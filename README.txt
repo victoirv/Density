@@ -5,6 +5,7 @@ It's cleaned up by changing fill values (usually 9999, but every column uses som
 
 The impulses are taken from OMNI spacecraft measurements, but since that data is very sparse in the years of interest, a reconstructed dataset is taken from this paper:
 
+
 http://onlinelibrary.wiley.com/doi/10.1002/2014GL059741/suppinfo
 
 specifically, WGhourFS_72_13.txt. The data are then formatted from white space separated to comma separated in vim using %s/\s+/,/g and the leading comma removed with %s/^,//g . Though MATLAB has means of reading in white space delimited files, none worked well and this ended up being easier and quicker.
