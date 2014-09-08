@@ -10,7 +10,7 @@ The solar wind measurements are taken from a gap-filled dataset here:
 
 http://onlinelibrary.wiley.com/doi/10.1002/2014GL059741/suppinfo
 
-specifically, WGhourFS_72_13.txt. The data are then formatted from white space separated to comma separated in vim using %s/\s+/,/g and the leading comma removed with %s/^,//g . Though MATLAB has means of reading in white space delimited files, none worked well and this ended up being easier and quicker.
+specifically, WGhourFS_72_13.txt. The data are then formatted from white space separated to comma separated in vim using %s/\s+/,/g and the leading comma removed with %s/^,//g and fixing the two status headers (8 status and 6 stat, both end up with a comma that they shouldn't have). Though MATLAB has means of reading in white space delimited files, none worked well and this ended up being easier and quicker.
 
 By looking at GOES spacecraft 6, the years 1983-1992 can be covered for prediction and modeling.
 

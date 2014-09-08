@@ -52,6 +52,7 @@ end
     
 MassDensitySpline=interp1(DentonTime,MassDensity,OMNITime,'linear');
 
+
 %Compare the two densities
 figure; plot(OMNITime,MassDensitySpline);hold on; plot(OMNITime,OMNIDensity,'r')
 legend('Denton','OMNI','Location','NorthEast')
@@ -93,6 +94,8 @@ test(lx5:2*lx5)=2;
 test(2*lx5:3*lx5)=3;
 test(3*lx5:4*lx5)=4;
 test(4*lx5:5*lx5)=5;
+
+test2=1:lx;
 
 corrcoef(test,x)
 
