@@ -10,7 +10,7 @@ The solar wind measurements are taken from a gap-filled dataset here:
 
 http://onlinelibrary.wiley.com/doi/10.1002/2014GL059741/suppinfo
 
-specifically, WGhourFS_72_13.txt. The data are then formatted from white space separated to comma separated in vim using %s/\s+/,/g and the leading comma removed with %s/^,//g . Though MATLAB has means of reading in white space delimited files, none worked well and this ended up being easier and quicker.
+specifically, WGhourFS_72_13.txt. The data are then formatted from white space separated to comma separated in vim using %s/\s+/,/g and the leading comma removed with %s/^,//g and fixing the two status headers (8 status and 6 stat, both end up with a comma that they shouldn't have). Though MATLAB has means of reading in white space delimited files, none worked well and this ended up being easier and quicker.
 
 By looking at GOES spacecraft 6, the years 1983-1992 can be covered for prediction and modeling.
 
@@ -22,33 +22,33 @@ This study so far seems to indicate that there is a value to using a linear impu
 
 A table of correlations (prediction with 1 impulse coefficient vs with 120 coefficients) follows:
 
-Variable 	 corr(1) 	 corr(120)
-Year 	 0.40649 	 0.40873
-Day 	 0.02062 	 0.04038
-Hr 	 0.00546 	 0.04759
-ByIMF 	 -0.01842 	 -0.02475
-BzIMF 	 0.08010 	 0.18258
-V_SW 	 0.09221 	 0.12063
-Den_P 	 0.05621 	 0.10010
-Pdyn 	 0.04620 	 0.07635
-G1 	 0.05513 	 0.00313
-G2 	 -0.00568 	 0.02843
-G3 	 -0.01177 	 0.03263
-8stat 	 0.02706 	 0.03505
-kp 	 0.01068 	 0.08803
-akp3 	 0.02380 	 0.08993
-dst 	 -0.02562 	 0.00855
-Bz1 	 0.08010 	 0.18258
-Bz2 	 0.08010 	 0.18258
-Bz3 	 0.08010 	 0.18258
-Bz4 	 0.08010 	 0.18258
-Bz5 	 0.08010 	 0.18258
-Bz6 	 0.08010 	 0.18258
-W1 	 0.00007 	 0.04389
-W2 	 0.01350 	 0.06754
-W3 	 -0.02017 	 0.00518
-W4 	 -0.02006 	 0.01150
-W5 	 0.00084 	 0.05064
-W6 	 -0.01140 	 0.03591
-6stat 	 0.01938 	 0.02466
-VBS 	 -0.00430 	 0.03222
+Variable 	 corr(1) 	 corr(120) 	 eff(1) 	 eff(120)
+Year 	 -0.00018 	 0.01011 	 -0.12737 	 -0.12499
+Day 	 0.00154 	 0.03346 	 0.00000 	 0.00170
+Hr 	 0.00601 	 0.05224 	 0.00004 	 0.00331
+ByIMF 	 0.00370 	 0.00987 	 0.00001 	 0.00068
+BzIMF 	 0.08715 	 0.19816 	 0.00749 	 0.03913
+V_SW 	 0.07154 	 0.11575 	 0.00512 	 0.01397
+Den_P 	 0.08113 	 0.11318 	 0.00658 	 0.01337
+Pdyn 	 0.06386 	 0.07962 	 0.00407 	 0.00690
+G1 	 0.03005 	 0.03768 	 0.00079 	 0.00169
+G2 	 0.01095 	 0.06679 	 0.00010 	 0.00493
+G3 	 0.00525 	 0.05628 	 0.00002 	 0.00371
+8stat 	 0.03457 	 0.04296 	 0.00119 	 0.00242
+kp 	 0.02326 	 0.11172 	 0.00054 	 0.01302
+akp3 	 0.03872 	 0.11345 	 0.00150 	 0.01341
+dst 	 0.04517 	 0.07900 	 0.00191 	 0.00668
+Bz1 	 0.08715 	 0.19816 	 0.00749 	 0.03913
+Bz2 	 0.08715 	 0.19816 	 0.00749 	 0.03913
+Bz3 	 0.08715 	 0.19816 	 0.00749 	 0.03913
+Bz4 	 0.08715 	 0.19816 	 0.00749 	 0.03913
+Bz5 	 0.08715 	 0.19816 	 0.00749 	 0.03913
+Bz6 	 0.08715 	 0.19816 	 0.00749 	 0.03913
+W1 	 0.01283 	 0.07382 	 0.00015 	 0.00595
+W2 	 0.02212 	 0.09056 	 0.00049 	 0.00873
+W3 	 0.01593 	 0.03660 	 0.00018 	 0.00185
+W4 	 0.00529 	 0.04793 	 -0.00001 	 0.00281
+W5 	 0.01081 	 0.07604 	 0.00011 	 0.00630
+W6 	 0.00700 	 0.05228 	 0.00005 	 0.00331
+6stat 	 0.04376 	 0.05429 	 0.00191 	 0.00351
+VBS 	 0.01070 	 0.06891 	 0.00010 	 0.00522

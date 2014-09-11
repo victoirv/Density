@@ -1,3 +1,5 @@
+function Density
+
 close all;clear all;
 %load('../OMNI_OMNI2_merged')
 %{
@@ -13,6 +15,7 @@ KP=Kp_index(getyears);
 FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
 headers=textread('WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
+BS=abs(FILLED(:,5))-FILLED(:,5);
 OMNIDensity=FILLED(:,7);
 OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
 %VBS=1/2*Plasma_bulk_speed.*(abs(Bz_GSM)-Bz_GSM);
@@ -53,6 +56,7 @@ end
 MassDensitySpline=interp1(DentonTime,MassDensity,OMNITime,'linear');
 
 
+
 %Compare the two densities
 figure; plot(OMNITime,MassDensitySpline);hold on; plot(OMNITime,OMNIDensity,'r')
 legend('Denton','OMNI','Location','NorthEast')
@@ -62,17 +66,14 @@ xlabel('Time')
 datetick
 print -dpng figures/densitycomp.png
 
-
-
-
-N=50;
 Na=0;
 Nb=1;
 lag=0;
 advance=0;
 
-x=MassDensitySpline;
+x=detrend(MassDensitySpline);
 
+%{ 
 %Figure out what's going on with the year
 [ca, cb, cc,xnew,corr] = IRboot(x,FILLED(:,1),Na,Nb,lag,advance);
 figure; plot(xnew,MassDensitySpline,'+')
@@ -98,6 +99,7 @@ test(4*lx5:5*lx5)=5;
 test2=1:lx;
 
 corrcoef(test,x)
+%}
 
 if(~exist(sprintf('figures/OMNI_%s.png',headers{1}),'file'))
     
@@ -115,178 +117,78 @@ if(~exist(sprintf('figures/OMNI_%s.png',headers{1}),'file'))
 end
 
 corrs_1=1:(length(headers)+1);
+pes_1=1:(length(headers)+1);
 Nb=1;
 for i=1:length(headers)
     f=FILLED(:,i);
     [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-    corrs_1(i)=corr;
-    %fprintf('%s - %2.5f\n',headers{i},corr);
-    
-    close all;
-    figure; plot(OMNITime,x); hold on; plot(OMNITime,xnew,'r'); plot(OMNITime,OverlayFilled(:,i),'k'); legend('Data','Prediction',headers{i},'Location','NorthEast')
-    ylabel('Density')
-    xlabel('Time')
-    datetick
-    title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.5f',headers{i},Na,Nb,corr))
-    
-    filestring=sprintf('figures/density_%s_%d_%d.png',headers{i},Na,Nb);
-    print('-dpng',filestring)
+    corrs_1(i)=corr;  
+    pe=pe_nonflag(x,xnew);
+    pes_1(i)=pe;
+    densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe)
     
 end
 
 %Add VBS_1
-x=MassDensitySpline;
+x=detrend(MassDensitySpline);
 f=VBS;
 
 [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
 corrs_1(end)=corr;
-close all;
-figure; plot(OMNITime,x); hold on; plot(OMNITime,xnew,'r'); plot(OMNITime,OverlayFilled(:,i),'k'); legend('Data','Prediction',headers{i},'Location','NorthEast')
-%figure; plot(OMNITime,x); hold on; plot(OMNITime,xnew,'r'); legend('Data','Prediction','Location','NorthEast')
-ylabel('Density')
-xlabel('Time')
-datetick
-title(sprintf('Denton Density from OMNI VBS: Nx:%d Nf:%d, corr: %2.2f',Na,Nb,corr))
-filestring=sprintf('figures/density_VBS_%d_%d.png',Na,Nb);
-print('-dpng',filestring)
+pes_1(end)=pe_nonflag(x,xnew);
 
-figure;plot(-advance:Nb-advance-1,flipud(cb))
-grid
-ylabel('Impulse Coefficient')
-xlabel('Time Lags')
-title(sprintf('Denton Density from OMNI VBS: Nx:%d Nf:%d, corr: %2.2f',Na,Nb,corr))
-filestring=sprintf('figures/density_VBS_%d_%d_Cb.png',Na,Nb);
-print('-dpng',filestring)
-
-
+densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],'VBS',Na,Nb,corr,pe_nonflag(x,xnew))
 
 %Open the table for writing
 table=fopen('table.txt','w');
 Nb=120;
-fprintf(table,'Variable \t corr(1) \t corr(120)\n');
+fprintf(table,'Variable \t corr(1) \t corr(120) \t eff(1) \t eff(120)\n');
 for i=1:length(headers)
     f=FILLED(:,i);
     [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-    fprintf(table,'%s \t %2.5f \t %2.5f\n',headers{i},corrs_1(i),corr);
+    pe=pe_nonflag(x,xnew);
+    fprintf(table,'%s \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',headers{i},corrs_1(i),corr,pes_1(i),pe);
     
-    close all;
-    figure; plot(OMNITime,x); hold on; plot(OMNITime,xnew,'r'); plot(OMNITime,OverlayFilled(:,i),'k'); legend('Data','Prediction',headers{i},'Location','NorthEast')
-    %figure; plot(OMNITime,x); hold on; plot(OMNITime,xnew,'r'); legend('Data','Prediction','Location','NorthEast')
-    ylabel('Density')
-    xlabel('Time')
-    datetick
-    title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.5f',headers{i},Na,Nb,corr))
-    
-    filestring=sprintf('figures/density_%s_%d_%d.png',headers{i},Na,Nb);
-    print('-dpng',filestring)
-    
-    figure;plot(-advance:Nb-advance-1,flipud(cb))
-    grid
-    ylabel('Impulse Coefficient')
-    xlabel('Time Lags')
-    title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.5f',headers{i},Na,Nb,corr))
-    filestring=sprintf('figures/density_%s_%d_%d_Cb.png',headers{i},Na,Nb);
-    print('-dpng',filestring)
-    
+    densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe)
+    densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe)
 end
 
 %Add VBS 120
-x=MassDensitySpline;
 f=VBS;
 
 [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-fprintf(table,'VBS \t %2.5f \t %2.5f\n',corrs_1(end),corr);
+pe=pe_nonflag(x,xnew);
+fprintf(table,'VBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end),corr,pes_1(end),pe);
 fclose(table);
 system('cat README.txt table.txt > README.md');
 
+densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],'VBS',Na,Nb,corr,pe)
+densitycoefplot(-advance:Nb-advance-1,flipud(cb),'VBS',Na,Nb,corr,pe)
+end
+
+function densityplot(x,ys,string,Na,Nb,corr,eff)
 close all;
-figure; plot(OMNITime,x); hold on; plot(OMNITime,xnew,'r'); plot(OMNITime,OverlayFilled(:,i),'k'); legend('Data','Prediction',headers{i},'Location','NorthEast')
-%figure; plot(OMNITime,x); hold on; plot(OMNITime,xnew,'r'); legend('Data','Prediction','Location','NorthEast')
-ylabel('Density')
-xlabel('Time')
-datetick
-title(sprintf('Denton Density from OMNI VBS: Nx:%d Nf:%d, corr: %2.2f',Na,Nb,corr))
-
-filestring=sprintf('figures/density_VBS_%d_%d.png',Na,Nb);
+test=size(ys);
+if test(1)>test(2) 
+   ys=ys'; 
+end
+figure;plot(x,ys)
+    legend('Data','Prediction',string,'Location','NorthEast')
+    ylabel('Density')
+    xlabel('Time')
+    datetick
+    title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.3f, eff: %2.3f',string,Na,Nb,corr,eff))
+    filestring=sprintf('figures/density_%s_%d_%d.png',string,Na,Nb);
 print('-dpng',filestring)
+end
 
-figure;plot(-advance:Nb-advance-1,flipud(cb))
-grid
+function densitycoefplot(x,ys,string,Na,Nb,corr,eff)
+close all;
+figure;plot(x,ys)
 ylabel('Impulse Coefficient')
 xlabel('Time Lags')
-title(sprintf('Denton Density from OMNI VBS: Nx:%d Nf:%d, corr: %2.2f',Na,Nb,corr))
-filestring=sprintf('figures/density_VBS_%d_%d_Cb.png',Na,Nb);
-print('-dpng',filestring)
-
-%{
-plot(DentonTime,MassDensity)
-hold on; plot(OMNITime,OMNIDensity,'r')
-title('Denton Density vs OMNI corrected Density')
-datetick
-print -dpng densitycomp.png
-
-MassDensitySpline=spline(DentonTime,MassDensity,OMNITime);
-
-plot(DentonTime,MassDensity)
-hold on; plot(OMNITime,MassDensitySpline,'r')
-title('Denton Density vs Splined Denton Density')
-datetick
-print -dpng densitysplinedensity.png
-
-ccoef=corrcoef(MassDensitySpline,OMNIDensity);
-fprintf('Correlation between Denton spline and OMNI density: %2.2f',ccoef(1,2))
-
-N=50;
-Na=0;
-Nb=48;
-lag=0;
-advance=16;
-
-x=MassDensitySpline;
-f=OMNIDensity;
-
-[ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-
-figure; plot(x); hold on; plot(xnew,'r'); legend('Data','Prediction','Location','NorthEast')
-ylabel('Density response to Density')
-xlabel('Time Lags')
-title(sprintf('Denton Density from OMNI Density: Nx:%d Nf:%d, corr: %2.2f',Na,Nb,corr))
-
-filestring=sprintf('density_density_%d_%d.png',Na,Nb);
-print('-dpng',filestring)
-
-figure;
-plot(flipud(ca));
-
-%--------------------------
-x=MassDensitySpline;
-f=VBS;
-
-[ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-
-figure; plot(x); hold on; plot(xnew,'r'); legend('Data','Prediction','Location','NorthEast')
-ylabel('Density response to VBs')
-xlabel('Time Lags')
-title(sprintf('Denton Density from OMNI VBS: Nx:%d Nf:%d, corr: %2.2f',Na,Nb,corr))
-
-filestring=sprintf('density_vbs_%d_%d.png',Na,Nb);
-print('-dpng',filestring)
-
-
-%--------------------------
-x=OMNIDensity;
-f=VBS;
-
-[ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-
-figure; plot(x); hold on; plot(xnew,'r'); legend('Data','Prediction','Location','NorthEast')
-ylabel('Density response to VBs')
-xlabel('Time Lags')
-title(sprintf('OMNI Density from OMNI VBS: Nx:%d Nf:%d, corr: %2.2f',Na,Nb,corr))
-
-filestring=sprintf('density_vbs_%d_%d.png',Na,Nb);
-print('-dpng',filestring)
-
-%Do Denton Density for all OMNI variables
-
-%}
+grid    
+    title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.3f, eff: %2.3f',string,Na,Nb,corr,eff))
+    filestring=sprintf('figures/density_%s_%d_%d_Cb.png',string,Na,Nb);
+    print('-dpng',filestring)
+end
