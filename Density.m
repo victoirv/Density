@@ -15,7 +15,7 @@ KP=Kp_index(getyears);
 FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
 headers=textread('WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
-BS=abs(FILLED(:,5))-FILLED(:,5);
+BS=1/2*(abs(FILLED(:,5))-FILLED(:,5));
 OMNIDensity=FILLED(:,7);
 OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
 %VBS=1/2*Plasma_bulk_speed.*(abs(Bz_GSM)-Bz_GSM);
@@ -45,6 +45,8 @@ gettime=(gettime==2);
 
 OMNITime=OMNITime(gettime);
 VBS=VBS(gettime);
+BS=BS(gettime);
+
 OMNIDensity=OMNIDensity(gettime);
 FILLED=FILLED(gettime,:);
 OverlayFilled=FILLED;
@@ -52,6 +54,8 @@ OverlayFilled=FILLED;
 for i=1:length(headers)
     OverlayFilled(:,i)=((250-150).*(OverlayFilled(:,i)-min(OverlayFilled(:,i))))./(max(OverlayFilled(:,i))-min(OverlayFilled(:,i))) + 150;
 end
+OverlayBS=((250-150).*(BS-min(BS)))./(max(BS)-min(BS)) + 150;
+OverlayVBS=((250-150).*(VBS-min(VBS)))./(max(VBS)-min(VBS)) + 150;
     
 MassDensitySpline=interp1(DentonTime,MassDensity,OMNITime,'linear');
 
@@ -116,8 +120,8 @@ if(~exist(sprintf('figures/OMNI_%s.png',headers{1}),'file'))
     
 end
 
-corrs_1=1:(length(headers)+1);
-pes_1=1:(length(headers)+1);
+corrs_1=1:(length(headers)+2);
+pes_1=1:(length(headers)+2);
 Nb=1;
 for i=1:length(headers)
     f=FILLED(:,i);
@@ -129,15 +133,20 @@ for i=1:length(headers)
     
 end
 
-%Add VBS_1
+%Add VBS_1 and BS_1
 x=detrend(MassDensitySpline);
-f=VBS;
 
+f=VBS;
+[ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+corrs_1(end-1)=corr;
+pes_1(end-1)=pe_nonflag(x,xnew);
+densityplot(OMNITime,[x,xnew,OverlayVBS],'VBS',Na,Nb,corr,pe_nonflag(x,xnew))
+
+f=BS;
 [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
 corrs_1(end)=corr;
 pes_1(end)=pe_nonflag(x,xnew);
-
-densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],'VBS',Na,Nb,corr,pe_nonflag(x,xnew))
+densityplot(OMNITime,[x,xnew,OverlayBS],'BS',Na,Nb,corr,pe_nonflag(x,xnew))
 
 %Open the table for writing
 table=fopen('table.txt','w');
@@ -158,12 +167,22 @@ f=VBS;
 
 [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
 pe=pe_nonflag(x,xnew);
-fprintf(table,'VBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end),corr,pes_1(end),pe);
+fprintf(table,'VBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end-1),corr,pes_1(end-1),pe);
+densityplot(OMNITime,[x,xnew,OverlayVBS],'VBS',Na,Nb,corr,pe)
+densitycoefplot(-advance:Nb-advance-1,flipud(cb),'VBS',Na,Nb,corr,pe)
+
+f=BS;
+[ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+pe=pe_nonflag(x,xnew);
+fprintf(table,'BS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end),corr,pes_1(end),pe);
+densityplot(OMNITime,[x,xnew,OverlayBS],'BS',Na,Nb,corr,pe)
+densitycoefplot(-advance:Nb-advance-1,flipud(cb),'BS',Na,Nb,corr,pe)
+
+
 fclose(table);
 system('cat README.txt table.txt > README.md');
 
-densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],'VBS',Na,Nb,corr,pe)
-densitycoefplot(-advance:Nb-advance-1,flipud(cb),'VBS',Na,Nb,corr,pe)
+
 end
 
 function densityplot(x,ys,string,Na,Nb,corr,eff)
