@@ -30,9 +30,12 @@ else
     IN(IN==9999)=NaN;
     
     [DentonTime,uniquerows]=unique(datenum(IN(:,2),1,0) + IN(:,3)+IN(:,4)/24+IN(:,5)/(24*60),'rows');
+    
+    %88 is density, 10 is f10.7
+    F107=IN(uniquerows,10);
     MassDensity=IN(uniquerows,88);
     
-    save('DentonDensityAndTime','DentonTime','MassDensity');
+    save('DentonDensityAndTime','DentonTime','MassDensity','F107');
 end
 
 if(~exist('figures','dir'))
@@ -56,6 +59,7 @@ for i=1:length(headers)
 end
 OverlayBS=((250-150).*(BS-min(BS)))./(max(BS)-min(BS)) + 150;
 OverlayVBS=((250-150).*(VBS-min(VBS)))./(max(VBS)-min(VBS)) + 150;
+OverlayF107=((250-150).*(F107-min(F107)))./(max(F107)-min(F107)) + 150;
     
 MassDensitySpline=interp1(DentonTime,MassDensity,OMNITime,'linear');
 
@@ -162,7 +166,7 @@ for i=1:length(headers)
     densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe)
 end
 
-%Add VBS 120
+%Add VBS, BS, and F107 for 120 coef
 f=VBS;
 
 [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
@@ -178,6 +182,15 @@ fprintf(table,'BS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end),corr,pes_1
 densityplot(OMNITime,[x,xnew,OverlayBS],'BS',Na,Nb,corr,pe)
 densitycoefplot(-advance:Nb-advance-1,flipud(cb),'BS',Na,Nb,corr,pe)
 
+
+[ca, cb, cc,xnew,corr1] = IRboot(MassDensity,F107,Na,1,0,0);
+pe1=pe_nonflag(MassDensity,xnew);
+densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'F107',Na,1,corr,pe1)
+[ca, cb, cc,xnew,corr] = IRboot(MassDensity,F107,Na,Nb,lag,advance);
+pe=pe_nonflag(MassDensity,xnew);
+densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'F107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+densitycoefplot(-advance:Nb-advance-1,flipud(cb),'F107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+fprintf(table,'F107 \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
 
 fclose(table);
 system('cat README.txt table.txt > README.md');

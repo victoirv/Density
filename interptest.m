@@ -9,9 +9,9 @@ toc
 datanew;
 %}
 tic
-t=t-t(1);
-tnew=tnew-tnew(1);
-t=floor(t.*10000)./10000;
+%t=t-t(1);
+%tnew=tnew-tnew(1);
+%t=round(t.*10000)./10000;
 timestep = min(diff(t)); %// Minimum time-stepsize for t
 %t_all=t(1):(t(2)-t(1)):t(end); %But this has rounding errors
 t_all=linspace(t(1),t(end),437146);
@@ -20,12 +20,14 @@ for i=2:length(t_all)
     t_all(i)=addtodate(t_all(i-1),10,'minute');
 end
 %}
-%t_all = min(t):timestep:max(t); %// create all the timesteps
-t_all=floor(t_all.*10000)./10000;
+t_all = min(t):timestep:t(end); %// create all the timesteps
+%t_all=floor(t_all.*10000)./10000;
+t = interp1(t_all, t_all, t, 'nearest');
 [b1,b2] = ismember(t,t_all);
-
-ind = bsxfun(@plus,[tnew(1)-dt:1:tnew(1)+dt]',[0:numel(tnew)-1]*dt);
-[v1,v2] = ismember(ind,t_all(b2));
+b2(end)=b2(end-1)+1;
+dtnew=min(diff(tnew));
+ind = bsxfun(@plus,[linspace(datenum_round_off(tnew(1)-3*dt+dt/2,'minute'),datenum_round_off(tnew(1)+3*dt-dt/2,'minute'),6)]',[0:numel(tnew)-1]*dtnew);
+[v1,v2] = ismember(floor(t_all(b2).*10000),floor(ind.*10000));
 vind = v2~=0;
 v2(v2==0) = NaN;
 v2(vind) = x(v2(vind));
