@@ -1,13 +1,17 @@
-function interptest(t,x,tnew,dt)
+function datanew=interptest(t,x,tnew,dt)
+if nargin == 3
+    dt=(tnew(2)-tnew(1))/2; %halfway to the points on either side
+end
+
+%tic
+datanew=1:length(tnew);
+for i=1:length(tnew)
+    datanew(i)=nanmedian(x(t>(tnew(i)-dt) & t<(tnew(i)+dt))); 
+end
+%toc
+%datanew;
 
 %{
-tic
-for i=1:length(tnew)
-    datanew(i)=mean(x(find(t>(tnew(i)-dt) & t<(tnew(i)+dt)))); 
-end
-toc
-datanew;
-%}
 tic
 %t=t-t(1);
 %tnew=tnew-tnew(1);
@@ -70,4 +74,5 @@ tnew_ub = tnew+dt; %// upper bound
 datanew = accumarray(c,x(r),[], @mean);
 toc
 datanew;
+%}
 %}

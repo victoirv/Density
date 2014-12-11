@@ -31,16 +31,64 @@ else
     
     [DentonTime,uniquerows]=unique(datenum(IN(:,2),1,0) + IN(:,3)+IN(:,4)/24+IN(:,5)/(24*60),'rows');
     
-    %88 is density, 10 is f10.7
+    %88 is density, 10 is f10.7, 31 is BZ_sw, 32 is Vsw
     F107=IN(uniquerows,10);
+    DBz=IN(uniquerows,31);
+    DBS=1/2*IN(uniquerows,32).*(abs(DBz)-DBz);
+    MLT=IN(uniquerows,8);
     MassDensity=IN(uniquerows,88);
     
-    save('DentonDensityAndTime','DentonTime','MassDensity','F107');
+    save('DentonDensityAndTime','DentonTime','MassDensity','F107','DBz','MLT','DBS');
 end
 
 if(~exist('figures','dir'))
     mkdir('figures');
 end
+
+%Test linear fit
+x=F107;
+y=MassDensity;
+
+p = polyfit(x,y,1)
+yfit =  p(1) * x + p(2);
+yresid = y - yfit;
+rsq = 1 -sum(yresid.^2)/((length(y)-1) * var(y))
+
+%Test without removing expanded plasma
+t27=DentonTime(1):27:DentonTime(end); %Make 27 day time vector
+y27=interptest(DentonTime,log(y),t27);
+x27=interptest(DentonTime,x,t27);
+p = polyfit(x27,y27,1)
+yfit =  p(1) * x27 + p(2);
+yresid = y27 - yfit;
+rsq = 1 -sum(yresid.^2)/((length(y27)-1) * var(y27))
+
+%Remove expanded plasma
+x2=x(y<20);
+y2=y(y<20);
+DentonTime2=DentonTime(y<20);
+y27=interptest(DentonTime2,log(y2),t27);
+x27=interptest(DentonTime2,x2,t27);
+p = polyfit(x27,y27,1)
+yfit =  p(1) * x27 + p(2);
+yresid = y27 - yfit;
+rsq = 1 -sum(yresid.^2)/((length(y27)-1) * var(y27))
+
+%Remove afternoon
+prenoon=(MLT<12 & MLT>=7);
+x2=x(y<25 & prenoon);
+y2=y(y<25 & prenoon);
+DentonTime2=DentonTime(y<25 & prenoon);
+y27=interptest(DentonTime2,log(y2),t27);
+x27=interptest(DentonTime2,x2,t27);
+p = polyfit(x27,y27,1)
+yfit =  p(1) * x27 + p(2);
+yresid = y27 - yfit;
+rsq = 1 -sum(yresid.^2)/((length(y27)-1) * var(y27))
+
+ignore=1;%For breakpoint
+
+
 
 gettime=OMNITime>min(DentonTime);
 gettime=gettime+(OMNITime<max(DentonTime));
@@ -60,9 +108,12 @@ end
 OverlayBS=((250-150).*(BS-min(BS)))./(max(BS)-min(BS)) + 150;
 OverlayVBS=((250-150).*(VBS-min(VBS)))./(max(VBS)-min(VBS)) + 150;
 OverlayF107=((250-150).*(F107-min(F107)))./(max(F107)-min(F107)) + 150;
-    
-MassDensitySpline=interp1(DentonTime,MassDensity,OMNITime,'linear');
+OverlayDBz=((250-150).*(DBz-min(DBz)))./(max(DBz)-min(DBz)) + 150;
+OverlayDBS=((250-150).*(DBS-min(DBS)))./(max(DBS)-min(DBS)) + 150;
 
+%MassDensitySpline=interp1(DentonTime,MassDensity,OMNITime,'linear');
+MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
+MassDensitySpline=MassDensitySpline';
 
 
 %Compare the two densities
@@ -79,7 +130,9 @@ Nb=1;
 lag=0;
 advance=0;
 
-x=detrend(MassDensitySpline);
+%x=detrend(MassDensitySpline);
+x=MassDensitySpline;
+
 
 %{ 
 %Figure out what's going on with the year
@@ -138,7 +191,7 @@ for i=1:length(headers)
 end
 
 %Add VBS_1 and BS_1
-x=detrend(MassDensitySpline);
+%x=detrend(MassDensitySpline);
 
 f=VBS;
 [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
@@ -183,6 +236,16 @@ densityplot(OMNITime,[x,xnew,OverlayBS],'BS',Na,Nb,corr,pe)
 densitycoefplot(-advance:Nb-advance-1,flipud(cb),'BS',Na,Nb,corr,pe)
 
 
+[ca, cb, cc,xnew,corr1] = IRboot(MassDensity,DBS,Na,1,0,0);
+pe1=pe_nonflag(MassDensity,xnew);
+densityplot(DentonTime,[MassDensity,xnew,OverlayDBS],'DBS',Na,1,corr,pe1)
+[ca, cb, cc,xnew,corr] = IRboot(MassDensity,DBS,Na,Nb,lag,advance);
+pe=pe_nonflag(MassDensity,xnew);
+densityplot(DentonTime,[MassDensity,xnew,OverlayDBS],'DBS',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+densitycoefplot(-advance:Nb-advance-1,flipud(cb),'DBS',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+fprintf(table,'DBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+
+
 [ca, cb, cc,xnew,corr1] = IRboot(MassDensity,F107,Na,1,0,0);
 pe1=pe_nonflag(MassDensity,xnew);
 densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'F107',Na,1,corr,pe1)
@@ -191,6 +254,35 @@ pe=pe_nonflag(MassDensity,xnew);
 densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'F107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
 densitycoefplot(-advance:Nb-advance-1,flipud(cb),'F107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
 fprintf(table,'F107 \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+
+[ca, cb, cc,xnew,corr1] = IRboot(MassDensity,log(F107),Na,1,0,0);
+pe1=pe_nonflag(MassDensity,xnew);
+densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'logF107',Na,1,corr,pe1)
+[ca, cb, cc,xnew,corr] = IRboot(MassDensity,log(F107),Na,Nb,lag,advance);
+pe=pe_nonflag(MassDensity,xnew);
+densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'logF107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+densitycoefplot(-advance:Nb-advance-1,flipud(cb),'logF107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+fprintf(table,'logF107 \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+
+[ca, cb, cc,xnew,corr1] = IRboot(MassDensity,DBz,Na,1,0,0);
+pe1=pe_nonflag(MassDensity,xnew);
+densityplot(DentonTime,[MassDensity,xnew,OverlayDBz],'DBz',Na,1,corr,pe1)
+[ca, cb, cc,xnew,corr] = IRboot(MassDensity,DBz,Na,Nb,lag,advance);
+pe=pe_nonflag(MassDensity,xnew);
+densityplot(DentonTime,[MassDensity,xnew,OverlayDBz],'DBz',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+densitycoefplot(-advance:Nb-advance-1,flipud(cb),'DBz',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+fprintf(table,'DBz \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+
+[ca, ca2, cb, cb2, cc, cc2, xnew, xnew2, corr, corr2] = IRsortboot(MassDensity,FILLED(:,5),FILLED(:,5),100,Na,1,lag,advance);
+pe=pe_nonflag(MassDensity,xnew);
+pe2=pe_nonflag(MassDensity,xnew2);
+densityplot(DentonTime,[MassDensity,xnew,OverlayFilled(:,5)],'BzHigh',Na,Nb,corr,pe)
+densityplot(DentonTime,[MassDensity,xnew2,OverlayFilled(:,5)],'BzLow',Na,Nb,corr2,pe2)
+densitycoefplot(-advance:Nb-advance-1,flipud(cb),'BzHigh',Na,Nb,corr,pe)
+densitycoefplot(-advance:Nb-advance-1,flipud(cb2),'BzLow',Na,Nb,corr2,pe2)
+fprintf(table,'BZHigh \t -- \t %2.5f \t -- \t %2.5f\n',corr,pe);
+fprintf(table,'BZLow \t -- \t %2.5f \t -- \t %2.5f\n',corr2,pe2);
+
 
 fclose(table);
 system('cat README.txt table.txt > README.md');
