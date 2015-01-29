@@ -6,7 +6,7 @@ http://onlinelibrary.wiley.com/doi/10.1029/2009JA015243/abstract
 
 It's cleaned up by changing fill values (usually 9999, but every column uses something different) to NaNs for uniformity's sake. The file I use is his on the website but with all of the headers removed. dlmread() supports this in the function, but I did it a while ago and just used that edited file here.
 
-The solar wind measurements are taken from a gap-filled dataset here:
+The solar wind measurements used as impulses are taken from a gap-filled dataset here:
 
 http://onlinelibrary.wiley.com/doi/10.1002/2014GL059741/suppinfo
 
@@ -18,7 +18,7 @@ All variables from the filled OMNI dataset were used as impulses with both 1 imp
 
 The table of correlation coefficients is in table.txt, and the plots of all variables (in the format OMNI_{var}.png) as well as all predicted datasets, and their corresponding coefficients (format density_{Var}_{num persist coef}_{num impulse coef}.png), are in the figures/ folder.
 
-This study so far seems to indicate that there is a value to using a linear impulse model for prediction. The statistical significance of any increase remains to be tested.
+This study so far seems to indicate that there is a value to using a linear impulse model for prediction. The statistical significance of any increase remains to be tested, but it certainly seems that the best linear predictor of solar wind density is Bz, and not just Bs. The next few things to look into are significance tests, nonlinear predictions, and a comparison of the prediction efficiency of large vs small Bz, and Bz with periods of precoditioning. 
 
 A table of correlations (prediction with 1 impulse coefficient vs with 120 coefficients) follows:
 

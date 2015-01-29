@@ -207,14 +207,16 @@ densityplot(OMNITime,[x,xnew,OverlayBS],'BS',Na,Nb,corr,pe_nonflag(x,xnew))
 
 %Open the table for writing
 table=fopen('table.txt','w');
+fprintf(table,'<pre>');
 Nb=120;
-fprintf(table,'Variable \t corr(1) \t corr(120) \t eff(1) \t eff(120)\n');
+fprintf(table,'Input \t CC(1) \t CC(120) \t PE(1) \t PE(120)\n');
+BigTable={};
 for i=1:length(headers)
     f=FILLED(:,i);
     [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
     pe=pe_nonflag(x,xnew);
-    fprintf(table,'%s \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',headers{i},corrs_1(i),corr,pes_1(i),pe);
-    
+    %fprintf(table,'%s \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',headers{i},corrs_1(i),corr,pes_1(i),pe);
+    BigTable=[BigTable;{headers{i},corrs_1(i),corr,pes_1(i),pe}];
     densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe)
     densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe)
 end
@@ -224,14 +226,16 @@ f=VBS;
 
 [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
 pe=pe_nonflag(x,xnew);
-fprintf(table,'VBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end-1),corr,pes_1(end-1),pe);
+%fprintf(table,'VBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end-1),corr,pes_1(end-1),pe);
+BigTable=[BigTable;{'VBS',corrs_1(end-1),corr,pes_1(end-1),pe}];
 densityplot(OMNITime,[x,xnew,OverlayVBS],'VBS',Na,Nb,corr,pe)
 densitycoefplot(-advance:Nb-advance-1,flipud(cb),'VBS',Na,Nb,corr,pe)
 
 f=BS;
 [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
 pe=pe_nonflag(x,xnew);
-fprintf(table,'BS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end),corr,pes_1(end),pe);
+%fprintf(table,'BS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end),corr,pes_1(end),pe);
+BigTable=[BigTable;{'BS',corrs_1(end),corr,pes_1(end),pe}];
 densityplot(OMNITime,[x,xnew,OverlayBS],'BS',Na,Nb,corr,pe)
 densitycoefplot(-advance:Nb-advance-1,flipud(cb),'BS',Na,Nb,corr,pe)
 
@@ -243,7 +247,8 @@ densityplot(DentonTime,[MassDensity,xnew,OverlayDBS],'DBS',Na,1,corr,pe1)
 pe=pe_nonflag(MassDensity,xnew);
 densityplot(DentonTime,[MassDensity,xnew,OverlayDBS],'DBS',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
 densitycoefplot(-advance:Nb-advance-1,flipud(cb),'DBS',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-fprintf(table,'DBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+%fprintf(table,'DBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+BigTable=[BigTable;{'DBS',corr1,corr,pe1,pe}];
 
 
 [ca, cb, cc,xnew,corr1] = IRboot(MassDensity,F107,Na,1,0,0);
@@ -253,16 +258,18 @@ densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'F107',Na,1,corr,pe1)
 pe=pe_nonflag(MassDensity,xnew);
 densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'F107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
 densitycoefplot(-advance:Nb-advance-1,flipud(cb),'F107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-fprintf(table,'F107 \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+%fprintf(table,'F107 \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+BigTable=[BigTable;{'F107',corr1,corr,pe1,pe}];
 
 [ca, cb, cc,xnew,corr1] = IRboot(MassDensity,log(F107),Na,1,0,0);
 pe1=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'logF107',Na,1,corr,pe1)
+densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'lnF107',Na,1,corr,pe1)
 [ca, cb, cc,xnew,corr] = IRboot(MassDensity,log(F107),Na,Nb,lag,advance);
 pe=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'logF107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-densitycoefplot(-advance:Nb-advance-1,flipud(cb),'logF107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-fprintf(table,'logF107 \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'lnF107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+densitycoefplot(-advance:Nb-advance-1,flipud(cb),'lnF107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
+%fprintf(table,'logF107 \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+BigTable=[BigTable;{'lnF107',corr1,corr,pe1,pe}];
 
 [ca, cb, cc,xnew,corr1] = IRboot(MassDensity,DBz,Na,1,0,0);
 pe1=pe_nonflag(MassDensity,xnew);
@@ -271,8 +278,10 @@ densityplot(DentonTime,[MassDensity,xnew,OverlayDBz],'DBz',Na,1,corr,pe1)
 pe=pe_nonflag(MassDensity,xnew);
 densityplot(DentonTime,[MassDensity,xnew,OverlayDBz],'DBz',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
 densitycoefplot(-advance:Nb-advance-1,flipud(cb),'DBz',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-fprintf(table,'DBz \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+%fprintf(table,'DBz \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
+BigTable=[BigTable;{'DBz',corr1,corr,pe1,pe}];
 
+%{
 [ca, ca2, cb, cb2, cc, cc2, xnew, xnew2, corr, corr2] = IRsortboot(MassDensity,FILLED(:,5),FILLED(:,5),100,Na,1,lag,advance);
 pe=pe_nonflag(MassDensity,xnew);
 pe2=pe_nonflag(MassDensity,xnew2);
@@ -280,9 +289,16 @@ densityplot(DentonTime,[MassDensity,xnew,OverlayFilled(:,5)],'BzHigh',Na,Nb,corr
 densityplot(DentonTime,[MassDensity,xnew2,OverlayFilled(:,5)],'BzLow',Na,Nb,corr2,pe2)
 densitycoefplot(-advance:Nb-advance-1,flipud(cb),'BzHigh',Na,Nb,corr,pe)
 densitycoefplot(-advance:Nb-advance-1,flipud(cb2),'BzLow',Na,Nb,corr2,pe2)
-fprintf(table,'BZHigh \t -- \t %2.5f \t -- \t %2.5f\n',corr,pe);
-fprintf(table,'BZLow \t -- \t %2.5f \t -- \t %2.5f\n',corr2,pe2);
-
+%fprintf(table,'BZHigh \t -- \t %2.5f \t -- \t %2.5f\n',corr,pe);
+%fprintf(table,'BZLow \t -- \t %2.5f \t -- \t %2.5f\n',corr2,pe2);
+BigTable=[BigTable;{'BZHigh',NaN,corr,NaN,pe}];
+BigTable=[BigTable;{'BZHigh',NaN,corr2,NaN,pe2}];
+%}
+BigTable=sortrows(BigTable,2);
+for i=1:size(BigTable,1)
+   fprintf(table,'%s \t %2.2f \t %2.2f \t %2.2f \t %2.2f\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
+end
+fprintf(table,'</pre>');
 
 fclose(table);
 system('cat README.txt table.txt > README.md');
