@@ -171,13 +171,18 @@ visible='off';
 if(MakePlots)
     Hr=hour(DentonTime);
     for i=0:23
-   avf107(i+1)=mean(F107(Hr==i));
-   avf107(i+1)=mean(MassDensity(Hr==i));
+        avf107(i+1)=mean(F107(Hr==i));
+        avdens(i+1)=mean(MassDensity(Hr==i));
     end
+    avf107=(avf107-min(avf107))/(max(avf107)-min(avf107));
+    avdens=(avdens-min(avdens))/(max(avdens)-min(avdens));
     h=figure('Visible',visible);
     plot(0:23,avf107,'r+:')
-    xlabel('Hour')
-    ylabel('Average F10.7')
+    hold on
+    plot(0:23,avdens,'b+:')
+    legend('F107','Density')
+    xlabel('UT Hour')
+    ylabel('Normalized Average')
     print '-dpng' 'figures/avf107.png'
 end
 
