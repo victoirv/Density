@@ -21,6 +21,7 @@ The table of correlation coefficients is in table.txt, and the plots of all vari
 This study so far seems to indicate that there is a value to using a linear impulse model for prediction. The statistical significance of any increase remains to be tested, but it certainly seems that the best linear predictor of solar wind density is Bz, and not just Bs. The next few things to look into are significance tests, nonlinear predictions, and a comparison of the prediction efficiency of large vs small Bz, and Bz with periods of precoditioning. 
 
 A table of correlations (prediction with 1 impulse coefficient vs with 120 coefficients) follows:
+
 <pre>
 Input 	 CC(1) 	 CC(120) 	 PE(1) 	 PE(120)
 Pdyn 	 -0.01 	 0.10 	 -0.00 	 0.01
@@ -46,6 +47,7 @@ W5 	 0.09 	 0.11 	 0.01 	 0.01
 kp 	 0.10 	 0.18 	 0.01 	 0.03
 akp3 	 0.11 	 0.18 	 0.01 	 0.03
 DBz 	 0.12 	 0.15 	 0.01 	 0.02
+VBz 	 0.12 	 0.18 	 0.01 	 0.03
 BzIMF 	 0.14 	 0.23 	 0.02 	 0.05
 Bz1 	 0.14 	 0.23 	 0.02 	 0.05
 Bz2 	 0.14 	 0.23 	 0.02 	 0.05
@@ -54,7 +56,8 @@ Bz4 	 0.14 	 0.23 	 0.02 	 0.05
 Bz5 	 0.14 	 0.23 	 0.02 	 0.05
 Bz6 	 0.14 	 0.23 	 0.02 	 0.05
 V_SW 	 0.19 	 0.20 	 0.03 	 0.04
-Year 	 0.36 	 0.00 	 0.06 	 -45478252641.44
+Year 	 0.36 	 0.00 	 0.06 	 -4.55e+10
 lnF107 	 0.43 	 0.44 	 0.17 	 0.18
 F107 	 0.43 	 0.44 	 0.18 	 0.19
+
 </pre>

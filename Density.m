@@ -15,6 +15,7 @@ KP=Kp_index(getyears);
 FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
 headers=textread('WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
+VBz=FILLED(:,6).*FILLED(:,5);
 BS=1/2*(abs(FILLED(:,5))-FILLED(:,5));
 OMNIDensity=FILLED(:,7);
 OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
@@ -46,6 +47,7 @@ if(~exist('figures','dir'))
 end
 
 %Test linear fit
+%{
 x=F107;
 y=MassDensity;
 
@@ -87,7 +89,7 @@ yresid = y27 - yfit;
 rsq = 1 -sum(yresid.^2)/((length(y27)-1) * var(y27))
 
 ignore=1;%For breakpoint
-
+%}
 
 
 gettime=OMNITime>min(DentonTime);
@@ -96,6 +98,7 @@ gettime=(gettime==2);
 
 OMNITime=OMNITime(gettime);
 VBS=VBS(gettime);
+VBz=VBz(gettime);
 BS=BS(gettime);
 
 OMNIDensity=OMNIDensity(gettime);
@@ -107,6 +110,7 @@ for i=1:length(headers)
 end
 OverlayBS=((250-150).*(BS-min(BS)))./(max(BS)-min(BS)) + 150;
 OverlayVBS=((250-150).*(VBS-min(VBS)))./(max(VBS)-min(VBS)) + 150;
+OverlayVBz=((250-150).*(VBz-min(VBz)))./(max(VBz)-min(VBz)) + 150;
 OverlayF107=((250-150).*(F107-min(F107)))./(max(F107)-min(F107)) + 150;
 OverlayDBz=((250-150).*(DBz-min(DBz)))./(max(DBz)-min(DBz)) + 150;
 OverlayDBS=((250-150).*(DBS-min(DBS)))./(max(DBS)-min(DBS)) + 150;
@@ -126,7 +130,6 @@ datetick
 print -dpng figures/densitycomp.png
 
 Na=0;
-Nb=1;
 lag=0;
 advance=0;
 
@@ -162,11 +165,35 @@ test2=1:lx;
 corrcoef(test,x)
 %}
 
-if(~exist(sprintf('figures/OMNI_%s.png',headers{1}),'file'))
-    
+MakePlots=1;
+visible='off';
+
+if(MakePlots)
+    Hr=hour(DentonTime);
+    for i=0:23
+   avf107(i+1)=mean(F107(Hr==i));
+   avf107(i+1)=mean(MassDensity(Hr==i));
+    end
+    h=figure('Visible',visible);
+    plot(0:23,avf107,'r+:')
+    xlabel('Hour')
+    ylabel('Average F10.7')
+    print '-dpng' 'figures/avf107.png'
+end
+
+%Add extra variables
+headers=[headers;{'VBS';'BS'; 'VBz'}];
+FILLED=[FILLED, VBS, BS, VBz];
+OverlayFilled=[OverlayFilled, OverlayVBS, OverlayBS, OverlayVBz];
+
+dheaders={'DBS';'F107';'lnF107';'DBz'};
+DFILLED=[DBS, F107, log(F107), DBz];
+DOverlayFilled=[OverlayDBS, OverlayF107, log(OverlayF107), OverlayDBz];
+
+if(MakePlots && ~exist(sprintf('figures/OMNI_%s.png',headers{1}),'file'))
     for i=1:length(headers)
         close all;
-        figure;plot(OMNITime,FILLED(:,i))
+        h=figure('Visible',visible);plot(OMNITime,FILLED(:,i))
         datetick
         ylabel(headers{i})
         xlabel('Time')
@@ -174,112 +201,56 @@ if(~exist(sprintf('figures/OMNI_%s.png',headers{1}),'file'))
         filestring=sprintf('figures/OMNI_%s.png',headers{i});
         print('-dpng',filestring)
     end
-    
+end
+if(MakePlots && ~exist(sprintf('figures/Denton_%s.png',dheaders{1}),'file'))
+    for i=1:length(dheaders)
+        close all;
+        h=figure('Visible',visible);plot(DentonTime,DFILLED(:,i))
+        datetick
+        ylabel(dheaders{i})
+        xlabel('Time')
+        title(sprintf('Denton %s',dheaders{i}))
+        filestring=sprintf('figures/Denton_%s.png',dheaders{i});
+        print('-dpng',filestring)
+    end
 end
 
-corrs_1=1:(length(headers)+2);
-pes_1=1:(length(headers)+2);
-Nb=1;
-for i=1:length(headers)
-    f=FILLED(:,i);
-    [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-    corrs_1(i)=corr;  
-    pe=pe_nonflag(x,xnew);
-    pes_1(i)=pe;
-    densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe)
-    
-end
-
-%Add VBS_1 and BS_1
 %x=detrend(MassDensitySpline);
-
-f=VBS;
-[ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-corrs_1(end-1)=corr;
-pes_1(end-1)=pe_nonflag(x,xnew);
-densityplot(OMNITime,[x,xnew,OverlayVBS],'VBS',Na,Nb,corr,pe_nonflag(x,xnew))
-
-f=BS;
-[ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-corrs_1(end)=corr;
-pes_1(end)=pe_nonflag(x,xnew);
-densityplot(OMNITime,[x,xnew,OverlayBS],'BS',Na,Nb,corr,pe_nonflag(x,xnew))
 
 %Open the table for writing
 table=fopen('table.txt','w');
-fprintf(table,'<pre>');
+fprintf(table,'<pre>\n');
+Nb1=1;
 Nb=120;
+x=MassDensitySpline;
 fprintf(table,'Input \t CC(1) \t CC(120) \t PE(1) \t PE(120)\n');
 BigTable={};
 for i=1:length(headers)
     f=FILLED(:,i);
-    [ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    [~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
+    pe1=pe_nonflag(x,xnew);
+    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb1,corr1,pe1), end
+    [~, cb, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
     pe=pe_nonflag(x,xnew);
-    %fprintf(table,'%s \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',headers{i},corrs_1(i),corr,pes_1(i),pe);
-    BigTable=[BigTable;{headers{i},corrs_1(i),corr,pes_1(i),pe}];
-    densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe)
-    densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe)
+    BigTable=[BigTable;{headers{i},corr1,corr,pe1,pe}];
+    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe), end
+    if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe), end
 end
 
-%Add VBS, BS, and F107 for 120 coef
-f=VBS;
-
-[ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-pe=pe_nonflag(x,xnew);
-%fprintf(table,'VBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end-1),corr,pes_1(end-1),pe);
-BigTable=[BigTable;{'VBS',corrs_1(end-1),corr,pes_1(end-1),pe}];
-densityplot(OMNITime,[x,xnew,OverlayVBS],'VBS',Na,Nb,corr,pe)
-densitycoefplot(-advance:Nb-advance-1,flipud(cb),'VBS',Na,Nb,corr,pe)
-
-f=BS;
-[ca, cb, cc,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
-pe=pe_nonflag(x,xnew);
-%fprintf(table,'BS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corrs_1(end),corr,pes_1(end),pe);
-BigTable=[BigTable;{'BS',corrs_1(end),corr,pes_1(end),pe}];
-densityplot(OMNITime,[x,xnew,OverlayBS],'BS',Na,Nb,corr,pe)
-densitycoefplot(-advance:Nb-advance-1,flipud(cb),'BS',Na,Nb,corr,pe)
+x=MassDensity;
+for i=1:length(dheaders)
+    f=DFILLED(:,i);
+    [~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance);
+    pe1=pe_nonflag(x,xnew);
+    if(MakePlots), densityplot(OMNITime,[x,xnew,DOverlayFilled(:,i)],dheaders{i},Na,Nb1,corr1,pe1), end
+    [~, cb, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    pe=pe_nonflag(x,xnew);
+    BigTable=[BigTable;{dheaders{i},corr1,corr,pe1,pe}];
+    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe), end
+    if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe), end
+end
 
 
-[ca, cb, cc,xnew,corr1] = IRboot(MassDensity,DBS,Na,1,0,0);
-pe1=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayDBS],'DBS',Na,1,corr,pe1)
-[ca, cb, cc,xnew,corr] = IRboot(MassDensity,DBS,Na,Nb,lag,advance);
-pe=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayDBS],'DBS',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-densitycoefplot(-advance:Nb-advance-1,flipud(cb),'DBS',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-%fprintf(table,'DBS \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
-BigTable=[BigTable;{'DBS',corr1,corr,pe1,pe}];
-
-
-[ca, cb, cc,xnew,corr1] = IRboot(MassDensity,F107,Na,1,0,0);
-pe1=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'F107',Na,1,corr,pe1)
-[ca, cb, cc,xnew,corr] = IRboot(MassDensity,F107,Na,Nb,lag,advance);
-pe=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'F107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-densitycoefplot(-advance:Nb-advance-1,flipud(cb),'F107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-%fprintf(table,'F107 \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
-BigTable=[BigTable;{'F107',corr1,corr,pe1,pe}];
-
-[ca, cb, cc,xnew,corr1] = IRboot(MassDensity,log(F107),Na,1,0,0);
-pe1=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'lnF107',Na,1,corr,pe1)
-[ca, cb, cc,xnew,corr] = IRboot(MassDensity,log(F107),Na,Nb,lag,advance);
-pe=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayF107],'lnF107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-densitycoefplot(-advance:Nb-advance-1,flipud(cb),'lnF107',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-%fprintf(table,'logF107 \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
-BigTable=[BigTable;{'lnF107',corr1,corr,pe1,pe}];
-
-[ca, cb, cc,xnew,corr1] = IRboot(MassDensity,DBz,Na,1,0,0);
-pe1=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayDBz],'DBz',Na,1,corr,pe1)
-[ca, cb, cc,xnew,corr] = IRboot(MassDensity,DBz,Na,Nb,lag,advance);
-pe=pe_nonflag(MassDensity,xnew);
-densityplot(DentonTime,[MassDensity,xnew,OverlayDBz],'DBz',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-densitycoefplot(-advance:Nb-advance-1,flipud(cb),'DBz',Na,Nb,corr,pe_nonflag(MassDensity,xnew))
-%fprintf(table,'DBz \t %2.5f \t %2.5f \t %2.5f \t %2.5f\n',corr1,corr,pe1,pe);
-BigTable=[BigTable;{'DBz',corr1,corr,pe1,pe}];
 
 %{
 [ca, ca2, cb, cb2, cc, cc2, xnew, xnew2, corr, corr2] = IRsortboot(MassDensity,FILLED(:,5),FILLED(:,5),100,Na,1,lag,advance);
@@ -296,9 +267,13 @@ BigTable=[BigTable;{'BZHigh',NaN,corr2,NaN,pe2}];
 %}
 BigTable=sortrows(BigTable,2);
 for i=1:size(BigTable,1)
-   fprintf(table,'%s \t %2.2f \t %2.2f \t %2.2f \t %2.2f\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
+   if(BigTable{i,5}>-10)
+       fprintf(table,'%s \t %2.2f \t %2.2f \t %2.2f \t %2.2f\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
+   else
+       fprintf(table,'%s \t %2.2f \t %2.2f \t %2.2f \t %2.0e\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
+   end
 end
-fprintf(table,'</pre>');
+fprintf(table,'\n</pre>');
 
 fclose(table);
 system('cat README.txt table.txt > README.md');
@@ -312,23 +287,24 @@ test=size(ys);
 if test(1)>test(2) 
    ys=ys'; 
 end
-figure;plot(x,ys)
+h=figure('Visible',visible);plot(x,ys)
     legend('Data','Prediction',string,'Location','NorthEast')
     ylabel('Density')
     xlabel('Time')
     datetick
     title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.3f, eff: %2.3f',string,Na,Nb,corr,eff))
     filestring=sprintf('figures/density_%s_%d_%d.png',string,Na,Nb);
-print('-dpng',filestring)
+print(h,'-dpng',filestring)
 end
 
 function densitycoefplot(x,ys,string,Na,Nb,corr,eff)
 close all;
-figure;plot(x,ys)
+h=figure('Visible',visible);
+plot(x,ys)
 ylabel('Impulse Coefficient')
 xlabel('Time Lags')
 grid    
     title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.3f, eff: %2.3f',string,Na,Nb,corr,eff))
     filestring=sprintf('figures/density_%s_%d_%d_Cb.png',string,Na,Nb);
-    print('-dpng',filestring)
+    print(h,'-dpng',filestring)
 end
