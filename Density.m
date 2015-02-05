@@ -13,6 +13,8 @@ HOUR=Hour(getyears);
 KP=Kp_index(getyears);
 %}
 FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
+FILLED=FILLED((FILLED(:,3)>10),:); %Hour greater than 10
+
 headers=textread('WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
 VBz=FILLED(:,6).*FILLED(:,5);
@@ -165,7 +167,7 @@ test2=1:lx;
 corrcoef(test,x)
 %}
 
-MakePlots=1;
+MakePlots=0;
 visible='off';
 
 if(MakePlots)
@@ -254,6 +256,22 @@ for i=1:length(dheaders)
     if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe), end
     if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe), end
 end
+
+%Now for doubles
+x=MassDensitySpline;
+f=[FILLED(:,3) FILLED(:,5)]; %Hr and Bz
+[~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
+    pe1=pe_nonflag(x,xnew);
+    [~, ~, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    pe=pe_nonflag(x,xnew);
+    BigTable=[BigTable;{'Hr+Bz',corr1,corr,pe1,pe}];
+f=[FILLED(:,5) FILLED(:,6)]; %Bz and V
+[~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
+    pe1=pe_nonflag(x,xnew);
+    [~, ~, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    pe=pe_nonflag(x,xnew);
+    BigTable=[BigTable;{'Bz+V',corr1,corr,pe1,pe}];
+
 
 
 
