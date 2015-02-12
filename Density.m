@@ -37,11 +37,12 @@ else
     %88 is density, 10 is f10.7, 31 is BZ_sw, 32 is Vsw
     F107=IN(uniquerows,10);
     DBz=IN(uniquerows,31);
+    DVsw=IN(uniquerows,32);
     DBS=1/2*IN(uniquerows,32).*(abs(DBz)-DBz);
     MLT=IN(uniquerows,8);
     MassDensity=IN(uniquerows,88);
     
-    save('DentonDensityAndTime','DentonTime','MassDensity','F107','DBz','MLT','DBS');
+    save('DentonDensityAndTime','DentonTime','MassDensity','F107','DBz','MLT','DBS','DVsw');
 end
 
 if(~exist('figures','dir'))
@@ -122,14 +123,20 @@ MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITi
 MassDensitySpline=MassDensitySpline';
 
 
+%%%%%Make Plots?
+MakePlots=0;
+visible='off';
+
 %Compare the two densities
-figure; plot(OMNITime,MassDensitySpline);hold on; plot(OMNITime,OMNIDensity,'r')
+if(MakePlots)
+h=figure('Visible',visible); plot(OMNITime,MassDensitySpline);hold on; plot(OMNITime,OMNIDensity,'r')
 legend('Denton','OMNI','Location','NorthEast')
 title('OMNI Density vs Denton Density')
 ylabel('Density')
 xlabel('Time')
 datetick
 print -dpng figures/densitycomp.png
+end
 
 Na=0;
 lag=0;
@@ -167,25 +174,30 @@ test2=1:lx;
 corrcoef(test,x)
 %}
 
-MakePlots=0;
-visible='off';
+
 
 if(MakePlots)
     Hr=hour(DentonTime);
     for i=0:23
         avf107(i+1)=mean(F107(Hr==i));
         avdens(i+1)=mean(MassDensity(Hr==i));
+        avvsw(i+1)=mean(DVsw(Hr==i));
+        avbz(i+1)=mean(DBz(Hr==i));
     end
     avf107=(avf107-min(avf107))/(max(avf107)-min(avf107));
     avdens=(avdens-min(avdens))/(max(avdens)-min(avdens));
+    avvsw=(avvsw-min(avvsw))/(max(avvsw)-min(avvsw));
+    avbz=(avbz-min(avbz))/(max(avbz)-min(avbz));
     h=figure('Visible',visible);
-    plot(0:23,avf107,'r+:')
+    plot(0:23,avf107,'r+-')
     hold on
-    plot(0:23,avdens,'b+:')
-    legend('F107','Density')
+    plot(0:23,avdens,'b+-')
+    plot(0:23,avvsw,'k+-')
+    plot(0:23,avbz,'m+-')
+    legend('F107','Density','Vsw','Bz')
     xlabel('UT Hour')
     ylabel('Normalized Average')
-    print '-dpng' 'figures/avf107.png'
+    print '-dpng' 'figures/avf107.png'    
 end
 
 %Add extra variables
@@ -230,18 +242,18 @@ fprintf(table,'<pre>\n');
 Nb1=1;
 Nb=120;
 x=MassDensitySpline;
-fprintf(table,'Input \t CC(1) \t CC(120) \t PE(1) \t PE(120)\n');
+fprintf(table,'Input \t CC1 \t CC120 \t PE(1) \t PE(120)\n');
 BigTable={};
 for i=1:length(headers)
     f=FILLED(:,i);
     [~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
     pe1=pe_nonflag(x,xnew);
-    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb1,corr1,pe1), end
+    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb1,corr1,pe1,visible), end
     [~, cb, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{headers{i},corr1,corr,pe1,pe}];
-    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe), end
-    if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe), end
+    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe,visible), end
+    if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe,visible), end
 end
 
 x=MassDensity;
@@ -249,12 +261,12 @@ for i=1:length(dheaders)
     f=DFILLED(:,i);
     [~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance);
     pe1=pe_nonflag(x,xnew);
-    if(MakePlots), densityplot(OMNITime,[x,xnew,DOverlayFilled(:,i)],dheaders{i},Na,Nb1,corr1,pe1), end
+    if(MakePlots), densityplot(OMNITime,[x,xnew,DOverlayFilled(:,i)],dheaders{i},Na,Nb1,corr1,pe1,visible), end
     [~, cb, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{dheaders{i},corr1,corr,pe1,pe}];
-    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe), end
-    if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe), end
+    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe,visible), end
+    if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe,visible), end
 end
 
 %Now for doubles
@@ -272,7 +284,19 @@ f=[FILLED(:,5) FILLED(:,6)]; %Bz and V
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{'Bz+V',corr1,corr,pe1,pe}];
 
-
+x=MassDensity;
+f=[F107 DBz]; %Hr and Bz
+[~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
+    pe1=pe_nonflag(x,xnew);
+    [~, ~, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    pe=pe_nonflag(x,xnew);
+    BigTable=[BigTable;{'F107+Bz',corr1,corr,pe1,pe}];
+f=[F107 DVsw]; %Bz and V
+[~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
+    pe1=pe_nonflag(x,xnew);
+    [~, ~, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    pe=pe_nonflag(x,xnew);
+    BigTable=[BigTable;{'F107+V',corr1,corr,pe1,pe}];
 
 
 %{
@@ -291,9 +315,9 @@ BigTable=[BigTable;{'BZHigh',NaN,corr2,NaN,pe2}];
 BigTable=sortrows(BigTable,2);
 for i=1:size(BigTable,1)
    if(BigTable{i,5}>-10)
-       fprintf(table,'%s \t %2.2f \t %2.2f \t %2.2f \t %2.2f\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
+       fprintf(table,'%s\t %2.2f \t %2.2f \t %2.2f \t %2.2f\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
    else
-       fprintf(table,'%s \t %2.2f \t %2.2f \t %2.2f \t %2.0e\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
+       fprintf(table,'%s\t %2.2f \t %2.2f \t %2.2f \t %2.0e\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
    end
 end
 fprintf(table,'\n</pre>');
@@ -304,7 +328,7 @@ system('cat README.txt table.txt > README.md');
 
 end
 
-function densityplot(x,ys,string,Na,Nb,corr,eff)
+function densityplot(x,ys,string,Na,Nb,corr,eff,visible)
 close all;
 test=size(ys);
 if test(1)>test(2) 
@@ -320,7 +344,7 @@ h=figure('Visible',visible);plot(x,ys)
 print(h,'-dpng',filestring)
 end
 
-function densitycoefplot(x,ys,string,Na,Nb,corr,eff)
+function densitycoefplot(x,ys,string,Na,Nb,corr,eff,visible)
 close all;
 h=figure('Visible',visible);
 plot(x,ys)
