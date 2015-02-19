@@ -14,54 +14,54 @@ specifically, WGhourFS_72_13.txt. The data are then formatted from white space s
 
 By looking at GOES spacecraft 6, the years 1983-1992 can be covered for prediction and modeling.
 
-All variables from the filled OMNI dataset were used as impulses with both 1 impulse coefficient, and 120 impulse coefficients, to determine how much difference a complete linear model made in predictability.
+All variables from the filled OMNI dataset were used as impulses with both 1 impulse coefficient, and 12 impulse coefficients (equivalent to 12 hours), to determine how much difference a complete linear model made in predictability.
 
 The table of correlation coefficients is in table.txt, and the plots of all variables (in the format OMNI_{var}.png) as well as all predicted datasets, and their corresponding coefficients (format density_{Var}_{num persist coef}_{num impulse coef}.png), are in the figures/ folder.
 
 This study so far seems to indicate that there is a value to using a linear impulse model for prediction. The statistical significance of any increase remains to be tested, but it certainly seems that the best linear predictor of solar wind density is Bz, and not just Bs. The next few things to look into are significance tests, nonlinear predictions, and a comparison of the prediction efficiency of large vs small Bz, and Bz with periods of precoditioning. 
 
-A table of correlations (prediction with 1 impulse coefficient vs with 120 coefficients) follows:
+A table of correlations (prediction with 1 impulse coefficient vs with 12 coefficients) follows:
 
 <pre>
-Input 	 CC(1) 	 CC(120) 	 PE(1) 	 PE(120)
-dst 	 -0.01 	 0.12 	 -0.00 	 0.01
-ByIMF 	 0.00 	 0.07 	 -0.00 	 0.01
-G1 	 0.01 	 0.12 	 -0.00 	 0.01
-Pdyn 	 0.01 	 0.10 	 -0.00 	 0.01
-W3 	 0.02 	 0.11 	 -0.00 	 0.01
-6stat 	 0.03 	 0.06 	 -0.00 	 0.00
-Day 	 0.04 	 0.02 	 0.00 	 -0.50
-DBS 	 0.04 	 0.05 	 0.00 	 0.00
-W4 	 0.04 	 0.09 	 0.00 	 0.01
-W6 	 0.04 	 0.09 	 0.00 	 0.01
-G3 	 0.05 	 0.08 	 0.00 	 0.00
-8stat 	 0.05 	 0.09 	 0.00 	 0.01
-W1 	 0.05 	 0.09 	 0.00 	 0.01
-kp 	 0.06 	 0.16 	 0.00 	 0.03
-W2 	 0.06 	 0.09 	 0.00 	 0.01
-G2 	 0.06 	 0.10 	 0.00 	 0.01
-BS 	 0.06 	 0.10 	 0.00 	 0.01
-VBS 	 0.07 	 0.11 	 0.00 	 0.01
-Hr 	 0.07 	 0.08 	 0.00 	 0.01
-W5 	 0.07 	 0.10 	 0.00 	 0.01
-akp3 	 0.07 	 0.17 	 0.00 	 0.03
-Den_P 	 0.07 	 0.15 	 0.00 	 0.02
-VBz 	 0.10 	 0.13 	 0.01 	 0.02
-DBz 	 0.12 	 0.15 	 0.01 	 0.02
-BzIMF 	 0.12 	 0.16 	 0.01 	 0.02
-Bz1 	 0.12 	 0.16 	 0.01 	 0.02
-Bz2 	 0.12 	 0.16 	 0.01 	 0.02
-Bz3 	 0.12 	 0.16 	 0.01 	 0.02
-Bz4 	 0.12 	 0.16 	 0.01 	 0.02
-Bz5 	 0.12 	 0.16 	 0.01 	 0.02
-Bz6 	 0.12 	 0.16 	 0.01 	 0.02
-Hr+Bz 	 0.14 	 0.03 	 0.02 	 -3e+21
-V_SW 	 0.17 	 0.19 	 0.03 	 0.03
-Bz+V 	 0.20 	 0.02 	 0.04 	 -4e+02
-Year 	 0.35 	 0.31 	 0.05 	 0.04
-lnF107 	 0.43 	 0.44 	 0.17 	 0.18
-F107 	 0.43 	 0.44 	 0.18 	 0.19
-F107+V 	 0.44 	 0.07 	 0.19 	 -1.99
-F107+Bz 	 0.45 	 0.44 	 0.19 	 -6e+01
+Input 	 CC1 	 CC12 	 PE(1) 	 PE(12)
+W3	 0.00 	 0.07 	 0.00 	 0.01
+Pdyn	 0.01 	 0.04 	 0.00 	 0.00
+ByIMF	 0.01 	 0.03 	 0.00 	 0.00
+Day	 0.02 	 0.20 	 0.00 	 0.04
+dst	 0.02 	 0.05 	 0.00 	 0.00
+G1	 0.02 	 0.07 	 0.00 	 0.00
+DBS	 0.04 	 0.05 	 0.00 	 0.00
+6stat	 0.04 	 0.04 	 0.00 	 0.00
+8stat	 0.05 	 0.05 	 0.00 	 0.00
+G3	 0.06 	 0.06 	 0.00 	 0.00
+W6	 0.06 	 0.06 	 0.00 	 0.00
+W4	 0.06 	 0.07 	 0.00 	 0.00
+Den_P	 0.07 	 0.08 	 0.01 	 0.01
+BS	 0.08 	 0.09 	 0.01 	 0.01
+W1	 0.08 	 0.08 	 0.01 	 0.01
+G2	 0.08 	 0.08 	 0.01 	 0.01
+VBS	 0.08 	 0.09 	 0.01 	 0.01
+W2	 0.08 	 0.09 	 0.01 	 0.01
+Hr	 0.09 	 0.21 	 0.01 	 0.05
+W5	 0.09 	 0.09 	 0.01 	 0.01
+kp	 0.10 	 0.13 	 0.01 	 0.02
+akp3	 0.11 	 0.15 	 0.01 	 0.02
+DBz	 0.12 	 0.13 	 0.01 	 0.02
+VBz	 0.12 	 0.16 	 0.02 	 0.03
+BzIMF	 0.14 	 0.20 	 0.02 	 0.04
+Bz1	 0.14 	 0.20 	 0.02 	 0.04
+Bz2	 0.14 	 0.20 	 0.02 	 0.04
+Bz3	 0.14 	 0.20 	 0.02 	 0.04
+Bz4	 0.14 	 0.20 	 0.02 	 0.04
+Bz5	 0.14 	 0.20 	 0.02 	 0.04
+Bz6	 0.14 	 0.20 	 0.02 	 0.04
+Hr+Bz	 0.16 	 0.28 	 0.03 	 0.08
+V_SW	 0.19 	 0.20 	 0.04 	 0.04
+Bz+V	 0.23 	 0.28 	 0.05 	 0.08
+Year	 0.36 	 0.36 	 0.13 	 0.13
+lnF107	 0.43 	 0.43 	 0.18 	 0.19
+F107	 0.43 	 0.43 	 0.19 	 0.19
+F107+V	 0.44 	 0.44 	 0.20 	 0.20
+F107+Bz	 0.45 	 0.45 	 0.20 	 0.20
 
 </pre>

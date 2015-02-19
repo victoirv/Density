@@ -13,7 +13,7 @@ HOUR=Hour(getyears);
 KP=Kp_index(getyears);
 %}
 FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
-FILLED=FILLED((FILLED(:,3)>10),:); %Hour greater than 10
+%FILLED=FILLED((FILLED(:,3)>10),:); %Hour greater than 10
 
 headers=textread('WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
@@ -107,6 +107,8 @@ BS=BS(gettime);
 OMNIDensity=OMNIDensity(gettime);
 FILLED=FILLED(gettime,:);
 OverlayFilled=FILLED;
+OHr=FILLED(:,3);
+DHr=hour(DentonTime);
 %Rescale to overlay on plots of density (where there's space from 150-250)
 for i=1:length(headers)
     OverlayFilled(:,i)=((250-150).*(OverlayFilled(:,i)-min(OverlayFilled(:,i))))./(max(OverlayFilled(:,i))-min(OverlayFilled(:,i))) + 150;
@@ -141,14 +143,17 @@ end
 Na=0;
 lag=0;
 advance=0;
+slice=0;
+slicemin=10;
+slicemax=24;
+
 
 %x=detrend(MassDensitySpline);
 x=MassDensitySpline;
 
-
 %{ 
 %Figure out what's going on with the year
-[ca, cb, cc,xnew,corr] = IRboot(x,FILLED(:,1),Na,Nb,lag,advance);
+[ca, cb, cc,xnew,corr] = IR(x,FILLED(:,1),Na,Nb,lag,advance);
 figure; plot(xnew,MassDensitySpline,'+')
 
 xm=mean(x);
@@ -177,12 +182,11 @@ corrcoef(test,x)
 
 
 if(MakePlots)
-    Hr=hour(DentonTime);
     for i=0:23
-        avf107(i+1)=mean(F107(Hr==i));
-        avdens(i+1)=mean(MassDensity(Hr==i));
-        avvsw(i+1)=mean(DVsw(Hr==i));
-        avbz(i+1)=mean(DBz(Hr==i));
+        avf107(i+1)=mean(F107(DHr==i));
+        avdens(i+1)=mean(MassDensity(DHr==i));
+        avvsw(i+1)=mean(DVsw(DHr==i));
+        avbz(i+1)=mean(DBz(DHr==i));
     end
     avf107=(avf107-min(avf107))/(max(avf107)-min(avf107));
     avdens=(avdens-min(avdens))/(max(avdens)-min(avdens));
@@ -237,19 +241,28 @@ end
 %x=detrend(MassDensitySpline);
 
 %Open the table for writing
-table=fopen('table.txt','w');
+if(slice)
+    table=fopen('tableslice.txt','w');
+else
+    table=fopen('table.txt','w');
+end
 fprintf(table,'<pre>\n');
-Nb1=1;
-Nb=120;
+Nb1=1; %Just in case?
+Nb=12;
 x=MassDensitySpline;
-fprintf(table,'Input \t CC1 \t CC120 \t PE(1) \t PE(120)\n');
+fprintf(table,'Input \t CC1 \t CC12 \t PE(1) \t PE(12)\n');
 BigTable={};
 for i=1:length(headers)
     f=FILLED(:,i);
-    [~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
-    pe1=pe_nonflag(x,xnew);
-    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb1,corr1,pe1,visible), end
-    [~, cb, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    if(slice)
+        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,OHr,slicemin,slicemax);
+        [~,cb,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,OHr,slicemin,slicemax);
+    else
+        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+        [~, cb, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance); 
+    end
+    pe1=pe_nonflag(x,xnew1);
+    if(MakePlots), densityplot(OMNITime,[x,xnew1,OverlayFilled(:,i)],headers{i},Na,Nb1,corr1,pe1,visible), end
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{headers{i},corr1,corr,pe1,pe}];
     if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe,visible), end
@@ -259,10 +272,15 @@ end
 x=MassDensity;
 for i=1:length(dheaders)
     f=DFILLED(:,i);
-    [~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance);
-    pe1=pe_nonflag(x,xnew);
-    if(MakePlots), densityplot(OMNITime,[x,xnew,DOverlayFilled(:,i)],dheaders{i},Na,Nb1,corr1,pe1,visible), end
-    [~, cb, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    if(slice)
+        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,DHr,slicemin,slicemax);
+        [~,cb,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,DHr,slicemin,slicemax);
+    else
+        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+        [~, cb, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance); 
+    end
+    pe1=pe_nonflag(x,xnew1);
+    if(MakePlots), densityplot(OMNITime,[x,xnew1,DOverlayFilled(:,i)],dheaders{i},Na,Nb1,corr1,pe1,visible), end
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{dheaders{i},corr1,corr,pe1,pe}];
     if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe,visible), end
@@ -272,46 +290,54 @@ end
 %Now for doubles
 x=MassDensitySpline;
 f=[FILLED(:,3) FILLED(:,5)]; %Hr and Bz
-[~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
-    pe1=pe_nonflag(x,xnew);
-    [~, ~, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    if(slice)
+        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,OHr,slicemin,slicemax);
+        [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,OHr,slicemin,slicemax);
+    else
+        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+        [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
+    end
+    pe1=pe_nonflag(x,xnew1);
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{'Hr+Bz',corr1,corr,pe1,pe}];
+    
 f=[FILLED(:,5) FILLED(:,6)]; %Bz and V
-[~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
-    pe1=pe_nonflag(x,xnew);
-    [~, ~, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    if(slice)
+        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,OHr,slicemin,slicemax);
+        [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,OHr,slicemin,slicemax);
+    else
+        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+        [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
+    end
+    pe1=pe_nonflag(x,xnew1);
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{'Bz+V',corr1,corr,pe1,pe}];
 
 x=MassDensity;
-f=[F107 DBz]; %Hr and Bz
-[~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
-    pe1=pe_nonflag(x,xnew);
-    [~, ~, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+f=[F107 DBz]; %F107 and Bz
+    if(slice)
+        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,DHr,slicemin,slicemax);
+        [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,DHr,slicemin,slicemax);
+    else
+        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+        [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
+    end
+    pe1=pe_nonflag(x,xnew1);
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{'F107+Bz',corr1,corr,pe1,pe}];
 f=[F107 DVsw]; %Bz and V
-[~,~,~,xnew,corr1] = IRboot(x,f,Na,Nb1,lag,advance); 
-    pe1=pe_nonflag(x,xnew);
-    [~, ~, ~,xnew,corr] = IRboot(x,f,Na,Nb,lag,advance);
+    if(slice)
+        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,DHr,slicemin,slicemax);
+        [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,DHr,slicemin,slicemax);
+    else
+        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+        [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
+    end
+    pe1=pe_nonflag(x,xnew1);
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{'F107+V',corr1,corr,pe1,pe}];
 
 
-%{
-[ca, ca2, cb, cb2, cc, cc2, xnew, xnew2, corr, corr2] = IRsortboot(MassDensity,FILLED(:,5),FILLED(:,5),100,Na,1,lag,advance);
-pe=pe_nonflag(MassDensity,xnew);
-pe2=pe_nonflag(MassDensity,xnew2);
-densityplot(DentonTime,[MassDensity,xnew,OverlayFilled(:,5)],'BzHigh',Na,Nb,corr,pe)
-densityplot(DentonTime,[MassDensity,xnew2,OverlayFilled(:,5)],'BzLow',Na,Nb,corr2,pe2)
-densitycoefplot(-advance:Nb-advance-1,flipud(cb),'BzHigh',Na,Nb,corr,pe)
-densitycoefplot(-advance:Nb-advance-1,flipud(cb2),'BzLow',Na,Nb,corr2,pe2)
-%fprintf(table,'BZHigh \t -- \t %2.5f \t -- \t %2.5f\n',corr,pe);
-%fprintf(table,'BZLow \t -- \t %2.5f \t -- \t %2.5f\n',corr2,pe2);
-BigTable=[BigTable;{'BZHigh',NaN,corr,NaN,pe}];
-BigTable=[BigTable;{'BZHigh',NaN,corr2,NaN,pe2}];
-%}
 BigTable=sortrows(BigTable,2);
 for i=1:size(BigTable,1)
    if(BigTable{i,5}>-10)
@@ -324,8 +350,6 @@ fprintf(table,'\n</pre>');
 
 fclose(table);
 system('cat README.txt table.txt > README.md');
-
-
 end
 
 function densityplot(x,ys,string,Na,Nb,corr,eff,visible)

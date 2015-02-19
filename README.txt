@@ -14,11 +14,16 @@ specifically, WGhourFS_72_13.txt. The data are then formatted from white space s
 
 By looking at GOES spacecraft 6, the years 1983-1992 can be covered for prediction and modeling.
 
-All variables from the filled OMNI dataset were used as impulses with both 1 impulse coefficient, and 120 impulse coefficients, to determine how much difference a complete linear model made in predictability.
+All variables from the filled OMNI dataset were used as impulses with both 1 impulse coefficient, and 12 impulse coefficients (equivalent to 12 hours), to determine how much difference a complete linear model made in predictability.
 
 The table of correlation coefficients is in table.txt, and the plots of all variables (in the format OMNI_{var}.png) as well as all predicted datasets, and their corresponding coefficients (format density_{Var}_{num persist coef}_{num impulse coef}.png), are in the figures/ folder.
 
 This study so far seems to indicate that there is a value to using a linear impulse model for prediction. The statistical significance of any increase remains to be tested, but it certainly seems that the best linear predictor of solar wind density is Bz, and not just Bs. The next few things to look into are significance tests, nonlinear predictions, and a comparison of the prediction efficiency of large vs small Bz, and Bz with periods of precoditioning. 
 
-A table of correlations (prediction with 1 impulse coefficient vs with 120 coefficients) follows:
+Some interesting things to note from the following table (added here for ease of concatenation): 
+-For 1 hour time steps, Bz outperforms B_south in predicting mass density. 
+-Though F10.7 is still a significant predictor, it's not nearly as effective at 1 hour increments as it is on 27 day averages
+-Looking at figures/avf107.png shows that the variables seem to have a strong dependence on hour. However, stripping the data to only predict mass density after 10AM UT only seems to affect models that include hour.
+
+The table of correlations (prediction with 1 impulse coefficient vs with 12 coefficients) follows:
 
