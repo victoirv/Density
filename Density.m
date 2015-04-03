@@ -13,7 +13,25 @@ HOUR=Hour(getyears);
 KP=Kp_index(getyears);
 %}
 FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
-%FILLED=FILLED((FILLED(:,3)>10),:); %Hour greater than 10
+%FILLED=FILLED((FILLED(:,15)>-30),:); %DST less than -30
+
+%Find a good storm
+
+%FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
+
+startt=727547.333333; 
+%DST Storm: 726479.750000;
+%Mass Storm: 725858.250000 - 20
+selectduration=22;
+OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
+starti=find(floor(OMNITime*100000)==floor(startt*100000)); %Rounding error?
+%starti=find(OMNITime==startt);
+%FILLED=FILLED(starti:starti+selectduration,:);
+%{
+%}
+
+%FILLED=FILLED((FILLED(:,1)==2000),:); %Year 2000
+%FILLED=FILLED((FILLED(:,2)==43),:); %February 12 (Day 31+12)
 
 headers=textread('WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
@@ -28,7 +46,7 @@ if(exist('DentonDensityAndTime.mat','file'))
     load('DentonDensityAndTime')
 else
     IN=dlmread('massdensity.txt');
-    IN(IN(:,1)~=6,:)=[]; %Only use satellite 7 (6 should also work)
+    IN(IN(:,1)~=7,:)=[]; %Only use satellite 7 (6 should also work)
     %IN=sortrows(IN,2);
     IN(IN==9999)=NaN;
     
@@ -94,6 +112,10 @@ rsq = 1 -sum(yresid.^2)/((length(y27)-1) * var(y27))
 ignore=1;%For breakpoint
 %}
 
+%Test subtracting F10.7 trend from mass density
+%[~, cb, ~,xnew,corr] = IR(log(MassDensity),log(F107),0,12,0,0);
+%MassDensity=exp(log(MassDensity)-xnew);
+
 
 gettime=OMNITime>min(DentonTime);
 gettime=gettime+(OMNITime<max(DentonTime));
@@ -124,6 +146,48 @@ OverlayDBS=((250-150).*(DBS-min(DBS)))./(max(DBS)-min(DBS)) + 150;
 MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
 MassDensitySpline=MassDensitySpline';
 
+ 
+%Find storm with enough data to analyze
+%storms=diff([0 (FILLED(:,15)<-30)' 0]);
+MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
+storms=diff([0 (MassDensityNanSpline>40)' 0]);
+starti=find(storms>0);
+endi=find(storms<0)-1;
+duration=endi-starti+1;
+stormi=1;
+AVMat=[];
+AVMDMat=[];
+
+starti(1)=[]; endi(1)=[]; starti(end)=[]; endi(end)=[];
+for i=1:length(starti)
+
+   datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
+   %if(datanum>(endi(i)-starti(i))/2 && datanum>18)
+       %AVMat(stormi,:,:)=FILLED((starti(i)-24):starti(i),:);
+       %AVMDMat(stormi,:)=MassDensitySpline((starti(i)-24):starti(i));
+       AVMat(stormi,:,:)=FILLED((starti(i)-24):starti(i)+48,:);
+       AVMDMat(stormi,:)=MassDensitySpline((starti(i)-24):starti(i)+48);
+       stormi=stormi+1;
+       fprintf('%6f - %3d \n',OMNITime(starti(i)),endi(i)-starti(i))
+  % end
+end
+AVs=nanmean(AVMat,1);
+AVMDs=nanmean(AVMDMat);
+AVnnans=sum(~isnan(AVMDMat));
+for i=1:length(AVs)
+    subplot('position',subplotstack(5,mod(i,4)+1));plot(AVs(1,:,i),'+-');
+    ylabel(headers{i})
+    if(mod(i,4)==0)
+        subplot('position',subplotstack(5,5)); [AX,H1,H2]=plotyy(1:length(AVMDs),AVMDs(1,:),1:length(AVMDs),AVnnans,'plot','bar'); 
+        set(AX(2),'Xlim',[1 length(AVMDs)]); set(AX(1),'Xlim',[1 length(AVMDs)]); set(get(H2,'child'),'facea',.3); set(H1,'marker','+','color','red'); set(AX(1),'YColor','r');
+        %drawnow; hold on; xlim manual; h=bar(AVnnans); ch = get(h,'child'); set(ch,'facea',.3)
+        ylabel(AX(1),'Mass Density'); ylabel(AX(2),'non-nan datapoints');
+        %xlabel('Time before storm onset (hr)')
+        print('-dpng',sprintf('figures/stormavs-%d',i));
+        close all
+    end
+end
+
 
 %%%%%Make Plots?
 MakePlots=0;
@@ -138,6 +202,30 @@ ylabel('Density')
 xlabel('Time')
 datetick
 print -dpng figures/densitycomp.png
+end
+
+if(MakePlots) %Make plot showing that most of F10.7 and Mass Density correlation is from long term effects
+    [~, cb, ~,xnew,corr] = IR(log(MassDensity),log(F107),0,12,0,0);
+    h=figure('Visible',visible); 
+    plot(DentonTime,log(MassDensity));
+    hold on;
+    plot(DentonTime,xnew,'g')
+    xlabel('Time')
+    ylabel('log(Mass Density)')
+    legend('Data','Predicted')
+    title(sprintf('Predicting Mass Density from F10.7 - cc(12)=%2.2f',corr))
+    print -dpng figures/longtermf107.png
+end
+
+if(MakePlots)
+    plot(OverlayBS)
+    hold on; plot(OverlayVBz,'r')
+    plot(MassDensitySpline,'g')
+    plot(OverlayFilled(:,15),'k')
+    legend('BS','VBz','MassDensity','DST','F10.7','Location','SouthWest')
+    timestr=datestr(startt)
+    title(timestr)
+    print -dpng figures/onestorm-4.png
 end
 
 Na=0;
@@ -179,7 +267,13 @@ test2=1:lx;
 corrcoef(test,x)
 %}
 
-
+%Calculate correlation coefficients
+cc=corrcoef(F107,DVsw);
+fprintf('F10.7 Vsw: %2.2f \n',cc(2))
+cc=corrcoef(F107,DBz);
+fprintf('F10.7 Bz: %2.2f \n',cc(2))
+cc=corrcoef(x,FILLED(:,15),'rows','complete');
+fprintf('DST MassDensity: %2.2f \n',cc(2))
 
 if(MakePlots)
     for i=0:23
@@ -237,6 +331,18 @@ if(MakePlots && ~exist(sprintf('figures/Denton_%s.png',dheaders{1}),'file'))
         print('-dpng',filestring)
     end
 end
+if(MakePlots && ~exist(sprintf('figures/Density_vs_%s.png',dheaders{1}),'file'))
+    for i=1:length(headers)
+        close all;
+        h=figure('Visible',visible);plot(MassDensitySpline,FILLED(:,i),'+')
+        ylabel(headers{i})
+        xlabel('Mass Density')
+        cc=corrcoef(MassDensitySpline,FILLED(:,i),'rows','complete');
+        title(sprintf('%s - cc:%2.2f',headers{i},cc(2)))
+        filestring=sprintf('figures/Density_vs_%s.png',headers{i});
+        print('-dpng',filestring)
+    end
+end
 
 %x=detrend(MassDensitySpline);
 
@@ -249,7 +355,7 @@ end
 fprintf(table,'<pre>\n');
 Nb1=1; %Just in case?
 Nb=12;
-x=MassDensitySpline;
+x=log(MassDensitySpline);
 fprintf(table,'Input \t CC1 \t CC12 \t PE(1) \t PE(12)\n');
 BigTable={};
 for i=1:length(headers)
@@ -269,7 +375,7 @@ for i=1:length(headers)
     if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe,visible), end
 end
 
-x=MassDensity;
+x=log(MassDensity);
 for i=1:length(dheaders)
     f=DFILLED(:,i);
     if(slice)
@@ -280,15 +386,15 @@ for i=1:length(dheaders)
         [~, cb, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance); 
     end
     pe1=pe_nonflag(x,xnew1);
-    if(MakePlots), densityplot(OMNITime,[x,xnew1,DOverlayFilled(:,i)],dheaders{i},Na,Nb1,corr1,pe1,visible), end
+    if(MakePlots), densityplot(DentonTime,[x,xnew1,DOverlayFilled(:,i)],dheaders{i},Na,Nb1,corr1,pe1,visible), end
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{dheaders{i},corr1,corr,pe1,pe}];
-    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe,visible), end
+    if(MakePlots), densityplot(DentonTime,[x,xnew,DOverlayFilled(:,i)],headers{i},Na,Nb,corr,pe,visible), end
     if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe,visible), end
 end
 
 %Now for doubles
-x=MassDensitySpline;
+x=log(MassDensitySpline);
 f=[FILLED(:,3) FILLED(:,5)]; %Hr and Bz
     if(slice)
         [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,OHr,slicemin,slicemax);
@@ -313,7 +419,7 @@ f=[FILLED(:,5) FILLED(:,6)]; %Bz and V
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{'Bz+V',corr1,corr,pe1,pe}];
 
-x=MassDensity;
+x=log(MassDensity);
 f=[F107 DBz]; %F107 and Bz
     if(slice)
         [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,DHr,slicemin,slicemax);
