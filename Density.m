@@ -143,12 +143,22 @@ OverlayDBz=((250-150).*(DBz-min(DBz)))./(max(DBz)-min(DBz)) + 150;
 OverlayDBS=((250-150).*(DBS-min(DBS)))./(max(DBS)-min(DBS)) + 150;
 
 %MassDensitySpline=interp1(DentonTime,MassDensity,OMNITime,'linear');
-MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
-MassDensitySpline=MassDensitySpline';
+if(exist('InterpedVals.mat','file'))
+    load('InterpedVals')
+else
+    MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
+    F107Spline=interptest(DentonTime,F107,OMNITime,(OMNITime(2)-OMNITime(1))/2);
+    MassDensitySpline=MassDensitySpline';
+    F107Spline=F107Spline';
+    save('InterpedVals','MassDensitySpline','F107Spline');
+end
+
+FILLED=[FILLED F107Spline];
+headers{end+1}='F107';
 
  
 %Find storm with enough data to analyze
-%storms=diff([0 (FILLED(:,15)<-30)' 0]);
+storms=diff([0 (FILLED(:,15)<-50)' 0]);
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
 storms=diff([0 (MassDensityNanSpline>40)' 0]);
 starti=find(storms>0);
@@ -157,8 +167,13 @@ duration=endi-starti+1;
 stormi=1;
 AVMat=[];
 AVMDMat=[];
-
-starti(1)=[]; endi(1)=[]; starti(end)=[]; endi(end)=[];
+maxwidth=48;
+while(starti(1)-maxwidth<1)
+    starti(1)=[]; endi(1)=[]; 
+end
+while(endi(end)+maxwidth>length(MassDensitySpline))
+    starti(end)=[]; endi(end)=[];
+end
 for i=1:length(starti)
 
    datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
@@ -174,10 +189,10 @@ end
 AVs=nanmean(AVMat,1);
 AVMDs=nanmean(AVMDMat);
 AVnnans=sum(~isnan(AVMDMat));
-for i=1:length(AVs)
+for i=1:length(headers)
     subplot('position',subplotstack(5,mod(i,4)+1));plot(AVs(1,:,i),'+-');
     ylabel(headers{i})
-    if(mod(i,4)==0)
+    if(mod(i,4)==0 || i==length(headers))
         subplot('position',subplotstack(5,5)); [AX,H1,H2]=plotyy(1:length(AVMDs),AVMDs(1,:),1:length(AVMDs),AVnnans,'plot','bar'); 
         set(AX(2),'Xlim',[1 length(AVMDs)]); set(AX(1),'Xlim',[1 length(AVMDs)]); set(get(H2,'child'),'facea',.3); set(H1,'marker','+','color','red'); set(AX(1),'YColor','r');
         %drawnow; hold on; xlim manual; h=bar(AVnnans); ch = get(h,'child'); set(ch,'facea',.3)
@@ -191,6 +206,7 @@ end
 
 %%%%%Make Plots?
 MakePlots=0;
+MakePaperPlots=1;
 visible='off';
 
 %Compare the two densities
@@ -202,6 +218,33 @@ ylabel('Density')
 xlabel('Time')
 datetick
 print -dpng figures/densitycomp.png
+end
+
+if(MakePaperPlots)
+h=figure('Visible',visible); 
+h2=subplot('position',subplotstack(5,2));plot((1:length(AVMDs))-24,AVs(1,:,6),'+-'); ylabel('V\_sw');%V_sw
+h1=subplot('position',subplotstack(5,1));plot((1:length(AVMDs))-24,AVs(1,:,5),'+-'); ylabel('Bz'); %Bz
+h3=subplot('position',subplotstack(5,3));plot((1:length(AVMDs))-24,AVs(1,:,15),'+-');ylabel('DST');%dst
+h4=subplot('position',subplotstack(5,4));plot((1:length(AVMDs))-24,AVs(1,:,29),'+-');ylabel('F10.7');%f107
+set(findobj('type','axes'),'xticklabel',{[]})
+        subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy((1:length(AVMDs))-24,AVnnans,(1:length(AVMDs))-24,AVMDs(1,:),'bar','plot'); 
+        set(AX(2),'Xlim',[1 length(AVMDs)]-24); set(AX(1),'Xlim',[1 length(AVMDs)]-24);  set(H6,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H5,'child'),'FaceColor',[0 0.5 0.5]);
+        ylabel(AX(1),'Mass Density'); ylabel(AX(2),'non-nan datapoints');
+        set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-24:12:48])
+        linkaxes([AX h1 h2 h3 h4],'x')
+        xlabel('Time from storm onset (hr)')
+        print -dpng paperfigures/stormavs-1.png
+end
+
+if(MakePlots)
+    NanPH=zeros(1,24);
+    for i=0:23
+   NanPH(i+1)=sum(isnan(MassDensitySpline(hour(OMNITime)==i)));
+    end
+    plot(0:23,NanPH);
+    ylabel('Nans per hour')
+    xlabel('Hour (UT)')
+    print -dpng figures/nanph.png
 end
 
 if(MakePlots) %Make plot showing that most of F10.7 and Mass Density correlation is from long term effects

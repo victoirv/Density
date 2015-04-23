@@ -1,0 +1,37 @@
+\documentclass[10pt]{article}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{fancyhdr}
+\usepackage{amssymb,amsmath}
+\usepackage{nicefrac}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[colorlinks,citecolor=RedViolet,urlcolor=blue]{hyperref}
+\usepackage{doi}
+\usepackage{setspace}
+\usepackage[paperwidth=8.5in, paperheight=11in,top=2in, bottom=1.5in, left=1.2in, right=1.2in]{geometry}
+
+\usepackage[authoryear,square]{natbib}
+\pagestyle{fancy}
+\fancyhead[R]{Veibell \thepage}
+\fancyhead[L]{}
+
+\begin{document}
+\title{Geomagnetic Storm Precursors}
+\author{Victoir Veibell\footnote{vveibell@gmu.edu}}
+\maketitle
+\hrule
+\setlength{\parskip}{3ex}
+\renewcommand{\labelitemi}{$-$}
+
+\section{Prior work}
+\citep{Takahashi} state that spikes in the Disturbance Storm Time (DST) index coincide with with significant changes in equatorial mass density. They look at five specific storms over a 20 day period with evidence that two had density spikes after the DST drop, two had density spikes before the drop, and one showed no effect. 
+
+\section{Our work}
+Our work takes the datasets from \citep{Denton} and \citep{Reconstruction}, uses a mean interpolation to take the mass density parameter from a highly non-uniform 15 minute grid of the former to the contiguous one hour grid of the latter, and looks for storms based on the definition of storm periods provided by \citep{Takahashi}, namely when $DST<-50nT$. The former has a time coverage of 1980-1991, but covered by different satellites in different years (sometimes with overlap), and the latter data set covers 1972-2013. By then looking at an hourly average of variables from 24 hours before storm onset to 48 hours after, trends in storms can be discerned. 
+
+
+\bibliographystyle{vplainnat}
+
+\bibliography{reportbib}
+
+\end{document}
