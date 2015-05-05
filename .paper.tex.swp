@@ -24,18 +24,19 @@
 \renewcommand{\labelitemi}{$-$}
 
 \section{Prior work}
-\citep{Takahashi} state that spikes in the Disturbance Storm Time (DST) index coincide with with significant changes in equatorial mass density. They look at five specific storms over a 20 day period with evidence that two had density spikes after the DST drop, two had density spikes before the drop, and one showed no effect. 
+\citep{Takahashi} state that spikes in the Disturbance Storm Time ($D_{ST}$) index coincide with with significant changes in equatorial mass density. They look at five specific storms over a 20 day period with evidence that two had density spikes after the $D_{ST}$ drop, two had density spikes before the drop, and one showed no effect. 
 
 \section{Our work}
-Our work takes the datasets from \citep{Denton} and \citep{Reconstruction}, uses a mean interpolation to take the mass density parameter from a highly non-uniform 15 minute grid of the former to the contiguous one hour grid of the latter, and looks for storms based on the definition of storm periods provided by \citep{Takahashi}, namely when $DST<-50nT$. The former has a time coverage of 1980-1991, but covered by different satellites in different years (sometimes with overlap), and the latter data set covers 1972-2013. By then looking at an hourly average of variables from 24 hours before storm onset to 48 hours after, trends in storms can be discerned. 
+Our work takes the datasets from \citep{Denton} and \citep{Reconstruction}, uses a mean interpolation to take the mass density parameter from a highly non-uniform 15 minute grid of the former to the contiguous one hour grid of the latter, and looks for storms based on the definition of storm periods provided by \citep{Takahashi}, namely when $D_{ST}<-50nT$. The former has a time coverage of 1980-1991, but covered by different satellites in different years (sometimes with overlap), and the latter data set covers 1972-2013. By then looking at an hourly average of variables from 24 hours before storm onset to 48 hours after, trends in storms can be discerned. 
 
 \subsection{DST Storm}
-Two storm indicators are looked at in this study. The first is looking for a drop in DST below the threshhold of $-50nT$ specified in \citep{Takahashi}. This method finds 668 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. A subset of long duration storms will be looked at later. Figure \ref{DSTstorm} shows the average values of $B_Z$, $V_{SW}$, $DST$, $F_{10.7}$, and Mass Density for a period of 24 hours before and 48 hours after a storm onset. 
+Two storm indicators are looked at in this study. The first is looking for a drop in DST below the threshhold of $-50nT$ specified in \citep{Takahashi}. This method finds 668 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. A subset of long duration storms will be looked at later. Figure \ref{DSTstorm} shows the average values of $B_Z$, $V_{SW}$, $D_{ST}$, $F_{10.7}$, and Mass Density for a period of 24 hours before and 48 hours after a storm onset. 
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.50]{paperfigures/stormavs-dst.png}
-\caption{DST Storms}
+\includegraphics[scale=0.35]{paperfigures/alldata.png}
+\includegraphics[scale=0.35]{paperfigures/massdensitystorms.png}
+\caption{All used data (left) and selected storm times highlighted (right)}
 \label{DSTstorm}
 \end{figure}
 
@@ -46,9 +47,9 @@ Figure \ref{MassStorm} shows this same algorithm, but looking for a rise in mass
 
 \begin{figure}[htp!]
 \centering
-\includegraphics[scale=0.35]{paperfigures/massdensitystorms.png}
+\includegraphics[scale=0.35]{paperfigures/stormavs-dst.png}
 \includegraphics[scale=0.35]{paperfigures/stormavs-mass.png}
-\caption{Mass Density Storms}
+\caption{$D_{ST}<-40nT$ onset, Mass Density $>40 g/cm^3$}
 \label{MassStorm}
 \end{figure}
 
@@ -65,13 +66,13 @@ It's hypothesized that progressively picking more specific storm criteria will a
 \label{Mspec}
 \end{figure}
 
-Neither of these seem to indicate anything too significant, so looking at $DST$ storms instead to look for something that causes a significant change in Mass Density results in Figure \ref{Dspec}. This shows that by either looking only at $DST$ storms that last longer than an hour (left) or at storms where the onset condition is $DST<-80nT$, a spike in mass density is seen, but also a definite lack of data availability. 
+Neither of these seem to indicate anything too significant, so looking at $D_{ST}$ storms instead to look for something that causes a significant change in Mass Density results in Figure \ref{Dspec}. This shows that by either looking only at $D_{ST}$ storms that last longer than an hour (left) or at storms where the onset condition is $D_{ST}<-80nT$, a spike in mass density is seen, but also a definite lack of data availability. 
 
 \begin{figure}[htp!]
 \centering
 \includegraphics[scale=0.35]{paperfigures/stormavs-dd12.png}
 \includegraphics[scale=0.35]{paperfigures/stormavs-d80.png}
-\caption{Specific $DST$ Storms}
+\caption{$D_{ST}$ Storms $>$ 12 hours, $D_{ST}<-80nT$}
 \label{Dspec}
 \end{figure}
 

@@ -183,7 +183,6 @@ while(endi(end)+maxwidth>length(MassDensitySpline))
     starti(end)=[]; endi(end)=[];
 end
 for i=1:length(starti)
-
    datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
    %if(datanum>(endi(i)-starti(i))/2 && datanum>18)
        %AVMat(stormi,:,:)=FILLED((starti(i)-24):starti(i),:);
@@ -205,31 +204,49 @@ visible='off';
 
 %Compare the two densities
 if(MakePlots)
-h=figure('Visible',visible); plot(OMNITime,MassDensitySpline);hold on; plot(OMNITime,OMNIDensity,'r')
-legend('Denton','OMNI','Location','NorthEast')
-title('OMNI Density vs Denton Density')
-ylabel('Density')
-xlabel('Time')
-datetick
-print -dpng figures/densitycomp.png
+    h=figure('Visible',visible); plot(OMNITime,MassDensitySpline);hold on; plot(OMNITime,OMNIDensity,'r')
+    legend('Denton','OMNI','Location','NorthEast')
+    title('OMNI Density vs Denton Density')
+    ylabel('Density')
+    xlabel('Time')
+    datetick
+    print -dpng figures/densitycomp.png
 end
 
 if(MakePaperPlots)
 h=figure('Visible',visible); 
-h2=subplot('position',subplotstack(5,2));plot((1:length(AVMDs))-24,AVs(1,:,6),'+-'); ylabel('V\_sw');%V_sw
-h1=subplot('position',subplotstack(5,1));plot((1:length(AVMDs))-24,AVs(1,:,5),'+-'); ylabel('Bz'); %Bz
-h3=subplot('position',subplotstack(5,3));plot((1:length(AVMDs))-24,AVs(1,:,15),'+-');ylabel('DST');%dst
-h4=subplot('position',subplotstack(5,4));plot((1:length(AVMDs))-24,AVs(1,:,29),'+-');ylabel('F10.7');%f107
+h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); ylabel('Bz (nT)'); %Bz
+h2=subplot('position',subplotstack(5,2));plot(OMNITime,FILLED(:,6),'.'); ylabel('V_{SW} (km/s)');%V_sw
+h3=subplot('position',subplotstack(5,3));plot(OMNITime,FILLED(:,15),'.');yl=ylabel('D_{ST} (nT)'); set(yl,'Units','Normalized','Position',[-.03 0.5 0]);
+h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,29),'.');ylabel('F10.7 (s.f.u.)');%f107
+h5=subplot('position',subplotstack(5,5));plot(OMNITime,MassDensitySpline,'r.');ylabel('Mass Density (g/cm^3)');%f107
+set(findobj('type','axes'),'xticklabel',{[]}); 
+set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
+datetick('x')
+set(findobj('type','axes'),'xtick',get(h5,'xtick'))
+axis tight;
+        linkaxes([h5 h1 h2 h3 h4],'x')
+        xlabel('Time')
+        set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on'); 
+        print -dpng paperfigures/alldata.png
+        
+        h=figure('Visible',visible); 
+h2=subplot('position',subplotstack(5,2));plot((1:length(AVMDs))-24,AVs(1,:,6),'+-'); ylabel('V_{SW} (km/s)');%V_sw
+h1=subplot('position',subplotstack(5,1));plot((1:length(AVMDs))-24,AVs(1,:,5),'+-'); ylabel('Bz (nT)'); %Bz
+h3=subplot('position',subplotstack(5,3));plot((1:length(AVMDs))-24,AVs(1,:,15),'+-');ylabel('D_{ST} (nT)');%dst
+h4=subplot('position',subplotstack(5,4));plot((1:length(AVMDs))-24,AVs(1,:,29),'+-');ylabel('F10.7 (s.f.u.)');%f107
 set(findobj('type','axes'),'xticklabel',{[]})
         stime=(1:length(AVMDs))-24;
         stimev=[stime(1) stime(end)];
         subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(stime,AVMDs(1,:),stime,AVnnans,'plot','bar'); 
         set(AX(2),'Xlim',stimev); set(AX(1),'Xlim',stimev);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
-        ylabel(AX(1),'Mass Density'); ylabel(AX(2),'non-nan datapoints');
+        ylabel(AX(1),'Mass Density (g/cm^3)'); ylabel(AX(2),'non-nan datapoints');
         set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-24:12:48])
         linkaxes([AX h1 h2 h3 h4],'x')
         xlabel('Time from storm onset (hr)')
+        set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms',length(duration)));set(gca,'Visible','off');set(h,'Visible','on'); 
         print -dpng paperfigures/stormavs-1.png
+        
 end
 
 if(MakePaperPlots)
