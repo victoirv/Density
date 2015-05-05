@@ -159,7 +159,7 @@ headers{end+1}='F107';
  
 %Find storm with enough data to analyze
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
-storms=diff([0 (FILLED(:,15)<-80)' 0]); %DST Storm
+storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
 %storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
 starti=find(storms>0);
 endi=find(storms<0)-1;
