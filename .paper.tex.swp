@@ -16,7 +16,7 @@
 \fancyhead[L]{}
 
 \begin{document}
-\title{Geomagnetic Storm Precursors}
+\title{Relationship between storm time disturbance and mass density on short time scales}
 \author{Victoir Veibell\footnote{vveibell@gmu.edu}}
 \maketitle
 \hrule
@@ -24,13 +24,23 @@
 \renewcommand{\labelitemi}{$-$}
 
 \section{Prior work}
-\citep{Takahashi} state that spikes in the Disturbance Storm Time ($D_{ST}$) index coincide with with significant changes in equatorial mass density. They look at five specific storms over a 20 day period with evidence that two had density spikes after the $D_{ST}$ drop, two had density spikes before the drop, and one showed no effect. 
+\citep{Takahashi2010} state that spikes in the Disturbance Storm Time ($D_{ST}$) index coincide with with significant changes in equatorial mass density. They look at five specific storms over a 20 day period with evidence that two had density spikes after the $D_{ST}$ drop, two had density spikes before the drop, and one showed no effect. They then show an epoch analysis where mass density is seen to spike the day of a mass density drop, using a daily average of 30 minute mass density and one hour $D_{ST}$ measurements. 
+
+The prior paper, \citep{Takahashi2006}, show how trends in storm dependence on mass/density only appear in longer timescales. Looking at $Kp$ vs mass ($amu$) between a field shell line of 6 and 7 $R_E$, a trend shows up in the 1.5 day averages that doesn't appear in the 3 hour averages.
+
+\citep{Lavraud2006} show that storms preceded by a northward interplanetary magnetic field (IMF) tend to have higher plasma density than those preceded by a southward IMF, and suggest an increased geoeffectiveness from a northward IMF and dense plasma sheet.
+
+\citep{Tsurutani1997} show how the density of a corotating interaction region (CIR) shows strong preconditioning for a drop in $D_{ST}$ and spike in magnetic field intensity. Assuming a reasonable amount of coupling between that region's density and the plasmaspheric density, this result could be relatable to others focusing on the plasmasphere. 
+
+\citep{Denton2006} show how $D_{ST}$ affects the distribution of plasma density along different magnetic latitudes, and specifically along the same field lines as looked at in later papers (6-8$R_E$).
 
 \section{Our work}
-Our work takes the datasets from \citep{Denton} and \citep{Reconstruction}, uses a mean interpolation to take the mass density parameter from a highly non-uniform 15 minute grid of the former to the contiguous one hour grid of the latter, and looks for storms based on the definition of storm periods provided by \citep{Takahashi}, namely when $D_{ST}<-50nT$. The former has a time coverage of 1980-1991, but covered by different satellites in different years (sometimes with overlap), and the latter data set covers 1972-2013. By then looking at an hourly average of variables from 24 hours before storm onset to 48 hours after, trends in storms can be discerned. 
+Our work takes the datasets from \citep{Denton} and \citep{Reconstruction}, uses a mean interpolation to take the mass density parameter from a highly non-uniform 15 minute grid of the former to the contiguous one hour grid of the latter, and looks for storms based on the definition of storm periods provided by \citep{Takahashi2010}, namely when $D_{ST}<-50nT$. The former has a time coverage of 1980-1991, but covered by different satellites in different years (sometimes with overlap), and the latter data set covers 1972-2013. By then looking at an hourly average of variables from 24 hours before storm onset to 48 hours after, short timescale trends can be discerned. 
+
+In this paper we try to test the relationship of short timescale effects on mass density from $D_{ST}$, $F_{10.7}$, and $B_Z$, in comparison to the long time scales presented in \citep{Takahashi2010,Takahashi2006}, as well as looking at other preconditioning factors by analysis of hourly data within a day surrounding storm onsets. We will briefly compare our results to other published results to verify our methods and handling of data. We also hope that by looking at all possible storms under less stringent qualifications, instead of hand selected storms with specific selection criteria, our results will be more generalizable and less prone to bias.
 
 \subsection{DST Storm}
-Two storm indicators are looked at in this study. The first is looking for a drop in DST below the threshhold of $-50nT$ specified in \citep{Takahashi}. This method finds 668 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. A subset of long duration storms will be looked at later. Figure \ref{DSTstorm} shows the average values of $B_Z$, $V_{SW}$, $D_{ST}$, $F_{10.7}$, and Mass Density for a period of 24 hours before and 48 hours after a storm onset. 
+Two storm indicators are looked at in this study. The first is looking for a drop in DST below the threshhold of $-50nT$ specified in \citep{Takahashi2010}, dubbed the "onset", and then considering the timeframe a storm until $D_{ST}$ passes back above the $-50nT$ threshold. This method finds 669 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. A subset of longer duration storms will be looked at later. Figure \ref{DSTstorm} shows the average values of $B_Z$, $V_{SW}$, $D_{ST}$, $F_{10.7}$, and Mass Density for a period of 24 hours before and 48 hours after a storm onset, as well as a plot of mass density with the found storm times highlighted.
 
 \begin{figure}[htp]
 \centering
@@ -40,7 +50,7 @@ Two storm indicators are looked at in this study. The first is looking for a dro
 \label{DSTstorm}
 \end{figure}
 
-This figure shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $DST$, but no obvious change in mass density as \citep{Takahashi} loosely suggests. 
+This figure shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $DST$, but no obvious change in mass density at an hourly timescale. This points to an issue with only looking at long-timescale trends between density and $D_{ST}$, and allows for the possibility that other factors are influencing the long term correlation since there's no obvious connection on a short timescale. One possibility is that, as suggested in \citep{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long term correlation of density and $D_{ST}$.
 
 \subsection{Mass Density Storm}
 Figure \ref{MassStorm} shows this same algorithm, but looking for a rise in mass density over a value of 40$g/cm^3$. This results in 130 storms with a mean duration of 32 hours and a median duration of 17 hours, marked in red on the left figure.
@@ -49,7 +59,7 @@ Figure \ref{MassStorm} shows this same algorithm, but looking for a rise in mass
 \centering
 \includegraphics[scale=0.35]{paperfigures/stormavs-dst.png}
 \includegraphics[scale=0.35]{paperfigures/stormavs-mass.png}
-\caption{$D_{ST}<-40nT$ onset, Mass Density $>40 g/cm^3$}
+\caption{$D_{ST}<-40nT$ onset, Mass Density $>40 amu/cm^3$}
 \label{MassStorm}
 \end{figure}
 
@@ -62,11 +72,11 @@ It's hypothesized that progressively picking more specific storm criteria will a
 \centering
 \includegraphics[scale=0.35]{paperfigures/stormavs-md12.png}
 \includegraphics[scale=0.35]{paperfigures/stormavs-m70.png}
-\caption{Specific Mass Density Storms}
+\caption{Duration $>$ 12 hours, Mass Density $>70 amu/cm^3$}
 \label{Mspec}
 \end{figure}
 
-Neither of these seem to indicate anything too significant, so looking at $D_{ST}$ storms instead to look for something that causes a significant change in Mass Density results in Figure \ref{Dspec}. This shows that by either looking only at $D_{ST}$ storms that last longer than an hour (left) or at storms where the onset condition is $D_{ST}<-80nT$, a spike in mass density is seen, but also a definite lack of data availability. 
+Neither of these seem to indicate anything too significant, so looking at $D_{ST}$ storms instead to look for something that causes a significant change in Mass Density results in Figure \ref{Dspec}. This shows that by either looking only at $D_{ST}$ storms that last longer than an hour (left) or at storms where the onset condition is $D_{ST}<-80nT$, a spike in mass density is seen, but also a definite lack of data availability to the point where that spike may be coming from less than five of the total 143 storms. 
 
 \begin{figure}[htp!]
 \centering
@@ -75,6 +85,8 @@ Neither of these seem to indicate anything too significant, so looking at $D_{ST
 \caption{$D_{ST}$ Storms $>$ 12 hours, $D_{ST}<-80nT$}
 \label{Dspec}
 \end{figure}
+
+Unforunately there are no storms in this time frame that are longer than 12 hours with $D_{ST}$ minima lower than $-80nT$ that have existing mass density data around onset, so an analysis of this particular relationship can't be made.
 
 \bibliographystyle{vplainnat}
 

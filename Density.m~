@@ -177,7 +177,7 @@ end
 %Remove F10.7 influence
 removef107=1;
 if(removef107)
-    [~, ~, ~,xnew,~] = IR(MassDensitySpline,F107Spline,0,12,0,0); %12 hour IR model
+    [~, ~, ~,xnew,~] = IR(MassDensitySpline,F107Spline,0,6,0,0); %12 hour IR model
     MassDensitySpline=MassDensitySpline-xnew; 
 end
 
