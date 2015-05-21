@@ -177,7 +177,8 @@ end
 %Remove F10.7 influence
 removef107=1;
 if(removef107)
-    [~, ~, ~,xnew,~] = IR(MassDensitySpline,F107Spline,0,12,0,0); %12 hour IR model
+    [~, ~, ~,xnew,~] = IR(MassDensitySpline,F107Spline,0,1,0,0); %1 hour IR model
+    MassDensitySplineOriginal=MassDensitySpline;
     MassDensitySpline=MassDensitySpline-xnew; 
 end
 
@@ -220,6 +221,15 @@ if(MakePlots)
     xlabel('Time')
     datetick
     print -dpng figures/densitycomp.png
+end
+
+if(MakePaperPlots && removef107)
+   plot(OMNITime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal))) 
+   title('F10.7 trend')
+   ylabel('Difference (amu/cm^3)')
+   xlabel('Time')
+   datetick
+   print -dpng paperfigures/f107removed.png
 end
 
 if(MakePaperPlots)
