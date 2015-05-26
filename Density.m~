@@ -157,12 +157,10 @@ FILLED=[FILLED F107Spline];
 headers{end+1}='F107';
 
 LongTimeScale=24; %How many hours to average over
-LongTimeInc=LongTimeScale*(OMNITime(2)-OMNITime(1));
 if(LongTimeScale>0) 
-   MassDensitySpline=interp1(OMNITime,MassDensitySpline,OMNITime(1):LongTimeInc:OMNITime(end));
-   F107Spline=interp1(OMNITime,F107Spline,OMNITime(1):LongTimeInc:OMNITime(end));
-   FILLED=interp1(OMNITime,FILLED,OMNITime(1):LongTimeInc:OMNITime(end));
-   OMNITime=OMNITime(1):LongTimeInc:OMNITime(end);
+   MassDensitySpline=interp1(OMNITime,MassDensitySpline,OMNITime(1):LongTimeScale:OMNITime(end));
+   F107Spline=interp1(OMNITime,F107Spline,OMNITime(1):LongTimeScale:OMNITime(end));
+   FILLED=interp1(OMNITime,FILLED,OMNITime(1):LongTimeScale:OMNITime(end));
 end
 
 
@@ -196,7 +194,7 @@ AVMat=[];
 AVMDMat=[];
 maxwidth=48;
 
-%if(LongTimeScale>0),maxwidth=floor(maxwidth/LongTimeScale); end
+if(LongTimeScale>0),maxwidth=floor(maxwidth/LongTimeScale);
 while(starti(1)-maxwidth<1)
     starti(1)=[]; endi(1)=[]; 
 end
