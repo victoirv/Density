@@ -168,10 +168,10 @@ end
 
 %Find storm with enough data to analyze
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
-%storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
 %storms=diff([0 (MassDensityNanSpline>70)' 0]); %Mass Density Storm, started at 40
 %storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
-storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
+%storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
 starti=find(storms>0);
 endi=find(storms<0)-1;
 duration=endi-starti+1;
@@ -246,9 +246,10 @@ end
 
 if(MakePaperPlots)
 h=figure('Visible',visible); 
+orient tall;
 h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); ylabel('Bz (nT)'); %Bz
-h2=subplot('position',subplotstack(5,2));plot(OMNITime,FILLED(:,6),'.'); ylabel('V_{SW} (km/s)');%V_sw
-h3=subplot('position',subplotstack(5,3));plot(OMNITime,FILLED(:,15),'.');yl=ylabel('D_{ST} (nT)'); set(yl,'Units','Normalized','Position',[-.03 0.5 0]);
+h2=subplot('position',subplotstack(5,2));plot(OMNITime,FILLED(:,6),'.'); ylabel('V_{SW} (km/s)'); ylim([300,900]);%V_sw
+h3=subplot('position',subplotstack(5,3));plot(OMNITime,FILLED(:,15),'.');yl=ylabel('D_{ST} (nT)'); set(yl,'Units','Normalized','Position',[-.03 0.5 0]); ylim([-300,100]);
 h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,29),'.');ylabel('F10.7 (s.f.u.)');%f107
 h5=subplot('position',subplotstack(5,5));plot(OMNITime,MassDensitySpline,'r.');ylabel('\rho_{eq} (amu/cm^3)');%f107
 set(findobj('type','axes'),'xticklabel',{[]}); 
@@ -259,12 +260,13 @@ axis tight;
         linkaxes([h5 h1 h2 h3 h4],'x')
         xlabel('Time')
         set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on'); 
-        print -dpng paperfigures/alldata.png
+        print -depsc2 -r200 paperfigures/alldata.eps
         
         h=figure('Visible',visible); 
+        orient tall;
 h2=subplot('position',subplotstack(5,2));plot((1:length(AVMDs))-timewidth-1,AVs(1,:,6),'+-'); ylabel('V_{SW} (km/s)');%V_sw
 h1=subplot('position',subplotstack(5,1));plot((1:length(AVMDs))-timewidth-1,AVs(1,:,5),'+-'); ylabel('Bz (nT)'); %Bz
-h3=subplot('position',subplotstack(5,3));plot((1:length(AVMDs))-timewidth-1,AVs(1,:,15),'+-');ylabel('D_{ST} (nT)');%dst
+h3=subplot('position',subplotstack(5,3));plot((1:length(AVMDs))-timewidth-1,AVs(1,:,15),'+-');ylabel('D_{ST} (nT)'); %dst
 h4=subplot('position',subplotstack(5,4));plot((1:length(AVMDs))-timewidth-1,AVs(1,:,29),'+-');ylabel('F10.7 (s.f.u.)');%f107
 set(findobj('type','axes'),'xticklabel',{[]})
         stime=(1:length(AVMDs))-timewidth-1;
@@ -276,7 +278,7 @@ set(findobj('type','axes'),'xticklabel',{[]})
         linkaxes([AX h1 h2 h3 h4],'x')
         xlabel('Time from storm onset (27 day)')
         set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on'); 
-        print -dpng paperfigures/stormavs-1.png
+        print -depsc2 -r200 paperfigures/stormavs-1.eps
         
 end
 
@@ -288,7 +290,16 @@ if(MakePaperPlots)
     xlabel('Time')
     datetick('x')
     title('Mass Density Storms')
-    print -dpng paperfigures/massdensitystorms.png
+    print -depsc2 -r200 paperfigures/massdensitystorms.eps
+    
+    h=figure('Visible',visible); 
+    plot(OMNITime,FILLED(:,15)); hold on;
+    plot(OMNITime(FILLED(:,15)<-50),FILLED(FILLED(:,15)<-50,15),'r+');
+    ylabel('D_{st}')
+    xlabel('Time')
+    datetick('x')
+    title('D_{st} Storms')
+    print -depsc2 -r200 paperfigures/dststorms.eps
 end
 
 if(MakePlots) %Stack plots
