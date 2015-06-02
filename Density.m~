@@ -170,8 +170,8 @@ end
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
 %storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
 %storms=diff([0 (MassDensityNanSpline>70)' 0]); %Mass Density Storm, started at 40
-%storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
-storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
+storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
+storms=[0 diff([0 (MassDensityNanSpline(2:end)/MassDensityNanSpline(1:end-1))>10)' 0])];
 starti=find(storms>0);
 endi=find(storms<0)-1;
 duration=endi-starti+1;

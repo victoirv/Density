@@ -61,6 +61,8 @@ The prior paper, \cite{Takahashi2006}, show how trends in storm dependence on ma
 
 \cite{Denton2006} show how $D_{ST}$ affects the distribution of plasma density along different magnetic latitudes, and specifically along the same field lines as looked at in later papers (6-8$R_E$). Though this shows that the trends for density may differ between field lines, it's mentioned mostly as a point for future research as the data used in this paper is already adjusted for one field line, as described by \cite{Takahashi2010}.
 
+\cite{Yao2008} looks at the differences in how $D_{ST}$ correlates with number density for different ions in different regions (ring current and plasma sheet), but still finds a general correlation during each of the four storms selected.
+
 \section{Previous Results}
 We will briefly compare our results to other published results to verify our methods and handling of data. 
 
@@ -120,11 +122,25 @@ Neither of these seem to indicate anything too significant, so looking at $D_{ST
 
 Unforunately there are no storms in this time frame that are longer than 12 hours with $D_{ST}$ minima lower than $-80nT$ that have existing mass density data around onset, so an analysis of this particular relationship can't be made.
 
+\subsection{Change in $\rho_{eq}$}
+If instead of looking for storms based on a threshold of $\rho_{eq}$, we instead look for a certain amount of change in $\rho_{eq}$ as the basis for storm onset, we get Figure \ref{rhochange}.
+
+\begin{figure}[htp!]
+\centering
+\includegraphics[scale=0.35]{paperfigures/stormavs-diffden-10amu.png}
+\includegraphics[scale=0.35]{paperfigures/stormavs-diffden-30percent.png}
+\caption{diff($\rho_{eq}$) $>$ 20$\frac{amu}{hour}$, diff($\rho_{eq}$) $>$ 30$\frac{\%}{hour}$}
+\label{rhochange}
+\end{figure}
+
+Both raw change and percent change were done in case of bias towards high or low $\rho_{eq}$ periods, respectively. This shows a distinct lack of correlation in either case to a change in $D_{ST}$. The percent change in $\rho_{eq}$ does, however, seem to be preconditioned by changes in $B_z$ and $F_{10.7}$.
+
+
 
 \section{F10.7 dependence}
-In an effort to analyze the dependence of mass density on $F_{10.7}$, a few tests were performed. \cite{Takahashi2010} mention a strong correlation between the two. The long term correlation could be a bias for $D_{ST}$'s effects, so a linear model was created, recreating mass density purely from $F_{10.7}$ in the form of $\rho_{eq}(t)=A*F_{10.7}(t)$. This re-created density shows around a 45\% correlation with the actual density, suggesting a strong influence, while doing the same procedure with $DST$ shows only a 20-25\% correlation. 
+In an effort to analyze the dependence of $\rho_{eq}$ on $F_{10.7}$, a few tests were performed. \cite{Takahashi2010} mention a strong correlation between the two. The long term correlation could be a bias for $D_{ST}$'s effects, so a linear model was created, recreating mass density purely from $F_{10.7}$ in the form of $\rho_{eq}(t)=A*F_{10.7}(t)$. This re-created $\rho_{eq}$ shows around a 45\% correlation with the actual $\rho_{eq}$, suggesting a strong influence, while doing the same procedure with $DST$ shows only a 20-25\% correlation. 
 
-Taking this re-created data set and subtracting it from the original should remove the $F_{10.7}$ dependence from the data, and allow for a less biased analysis of the relationship between $D_{ST}$ and mass density. Figure \ref{nof107} shows the stack plot for the reduced $F_{10.7}$, where a more distinct peak after storm onset can be seen. It also shows what that removed trend looks like, of the form $\rho_{eq}-\rho_{eq,F_{10.7}}$.
+Taking this re-created data set and subtracting it from the original should remove the $F_{10.7}$ dependence from the data, and allow for a less biased analysis of the relationship between $D_{ST}$ and $\rho_{eq}$. Figure \ref{nof107} shows the stack plot for the reduced $F_{10.7}$, where a more distinct peak after storm onset can be seen. It also shows what that removed trend looks like, of the form $\rho_{eq}-\rho_{eq,F_{10.7}}$.
 
 \begin{figure}[htp!]
 \centering

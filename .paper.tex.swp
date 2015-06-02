@@ -37,7 +37,7 @@ R.S. Weigel\footnote{rweigel@gmu.edu}}
 \maketitle
 \hrule
 \begin{abstract}
-We consider solar wind conditions surrounding time intervals of large negative excursions of the $D_{st}$ index and large positive excursions of plasmaspheric mass density. Consistent with previous results, a sudden decrease in $D_{st}$ is associated with an increase in equatorial mass density.  We find ...
+This paper looks at how various magnetosphere conditions behave around the onset of geomagnetic storms. It confirms results from previous papers that a sudden drop in $D_{ST}$ correlates with a spike in equatorial mass density, while adding a level of depth and specification to the applicability of their results. It compares data at 1-hour averages to data at 1-day averages, and briefly to data at 27-day averages to examine if the trend holds at varying time scales and finds that it does, so long as the data is pre-processed to linearly remove a large time scale $F_{10.7}$ dependence. 
 \vspace{2em}
 \end{abstract}
  \end{@twocolumnfalse}
@@ -51,22 +51,17 @@ We consider solar wind conditions surrounding time intervals of large negative e
 % hope is colloqual.
 % intends is colloqual.
 
-%This paper intends to investigate solar wind and magnetospheric conditions immediately before geomagnetic storm onset to determine trends and useful correlations, specifically looking at the effects on equatorial mass density ($\rho_{eq}$).
-In this paper we test the relationship of short timescale effects on mass density from $D_{ST}$, $F_{10.7}$, and $B_Z$, in comparison to the long time scales presented in \cite{Takahashi2010,Takahashi2006}, as well as looking at other preconditioning factors by analysis of hourly data within a day surrounding storm onsets.  
+\cite{Takahashi2010} state that spikes in the Disturbance Storm Time ($D_{ST}$) index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8$R_E$. For five storms over a 20 day period two had $\rho_{eq}$ spikes after the $D_{ST}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$. They then show an epoch analysis where $\rho_{eq}$ is seen to spike the day of a $D_{ST}$ drop, using a daily average of 30 minute $\rho_{eq}$ and one hour $D_{ST}$ measurements. 
 
-%Keep the following for now.  Not sure where we will put it.
-%We also hope that by looking at all possible storms under less stringent qualifications, instead of hand selected storms with specific selection criteria, our results will be more generalizable and less prone to bias.
-
-\cite{Takahashi2006} considered the relationship between geomagnetic activity and average ion mass ($M$).  A scatter plot of log$_{10}(M)$ versus $-D_{st}$ showed an increasing trend.  The scatter plot of log$_{10}(M)$ versus $K_p$ had near zero correlation, but a positive trend was found when log$_{10}(M)$ versus 1.5-day averaged $K_p$ was considered, and this trend persisted when 3-day averages were used. 
-
-
-\cite{Takahashi2010} found that spikes in the Disturbance Storm Time ($D_{ST}$) index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8$R_E$. For five storms over a 20 day period two had $\rho_{eq}$ spikes after the $D_{ST}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$. They then show an epoch analysis where $\rho_{eq}$ is seen to spike the day of a $D_{ST}$ drop, using a daily average of 30 minute $\rho_{eq}$ and one hour $D_{ST}$ measurements. 
+The prior paper, \cite{Takahashi2006}, show how trends in storm dependence on mass/density only appear in longer timescales. Looking at $Kp$ vs mass ($amu$) in the range of 6 to 7 $R_E$, a trend shows up in the 1.5 day averages that doesn't appear in the 3 hour averages.
 
 \cite{Lavraud2006} show that storms preceded by a northward interplanetary magnetic field (IMF) tend to have higher plasma density than those preceded by a southward IMF, and suggest an increased geoeffectiveness from a northward IMF and dense plasma sheet.
 
 \cite{Tsurutani1997} show how the density of a corotating interaction region (CIR) shows strong preconditioning for a drop in $D_{ST}$ and spike in magnetic field intensity. Assuming a reasonable amount of coupling between that region's density and the plasmaspheric density, this result could be relatable to others focusing on the plasmasphere. 
 
 \cite{Denton2006} show how $D_{ST}$ affects the distribution of plasma density along different magnetic latitudes, and specifically along the same field lines as looked at in later papers (6-8$R_E$). Though this shows that the trends for density may differ between field lines, it's mentioned mostly as a point for future research as the data used in this paper is already adjusted for one field line, as described by \cite{Takahashi2010}.
+
+\cite{Yao2008} looks at the differences in how $D_{ST}$ correlates with number density for different ions in different regions (ring current and plasma sheet), but still finds a general correlation during each of the four storms selected.
 
 \section{Previous Results}
 We will briefly compare our results to other published results to verify our methods and handling of data. 
@@ -127,11 +122,25 @@ Neither of these seem to indicate anything too significant, so looking at $D_{ST
 
 Unforunately there are no storms in this time frame that are longer than 12 hours with $D_{ST}$ minima lower than $-80nT$ that have existing mass density data around onset, so an analysis of this particular relationship can't be made.
 
+\subsection{Change in $\rho_{eq}$}
+If instead of looking for storms based on a threshold of $\rho_{eq}$, we instead look for a certain amount of change in $\rho_{eq}$ as the basis for storm onset, we get Figure \ref{rhochange}.
+
+\begin{figure}[htp!]
+\centering
+\includegraphics[scale=0.35]{paperfigures/stormavs-diffden-10amu.png}
+\includegraphics[scale=0.35]{paperfigures/stormavs-diffden-30percent.png}
+\caption{diff($\rho_{eq}$) $>$ 20$\frac{amu}{hour}$, diff($\rho_{eq}$) $>$ 30$\frac{\%}{hour}$}
+\label{rhochange}
+\end{figure}
+
+Both raw change and percent change were done in case of bias towards high or low $\rho_{eq}$ periods, respectively. This shows a distinct lack of correlation in either case to a change in $D_{ST}$. The percent change in $\rho_{eq}$ does, however, seem to be preconditioned by changes in $B_z$ and $F_{10.7}$.
+
+
 
 \section{F10.7 dependence}
-In an effort to analyze the dependence of mass density on $F_{10.7}$, a few tests were performed. \cite{Takahashi2010} mention a strong correlation between the two. The long term correlation could be a bias for $D_{ST}$'s effects, so a linear model was created, recreating mass density purely from $F_{10.7}$ in the form of $\rho_{eq}(t)=A*F_{10.7}(t)$. This re-created density shows around a 45\% correlation with the actual density, suggesting a strong influence, while doing the same procedure with $DST$ shows only a 20-25\% correlation. 
+In an effort to analyze the dependence of $\rho_{eq}$ on $F_{10.7}$, a few tests were performed. \cite{Takahashi2010} mention a strong correlation between the two. The long term correlation could be a bias for $D_{ST}$'s effects, so a linear model was created, recreating mass density purely from $F_{10.7}$ in the form of $\rho_{eq}(t)=A*F_{10.7}(t)$. This re-created $\rho_{eq}$ shows around a 45\% correlation with the actual $\rho_{eq}$, suggesting a strong influence, while doing the same procedure with $DST$ shows only a 20-25\% correlation. 
 
-Taking this re-created data set and subtracting it from the original should remove the $F_{10.7}$ dependence from the data, and allow for a less biased analysis of the relationship between $D_{ST}$ and mass density. Figure \ref{nof107} shows the stack plot for the reduced $F_{10.7}$, where a more distinct peak after storm onset can be seen. It also shows what that removed trend looks like, of the form $\rho_{eq}-\rho_{eq,F_{10.7}}$.
+Taking this re-created data set and subtracting it from the original should remove the $F_{10.7}$ dependence from the data, and allow for a less biased analysis of the relationship between $D_{ST}$ and $\rho_{eq}$. Figure \ref{nof107} shows the stack plot for the reduced $F_{10.7}$, where a more distinct peak after storm onset can be seen. It also shows what that removed trend looks like, of the form $\rho_{eq}-\rho_{eq,F_{10.7}}$.
 
 \begin{figure}[htp!]
 \centering
