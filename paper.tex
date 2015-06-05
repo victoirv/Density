@@ -67,15 +67,18 @@ By then looking at an hourly average of variables from 24 hours before storm ons
 
 
 
-
 \section{Data Preparation}
-Starting from the data provided by \cite{Denton} for $\rho_{eq}$ and $F_{10.7}$ from 1980-1991, and \cite{Reconstruction} for all other variables from 1972-2013, the data were prepared to get all variables on the same consecutive time-grid. Since the latter was pre-adjusted to have data on a consecutive one-hour grid, the former variables were adjusted to be compatible. First, since the data covers multiple Geostationary Operational Environmental Satellites (GOES), one in particular (GOES 7) was selected to avoid overlapping data points. 
 
-Second, the various forms of "bad data" were converted from their respective set value to NaNs (e.g. 9999 becomes NaN). It was then condensed in range to match the time range from \cite{Reconstruction} down to the same start and end hours, and then interpolated from the GOES 15-minute grid to the one-hour grid by taking the median of all valid non-NaN data points within half an hour to either side of each hour. When no valid points existed in that hour period, a NaN was kept for the sake of the uniform time grid.
+The parameters $\rho_{eq}$ and $F_{10.7}$ used in this work are from the data associated with \cite{Denton}, with data available from 1980-1991; all other variables are from \cite{Reconstruction} over the time range of 1972-2013, which are on a 1-hour time grid.  In cases where $\rho_{eq}$ was available from multiple Geostationary Operational Environmental Satellites (GOES) satellites at the same time, the value from GOES 7 was selected to avoid overlapping data points.  $\rho_{eq}$ is the inferred mass density based on the 3rd harmonic frequency of magnetic field measurements.  The smallest cadence for $\rho_{eq}$ values is 10 minutes.  To compute an hourly average over the same time range as the solar wind parameters, the median of all values in a given hourly range was used.  Fill values were used for hours when no measurements were available.
 
-The only other point to note in this section: For finding storm times, all NaNs were linearly interpolated out of the data in order to aid in finding storms that may have had their onset point missing. Though this may skew the onset time slightly, it's thought to be less skewed than trying to determine start and end times with the NaNs in place. This interpolation was only used for determining storm times, and not for any analysis.
+In this work events are considered when $D_{st}$ or $\rho_{eq}$ crosses a threshold value.  In finding events, all fill values were replaced with linearly interpolated values.  
+% unless the gap was larger than X hours?
 
+% Though this may skew the onset time slightly, it's thought to be less skewed than trying to determine start and end times with the NaNs in place. This interpolation was only used for determining storm times, and not for any analysis.
+% If you say this, you need to do an experiement.  A review will say ``seems like it is an easy statement to check.  Why didn't you?''
 
+% http://www.dartmouth.edu/~rdenton/Data/DentonTakahashiGOES1980-1991MassDensityWithHeader.txt
+% This looks like a 10 minute grid, not 15 minute?
 
 \section{Results}
 
