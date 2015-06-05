@@ -168,8 +168,8 @@ end
 
 %Find storm with enough data to analyze
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
-storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
-%storms=diff([0 (MassDensityNanSpline>70)' 0]); %Mass Density Storm, started at 40
+%storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
 %storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
 %storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
 starti=find(storms>0);
@@ -236,12 +236,12 @@ if(MakePlots)
 end
 
 if(MakePaperPlots && removef107)
-   plot(OMNITime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal))) 
+   plot(OMNITime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal)),'-') 
    title('F10.7 trend')
    ylabel('Difference (amu/cm^3)')
    xlabel('Time')
    datetick
-   print -dpng paperfigures/f107removed.png
+   print -depsc2 -r200 paperfigures/f107removed.eps
 end
 
 if(MakePaperPlots)
@@ -262,17 +262,23 @@ axis tight;
         set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on'); 
         print -depsc2 -r200 paperfigures/alldata.eps
         
+        
+        xa=(1:length(AVMDs))-timewidth-1;
         h=figure('Visible',visible); 
         orient tall;
-h2=subplot('position',subplotstack(5,2));plot((1:length(AVMDs))-timewidth-1,AVs(1,:,6),'+-'); ylabel('V_{SW} (km/s)');%V_sw
-h1=subplot('position',subplotstack(5,1));plot((1:length(AVMDs))-timewidth-1,AVs(1,:,5),'+-'); ylabel('Bz (nT)'); %Bz
-h3=subplot('position',subplotstack(5,3));plot((1:length(AVMDs))-timewidth-1,AVs(1,:,15),'+-');ylabel('D_{ST} (nT)'); %dst
-h4=subplot('position',subplotstack(5,4));plot((1:length(AVMDs))-timewidth-1,AVs(1,:,29),'+-');ylabel('F10.7 (s.f.u.)');%f107
+h2=subplot('position',subplotstack(5,2));plot(xa,AVs(1,:,6),'+-'); ylabel('V_{SW} (km/s)');%V_sw
+hold on; plot(xa,AVs(1,:,6)+std(AVMat(:,:,6)),'r-.'); plot(xa,AVs(1,:,6)-std(AVMat(:,:,6)),'r-.');
+h1=subplot('position',subplotstack(5,1));plot(xa,AVs(1,:,5),'+-'); ylabel('Bz (nT)'); %Bz
+hold on; plot(xa,AVs(1,:,5)+std(AVMat(:,:,5)),'r-.'); plot(xa,AVs(1,:,5)-std(AVMat(:,:,5)),'r-.');
+h3=subplot('position',subplotstack(5,3));plot(xa,AVs(1,:,15),'+-');ylabel('D_{ST} (nT)'); %dst
+hold on; plot(xa,AVs(1,:,15)+std(AVMat(:,:,15)),'r-.'); plot(xa,AVs(1,:,15)-std(AVMat(:,:,15)),'r-.');
+h4=subplot('position',subplotstack(5,4));plot(xa,AVs(1,:,29),'+-');ylabel('F10.7 (s.f.u.)');%f107
+hold on; plot(xa,AVs(1,:,29)+nanstd(AVMat(:,:,29)),'r-.'); plot(xa,AVs(1,:,29)-nanstd(AVMat(:,:,29)),'r-.');
 set(findobj('type','axes'),'xticklabel',{[]})
-        stime=(1:length(AVMDs))-timewidth-1;
-        stimev=[stime(1) stime(end)];
-        subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(stime,AVMDs(1,:),stime,AVnnans,'plot','bar'); 
-        set(AX(2),'Xlim',stimev); set(AX(1),'Xlim',stimev);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
+        xv=[xa(1) xa(end)];
+        subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar'); 
+        hold on; plot(xa,AVMDs(1,:)+nanstd(AVMDMat(:,:)),'r-.'); plot(xa,AVMDs(1,:)-nanstd(AVMDMat(:,:)),'r-.');
+        set(AX(2),'Xlim',xv); set(AX(1),'Xlim',xv);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
         ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); ylabel(AX(2),'non-nan datapoints');
         set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2])
         linkaxes([AX h1 h2 h3 h4],'x')
@@ -285,7 +291,7 @@ end
 if(MakePaperPlots)
     h=figure('Visible',visible); 
     plot(OMNITime,MassDensitySpline); hold on;
-    plot(OMNITime(MassDensitySpline>40),MassDensitySpline(MassDensitySpline>40),'r+');
+    plot([OMNITime(1) OMNITime(end)],[40 40],'r-.','LineWidth',6);
     ylabel('Mass Density')
     xlabel('Time')
     datetick('x')
@@ -294,7 +300,7 @@ if(MakePaperPlots)
     
     h=figure('Visible',visible); 
     plot(OMNITime,FILLED(:,15)); hold on;
-    plot(OMNITime(FILLED(:,15)<-50),FILLED(FILLED(:,15)<-50,15),'r+');
+    plot([OMNITime(1) OMNITime(end)],[-50 -50],'r-.','LineWidth',6);
     ylabel('D_{st}')
     xlabel('Time')
     datetick('x')

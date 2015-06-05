@@ -51,7 +51,7 @@ This paper looks at how various magnetosphere conditions behave around the onset
 % hope is colloqual.
 % intends is colloqual.
 
-\cite{Takahashi2010} state that spikes in the Disturbance Storm Time ($D_{st}$) index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8$R_E$. For five storms over a 20 day period two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$. They then show an epoch analysis where $\rho_{eq}$ is seen to spike the day of a $D_{st}$ drop, using a daily average of 30 minute $\rho_{eq}$ and one hour $D_{st}$ measurements. 
+\cite{Takahashi2010} show that spikes in the Disturbance Storm Time ($D_{st}$) index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8$R_E$. For five storms over a 20 day period two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$. They then show an epoch analysis where $\rho_{eq}$ is seen to spike the day of a $D_{st}$ drop, using a daily average of 30 minute $\rho_{eq}$ and one hour $D_{st}$ measurements. 
 
 The prior paper, \cite{Takahashi2006}, show how trends in storm dependence on mass/density only appear in longer timescales. Looking at $Kp$ vs mass ($amu$) in the range of 6 to 7 $R_E$, a trend shows up in the 1.5 day averages that doesn't appear in the 3 hour averages.
 
@@ -67,6 +67,16 @@ The prior paper, \cite{Takahashi2006}, show how trends in storm dependence on ma
 We will briefly compare our results to other published results to verify our methods and handling of data. 
 
 Our work takes the datasets from \cite{Denton} and \cite{Reconstruction}, uses a mean interpolation to take the mass density parameter from a highly non-uniform 15 minute grid of the former to the contiguous one hour grid of the latter, and looks for storms based on the definition of storm periods provided by \cite{Takahashi2010}, namely when $D_{st}<-50nT$. The former has a time coverage of 1980-1991, but covered by different satellites in different years (sometimes with overlap), and the latter data set covers 1972-2013. By then looking at an hourly average of variables from 24 hours before storm onset to 48 hours after, short timescale trends can be discerned. 
+
+
+\section{Data Preparation}
+Starting from the data provided by \cite{Denton} for $\rho_{eq}$ and $F_{10.7}$, and \cite{Reconstruction} for all other variables, the data were prepared to get all variables on the same consecutive time-grid. Since the latter was pre-adjusted to have data on a consecutive one-hour grid, the former variables were adjusted to be compatible. First, since the data covers multiple Geostationary Operational Environmental Satellites (GOES), one in particular (GOES 7) was selected to avoid overlapping data points. 
+
+Second, the various forms of "bad data" were converted from their respective set value to NaNs (e.g. 9999 becomes NaN). It was then condensed in range to match the time range from \cite{Reconstruction} down to the same start and end hours, and then interpolated from the GOES 15-minute grid to the one-hour grid by taking the median of all valid non-NaN data points within half an hour to either side of each hour. When no valid points existed in that hour period, a NaN was kept for the sake of the uniform time grid.
+
+The only other point to note in this section: For finding storm times, all NaNs were linearly interpolated out of the data in order to aid in finding storms that may have had their onset point missing. Though this may skew the onset time slightly, it's thought to be less skewed than trying to determine start and end times with the NaNs in place. This interpolation was only used for determining storm times, and not for any analysis.
+
+
 
 \section{Results}
 
@@ -146,8 +156,8 @@ Similarly, looking at the 1 day averaged data with and without the $F_{10.7}$ de
 
 \begin{figure}[htp!]
 \centering
-\includegraphics[scale=0.7]{paperfigures/stormavs-dst.png}
-\includegraphics[scale=0.7]{paperfigures/stormavs-mass.png}
+\includegraphics[scale=0.5]{paperfigures/stormavs-dst.eps}
+\includegraphics[scale=0.5]{paperfigures/stormavs-mass.eps}
 \caption{$D_{st}<-40nT$ onset, Mass Density $>40 amu/cm^3$}
 \label{MassStorm}
 \end{figure}
