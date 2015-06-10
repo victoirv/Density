@@ -19,7 +19,7 @@ FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
 
 %FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
 
-startt=727547.333333; 
+startt=727547.333333;
 %DST Storm: 726479.750000;
 %Mass Storm: 725858.250000 - 20
 selectduration=22;
@@ -158,18 +158,18 @@ headers{end+1}='F107';
 
 LongTimeScale=0;%24*27; %How many hours to average over
 LongTimeInc=LongTimeScale*(OMNITime(2)-OMNITime(1));
-if(LongTimeScale>0) 
-   MassDensitySpline=interp1(OMNITime,MassDensitySpline,OMNITime(1):LongTimeInc:OMNITime(end));
-   F107Spline=interp1(OMNITime,F107Spline,OMNITime(1):LongTimeInc:OMNITime(end));
-   FILLED=interp1(OMNITime,FILLED,OMNITime(1):LongTimeInc:OMNITime(end));
-   OMNITime=OMNITime(1):LongTimeInc:OMNITime(end);
+if(LongTimeScale>0)
+    MassDensitySpline=interp1(OMNITime,MassDensitySpline,OMNITime(1):LongTimeInc:OMNITime(end));
+    F107Spline=interp1(OMNITime,F107Spline,OMNITime(1):LongTimeInc:OMNITime(end));
+    FILLED=interp1(OMNITime,FILLED,OMNITime(1):LongTimeInc:OMNITime(end));
+    OMNITime=OMNITime(1):LongTimeInc:OMNITime(end);
 end
 
 
 %Find storm with enough data to analyze
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
-%storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
-storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
+storms=diff([0 (FILLED(:,15)<-40)' 0]); %DST Storm
+%storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
 %storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
 %storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
 starti=find(storms>0);
@@ -190,7 +190,7 @@ removef107=0;
 if(removef107)
     [~, ~, ~,xnew,~] = IR(MassDensitySpline,F107Spline,0,1,0,0); %1 hour IR model
     MassDensitySplineOriginal=MassDensitySpline;
-    MassDensitySpline=MassDensitySpline-xnew; 
+    MassDensitySpline=MassDensitySpline-xnew;
 end
 
 stormi=1;
@@ -201,19 +201,19 @@ if(LongTimeScale>0),timewidth=4; end
 maxwidth=timewidth*2;
 
 while(starti(1)-maxwidth<1)
-    starti(1)=[]; endi(1)=[]; 
+    starti(1)=[]; endi(1)=[];
 end
 while(endi(end)+maxwidth>length(MassDensitySpline))
     starti(end)=[]; endi(end)=[];
 end
 for i=1:length(starti)
-   datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
-   %if(datanum>(endi(i)-starti(i))/2 && datanum>18)
-       AVMat(stormi,:,:)=FILLED((starti(i)-timewidth):starti(i)+timewidth*2,:);
-       AVMDMat(stormi,:)=MassDensitySpline((starti(i)-timewidth):starti(i)+timewidth*2);
-       stormi=stormi+1;
-       %fprintf('%6f - %3d \n',OMNITime(starti(i)),endi(i)-starti(i))
-  % end
+    datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
+    %if(datanum>(endi(i)-starti(i))/2 && datanum>18)
+    AVMat(stormi,:,:)=FILLED((starti(i)-timewidth):starti(i)+timewidth*2,:);
+    AVMDMat(stormi,:)=MassDensitySpline((starti(i)-timewidth):starti(i)+timewidth*2);
+    stormi=stormi+1;
+    %fprintf('%6f - %3d \n',OMNITime(starti(i)),endi(i)-starti(i))
+    % end
 end
 AVs=nanmean(AVMat,1);
 AVMDs=nanmean(AVMDMat);
@@ -236,98 +236,99 @@ if(MakePlots)
 end
 
 if(MakePaperPlots && removef107)
-   plot(OMNITime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal)),'-') 
-   title('F10.7 trend')
-   ylabel('Difference (amu/cm^3)')
-   xlabel('Time')
-   datetick
-   print -depsc2 -r200 paperfigures/f107removed.eps
+    plot(OMNITime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal)),'-')
+    %title('F10.7 trend')
+    ylabel('Difference (amu/cm^3)')
+    xlabel('Time')
+    datetick
+    print -depsc2 -r200 paperfigures/f107removed.eps
 end
 
 if(MakePaperPlots)
-h=figure('Visible',visible); 
-orient tall;
-h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); ylabel('Bz (nT)'); %Bz
-h2=subplot('position',subplotstack(5,2));plot(OMNITime,FILLED(:,6),'.'); ylabel('V_{SW} (km/s)'); ylim([300,900]);%V_sw
-h3=subplot('position',subplotstack(5,3));plot(OMNITime,FILLED(:,15),'.');yl=ylabel('D_{ST} (nT)'); set(yl,'Units','Normalized','Position',[-.03 0.5 0]); ylim([-300,100]);
-h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,29),'.');ylabel('F10.7 (s.f.u.)');%f107
-h5=subplot('position',subplotstack(5,5));plot(OMNITime,MassDensitySpline,'r.');ylabel('\rho_{eq} (amu/cm^3)');%f107
-set(findobj('type','axes'),'xticklabel',{[]}); 
-set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
-datetick('x')
-set(findobj('type','axes'),'xtick',get(h5,'xtick'))
-axis tight;
-        linkaxes([h5 h1 h2 h3 h4],'x')
-        xlabel('Time')
-        set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on'); 
-        print -depsc2 -r200 paperfigures/alldata.eps
-        
-        
-        xa=(1:length(AVMDs))-timewidth-1;
-        h=figure('Visible',visible); 
-        orient tall;
-h2=subplot('position',subplotstack(5,2));plot(xa,AVs(1,:,6),'+-'); ylabel('V_{SW} (km/s)');%V_sw
-hold on; plot(xa,AVs(1,:,6)+std(AVMat(:,:,6)),'r-.'); plot(xa,AVs(1,:,6)-std(AVMat(:,:,6)),'r-.');
-h1=subplot('position',subplotstack(5,1));plot(xa,AVs(1,:,5),'+-'); ylabel('Bz (nT)'); %Bz
-hold on; plot(xa,AVs(1,:,5)+std(AVMat(:,:,5)),'r-.'); plot(xa,AVs(1,:,5)-std(AVMat(:,:,5)),'r-.');
-h3=subplot('position',subplotstack(5,3));plot(xa,AVs(1,:,15),'+-');ylabel('D_{ST} (nT)'); %dst
-hold on; plot(xa,AVs(1,:,15)+std(AVMat(:,:,15)),'r-.'); plot(xa,AVs(1,:,15)-std(AVMat(:,:,15)),'r-.');
-h4=subplot('position',subplotstack(5,4));plot(xa,AVs(1,:,29),'+-');ylabel('F10.7 (s.f.u.)');%f107
-hold on; plot(xa,AVs(1,:,29)+nanstd(AVMat(:,:,29)),'r-.'); plot(xa,AVs(1,:,29)-nanstd(AVMat(:,:,29)),'r-.');
-set(findobj('type','axes'),'xticklabel',{[]})
-        xv=[xa(1) xa(end)];
-        subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar'); 
-        hold on; plot(xa,AVMDs(1,:)+nanstd(AVMDMat(:,:)),'r-.'); plot(xa,AVMDs(1,:)-nanstd(AVMDMat(:,:)),'r-.');
-        set(AX(2),'Xlim',xv); set(AX(1),'Xlim',xv);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
-        ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); ylabel(AX(2),'non-nan datapoints');
-        set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2])
-        linkaxes([AX h1 h2 h3 h4],'x')
-        xlabel('Time from storm onset (27 day)')
-        set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on'); 
-        print -depsc2 -r200 paperfigures/stormavs-1.eps
-        
+    h=figure('Visible',visible);
+    orient tall;
+    h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); ylabel('B_z (nT)'); %Bz
+    h2=subplot('position',subplotstack(5,2));plot(OMNITime,FILLED(:,6),'.'); ylabel('V_{SW} (km/s)'); ylim([300,900]);%V_sw
+    h3=subplot('position',subplotstack(5,3));plot(OMNITime,FILLED(:,15),'.');yl=ylabel('D_{st} (nT)'); set(yl,'Units','Normalized','Position',[-.03 0.5 0]); ylim([-300,100]);
+    h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,29),'.');ylabel('F10.7 (s.f.u.)');%f107
+    h5=subplot('position',subplotstack(5,5));plot(OMNITime,MassDensitySpline,'r.');ylabel('\rho_{eq} (amu/cm^3)');%f107
+    set(findobj('type','axes'),'xticklabel',{[]});
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
+    datetick('x')
+    set(findobj('type','axes'),'xtick',get(h5,'xtick'))
+    axis tight;
+    linkaxes([h5 h1 h2 h3 h4],'x')
+    xlabel('Time')
+    %set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on');
+    print -depsc2 -r200 paperfigures/alldata.eps
+    
+    
+    xa=(1:length(AVMDs))-timewidth-1;
+    h=figure('Visible',visible);
+    orient tall;
+    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(1,:,6),'+-'); ylabel('V_{SW} (km/s)');%V_sw
+    hold on; plot(xa,AVs(1,:,6)+std(AVMat(:,:,6)),'r-.'); plot(xa,AVs(1,:,6)-std(AVMat(:,:,6)),'r-.');
+    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(1,:,5),'+-'); ylabel('B_z (nT)'); %Bz
+    hold on; plot(xa,AVs(1,:,5)+std(AVMat(:,:,5)),'r-.'); plot(xa,AVs(1,:,5)-std(AVMat(:,:,5)),'r-.');
+    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(1,:,15),'+-');ylabel('D_{st} (nT)'); %dst
+    hold on; plot(xa,AVs(1,:,15)+std(AVMat(:,:,15)),'r-.'); plot(xa,AVs(1,:,15)-std(AVMat(:,:,15)),'r-.');
+    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(1,:,29),'+-');ylabel('F10.7 (s.f.u.)');%f107
+    hold on; plot(xa,AVs(1,:,29)+nanstd(AVMat(:,:,29)),'r-.'); plot(xa,AVs(1,:,29)-nanstd(AVMat(:,:,29)),'r-.');
+    set(findobj('type','axes'),'xticklabel',{[]})
+    xv=[xa(1) xa(end)];
+    subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
+    hold on; plot(xa,AVMDs(1,:)+nanstd(AVMDMat(:,:)),'r-.'); plot(xa,AVMDs(1,:)-nanstd(AVMDMat(:,:)),'r-.');
+    set(AX(2),'Xlim',xv); set(AX(1),'Xlim',xv);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
+    ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); ylabel(AX(2),'# of values');
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2])
+    linkaxes([AX h1 h2 h3 h4],'x')
+    xlabel('Time from start of event (hr)')
+    %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
+    fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end)));
+    print -depsc2 -r200 paperfigures/stormavs-1.eps
+    
 end
 
 if(MakePaperPlots)
-    h=figure('Visible',visible); 
+    h=figure('Visible',visible);
     plot(OMNITime,MassDensitySpline); hold on;
     plot([OMNITime(1) OMNITime(end)],[40 40],'r-.','LineWidth',6);
     ylabel('Mass Density')
     xlabel('Time')
     datetick('x')
-    title('Mass Density Storms')
+    %title('Mass Density Storms')
     print -depsc2 -r200 paperfigures/massdensitystorms.eps
     
-    h=figure('Visible',visible); 
+    h=figure('Visible',visible);
     plot(OMNITime,FILLED(:,15)); hold on;
     plot([OMNITime(1) OMNITime(end)],[-50 -50],'r-.','LineWidth',6);
     ylabel('D_{st}')
     xlabel('Time')
     datetick('x')
-    title('D_{st} Storms')
+    %title('D_{st} Storms')
     print -depsc2 -r200 paperfigures/dststorms.eps
 end
 
 if(MakePlots) %Stack plots
     for i=1:length(headers)
-    subplot('position',subplotstack(5,mod(i,4)+1));plot(AVs(1,:,i),'+-');
-    ylabel(headers{i})
-    if(mod(i,4)==0 || i==length(headers))
-        subplot('position',subplotstack(5,5)); [AX,H1,H2]=plotyy(1:length(AVMDs),AVMDs(1,:),1:length(AVMDs),AVnnans,'plot','bar'); 
-        set(AX(2),'Xlim',[1 length(AVMDs)]); set(AX(1),'Xlim',[1 length(AVMDs)]); set(get(H2,'child'),'facea',.3); set(H1,'marker','+','color','red'); set(AX(1),'YColor','r');
-        %drawnow; hold on; xlim manual; h=bar(AVnnans); ch = get(h,'child'); set(ch,'facea',.3)
-        ylabel(AX(1),'Mass Density'); ylabel(AX(2),'non-nan datapoints');
-        %xlabel('Time before storm onset (hr)')
-        print('-dpng',sprintf('figures/stormavs-%d',i));
-        close all
-    end
+        subplot('position',subplotstack(5,mod(i,4)+1));plot(AVs(1,:,i),'+-');
+        ylabel(headers{i})
+        if(mod(i,4)==0 || i==length(headers))
+            subplot('position',subplotstack(5,5)); [AX,H1,H2]=plotyy(1:length(AVMDs),AVMDs(1,:),1:length(AVMDs),AVnnans,'plot','bar');
+            set(AX(2),'Xlim',[1 length(AVMDs)]); set(AX(1),'Xlim',[1 length(AVMDs)]); set(get(H2,'child'),'facea',.3); set(H1,'marker','+','color','red'); set(AX(1),'YColor','r');
+            %drawnow; hold on; xlim manual; h=bar(AVnnans); ch = get(h,'child'); set(ch,'facea',.3)
+            ylabel(AX(1),'Mass Density'); ylabel(AX(2),'# of values');
+            %xlabel('Time before storm onset (hr)')
+            print('-dpng',sprintf('figures/stormavs-%d',i));
+            close all
+        end
     end
 end
 
 if(MakePlots)
     NanPH=zeros(1,24);
     for i=0:23
-   NanPH(i+1)=sum(isnan(MassDensitySpline(hour(OMNITime)==i)));
+        NanPH(i+1)=sum(isnan(MassDensitySpline(hour(OMNITime)==i)));
     end
     plot(0:23,NanPH);
     ylabel('Nans per hour')
@@ -337,7 +338,7 @@ end
 
 if(MakePlots) %Make plot showing that most of F10.7 and Mass Density correlation is from long term effects
     [~, cb, ~,xnew,corr] = IR(log(MassDensity),log(F107),0,12,0,0);
-    h=figure('Visible',visible); 
+    h=figure('Visible',visible);
     plot(DentonTime,log(MassDensity));
     hold on;
     plot(DentonTime,xnew,'g')
@@ -370,7 +371,7 @@ slicemax=24;
 %x=detrend(MassDensitySpline);
 x=MassDensitySpline;
 
-%{ 
+%{
 %Figure out what's going on with the year
 [ca, cb, cc,xnew,corr] = IR(x,FILLED(:,1),Na,Nb,lag,advance);
 figure; plot(xnew,MassDensitySpline,'+')
@@ -426,7 +427,7 @@ if(MakePlots)
     legend('F107','Density','Vsw','Bz')
     xlabel('UT Hour')
     ylabel('Normalized Average')
-    print '-dpng' 'figures/avf107.png'    
+    print '-dpng' 'figures/avf107.png'
 end
 
 %Add extra variables
@@ -496,7 +497,7 @@ for i=1:length(headers)
         [~,cb,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,OHr,slicemin,slicemax);
     else
         [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
-        [~, cb, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance); 
+        [~, cb, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
     end
     pe1=pe_nonflag(x,xnew1);
     if(MakePlots), densityplot(OMNITime,[x,xnew1,OverlayFilled(:,i)],headers{i},Na,Nb1,corr1,pe1,visible), end
@@ -514,7 +515,7 @@ for i=1:length(dheaders)
         [~,cb,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,DHr,slicemin,slicemax);
     else
         [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
-        [~, cb, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance); 
+        [~, cb, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
     end
     pe1=pe_nonflag(x,xnew1);
     if(MakePlots), densityplot(DentonTime,[x,xnew1,DOverlayFilled(:,i)],dheaders{i},Na,Nb1,corr1,pe1,visible), end
@@ -527,61 +528,61 @@ end
 %Now for doubles
 x=log(MassDensitySpline);
 f=[FILLED(:,3) FILLED(:,5)]; %Hr and Bz
-    if(slice)
-        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,OHr,slicemin,slicemax);
-        [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,OHr,slicemin,slicemax);
-    else
-        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
-        [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
-    end
-    pe1=pe_nonflag(x,xnew1);
-    pe=pe_nonflag(x,xnew);
-    BigTable=[BigTable;{'Hr+Bz',corr1,corr,pe1,pe}];
-    
+if(slice)
+    [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,OHr,slicemin,slicemax);
+    [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,OHr,slicemin,slicemax);
+else
+    [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+    [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
+end
+pe1=pe_nonflag(x,xnew1);
+pe=pe_nonflag(x,xnew);
+BigTable=[BigTable;{'Hr+Bz',corr1,corr,pe1,pe}];
+
 f=[FILLED(:,5) FILLED(:,6)]; %Bz and V
-    if(slice)
-        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,OHr,slicemin,slicemax);
-        [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,OHr,slicemin,slicemax);
-    else
-        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
-        [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
-    end
-    pe1=pe_nonflag(x,xnew1);
-    pe=pe_nonflag(x,xnew);
-    BigTable=[BigTable;{'Bz+V',corr1,corr,pe1,pe}];
+if(slice)
+    [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,OHr,slicemin,slicemax);
+    [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,OHr,slicemin,slicemax);
+else
+    [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+    [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
+end
+pe1=pe_nonflag(x,xnew1);
+pe=pe_nonflag(x,xnew);
+BigTable=[BigTable;{'Bz+V',corr1,corr,pe1,pe}];
 
 x=log(MassDensity);
 f=[F107 DBz]; %F107 and Bz
-    if(slice)
-        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,DHr,slicemin,slicemax);
-        [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,DHr,slicemin,slicemax);
-    else
-        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
-        [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
-    end
-    pe1=pe_nonflag(x,xnew1);
-    pe=pe_nonflag(x,xnew);
-    BigTable=[BigTable;{'F107+Bz',corr1,corr,pe1,pe}];
+if(slice)
+    [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,DHr,slicemin,slicemax);
+    [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,DHr,slicemin,slicemax);
+else
+    [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+    [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
+end
+pe1=pe_nonflag(x,xnew1);
+pe=pe_nonflag(x,xnew);
+BigTable=[BigTable;{'F107+Bz',corr1,corr,pe1,pe}];
 f=[F107 DVsw]; %Bz and V
-    if(slice)
-        [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,DHr,slicemin,slicemax);
-        [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,DHr,slicemin,slicemax);
-    else
-        [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
-        [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
-    end
-    pe1=pe_nonflag(x,xnew1);
-    pe=pe_nonflag(x,xnew);
-    BigTable=[BigTable;{'F107+V',corr1,corr,pe1,pe}];
+if(slice)
+    [~,~,~,xnew1,corr1] = IRslice(x,f,Na,Nb1,lag,advance,DHr,slicemin,slicemax);
+    [~,~,~,xnew,corr] = IRslice(x,f,Na,Nb,lag,advance,DHr,slicemin,slicemax);
+else
+    [~,~,~,xnew1,corr1] = IR(x,f,Na,Nb1,lag,advance);
+    [~, ~, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
+end
+pe1=pe_nonflag(x,xnew1);
+pe=pe_nonflag(x,xnew);
+BigTable=[BigTable;{'F107+V',corr1,corr,pe1,pe}];
 
 
 BigTable=sortrows(BigTable,2);
 for i=1:size(BigTable,1)
-   if(BigTable{i,5}>-10)
-       fprintf(table,'%s\t %2.2f \t %2.2f \t %2.2f \t %2.2f\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
-   else
-       fprintf(table,'%s\t %2.2f \t %2.2f \t %2.2f \t %2.0e\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5}); 
-   end
+    if(BigTable{i,5}>-10)
+        fprintf(table,'%s\t %2.2f \t %2.2f \t %2.2f \t %2.2f\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5});
+    else
+        fprintf(table,'%s\t %2.2f \t %2.2f \t %2.2f \t %2.0e\n',BigTable{i,1},BigTable{i,2},BigTable{i,3},BigTable{i,4},BigTable{i,5});
+    end
 end
 fprintf(table,'\n</pre>');
 
@@ -592,16 +593,16 @@ end
 function densityplot(x,ys,string,Na,Nb,corr,eff,visible)
 close all;
 test=size(ys);
-if test(1)>test(2) 
-   ys=ys'; 
+if test(1)>test(2)
+    ys=ys';
 end
 h=figure('Visible',visible);plot(x,ys)
-    legend('Data','Prediction',string,'Location','NorthEast')
-    ylabel('Density')
-    xlabel('Time')
-    datetick
-    title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.3f, eff: %2.3f',string,Na,Nb,corr,eff))
-    filestring=sprintf('figures/density_%s_%d_%d.png',string,Na,Nb);
+legend('Data','Prediction',string,'Location','NorthEast')
+ylabel('Density')
+xlabel('Time')
+datetick
+title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.3f, eff: %2.3f',string,Na,Nb,corr,eff))
+filestring=sprintf('figures/density_%s_%d_%d.png',string,Na,Nb);
 print(h,'-dpng',filestring)
 end
 
@@ -611,8 +612,8 @@ h=figure('Visible',visible);
 plot(x,ys)
 ylabel('Impulse Coefficient')
 xlabel('Time Lags')
-grid    
-    title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.3f, eff: %2.3f',string,Na,Nb,corr,eff))
-    filestring=sprintf('figures/density_%s_%d_%d_Cb.png',string,Na,Nb);
-    print(h,'-dpng',filestring)
+grid
+title(sprintf('Denton Density from OMNI %s: Nx:%d Nf:%d, corr: %2.3f, eff: %2.3f',string,Na,Nb,corr,eff))
+filestring=sprintf('figures/density_%s_%d_%d_Cb.png',string,Na,Nb);
+print(h,'-dpng',filestring)
 end
