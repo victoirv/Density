@@ -168,8 +168,8 @@ end
 
 %Find storm with enough data to analyze
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
-storms=diff([0 (FILLED(:,15)<-40)' 0]); %DST Storm
-%storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
+%storms=diff([0 (FILLED(:,15)<-40)' 0]); %DST Storm
+storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
 %storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
 %storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
 starti=find(storms>0);
@@ -211,6 +211,7 @@ for i=1:length(starti)
     %if(datanum>(endi(i)-starti(i))/2 && datanum>18)
     AVMat(stormi,:,:)=FILLED((starti(i)-timewidth):starti(i)+timewidth*2,:);
     AVMDMat(stormi,:)=MassDensitySpline((starti(i)-timewidth):starti(i)+timewidth*2);
+    
     stormi=stormi+1;
     %fprintf('%6f - %3d \n',OMNITime(starti(i)),endi(i)-starti(i))
     % end
@@ -218,7 +219,8 @@ end
 AVs=nanmean(AVMat,1);
 AVMDs=nanmean(AVMDMat);
 AVnnans=sum(~isnan(AVMDMat));
-
+AVMatBars=[AVs(1,:,:)-nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:)))) ; AVs(1,:,:)+nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:))))];
+AVMDMatBars=[AVMDs(1,:)-nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:)))) ; AVMDs(1,:)+nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:))))];
 %%%%%Make Plots?
 MakePlots=0;
 MakePaperPlots=1;
@@ -267,17 +269,17 @@ if(MakePaperPlots)
     h=figure('Visible',visible);
     orient tall;
     h2=subplot('position',subplotstack(5,2));plot(xa,AVs(1,:,6),'+-'); ylabel('V_{SW} (km/s)');%V_sw
-    hold on; plot(xa,AVs(1,:,6)+std(AVMat(:,:,6)),'r-.'); plot(xa,AVs(1,:,6)-std(AVMat(:,:,6)),'r-.');
+    hold on; plot(xa,AVMatBars(:,:,6),'r-.'); 
     h1=subplot('position',subplotstack(5,1));plot(xa,AVs(1,:,5),'+-'); ylabel('B_z (nT)'); %Bz
-    hold on; plot(xa,AVs(1,:,5)+std(AVMat(:,:,5)),'r-.'); plot(xa,AVs(1,:,5)-std(AVMat(:,:,5)),'r-.');
+    hold on; plot(xa,AVMatBars(:,:,5),'r-.');
     h3=subplot('position',subplotstack(5,3));plot(xa,AVs(1,:,15),'+-');ylabel('D_{st} (nT)'); %dst
-    hold on; plot(xa,AVs(1,:,15)+std(AVMat(:,:,15)),'r-.'); plot(xa,AVs(1,:,15)-std(AVMat(:,:,15)),'r-.');
+    hold on; plot(xa,AVMatBars(:,:,15),'r-.'); 
     h4=subplot('position',subplotstack(5,4));plot(xa,AVs(1,:,29),'+-');ylabel('F10.7 (s.f.u.)');%f107
-    hold on; plot(xa,AVs(1,:,29)+nanstd(AVMat(:,:,29)),'r-.'); plot(xa,AVs(1,:,29)-nanstd(AVMat(:,:,29)),'r-.');
+    hold on; plot(xa,AVMatBars(:,:,29),'r-.');
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
     subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
-    hold on; plot(xa,AVMDs(1,:)+nanstd(AVMDMat(:,:)),'r-.'); plot(xa,AVMDs(1,:)-nanstd(AVMDMat(:,:)),'r-.');
+    hold on; plot(xa,AVMDMatBars(:,:),'r-.');
     set(AX(2),'Xlim',xv); set(AX(1),'Xlim',xv);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
     ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); ylabel(AX(2),'# of values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2])
