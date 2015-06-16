@@ -18,13 +18,13 @@ FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
 %Find a good storm
 
 %FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
+OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
 
 startt=727547.333333;
 %DST Storm: 726479.750000;
 %Mass Storm: 725858.250000 - 20
-selectduration=22;
-OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
-starti=find(floor(OMNITime*100000)==floor(startt*100000)); %Rounding error?
+%selectduration=22;
+%starti=find(floor(OMNITime*100000)==floor(startt*100000)); %Rounding error?
 %starti=find(OMNITime==startt);
 %FILLED=FILLED(starti:starti+selectduration,:);
 %{
@@ -53,15 +53,26 @@ else
     [DentonTime,uniquerows]=unique(datenum(IN(:,2),1,0) + IN(:,3)+IN(:,4)/24+IN(:,5)/(24*60),'rows');
     
     %88 is density, 10 is f10.7, 31 is BZ_sw, 32 is Vsw
-    F107=IN(uniquerows,10);
+    %F107=IN(uniquerows,10);
     DBz=IN(uniquerows,31);
     DVsw=IN(uniquerows,32);
     DBS=1/2*IN(uniquerows,32).*(abs(DBz)-DBz);
     MLT=IN(uniquerows,8);
     MassDensity=IN(uniquerows,88);
     
-    save('DentonDensityAndTime','DentonTime','MassDensity','F107','DBz','MLT','DBS','DVsw');
+    save('DentonDensityAndTime','DentonTime','MassDensity','DBz','MLT','DBS','DVsw');
 end
+
+if(exist('OMNIF107.mat','file'))
+    load('OMNIF107.mat')
+else
+    F107in=dlmread('omni2_1980_2000.lst');
+    F107time=datenum(F107in(:,1),1,F107in(:,2),F107in(:,3),0,0);
+    F107=F107in(:,5); %column 4 is dst
+    F107(F107==999.9)=NaN;
+    save('OMNIF107','F107time','F107');
+end
+
 
 if(~exist('figures','dir'))
     mkdir('figures');
@@ -128,6 +139,14 @@ BS=BS(gettime);
 
 OMNIDensity=OMNIDensity(gettime);
 FILLED=FILLED(gettime,:);
+
+getFtime=F107time>min(DentonTime);
+getFtime=getFtime+(F107time<max(DentonTime));
+getFtime=(getFtime==2);
+F107time=F107time(getFtime);
+F107=F107(getFtime);
+
+
 OverlayFilled=FILLED;
 OHr=FILLED(:,3);
 DHr=hour(DentonTime);
@@ -147,20 +166,22 @@ if(exist('InterpedVals.mat','file'))
     load('InterpedVals')
 else
     MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
-    F107Spline=interptest(DentonTime,F107,OMNITime,(OMNITime(2)-OMNITime(1))/2);
+    %F107Spline=interptest(DentonTime,F107,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     MassDensitySpline=MassDensitySpline';
-    F107Spline=F107Spline';
+    %F107Spline=F107Spline';
     save('InterpedVals','MassDensitySpline','F107Spline');
 end
 
-FILLED=[FILLED F107Spline];
+%FILLED=[FILLED F107Spline]; %When F107 is from Denton, use spline
+%interpolated version
+FILLED=[FILLED F107];
 headers{end+1}='F107';
 
 LongTimeScale=0;%24*27; %How many hours to average over
 LongTimeInc=LongTimeScale*(OMNITime(2)-OMNITime(1));
 if(LongTimeScale>0)
     MassDensitySpline=interp1(OMNITime,MassDensitySpline,OMNITime(1):LongTimeInc:OMNITime(end));
-    F107Spline=interp1(OMNITime,F107Spline,OMNITime(1):LongTimeInc:OMNITime(end));
+    %F107Spline=interp1(OMNITime,F107Spline,OMNITime(1):LongTimeInc:OMNITime(end));
     FILLED=interp1(OMNITime,FILLED,OMNITime(1):LongTimeInc:OMNITime(end));
     OMNITime=OMNITime(1):LongTimeInc:OMNITime(end);
 end
@@ -188,7 +209,7 @@ end
 %Remove F10.7 influence
 removef107=0;
 if(removef107)
-    [~, ~, ~,xnew,~] = IR(MassDensitySpline,F107Spline,0,1,0,0); %1 hour IR model
+    [~, ~, ~,xnew,~] = IR(MassDensitySpline,F107,0,1,0,0); %1 hour IR model
     MassDensitySplineOriginal=MassDensitySpline;
     MassDensitySpline=MassDensitySpline-xnew;
 end
