@@ -189,8 +189,8 @@ end
 
 %Find storm with enough data to analyze
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
-%storms=diff([0 (FILLED(:,15)<-40)' 0]); %DST Storm
-storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
+storms=diff([0 (FILLED(:,15)<-80)' 0]); %DST Storm
+%storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
 %storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
 %storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
 starti=find(storms>0);
@@ -305,6 +305,7 @@ if(MakePaperPlots)
     ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); ylabel(AX(2),'# of values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2])
     linkaxes([AX h1 h2 h3 h4],'x')
+    axis tight;
     xlabel('Time from start of event (hr)')
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end)));
