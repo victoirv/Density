@@ -72,15 +72,11 @@ By then looking at an hourly average of variables from 24 hours before event ons
 The parameters $\rho_{eq}$ and $F_{10.7}$ used in this work are from the data associated with \cite{Denton}, with data available from 1980-1991; all other variables are from \cite{Reconstruction} over the time range of 1972-2013, which are on a 1-hour time grid.  In cases where $\rho_{eq}$ was available from multiple Geostationary Operational Environmental Satellites (GOES) satellites at the same time, the value from GOES 7 was selected to avoid overlapping data points.  $\rho_{eq}$ is the inferred mass density based on the 3rd harmonic frequency of magnetic field measurements.  The smallest cadence for $\rho_{eq}$ values is 10 minutes.  To compute an hourly average over the same time range as the solar wind parameters, the median of all values in a given hourly range was used.  Fill values were used for hours when no measurements were available.
 
 In this work events are considered when $D_{st}$ or $\rho_{eq}$ crosses a threshold value.  In finding events, all fill values were replaced with linearly interpolated values.  
-% unless the gap was larger than X hours?
-% v: No. I interpolated across the entire time range. By the fact that it's linear, it shouldn't ever create a false storm, just skewed start/end times
 
 % Though this may skew the onset time slightly, it's thought to be less skewed than trying to determine start and end times with the NaNs in place. This interpolation was only used for determining storm times, and not for any analysis.
 % If you say this, you need to do an experiement.  A review will say ``seems like it is an easy statement to check.  Why didn't you?''
 
-% http://www.dartmouth.edu/~rdenton/Data/DentonTakahashiGOES1980-1991MassDensityWithHeader.txt
-% This looks like a 10 minute grid, not 15 minute?
-% v: Correct. My bad.
+To check for potential bias in the data as used by our analysis, we checked how the data availability varied with hour, shown in Figure \ref{nanperhour}. We also looked at how storm conditions affected data availability. Both a two sample t-test for difference in means and a Wilcoxon rank sum test showed significance at the 1\% level that $D_{st}$ during periods with available data was of a different distribution than $D_{st}$ during periods missing data. When testing for other significant $D_{st}$ differences, the Wilcoxon test was significant while the t-test was not in pre-noon vs post-noon distributions, as well as $\rho_{eq}>40$ vs $\rho_{eq}<40$ distributions indicating perhaps an increase in variability without an increase in mean.
 
 \section{Results}
 
@@ -138,6 +134,15 @@ Similarly, looking at the 1 day averaged data with and without the $F_{10.7}$ de
 \bibliography{reportbib}
 
 \section{Figures}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.5]{paperfigures/nansbyhour.eps}
+\includegraphics[scale=0.5]{paperfigures/nansbyhour_storm.eps}
+\caption{(a) Number of NaN points per hour of observation in the total data set (b) Data availability relative to average event hour in events where $D_{st}<-80nT$}
+\label{nanperhour}
+\end{figure}
+\clearpage
 
 \begin{figure}[htp]
 \centering

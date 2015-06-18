@@ -189,7 +189,7 @@ end
 
 %Find storm with enough data to analyze
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
-storms=diff([0 (FILLED(:,15)<-80)' 0]); %DST Storm
+storms=diff([0 (FILLED(:,15)<-40)' 0]); %DST Storm
 %storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
 %storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
 %storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
@@ -331,6 +331,38 @@ if(MakePaperPlots)
     datetick('x')
     %title('D_{st} Storms')
     print -depsc2 -r200 paperfigures/dststorms.eps
+end
+
+if(MakePaperPlots) %Nans per hour
+    h=figure('Visible',visible);
+    hist(FILLED(isnan(MassDensitySpline),3),[0:23])
+    axis([-1 24 0 3000])
+    xlabel('Hour')
+    ylabel('Frequency')
+    print -depsc2 -r200 paperfigures/nansbyhour.eps
+
+    h=figure('Visible',visible);
+    subplot(2,1,1)
+    plot(xa,AVs(1,:,3))
+    ylabel('Hour average')
+    grid on
+    subplot(2,1,2)
+    plot(xa,AVMDs(1,:),'r')
+    plot(xa,AVnnans,'r')
+    ylabel('Data available')
+    xlabel('Time from event start (hr)')
+    grid on
+    print -depsc2 -r200 nansbyhour_storm.eps
+    
+    %Show DST is significantly different during missing data times
+    [p,h]=ranksum(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
+    [h,p]=ttest2(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
+    %Or when mass density gets above/below 40
+    [p,h]=ranksum(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01)
+    [h,p]=ttest2(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01)
+    %Or pre-noon vs post-noon
+    [p,h]=ranksum(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
+    [h,p]=ttest2(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
 end
 
 if(MakePlots) %Stack plots
