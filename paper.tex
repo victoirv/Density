@@ -59,7 +59,7 @@ By then looking at an hourly average of variables from 24 hours before event ons
 
 \cite{Yao2008} looks at the differences in how $D_{st}$ correlates with number density for different ions in different regions (ring current and plasma sheet), but still finds a general correlation during each of the four storms selected.
 
-\cite{Takahashi2010} state that spikes in the Disturbance Storm Time ($D_{st}$) index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8$R_E$. For five storms over a 20 day period two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$. They then show an epoch analysis where $\rho_{eq}$ is seen to spike the day of a $D_{st}$ drop, using a daily average of 30 minute $\rho_{eq}$ and one hour $D_{st}$ measurements. 
+\cite{Takahashi2010} state that spikes in the Disturbance Storm Time ($D_{st}$) index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8$R_E$. For five storms over a 20 day period two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$. They then show an epoch analysis where $\rho_{eq}$ is seen to spike the day of a $D_{st}$ drop, using a daily average of 30 minute $\rho_{eq}$ and one hour $D_{st}$ measurements. Figure \ref{DailyAverages} show that the trends observed by \cite{Takahashi2010} hold true in this analysis as well.
 
 %\cite{Lavraud2006} show that storms preceded by a northward interplanetary magnetic field (IMF) tend to have higher plasma density than those preceded by a southward IMF, and suggest an increased geoeffectiveness from a northward IMF and dense plasma sheet.
 
@@ -71,26 +71,22 @@ By then looking at an hourly average of variables from 24 hours before event ons
 
 The parameters $\rho_{eq}$ and $F_{10.7}$ used in this work are from the data associated with \cite{Denton}, with data available from 1980-1991; all other variables are from \cite{Reconstruction} over the time range of 1972-2013, which are on a 1-hour time grid.  In cases where $\rho_{eq}$ was available from multiple Geostationary Operational Environmental Satellites (GOES) satellites at the same time, the value from GOES 7 was selected to avoid overlapping data points.  $\rho_{eq}$ is the inferred mass density based on the 3rd harmonic frequency of magnetic field measurements.  The smallest cadence for $\rho_{eq}$ values is 10 minutes.  To compute an hourly average over the same time range as the solar wind parameters, the median of all values in a given hourly range was used.  Fill values were used for hours when no measurements were available.
 
-In this work events are considered when $D_{st}$ or $\rho_{eq}$ crosses a threshold value.  In finding events, all fill values were replaced with linearly interpolated values.  
+In this work events are considered when $D_{st}$ or $\rho_{eq}$ crosses a threshold value, as indicated in \ref{StormCutoff}.  In finding events, all fill values were replaced with linearly interpolated values.  Figure \ref{AllData} shows the values of $B_Z$, $V_{SW}$, $D_{st}$, $F_{10.7}$, and Mass Density for the duration of the dataset. 
 
 % Though this may skew the onset time slightly, it's thought to be less skewed than trying to determine start and end times with the NaNs in place. This interpolation was only used for determining storm times, and not for any analysis.
 % If you say this, you need to do an experiement.  A review will say ``seems like it is an easy statement to check.  Why didn't you?''
-
-To check for potential bias in the data as used by our analysis, we checked how the data availability varied with hour, shown in Figure \ref{nanperhour}. We also looked at how storm conditions affected data availability. Both a two sample t-test for difference in means and a Wilcoxon rank sum test showed significance at the 1\% level that $D_{st}$ during periods with available data was of a different distribution than $D_{st}$ during periods missing data. When testing for other significant $D_{st}$ differences, the Wilcoxon test was significant while the t-test was not in pre-noon vs post-noon distributions, as well as $\rho_{eq}>40$ vs $\rho_{eq}<40$ distributions indicating perhaps an increase in variability without an increase in mean.
-
-While the GOES Satellites tend to keep an average geostationary distance of around $L=6.8R_E$ shown in \cite{Takahashi2010}, the actual plasmapause location varies significantly , as shown in \cite{OBrien2003}. This means that during periods of large $D_{st}$ the plasmapause may be far from the point of measurement of $\rho_{eq}$ creating a discord in the correlation. \cite{Gallagher2000} provides a model for $\rho_{eq}$ at a range of L-shells and a brief discussion of the elemental contributions.
 
 \section{Results}
 
 Figure \ref{AllData} shows values of solar wind averages and mass density used in this study. We will briefly compare our results to other published results to verify our methods and handling of data. 
 
 \subsection{D$_{st}$ Events}
-Two event indicators are looked at in this study. The first is looking for a drop in DST below the threshhold of $-50nT$ specified in \cite{Takahashi2010}, dubbed the "onset", and then considering the timeframe a event until $D_{st}$ passes back above the $-50nT$ threshold. This method finds 669 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. A subset of longer duration events will be looked at later. Figure \ref{AllData} shows the average values of $B_Z$, $V_{SW}$, $D_{st}$, $F_{10.7}$, and Mass Density for a period of 24 hours before and 48 hours after a event onset, as well as a plot of mass density with the found event times highlighted.
+Two event indicators are looked at in this study. The first is looking for a drop in DST below the threshhold of $-40nT$ specified in \cite{Takahashi2010}, dubbed the "onset", and then considering the timeframe an event until $D_{st}$ passes back above the $-40nT$ threshold. This method finds 669 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. Figure \ref{Storms} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{Storms}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-40nT$. The dashed red lines indicate plus and minus one standard deviation of values from all events that went into the average. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other variables in the stack. A subset of longer duration events will be looked at later. 
 
 This figure shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $DST$, but no obvious change in mass density at an hourly timescale. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation since there's no obvious connection on a short timescale. One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long term correlation of density and $D_{st}$.
 
 \subsection{Mass Density Events}
-Figure \ref{MassStorm} shows this same algorithm, but looking for a rise in mass density over a value of 40$g/cm^3$. This results in 130 events with a mean duration of 32 hours and a median duration of 17 hours, marked in red on the left figure.
+Figure \ref{Storms}b shows this same algorithm, but looking for a rise in mass density over a value of 40$g/cm^3$. This results in 130 events with a mean duration of 32 hours and a median duration of 17 hours, marked in red on the left figure.
 
 
 
@@ -125,9 +121,12 @@ Taking this re-created data set and subtracting it from the original should remo
 
 
 
-Similarly, looking at the 1 day averaged data with and without the $F_{10.7}$ dependence, Figure \ref{nof107day} shows that the results of \cite{Takahashi2010} hold only once the dependence has been removed. The 27 day trend couldn't be determined as not enough valid data existed to test it.
+\section{Appendix}
+\subsection{Bias}
 
+To check for potential bias in the data as used by our analysis, we checked how the data availability varied with hour, shown in Figure \ref{nanperhour}. We also looked at how storm conditions affected data availability. Both a two sample t-test for difference in means and a Wilcoxon rank sum test showed significance at the 1\% level that $D_{st}$ during periods with available data was of a different distribution than $D_{st}$ during periods missing data. When testing for other significant $D_{st}$ differences, the Wilcoxon test was significant while the t-test was not in pre-noon vs post-noon distributions, as well as $\rho_{eq}>40$ vs $\rho_{eq}<40$ distributions indicating perhaps an increase in variability without an increase in mean.
 
+While the GOES Satellites tend to keep an average geostationary distance of around $L=6.8R_E$ shown in \cite{Takahashi2010}, the actual plasmapause location varies significantly , as shown in \cite{OBrien2003}. This means that during periods of large $D_{st}$ the plasmapause may be far from the point of measurement of $\rho_{eq}$ creating a discord in the correlation. \cite{Gallagher2000} provides a model for $\rho_{eq}$ at a range of L-shells and a brief discussion of the elemental contributions.
 
 \newpage
 \footnotesize
@@ -143,6 +142,15 @@ Similarly, looking at the 1 day averaged data with and without the $F_{10.7}$ de
 \includegraphics[scale=0.5]{paperfigures/nansbyhour_storm.eps}
 \caption{(a) Number of NaN points per hour of observation in the total data set (b) Data availability relative to average event hour in events where $D_{st}<-80nT$}
 \label{nanperhour}
+\end{figure}
+\clearpage
+
+\begin{figure}[htp!]
+\centering
+\includegraphics[scale=0.5]{paperfigures/stormavs-dst-day.eps}
+\includegraphics[scale=0.5]{paperfigures/stormavs-dst-27day.eps}
+\caption{One-day and 27-day averaged $D_{st}$ storms}
+\label{DailyAverages}
 \end{figure}
 \clearpage
 
@@ -162,7 +170,7 @@ Similarly, looking at the 1 day averaged data with and without the $F_{10.7}$ de
 (b)
 \includegraphics[scale=0.7]{paperfigures/dststorms.eps}
 \caption{Averages around time of (a) 669 $\rho_{eq}$ and (b) 130 $D_{st}$ events along with thresholds used to define an event. The number of values used in the averages for mass density is shown in the bottom panel (a) and (b).}
-\label{DSTstorm}
+\label{StormCutoff}
 \end{figure}
 \clearpage
 
@@ -172,7 +180,7 @@ Similarly, looking at the 1 day averaged data with and without the $F_{10.7}$ de
 \includegraphics[scale=0.5]{paperfigures/stormavs-dst.eps}
 \includegraphics[scale=0.5]{paperfigures/stormavs-mass.eps}
 \caption{(a) Average of solar wind and near-Earth measurements around the time $D_{st}$ crossed below -40~nT onset. (b) Same as (a) except around time intervals where mass density crossed above $40 amu/cm^3$.  The bottom panel shows the number of mass density data points that were used for the average.}
-\label{MassStorm}
+\label{Storms}
 \end{figure}
 \clearpage
 
@@ -196,28 +204,22 @@ Similarly, looking at the 1 day averaged data with and without the $F_{10.7}$ de
 
 \begin{figure}[htp!]
 \centering
-\includegraphics[scale=0.7]{paperfigures/stormavs-diffden-10amu.png}
-\includegraphics[scale=0.7]{paperfigures/stormavs-diffden-30percent.png}
-\caption{diff($\rho_{eq}$) $>$ 20$\frac{amu}{hour}$, diff($\rho_{eq}$) $>$ 30$\frac{\%}{hour}$}
+\includegraphics[scale=0.5]{paperfigures/stormavs-diffden-10amu.eps}
+\includegraphics[scale=0.5]{paperfigures/stormavs-diffden-30percent.eps}
+\caption{diff($\rho_{eq}$) $>$ 10$\frac{amu}{hour}$, diff($\rho_{eq}$) $>$ 30$\frac{\%}{hour}$}
 \label{rhochange}
 \end{figure}
 \clearpage
 
 \begin{figure}[htp!]
 \centering
-\includegraphics[scale=0.7]{paperfigures/stormavs-dst-nof107.png}
-\includegraphics[scale=0.7]{paperfigures/f107removed.png}
-\caption{$\rho_{eq}$ with $F_{10.7}$ removed, and Difference from original}
+\includegraphics[scale=0.5]{paperfigures/stormavs-dst-nof107.eps}
+\includegraphics[scale=0.6]{paperfigures/f107removed.eps}
+\caption{$D_{st}$ events where $\rho_{eq}$ has $F_{10.7}$ dependence removed, and Difference between original $\rho_{eq}$ and $F_{10.7}$-less $\rho_{eq}$}
 \label{nof107}
 \end{figure}
 \clearpage
 
-\begin{figure}[htp!]
-\centering
-\includegraphics[scale=0.7]{paperfigures/stormavs-dst-day.png}
-\includegraphics[scale=0.7]{paperfigures/stormavs-dst-day-nof107.png}
-\caption{Original $\rho_{eq}$, and with $F_{10.7}$ dependence removed, both at 1-day averages}
-\label{nof107day}
-\end{figure}
+
 
 \end{document}

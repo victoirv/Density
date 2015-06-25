@@ -246,6 +246,7 @@ AVMDMatBars=[AVMDs(1,:)-nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:)))) ; 
 MakePlots=0;
 MakePaperPlots=1;
 visible='off';
+visible='on';
 
 %Compare the two densities
 if(MakePlots)
@@ -289,24 +290,25 @@ if(MakePaperPlots)
     xa=(1:length(AVMDs))-timewidth-1;
     h=figure('Visible',visible);
     orient tall;
-    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(1,:,6),'+-'); ylabel('V_{SW} (km/s)');%V_sw
+    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(1,:,6),'+-'); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',12); %ylabel('V_{SW} (km/s)');%V_sw
     hold on; plot(xa,AVMatBars(:,:,6),'r-.'); 
-    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(1,:,5),'+-'); ylabel('B_z (nT)'); %Bz
+    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(1,:,5),'+-'); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',12); %ylabel('B_z (nT)'); %Bz
     hold on; plot(xa,AVMatBars(:,:,5),'r-.');
-    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(1,:,15),'+-');ylabel('D_{st} (nT)'); %dst
+    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(1,:,15),'+-'); text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',12); %ylabel('D_{st} (nT)'); %dst
     hold on; plot(xa,AVMatBars(:,:,15),'r-.'); 
-    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(1,:,29),'+-');ylabel('F10.7 (s.f.u.)');%f107
+    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(1,:,29),'+-'); text(0.01,0.9,'F_{10.7} (s.f.u)','Units','normalized','FontSize',12); %ylabel('F10.7 (s.f.u.)');%f107
     hold on; plot(xa,AVMatBars(:,:,29),'r-.');
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
     subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
     hold on; plot(xa,AVMDMatBars(:,:),'r-.');
     set(AX(2),'Xlim',xv); set(AX(1),'Xlim',xv);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
-    ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); ylabel(AX(2),'# of values');
+    text(0.01,0.9,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',12); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
+    ylabel(AX(2),'# of values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2])
     linkaxes([AX h1 h2 h3 h4],'x')
     axis tight;
-    xlabel('Time from start of event (hr)')
+    xlabel('Time from start of event (hour)')
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end)));
     print -depsc2 -r200 paperfigures/stormavs-1.eps
@@ -318,7 +320,7 @@ if(MakePaperPlots)
     plot(OMNITime,MassDensitySpline); hold on;
     plot([OMNITime(1) OMNITime(end)],[40 40],'r-.','LineWidth',6);
     ylabel('Mass Density')
-    xlabel('Time')
+    xlabel('Year')
     datetick('x')
     %title('Mass Density Storms')
     print -depsc2 -r200 paperfigures/massdensitystorms.eps
@@ -327,7 +329,7 @@ if(MakePaperPlots)
     plot(OMNITime,FILLED(:,15)); hold on;
     plot([OMNITime(1) OMNITime(end)],[-50 -50],'r-.','LineWidth',6);
     ylabel('D_{st}')
-    xlabel('Time')
+    xlabel('Year')
     datetick('x')
     %title('D_{st} Storms')
     print -depsc2 -r200 paperfigures/dststorms.eps
