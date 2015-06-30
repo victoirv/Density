@@ -207,7 +207,7 @@ if(cutoffduration>1)
 end
 
 %Remove F10.7 influence
-removef107=0;
+removef107=1;
 if(removef107)
     [~, ~, ~,xnew,~] = IR(MassDensitySpline,FILLED(:,end),0,1,0,0); %Remove F10.7 
     MassDensitySplineOriginal=MassDensitySpline;
@@ -327,7 +327,9 @@ if(MakePaperPlots && LongTimeScale==24*27 && ~removef107) %Correlation plot of F
     xlabel('F_{10.7\_27d} (s.f.u.)'); ylabel('log(\rho_{eq\_27d}) (amu/cm^3)');
     cc=corrcoef(FILLED(~isnan(MassDensitySpline),end),MassDensitySpline(~isnan(MassDensitySpline)));
     title(sprintf('cc = %2.3f',cc(1,2)));
-    print -depsc2 -r200 paperfigures/ccplot.eps    
+    print -depsc2 -r200 paperfigures/ccplot.eps
+    
+    
 end
 
 
