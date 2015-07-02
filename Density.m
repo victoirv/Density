@@ -177,12 +177,12 @@ end
 FILLED=[FILLED F107];
 headers{end+1}='F107';
 
-LongTimeScale=24*27;%24*27; %How many hours to average over
+LongTimeScale=24;%24*27; %How many hours to average over
 LongTimeInc=LongTimeScale*(OMNITime(2)-OMNITime(1));
 if(LongTimeScale>0)
-    MassDensitySpline=interp1(OMNITime,MassDensitySpline,OMNITime(1):LongTimeInc:OMNITime(end));
+    MassDensitySpline=interptest(OMNITime,MassDensitySpline,OMNITime(1):LongTimeInc:OMNITime(end));
     %F107Spline=interp1(OMNITime,F107Spline,OMNITime(1):LongTimeInc:OMNITime(end));
-    FILLED=interp1(OMNITime,FILLED,OMNITime(1):LongTimeInc:OMNITime(end));
+    FILLED=interptest(OMNITime,FILLED,OMNITime(1):LongTimeInc:OMNITime(end));
     OMNITime=OMNITime(1):LongTimeInc:OMNITime(end);
 end
 
@@ -261,8 +261,8 @@ end
 if(MakePaperPlots && removef107)
     h=figure('Visible',visible);
     %plot(OMNITime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal)),'-')
-    plot(OMNITime,MassDensitySplineOriginal,'r-')
-    hold on; plot(OMNITime,MassDensitySpline,'b-')
+    plot(OMNITime,MassDensitySplineOriginal,'r.')
+    hold on; plot(OMNITime,MassDensitySpline,'b.')
     legend('Original','F_{10.7} Removed');
     %title('F10.7 trend')
     ylabel('\rho_{eq} (amu/cm^3)')
@@ -331,7 +331,7 @@ if(MakePaperPlots && LongTimeScale==24*27 && ~removef107) %Correlation plot of F
 end
 
 
-if(MakePaperPlots) %Nans per hour
+if(MakePaperPlots && LongTimeScale==0) %Nans per hour
     h=figure('Visible',visible);
     hist(FILLED(isnan(MassDensitySpline),3),0:23)
     axis([-1 24 0 3000])
@@ -350,7 +350,7 @@ if(MakePaperPlots) %Nans per hour
     ylabel('Data available')
     xlabel('Time from event start (hr)')
     grid on
-    print -depsc2 -r200 nansbyhour_storm.eps
+    print -depsc2 -r200 paperfigures/nansbyhour_storm.eps
     
     %Show DST is significantly different during missing data times
     [p,h]=ranksum(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
@@ -363,6 +363,32 @@ if(MakePaperPlots) %Nans per hour
     [h,p]=ttest2(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
 end
 
+if(MakePaperPlots && LongTimeScale==0) %DST vs rho_eq for 1 hour and 1 day
+    h=figure('Visible',visible);
+    plot(FILLED(~isnan(MassDensitySpline),15),MassDensitySpline(~isnan(MassDensitySpline)),'.');
+    xlabel('D_{st}')
+    ylabel('\rho_{eq}')
+    
+    DSTDay=interptest(OMNITime,FILLED(:,15),OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
+    MDDay=interptest(OMNITime,MassDensitySpline,OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
+    hold on;
+    plot(DSTDay,MDDay,'r+');
+    legend('One Hour','One Day Median');
+    axis tight;
+    print -depsc2 -r200 paperfigures/DSTvsMD.eps
+end
+
+if(MakePaperPlots && ~removef107)
+    h=figure('Visible',visible);
+    NewTime=OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end);
+    [AX,H1,H2]=plotyy(OMNITime,FILLED(:,end),NewTime,interptest(OMNITime,MassDensitySpline,NewTime),'plot','plot');
+    set(H1,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'yscale','log')
+    ylabel(AX(1),'D_{st}'); ylabel(AX(2),'\rho_{eq}');
+    xlabel('Year');
+    datetick;
+    print -depsc2 -r200 paperfigures/DstMDAllData.eps
+end
+
 if(MakePlots) %Stack plots
     for i=1:length(headers)
         subplot('position',subplotstack(5,mod(i,4)+1));plot(AVs(1,:,i),'+-');
@@ -371,7 +397,7 @@ if(MakePlots) %Stack plots
             subplot('position',subplotstack(5,5)); [AX,H1,H2]=plotyy(1:length(AVMDs),AVMDs(1,:),1:length(AVMDs),AVnnans,'plot','bar');
             set(AX(2),'Xlim',[1 length(AVMDs)]); set(AX(1),'Xlim',[1 length(AVMDs)]); set(get(H2,'child'),'facea',.3); set(H1,'marker','+','color','red'); set(AX(1),'YColor','r');
             %drawnow; hold on; xlim manual; h=bar(AVnnans); ch = get(h,'child'); set(ch,'facea',.3)
-            ylabel(AX(1),'Mass Density'); ylabel(AX(2),'# of values');
+            ylabel(AX(1),'\rho_{eq}'); ylabel(AX(2),'# of values');
             %xlabel('Time before storm onset (hr)')
             print('-dpng',sprintf('figures/stormavs-%d',i));
             close all

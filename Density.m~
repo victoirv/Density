@@ -177,12 +177,12 @@ end
 FILLED=[FILLED F107];
 headers{end+1}='F107';
 
-LongTimeScale=24*27;%24*27; %How many hours to average over
+LongTimeScale=0;%24*27; %How many hours to average over
 LongTimeInc=LongTimeScale*(OMNITime(2)-OMNITime(1));
 if(LongTimeScale>0)
-    MassDensitySpline=interp1(OMNITime,MassDensitySpline,OMNITime(1):LongTimeInc:OMNITime(end));
+    MassDensitySpline=interptest(OMNITime,MassDensitySpline,OMNITime(1):LongTimeInc:OMNITime(end));
     %F107Spline=interp1(OMNITime,F107Spline,OMNITime(1):LongTimeInc:OMNITime(end));
-    FILLED=interp1(OMNITime,FILLED,OMNITime(1):LongTimeInc:OMNITime(end));
+    FILLED=interptest(OMNITime,FILLED,OMNITime(1):LongTimeInc:OMNITime(end));
     OMNITime=OMNITime(1):LongTimeInc:OMNITime(end);
 end
 
@@ -261,8 +261,8 @@ end
 if(MakePaperPlots && removef107)
     h=figure('Visible',visible);
     %plot(OMNITime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal)),'-')
-    plot(OMNITime,MassDensitySplineOriginal,'r-')
-    hold on; plot(OMNITime,MassDensitySpline,'b-')
+    plot(OMNITime,MassDensitySplineOriginal,'r.')
+    hold on; plot(OMNITime,MassDensitySpline,'b.')
     legend('Original','F_{10.7} Removed');
     %title('F10.7 trend')
     ylabel('\rho_{eq} (amu/cm^3)')
@@ -327,13 +327,11 @@ if(MakePaperPlots && LongTimeScale==24*27 && ~removef107) %Correlation plot of F
     xlabel('F_{10.7\_27d} (s.f.u.)'); ylabel('log(\rho_{eq\_27d}) (amu/cm^3)');
     cc=corrcoef(FILLED(~isnan(MassDensitySpline),end),MassDensitySpline(~isnan(MassDensitySpline)));
     title(sprintf('cc = %2.3f',cc(1,2)));
-    print -depsc2 -r200 paperfigures/ccplot.eps
-    
-    
+    print -depsc2 -r200 paperfigures/ccplot.eps    
 end
 
 
-if(MakePaperPlots) %Nans per hour
+if(MakePaperPlots && LongTimeScale==0) %Nans per hour
     h=figure('Visible',visible);
     hist(FILLED(isnan(MassDensitySpline),3),0:23)
     axis([-1 24 0 3000])
@@ -352,7 +350,7 @@ if(MakePaperPlots) %Nans per hour
     ylabel('Data available')
     xlabel('Time from event start (hr)')
     grid on
-    print -depsc2 -r200 nansbyhour_storm.eps
+    print -depsc2 -r200 paperfigures/nansbyhour_storm.eps
     
     %Show DST is significantly different during missing data times
     [p,h]=ranksum(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
@@ -363,6 +361,29 @@ if(MakePaperPlots) %Nans per hour
     %Or pre-noon vs post-noon
     [p,h]=ranksum(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
     [h,p]=ttest2(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
+end
+
+if(MakePaperPlots && LongTimeScale==0) %DST vs rho_eq for 1 hour and 1 day
+    h=figure('Visible',visible);
+    plot(FILLED(~isnan(MassDensitySpline),15),MassDensitySpline(~isnan(MassDensitySpline)),'.');
+    xlabel('D_{st}')
+    ylabel('\rho_{eq}')
+    
+    DSTDay=interptest(OMNITime,FILLED(:,15),OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
+    MDDay=interptest(OMNITime,MassDensitySpline,OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
+    hold on;
+    plot(DSTDay,MDDay,'r+');
+    legend('One Hour','One Day Median');
+    axis tight;
+    print -depsc2 -r200 paperfigures/DSTvsMD.eps
+end
+
+if(MakePaperPlots)
+    h=figure('Visible',visible);
+    NewTime=OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end);
+    [AX,H1,H2]=plotyy(OMNITime,FILLED(:,end),NewTime,interptest(OMNITime,MassDensitySpline,NewTime),'plot','plot');
+    
+    print -depsc2 -r200 paperfigures/DstMDAllData.eps
 end
 
 if(MakePlots) %Stack plots
