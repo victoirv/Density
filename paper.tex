@@ -84,7 +84,7 @@ Figure \ref{AllData} shows values of solar wind averages and mass density used i
 Figure \ref{DailyAverages} show that the trends observed by \cite{Takahashi2010} for one day averages only seems to hold true for the one-day averaged data, and only after the $F_{10.7}$ dependence is removed. The correlation seen between $log(\rho_{eq\_27d})$ and $F_{10.7\_27d}$ isn't quite as good in this data as in \cite{Takahashi2010}, but shows the same trend as seen in Figure \ref{ccplot}.
 
 \subsection{D$_{st}$ Events}
-Two event indicators are looked at in this study. The first is looking for a drop in DST below the threshhold of $-40nT$ specified in \cite{Takahashi2010}, dubbed the "onset", and then considering the timeframe an event until $D_{st}$ passes back above the $-40nT$ threshold. This method finds 669 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. Figure \ref{Storms} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{Storms}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-40nT$. The dashed red lines indicate plus and minus one standard deviation of values from all events that went into the average. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other parameters in the stack. A subset of longer duration events will be looked at later. 
+Two event indicators are looked at in this study. The first is looking for a drop in DST below the threshold of $-40nT$ specified in \cite{Takahashi2010}, dubbed the "onset", and then considering the timeframe an event until $D_{st}$ passes back above the $-40nT$ threshold. This method finds 669 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. Figure \ref{Storms} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{Storms}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-40nT$. The dashed red lines indicate plus and minus one standard deviation of values from all events that went into the average. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other parameters in the stack. A subset of longer duration events will be looked at later. 
 
 This figure shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $DST$, but no obvious change in mass density at an hourly timescale. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation since there's no obvious connection on a short timescale. One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long term correlation of density and $D_{st}$.
 
@@ -146,18 +146,9 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \begin{figure}[htp!]
 \centering
 \includegraphics[scale=0.5]{paperfigures/stormavs-dst-day.eps}
-\includegraphics[scale=0.5]{paperfigures/stormavs-dst-27day.eps}
-\caption{One-day and 27-day averaged $D_{st}$ storms}
+\includegraphics[scale=0.5]{paperfigures/stormavs-dst-day-50.eps}
+\caption{One-day averaged $D_{st}$ storms at thresholds of $-40nT$ and $-50nT$}
 \label{DailyAverages}
-\end{figure}
-\clearpage
-
-\begin{figure}[htp!]
-\centering
-\includegraphics[scale=0.5]{paperfigures/stormavs-dst-day-nof107.eps}
-\includegraphics[scale=0.5]{paperfigures/stormavs-dst-27day-nof107.eps}
-\caption{One-day and 27-day averaged $D_{st}$ storms with $F_{10.7}$ dependence removed}
-\label{DailyAveragesNoF107}
 \end{figure}
 \clearpage
 
