@@ -194,6 +194,15 @@ starti=find(storms>0);
 endi=find(storms<0)-1;
 duration=endi-starti+1;
 
+while(1) %Shift start points to next local minimum 
+    ind=FILLED(starti+1,15)<FILLED(starti,15);
+    if(sum(ind)==0)
+        break
+    end
+    starti(ind)=starti(ind)+1;
+end
+
+
 %{
 if(LongTimeScale>0); %Maybe add unique? And figure out how to make duration work then
    starti=(ceil(starti./LongTimeScale))+1; %Not entirely sure why it's off by 1
@@ -240,6 +249,14 @@ end
 while(endi(end)+maxwidth>length(MassDensitySpline))
     starti(end)=[]; endi(end)=[];
 end
+
+cutconditions=0;
+if(cutconditions) %Cut down found storms to only include pre-noon conditions
+   endi(FILLED(starti,3)>12)=[];
+   duration(FILLED(starti,3)>12)=[];
+   starti(FILLED(starti,3)>12)=[];
+end
+
 for i=1:length(starti)
     datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
     %if(datanum>(endi(i)-starti(i))/2 && datanum>18)
@@ -250,8 +267,8 @@ for i=1:length(starti)
     %fprintf('%6f - %3d \n',OMNITime(starti(i)),endi(i)-starti(i))
     % end
 end
-AVs=nanmean(AVMat,1);
-AVMDs=nanmean(AVMDMat);
+AVs=nanmedian(AVMat,1);
+AVMDs=nanmedian(AVMDMat);
 AVnnans=sum(~isnan(AVMDMat));
 AVMatBars=[AVs(1,:,:)-nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:)))) ; AVs(1,:,:)+nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:))))];
 AVMDMatBars=[AVMDs(1,:)-nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:)))) ; AVMDs(1,:)+nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:))))];
@@ -260,6 +277,7 @@ AVs=squeeze(AVs);
 if(LongTimeScale>1)
     AVs=interptest(-timewidth:1:timewidth*2,AVs,-timewidth:LongTimeScale:timewidth*2);
     AVMDs=interptest(-timewidth:1:timewidth*2,AVMDs',-timewidth:LongTimeScale:timewidth*2)';
+    
     AVnnans=interptest(-timewidth:1:timewidth*2,AVnnans',-timewidth:LongTimeScale:timewidth*2)';
     NewAVMatBars(1,:,:)=interptest(-timewidth:1:timewidth*2,squeeze(AVMatBars(1,:,:)),-timewidth:LongTimeScale:timewidth*2); 
     NewAVMatBars(2,:,:)=interptest(-timewidth:1:timewidth*2,squeeze(AVMatBars(2,:,:)),-timewidth:LongTimeScale:timewidth*2);
@@ -267,6 +285,9 @@ if(LongTimeScale>1)
     
     AVMDMatBars=[interptest(-timewidth:1:timewidth*2,AVMDMatBars(1,:)',-timewidth:LongTimeScale:timewidth*2)'; ...
         interptest(-timewidth:1:timewidth*2,AVMDMatBars(2,:)',-timewidth:LongTimeScale:timewidth*2)'];
+    
+    xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
+    AVMDblock=nanmedian(reshape(AVMDMat(:,14:end),[],length(-timewidth:LongTimeScale:timewidth*2)-1));
 end
 
 %%%%%Make Plots?
@@ -283,6 +304,26 @@ if(MakePlots)
     xlabel('Time')
     datetick
     print -dpng figures/densitycomp.png
+end
+
+if(MakePaperPlots && LongTimeScale>1)
+    h=figure('Visible',visible);
+    plot(xa(2:end),AVMDblock)
+    hold on; plot(xa(2:end),AVMDs(2:end),'r')
+    xlabel('Time from minimum of event (day)')
+    ylabel('\rho_{eq} (amu/cm^3)')
+    legend('Block median','Median of Median')
+    print -depsc2 -r200 paperfigures/blockmedian.eps
+end
+
+if(MakePaperPlots)
+    h=figure('Visible',visible);
+    plot(-timewidth:1:timewidth*2,AVMDMat,'.')
+    hold on;
+    xa=(-timewidth:LongTimeScale:timewidth*2);
+    plot(xa,AVMDs(1,:),'r','LineWidth',3);
+    hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
+    print -depsc2 -r200 paperfigures/allstorms.eps
 end
 
 if(MakePaperPlots && removef107)

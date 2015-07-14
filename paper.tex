@@ -38,7 +38,7 @@ R.S. Weigel\footnote{rweigel@gmu.edu}}
 \hrule
 \begin{abstract}
 This paper looks at how various magnetosphere conditions behave around the onset of geomagnetic events. It confirms results from previous papers that a sudden drop in $D_{st}$ correlates with a spike in equatorial mass density, while adding a level of depth and specification to the applicability of their results. It compares data at 1-hour averages to data at 1-day averages, and briefly to data at 27-day averages to examine if the trend holds at varying time scales and finds that it does, so long as the data is pre-processed to linearly remove a large time scale $F_{10.7}$ dependence. 
-By then looking at an hourly average of parameters from 24 hours before event onset to 48 hours after, short timescale trends can be discerned. 
+By then looking at an hourly average of parameters from 24 hours before event onset to 48 hours after, short timescale trends can be discerned.
 
 \vspace{2em}
 \end{abstract}
@@ -77,7 +77,6 @@ In this work events are considered when $D_{st}$ or $\rho_{eq}$ crosses a thresh
 % If you say this, you need to do an experiement.  A review will say ``seems like it is an easy statement to check.  Why didn't you?''
 
 \section{Results}
-
 Figure \ref{AllData} shows values of solar wind averages and mass density used in this study. We will briefly compare our results to other published results to verify our methods and handling of data. 
 
 \subsection{Previous Results}
@@ -122,10 +121,11 @@ Taking this re-created data set and subtracting it from the original should remo
 
 \section{Appendix}
 \subsection{Bias}
+In an attempt to reproduce Figure 11 from \cite{Takahashi2010}, an ambiguity in data-handling was found. It is unknown how they got from hourly $\rho_{eq}$ to daily medians, whether in one step or two steps, so attempts were made to reproduce all possibilities and compare in order to find a data-handling method with the least bias. These attempts are shown in Figure \ref{blockmedian}. This also shows the effect of only considering events with a minimum before noon. All show a similar spike in $\rho_{eq}$ at the time of $D_{st}$ minimum, though none quite reproduce the exact values seen in \cite{Takahashi2010}. Figure \ref{allstorms} shows where the median falls for all of the found storms during that period, as a sanity check for why the prior work would get median values nearing $30 amu/cm^3$.
 
 To check for potential bias in the data as used by our analysis, we checked how the data availability varied with hour, shown in Figure \ref{nanperhour}. We also looked at how storm conditions affected data availability. Both a two sample t-test for difference in means and a Wilcoxon rank sum test showed significance at the 1\% level that $D_{st}$ during periods with available data was of a different distribution than $D_{st}$ during periods missing data. When testing for other significant $D_{st}$ differences, the Wilcoxon test was significant while the t-test was not in pre-noon vs post-noon distributions, as well as $\rho_{eq}>40$ vs $\rho_{eq}<40$ distributions indicating perhaps an increase in variability without an increase in mean.
 
-While the GOES Satellites tend to keep an average geostationary distance of around $L=6.8R_E$ shown in \cite{Takahashi2010}, the actual plasmapause location varies significantly , as shown in \cite{OBrien2003}. This means that during periods of large $D_{st}$ the plasmapause may be far from the point of measurement of $\rho_{eq}$ creating a discord in the correlation. \cite{Gallagher2000} provides a model for $\rho_{eq}$ at a range of L-shells and a brief discussion of the elemental contributions.
+While the GOES Satellites tend to keep an average geostationary distance of around $L=6.8R_E$ shown in \cite{Takahashi2010}, the actual plasmapause location varies significantly, as shown in \cite{OBrien2003}. This means that during periods of large $D_{st}$ the plasmapause may be far from the point of measurement of $\rho_{eq}$ creating a discord in the correlation. \cite{Gallagher2000} provides a model for $\rho_{eq}$ at a range of L-shells and a brief discussion of the elemental contributions.
 
 \newpage
 \footnotesize
@@ -223,11 +223,30 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 
 \begin{figure}[htp]
 \centering
+\includegraphics[scale=0.75]{paperfigures/blockmedian.eps}
+\includegraphics[scale=0.75]{paperfigures/blockmedian-prenoon.eps}
+\caption{Comparing median values calculated as median of all 1-hour points in the 12 day block, and as the daily median of all hourly-mediated storms. (b) Same, but only storms starting between 0-12 UTC}
+\label{blockmedian}
+\end{figure}
+\clearpage
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.9]{paperfigures/allstorms.eps}
+\caption{Comparing all storms to their median and $1\sigma$ range}
+\label{allstorms}
+\end{figure}
+\clearpage
+
+\begin{figure}[htp]
+\centering
 \includegraphics[scale=0.5]{paperfigures/nansbyhour.eps}
 \includegraphics[scale=0.5]{paperfigures/nansbyhour_storm.eps}
 \caption{(a) Number of NaN points per hour of observation in the total data set (b) Data availability relative to average event hour in events where $D_{st}<-80nT$}
 \label{nanperhour}
 \end{figure}
 \clearpage
+
+
 
 \end{document}
