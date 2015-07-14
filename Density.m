@@ -1,38 +1,12 @@
 function Density
 
 close all;clear all;
-%load('../OMNI_OMNI2_merged')
-%{
-getyears=Year>=2000;
-getyears=getyears+(Year<=2011);
-getyears=(getyears==2);
-VBS=VBS(getyears);
-DST=Dst_index(getyears);
-ION=Ion_density(getyears);
-HOUR=Hour(getyears);
-KP=Kp_index(getyears);
-%}
+
+%Read filled dataset from Kondrashov(2014)
 FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
-%FILLED=FILLED((FILLED(:,15)>-30),:); %DST less than -30
-
-%Find a good storm
-
-FILLED=FILLED(FILLED(:,1)>1988,:); %Just to get into Denton time
-OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
-
-startt=727547.333333;
-%DST Storm: 726479.750000;
-%Mass Storm: 725858.250000 - 20
-%selectduration=22;
-%starti=find(floor(OMNITime*100000)==floor(startt*100000)); %Rounding error?
-%starti=find(OMNITime==startt);
-%FILLED=FILLED(starti:starti+selectduration,:);
-%{
-%}
-
-%FILLED=FILLED((FILLED(:,1)==2000),:); %Year 2000
-%FILLED=FILLED((FILLED(:,2)==43),:); %February 12 (Day 31+12)
-
+FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
+%FILLED=FILLED(FILLED(:,1)>1988,:);
+%FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
 headers=textread('WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
 VBz=FILLED(:,6).*FILLED(:,5);
@@ -40,14 +14,14 @@ BS=1/2*(abs(FILLED(:,5))-FILLED(:,5));
 OMNIDensity=FILLED(:,7);
 OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
 %VBS=1/2*Plasma_bulk_speed.*(abs(Bz_GSM)-Bz_GSM);
-%OMNITime=Time;
 
+%Get Denton data (mostly just for mass density)
 if(exist('DentonDensityAndTime.mat','file'))
     load('DentonDensityAndTime')
 else
-    IN=dlmread('massdensity.txt');
+    urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/massdensity.txt','/tmp/massdensity.txt');
+    IN=dlmread('/tmp/massdensity.txt');
     IN(IN(:,1)~=7,:)=[]; %Only use satellite 7 (6 should also work)
-    %IN=sortrows(IN,2);
     IN(IN==9999)=NaN;
     
     [DentonTime,uniquerows]=unique(datenum(IN(:,2),1,0) + IN(:,3)+IN(:,4)/24+IN(:,5)/(24*60),'rows');
@@ -63,6 +37,7 @@ else
     save('DentonDensityAndTime','DentonTime','MassDensity','DBz','MLT','DBS','DVsw');
 end
 
+%Load F10.7 specifically 
 if(exist('OMNIF107.mat','file'))
     load('OMNIF107.mat')
 else
@@ -73,61 +48,11 @@ else
     save('OMNIF107','F107time','F107');
 end
 
-
 if(~exist('figures','dir'))
     mkdir('figures');
 end
 
-%Test linear fit
-%{
-x=F107;
-y=MassDensity;
-
-p = polyfit(x,y,1)
-yfit =  p(1) * x + p(2);
-yresid = y - yfit;
-rsq = 1 -sum(yresid.^2)/((length(y)-1) * var(y))
-
-%Test without removing expanded plasma
-t27=DentonTime(1):27:DentonTime(end); %Make 27 day time vector
-y27=interptest(DentonTime,log(y),t27);
-x27=interptest(DentonTime,x,t27);
-p = polyfit(x27,y27,1)
-yfit =  p(1) * x27 + p(2);
-yresid = y27 - yfit;
-rsq = 1 -sum(yresid.^2)/((length(y27)-1) * var(y27))
-
-%Remove expanded plasma
-x2=x(y<20);
-y2=y(y<20);
-DentonTime2=DentonTime(y<20);
-y27=interptest(DentonTime2,log(y2),t27);
-x27=interptest(DentonTime2,x2,t27);
-p = polyfit(x27,y27,1)
-yfit =  p(1) * x27 + p(2);
-yresid = y27 - yfit;
-rsq = 1 -sum(yresid.^2)/((length(y27)-1) * var(y27))
-
-%Remove afternoon
-prenoon=(MLT<12 & MLT>=7);
-x2=x(y<25 & prenoon);
-y2=y(y<25 & prenoon);
-DentonTime2=DentonTime(y<25 & prenoon);
-y27=interptest(DentonTime2,log(y2),t27);
-x27=interptest(DentonTime2,x2,t27);
-p = polyfit(x27,y27,1)
-yfit =  p(1) * x27 + p(2);
-yresid = y27 - yfit;
-rsq = 1 -sum(yresid.^2)/((length(y27)-1) * var(y27))
-
-ignore=1;%For breakpoint
-%}
-
-%Test subtracting F10.7 trend from mass density
-%[~, cb, ~,xnew,corr] = IR(log(MassDensity),log(F107),0,12,0,0);
-%MassDensity=exp(log(MassDensity)-xnew);
-
-
+%Get everything onto the same time grid
 gettime=OMNITime>min(DentonTime);
 gettime=gettime+(OMNITime<max(DentonTime));
 gettime=(gettime==2);
@@ -151,21 +76,6 @@ getFtime=(getFtime==2);
 F107time=F107time(getFtime);
 F107=F107(getFtime);
 
-
-OverlayFilled=FILLED;
-OHr=FILLED(:,3);
-DHr=hour(DentonTime);
-%Rescale to overlay on plots of density (where there's space from 150-250)
-for i=1:length(headers)
-    OverlayFilled(:,i)=((250-150).*(OverlayFilled(:,i)-min(OverlayFilled(:,i))))./(max(OverlayFilled(:,i))-min(OverlayFilled(:,i))) + 150;
-end
-OverlayBS=((250-150).*(BS-min(BS)))./(max(BS)-min(BS)) + 150;
-OverlayVBS=((250-150).*(VBS-min(VBS)))./(max(VBS)-min(VBS)) + 150;
-OverlayVBz=((250-150).*(VBz-min(VBz)))./(max(VBz)-min(VBz)) + 150;
-OverlayF107=((250-150).*(F107-min(F107)))./(max(F107)-min(F107)) + 150;
-OverlayDBz=((250-150).*(DBz-min(DBz)))./(max(DBz)-min(DBz)) + 150;
-OverlayDBS=((250-150).*(DBS-min(DBS)))./(max(DBS)-min(DBS)) + 150;
-
 %MassDensitySpline=interp1(DentonTime,MassDensity,OMNITime,'linear');
 if(exist('InterpedVals.mat','file'))
     load('InterpedVals')
@@ -182,7 +92,7 @@ end
 FILLED=[FILLED F107];
 headers{end+1}='F107';
 
-LongTimeScale=24;%24*27; %How many hours to average over
+LongTimeScale=24;%24*27; %How many hours to average over. Best stick to 1, 24, or 24*27
 
 %Find storm with enough data to analyze
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
@@ -194,7 +104,8 @@ starti=find(storms>0);
 endi=find(storms<0)-1;
 duration=endi-starti+1;
 
-while(1) %Shift start points to next local minimum 
+%Shift event start points to next local minimum 
+while(1) 
     ind=FILLED(starti+1,15)<FILLED(starti,15);
     if(sum(ind)==0)
         break
@@ -204,6 +115,7 @@ end
 
 
 %{
+%To interpolate data onto long-scale time grids
 if(LongTimeScale>0); %Maybe add unique? And figure out how to make duration work then
    starti=(ceil(starti./LongTimeScale))+1; %Not entirely sure why it's off by 1
    endi=(ceil(endi./LongTimeScale))+1;
@@ -220,7 +132,7 @@ end
 %}
 
 durationcaveat=''; %empty string if no cutoff set
-cutoffduration=1; %If you want to get rid of short (spurious?) storms
+cutoffduration=1; %If you want to get rid of short (spurious?) storms, set larger than 1
 if(cutoffduration>1)
     starti=starti(duration>cutoffduration);
     endi=endi(duration>cutoffduration);
@@ -243,6 +155,7 @@ timewidth=24;
 if(LongTimeScale>1),timewidth=96; end
 maxwidth=timewidth*2;
 
+%Remove storms where the window of interest extends past existing data
 while(starti(1)-maxwidth<1)
     starti(1)=[]; endi(1)=[];
 end
@@ -250,22 +163,20 @@ while(endi(end)+maxwidth>length(MassDensitySpline))
     starti(end)=[]; endi(end)=[];
 end
 
+%Cut down found storms to only include pre-noon conditions
 cutconditions=0;
-if(cutconditions) %Cut down found storms to only include pre-noon conditions
+if(cutconditions) 
    endi(FILLED(starti,3)>12)=[];
    duration(FILLED(starti,3)>12)=[];
    starti(FILLED(starti,3)>12)=[];
 end
 
+%Build matrices storing all storms
 for i=1:length(starti)
-    datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
-    %if(datanum>(endi(i)-starti(i))/2 && datanum>18)
+    %datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
     AVMat(stormi,:,:)=FILLED((starti(i)-timewidth):starti(i)+timewidth*2,:); 
     AVMDMat(stormi,:)=MassDensitySpline((starti(i)-timewidth):starti(i)+timewidth*2);
-    
     stormi=stormi+1;
-    %fprintf('%6f - %3d \n',OMNITime(starti(i)),endi(i)-starti(i))
-    % end
 end
 AVs=nanmedian(AVMat,1);
 AVMDs=nanmedian(AVMDMat);
@@ -290,7 +201,7 @@ if(LongTimeScale>1)
     AVMDblock=nanmedian(reshape(AVMDMat(:,14:end),[],length(-timewidth:LongTimeScale:timewidth*2)-1));
 end
 
-%%%%%Make Plots?
+%%%%%Make Plots
 MakePlots=0;
 MakePaperPlots=1;
 visible='off';
@@ -306,6 +217,7 @@ if(MakePlots)
     print -dpng figures/densitycomp.png
 end
 
+%Median of medians vs block median
 if(MakePaperPlots && LongTimeScale>1)
     h=figure('Visible',visible);
     plot(xa(2:end),AVMDblock)
@@ -316,6 +228,7 @@ if(MakePaperPlots && LongTimeScale>1)
     print -depsc2 -r200 paperfigures/blockmedian.eps
 end
 
+%All storms plotted together with median
 if(MakePaperPlots)
     h=figure('Visible',visible);
     plot(-timewidth:1:timewidth*2,AVMDMat,'.')
@@ -326,19 +239,20 @@ if(MakePaperPlots)
     print -depsc2 -r200 paperfigures/allstorms.eps
 end
 
+%Showing 'detrending' by removing F10.7 influencex`
 if(MakePaperPlots && removef107)
     h=figure('Visible',visible);
     %plot(OMNITime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal)),'-')
     plot(OMNITime,MassDensitySplineOriginal,'r.')
     hold on; plot(OMNITime,MassDensitySpline,'b.')
     legend('Original','F_{10.7} Removed');
-    %title('F10.7 trend')
     ylabel('\rho_{eq} (amu/cm^3)')
     xlabel('Year')
     datetick
     print -depsc2 -r200 paperfigures/f107removed.eps
 end
 
+%Make main stack plots
 if(MakePaperPlots)
     h=figure('Visible',visible);
     orient tall;
@@ -360,9 +274,7 @@ if(MakePaperPlots)
     print -depsc2 -r200 paperfigures/alldata.eps
     
     
-    %xa=(1:length(AVMDs))-timewidth-1;
     xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
-    %if(LongTimeScale==24*27), xa=xa./27; end %Make axis reflect 27-day steps
     h=figure('Visible',visible);
     orient tall;
     h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-'); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',12); %ylabel('V_{SW} (km/s)');%V_sw
@@ -391,7 +303,8 @@ if(MakePaperPlots)
     
 end
 
-if(MakePaperPlots && LongTimeScale==24*27 && ~removef107) %Correlation plot of F10.7 and rho at 27 day averages
+%Correlation plot of F10.7 and rho at 27 day averages
+if(MakePaperPlots && LongTimeScale==24*27 && ~removef107) 
     h=figure('Visible',visible); plot(FILLED(:,end),log(MassDensitySpline),'+') ;
     xlabel('F_{10.7\_27d} (s.f.u.)'); ylabel('log(\rho_{eq\_27d}) (amu/cm^3)');
     cc=corrcoef(FILLED(~isnan(MassDensitySpline),end),MassDensitySpline(~isnan(MassDensitySpline)));
@@ -399,8 +312,8 @@ if(MakePaperPlots && LongTimeScale==24*27 && ~removef107) %Correlation plot of F
     print -depsc2 -r200 paperfigures/ccplot.eps    
 end
 
-
-if(MakePaperPlots && LongTimeScale==1) %Nans per hour
+%Nans per hour
+if(MakePaperPlots && LongTimeScale==1) 
     h=figure('Visible',visible);
     hist(FILLED(isnan(MassDensitySpline),3),0:23)
     axis([-1 24 0 3000])
@@ -420,19 +333,10 @@ if(MakePaperPlots && LongTimeScale==1) %Nans per hour
     xlabel('Time from event start (hr)')
     grid on
     print -depsc2 -r200 paperfigures/nansbyhour_storm.eps
-    
-    %Show DST is significantly different during missing data times
-    [p,h]=ranksum(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
-    [h,p]=ttest2(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
-    %Or when mass density gets above/below 40
-    [p,h]=ranksum(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01)
-    [h,p]=ttest2(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01)
-    %Or pre-noon vs post-noon
-    [p,h]=ranksum(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
-    [h,p]=ttest2(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
 end
 
-if(MakePaperPlots && LongTimeScale==1) %DST vs rho_eq for 1 hour and 1 day
+%DST vs rho_eq for 1 hour and 1 day
+if(MakePaperPlots && LongTimeScale==1) 
     h=figure('Visible',visible);
     plot(FILLED(~isnan(MassDensitySpline),end),MassDensitySpline(~isnan(MassDensitySpline)),'.');
     xlabel('F_{10.7}')
@@ -447,6 +351,7 @@ if(MakePaperPlots && LongTimeScale==1) %DST vs rho_eq for 1 hour and 1 day
     print -depsc2 -r200 paperfigures/F107vsMD.eps
 end
 
+
 if(MakePaperPlots && ~removef107 && LongTimeScale==1)
     h=figure('Visible',visible);
     NewTime=OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end);
@@ -457,6 +362,42 @@ if(MakePaperPlots && ~removef107 && LongTimeScale==1)
     datetick;
     print -depsc2 -r200 paperfigures/F107MDAllData.eps
 end
+
+%Statistical comparisons
+if(LongTimeScale==1)
+    %Show DST is significantly different during missing data times
+    [p,h]=ranksum(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
+    [h,p]=ttest2(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
+    %Or when mass density gets above/below 40
+    [p,h]=ranksum(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01)
+    [h,p]=ttest2(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01)
+    %Or pre-noon vs post-noon
+    [p,h]=ranksum(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
+    [h,p]=ttest2(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
+end
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+%Older plots, possibly for thesis, just batch comparing variables and
+%making correlation tables
+
+%{
+%Get re-scaled values for the sake of plotting overlays
+OverlayFilled=FILLED;
+OHr=FILLED(:,3);
+DHr=hour(DentonTime);
+for i=1:length(headers)
+    OverlayFilled(:,i)=((250-150).*(OverlayFilled(:,i)-min(OverlayFilled(:,i))))./(max(OverlayFilled(:,i))-min(OverlayFilled(:,i))) + 150;
+end
+OverlayBS=((250-150).*(BS-min(BS)))./(max(BS)-min(BS)) + 150;
+OverlayVBS=((250-150).*(VBS-min(VBS)))./(max(VBS)-min(VBS)) + 150;
+OverlayVBz=((250-150).*(VBz-min(VBz)))./(max(VBz)-min(VBz)) + 150;
+OverlayF107=((250-150).*(F107-min(F107)))./(max(F107)-min(F107)) + 150;
+OverlayDBz=((250-150).*(DBz-min(DBz)))./(max(DBz)-min(DBz)) + 150;
+OverlayDBS=((250-150).*(DBS-min(DBS)))./(max(DBS)-min(DBS)) + 150;
+
 
 if(MakePlots) %Stack plots
     for i=1:length(headers)
@@ -509,13 +450,13 @@ if(MakePlots)
     print -dpng figures/onestorm-4.png
 end
 
+
 Na=0;
 lag=0;
 advance=0;
 slice=0;
 slicemin=10;
 slicemax=24;
-
 
 %x=detrend(MassDensitySpline);
 x=MassDensitySpline;
@@ -737,6 +678,8 @@ fprintf(table,'\n</pre>');
 
 fclose(table);
 system('cat README.txt table.txt > README.md');
+%}
+
 end
 
 function densityplot(x,ys,string,Na,Nb,corr,eff,visible)
