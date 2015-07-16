@@ -5,8 +5,8 @@ close all;clear all;
 %Read filled dataset from Kondrashov(2014)
 FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
 FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
-%FILLED=FILLED(FILLED(:,1)>1988,:);
-%FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
+FILLED=FILLED(FILLED(:,1)>1988,:);
+FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
 headers=textread('WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
 VBz=FILLED(:,6).*FILLED(:,5);
@@ -65,54 +65,69 @@ BS=BS(gettime);
 OMNIDensity=OMNIDensity(gettime);
 FILLED=FILLED(gettime,:);
 
+%{
 getFtime=F107time>min(DentonTime);
 getFtime=getFtime+(F107time<max(DentonTime));
 getFtime=(getFtime==2);
 F107time=F107time(getFtime);
 F107=F107(getFtime);
+%}
+%Should only need to match it to OMNITime since OMNITime is already matched
+%to DentonTime at this point
 getFtime=F107time>=min(OMNITime);
 getFtime=getFtime+(F107time<=max(OMNITime));
 getFtime=(getFtime==2);
 F107time=F107time(getFtime);
 F107=F107(getFtime);
 
-%MassDensitySpline=interp1(DentonTime,MassDensity,OMNITime,'linear');
+%Save interpolated values since it takes a while to interpolate the whole
+%dataset. "Spline" is a misnomer at this point but a proper find/replace might
+%take a while and introduce bugs
 if(exist('InterpedVals.mat','file'))
     load('InterpedVals')
 else
     MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
+    MLTFit=interptest(DentonTime,MLT,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     %F107Spline=interptest(DentonTime,F107,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     MassDensitySpline=MassDensitySpline';
     %F107Spline=F107Spline';
-    save('InterpedVals','MassDensitySpline');%,'F107Spline');
+    save('InterpedVals','MassDensitySpline','MLTFit');%,'F107Spline');
 end
 
-%FILLED=[FILLED F107Spline]; %When F107 is from Denton, use spline
+%Find storm with enough data to analyze
+MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
+
+%FILLED=[FILLED F107Spline]; %When F107 is from Denton, use
 %interpolated version
 FILLED=[FILLED F107];
 headers{end+1}='F107';
 
 LongTimeScale=24;%24*27; %How many hours to average over. Best stick to 1, 24, or 24*27
 
-%Find storm with enough data to analyze
-MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
-storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
-%storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
-%storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
-%storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
+%Select kind of storm to look for
+stormcase=1;
+switch stormcase
+    case 1
+        storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+    case 2
+        storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
+    case 3
+        storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
+    case 4
+        storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
+end
 starti=find(storms>0);
 endi=find(storms<0)-1;
 duration=endi-starti+1;
 
-%Shift event start points to next local minimum 
-while(1) 
+%Shift event start points to next local DST minimum 
+while(1 && stormcase==1) 
     ind=FILLED(starti+1,15)<FILLED(starti,15);
     if(sum(ind)==0)
         break
     end
     starti(ind)=starti(ind)+1;
 end
-
 
 %{
 %To interpolate data onto long-scale time grids
@@ -151,7 +166,7 @@ end
 stormi=1;
 AVMat=[];
 AVMDMat=[];
-timewidth=24;
+timewidth=24; %How many hours before, and twice as many hours after, to select as the window for an event
 if(LongTimeScale>1),timewidth=96; end
 maxwidth=timewidth*2;
 
@@ -164,11 +179,11 @@ while(endi(end)+maxwidth>length(MassDensitySpline))
 end
 
 %Cut down found storms to only include pre-noon conditions
-cutconditions=0;
+cutconditions=1;
 if(cutconditions) 
-   endi(FILLED(starti,3)>12)=[];
-   duration(FILLED(starti,3)>12)=[];
-   starti(FILLED(starti,3)>12)=[];
+   endi(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
+   duration(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
+   starti(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
 end
 
 %Build matrices storing all storms
@@ -201,6 +216,14 @@ if(LongTimeScale>1)
     AVMDblock=nanmedian(reshape(AVMDMat(:,14:end),[],length(-timewidth:LongTimeScale:timewidth*2)-1));
 end
 
+AVMD2=zeros(length(starti),13);
+AVMD2(:,1)=nanmedian(AVMDMat(:,1:12),2);
+for i=1:length(-timewidth:LongTimeScale:timewidth*2)-2
+   AVMD2(:,i+1)=nanmedian(AVMDMat(:,i*LongTimeScale+1-12:i*LongTimeScale+12),2);
+end
+AVMD2(:,13)=nanmedian(AVMDMat(:,end-12:end),2);
+AVMD2=nanmedian(AVMD2);
+
 %%%%%Make Plots
 MakePlots=0;
 MakePaperPlots=1;
@@ -208,7 +231,8 @@ visible='off';
 
 %Compare the two densities
 if(MakePlots)
-    h=figure('Visible',visible); plot(OMNITime,MassDensitySpline);hold on; plot(OMNITime,OMNIDensity,'r')
+    h=figure('Visible',visible); plot(OMNITime,MassDensitySpline);hold on; 
+    plot(OMNITime,OMNIDensity,'r')
     legend('Denton','OMNI','Location','NorthEast')
     title('OMNI Density vs Denton Density')
     ylabel('Density')
@@ -222,9 +246,10 @@ if(MakePaperPlots && LongTimeScale>1)
     h=figure('Visible',visible);
     plot(xa(2:end),AVMDblock)
     hold on; plot(xa(2:end),AVMDs(2:end),'r')
+    plot(xa(2:end),AVMD2(2:end),'k')
     xlabel('Time from minimum of event (day)')
     ylabel('\rho_{eq} (amu/cm^3)')
-    legend('Block median','Median of Median')
+    legend('Block median','MoM storm, day','MoM day, storm')
     print -depsc2 -r200 paperfigures/blockmedian.eps
 end
 
