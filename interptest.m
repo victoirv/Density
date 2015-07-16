@@ -6,7 +6,7 @@ end
 %tic
 datanew=zeros(length(tnew),min(size(x)));
 for i=1:length(tnew)
-    datanew(i,:)=nanmedian(x(t>(tnew(i)-dt) & t<(tnew(i)+dt),:)); 
+    datanew(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); 
 end
 %toc
 %datanew;
