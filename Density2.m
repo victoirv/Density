@@ -182,3 +182,23 @@ figure(1);clf;hold on;
     legend('Original Data','Original on 1-min grid','Median over next 60 minutes')
     xlabel(['Minutes since ',datestr(DDN(1))])
     set(gca,'XLim',[0,1440-1])
+
+I = find(ODst(1:end-1) > -30 & ODst(2:end) < -30);
+
+k = 1;
+for i = 1:length(I)
+    a = I(i)-24;
+    b = I(i)+24;
+    if (a < 1),continue,end
+    if (b > length(DDensityMedian)),break,end
+    DDensityMedianStorm(k,:) = DDensityMedian(a:b);
+    ODstStorm(k,:) = ODst(a:b);
+    k = k+1;
+end
+
+t = [-24:24];
+figure(2);clf;hold on;grid on;
+    plot(t,nanmean(DDensityMedianStorm),'b')
+    plot(t,nanmean(-ODstStorm),'g')
+    xlabel('Time since onset [hrs]')
+    legend('Density','-Dst')
