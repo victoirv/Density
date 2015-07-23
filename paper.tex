@@ -71,7 +71,7 @@ By then looking at an hourly average of parameters from 24 hours before event on
 
 The parameters $\rho_{eq}$ and $F_{10.7}$ used in this work are from the data associated with \cite{Denton}, with data available from 1980-1991; all other parameters are from \cite{Reconstruction} over the time range of 1972-2013, which are on a 1-hour time grid.  In cases where $\rho_{eq}$ was available from multiple Geostationary Operational Environmental Satellites (GOES) satellites at the same time, the value from GOES 7 was selected to avoid overlapping data points.  $\rho_{eq}$ is the inferred mass density based on the 3rd harmonic frequency of magnetic field measurements.  The smallest cadence for $\rho_{eq}$ values is 10 minutes.  To compute an hourly average over the same time range as the solar wind parameters, the median of all values in a given hourly range was used.  Fill values were used for hours when no measurements were available.
 
-In this work events are considered when $D_{st}$ or $\rho_{eq}$ crosses a threshold value, as indicated in \ref{StormCutoff}.  In finding events, all fill values were replaced with linearly interpolated values.  Figure \ref{AllData} shows the values of $B_Z$, $V_{SW}$, $D_{st}$, $F_{10.7}$, and Mass Density for the duration of the dataset. 
+In this work events are considered when $D_{st}$ or $\rho_{eq}$ crosses a threshold value, as indicated in \ref{AllData}.  In finding events, all fill values were replaced with linearly interpolated values.  Figure \ref{AllData} shows the values of $B_Z$, $V_{SW}$, $D_{st}$, $F_{10.7}$, and Mass Density for the duration of the dataset. 
 
 % Though this may skew the onset time slightly, it's thought to be less skewed than trying to determine start and end times with the NaNs in place. This interpolation was only used for determining storm times, and not for any analysis.
 % If you say this, you need to do an experiement.  A review will say ``seems like it is an easy statement to check.  Why didn't you?''
@@ -121,7 +121,7 @@ Taking this re-created data set and subtracting it from the original should remo
 
 \section{Appendix}
 \subsection{Bias}
-While attempting to reproduce Figure 11 from \cite{Takahashi2010}, an ambiguity in data-handling was found. It is unknown how they got from hourly $\rho_{eq}$ to daily medians, whether in one step or two steps, and whether the hourly medians are an hour ahead of each hour grid point, or a median of points a half hour to either side, so attempts were made to reproduce all possibilities and compare in order to find a data-handling method with the least bias. These attempts are shown in Figure \ref{blockmedian}. This also shows the effect of only considering events with a minimum before noon. All show a similar spike in $\rho_{eq}$ at the time of $D_{st}$ minimum, though none quite reproduce the exact values seen in \cite{Takahashi2010}. Figure \ref{allstorms} shows where the median falls for all of the found storms during that period, as a sanity check for why the prior work would get median values nearing $30 amu/cm^3$. Both authors of this paper conducted independent trials to confirm that the data and analysis don't quite yield the results of Figure 11 in \cite{Takahashi2010} with the processes described in that paper, but the same general trend is still seen. 
+While attempting to reproduce Figure 11 from \cite{Takahashi2010}, an ambiguity in data-handling was found. It is unknown how they got from hourly $\rho_{eq}$ to daily medians, whether in one step or two steps, and whether the hourly medians are an hour ahead of each hour grid point, or a median of points a half hour to either side, so attempts were made to reproduce all possibilities and compare in order to find a data-handling method with the least bias. These attempts are shown in Figure \ref{blockmedian}. This also shows the effect of only considering events with a minimum before noon. All show a similar spike in $\rho_{eq}$ at the time of $D_{st}$ minimum, though none quite reproduce the exact values seen in \cite{Takahashi2010}. Figure \ref{allstorms} shows where the median falls for all of the found events during that period, as a sanity check for why the prior work would get median values nearing $30 amu/cm^3$. Both authors of this paper conducted independent trials to confirm that the data and analysis don't quite yield the results of Figure 11 in \cite{Takahashi2010} with the processes described in that paper, but the same general trend is still seen. 
 
 To check for potential bias in the data as used by our analysis, we checked how the data availability varied with hour, shown in Figure \ref{nanperhour}. We also looked at how storm conditions affected data availability. Both a two sample t-test for difference in means and a Wilcoxon rank sum test showed significance at the 1\% level that $D_{st}$ during periods with available data was of a different distribution than $D_{st}$ during periods missing data. When testing for other significant $D_{st}$ differences, the Wilcoxon test was significant while the t-test was not in pre-noon vs post-noon distributions, as well as $\rho_{eq}>40$ vs $\rho_{eq}<40$ distributions indicating perhaps an increase in variability without an increase in mean.
 
@@ -133,99 +133,87 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 
 \bibliography{reportbib}
 
+\clearpage
 \section{Figures}
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.7]{paperfigures/alldata.eps}
-\caption{Overview of data used in this study. The top four panels are from \cite{Reconstruction} and the bottom panel is based on \cite{Denton} after interpolation and averaging described in the text. Dashed lines indicate default event cutoff thresholds.}
+\includegraphics[scale=0.45]{paperfigures/alldata.eps}
+\caption{Overview of data used in this study. The top four panels are from \cite{Reconstruction} and the bottom panel is based on \cite{Denton} after interpolation and averaging described in the text. Dashed horizontal lines indicate default event cutoff thresholds.}
 \label{AllData}
 \end{figure}
-\clearpage
+
 
 \begin{figure}[htp!]
 \centering
-\includegraphics[scale=0.45]{paperfigures/stormavs-dst-day.eps}
-\includegraphics[scale=0.45]{paperfigures/stormavs-dst-50-tak.eps}
-\caption{(a) One-day medians of $D_{st}$ storms at a threshold of $-40nT$ and (b) verifying \cite{Takahashi2010} Fig. 11 conditions: $D_{st}<-50nT$ between 1989 and 1991}
-\label{DailyAverages}
-\end{figure}
-\clearpage
-
-\begin{figure}[htp!]
-\centering
+\includegraphics[scale=0.42]{paperfigures/DstMDAllData.eps}
 \includegraphics[scale=0.42]{paperfigures/ccplot.eps}
 \includegraphics[scale=0.42]{paperfigures/DSTvsMD.eps}
-\includegraphics[scale=0.42]{paperfigures/DstMDAllData.eps}
-\caption{(a) Correlation between $log(\rho_{eq\_27d})$ and $F_{10.7\_27d}$. (b) $D_{st}$ against $\rho_{eq}$ at one hour and one-day median values. (c) All data of $D_{st}$ and $\rho_{eq}$ }
+\caption{(a) All data of $D_{st}$ and $\rho_{eq}$ (b) Correlation between $log(\rho_{eq\_27d})$ and $F_{10.7\_27d}$. (c) $D_{st}$ against $\rho_{eq}$ at one hour and one-day median values.  }
 \label{ccplot}
 \end{figure}
 \clearpage
 
-
-% Change x-label to be ``Time from start of event (hr)'' and put vertical lines in each panel at t = 0 (somewhere I have a code called vertline.m)
-\begin{figure}[htp]
+\begin{figure}[htp!]
 \centering
-(a)
-\includegraphics[scale=0.7]{paperfigures/massdensitystorms.eps}
-(b)
-\includegraphics[scale=0.7]{paperfigures/dststorms.eps}
-\caption{Averages around time of (a) 669 $\rho_{eq}$ and (b) 130 $D_{st}$ events along with thresholds used to define an event. The number of values used in the averages for mass density is shown in the bottom panel (a) and (b).}
-\label{StormCutoff}
+\includegraphics[scale=0.45]{paperfigures/stormavs-dst-50-tak.eps}
+\includegraphics[scale=0.45]{paperfigures/stormavs-dst-day.eps}
+\caption{(a) Verifying \cite{Takahashi2010} Fig. 11 conditions: $D_{st}<-50nT$ between 1989 and 1991 and (b) One-day medians of $D_{st}$ events at a threshold of $-40nT$}
+\label{DailyAverages}
 \end{figure}
-\clearpage
-
 
 \begin{figure}[htp!]
 \centering
 \includegraphics[scale=0.45]{paperfigures/stormavs-dst.eps}
 \includegraphics[scale=0.45]{paperfigures/stormavs-mass.eps}
-\caption{(a) Average of solar wind and near-Earth measurements around the time $D_{st}$ crossed below -40~nT onset. (b) Same as (a) except around time intervals where mass density crossed above $40 amu/cm^3$.  The bottom panel shows the number of mass density data points that were used for the average.}
+\caption{(a) Average of solar wind and near-Earth measurements around the time $D_{st}$ crossed below $-50~nT$ onset. (b) Same as (a) except around time intervals where mass density crossed above $40~amu/cm^3$.  The bottom panel shows the number of mass density data points that were used for the average.}
 \label{Storms}
 \end{figure}
 \clearpage
 
-\begin{figure}[htp!]
-\centering
-\includegraphics[scale=0.45]{paperfigures/stormavs-dd12.eps}
-\includegraphics[scale=0.45]{paperfigures/stormavs-d80.eps}
-\caption{(a) Same as \ref{fig:Storms}(a) except with constraint that $D_{st}$ stayed below -40~nT for at least 12~hours. (b) Same as \ref{fig:Storms}(b) except for constrain that $D_{st}$ crossed below $-80 nT$.}
-\label{Mspec}
-\end{figure}
-\clearpage
 
 \begin{figure}[htp!]
 \centering
+\includegraphics[scale=0.45]{paperfigures/stormavs-dd12.eps}
 \includegraphics[scale=0.45]{paperfigures/stormavs-md12.eps}
+\caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ stayed below $-50~nT$ for at least 12~hours. (b) Same as Figure \ref{Storms}(b) except for constrain that $\rho_{eq}$ stayed above $50~amu/cm^3$ for at least 12 hours.}
+\label{Mspec}
+\end{figure}
+
+\begin{figure}[htp!]
+\centering
+\includegraphics[scale=0.45]{paperfigures/stormavs-d80.eps}
 \includegraphics[scale=0.45]{paperfigures/stormavs-m70.eps}
-\caption{(a) Same as \ref{fig:MassStorm}(a) except with constraint that $\rho_{eq}$ stayed above 50~nT for at least 12~hours. (b) Same as \ref{fig:Storms}(b) except for constrain that mass density crossed above $70 amu/cm^3$.}
+\caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ crossed below $-80nT$ (b) Same as Figure \ref{Storms}(b) except for constrain that $\rho_{eq}$ crossed above $70~amu/cm^3$.}
 \label{Dspec}
 \end{figure}
 \clearpage
 
-\begin{figure}[htp!]
-\centering
-\includegraphics[scale=0.5]{paperfigures/stormavs-diffden-10amu.eps}
-\includegraphics[scale=0.5]{paperfigures/stormavs-diffden-30percent.eps}
-\caption{diff($\rho_{eq}$) $>$ 10$\frac{amu}{hour}$, diff($\rho_{eq}$) $>$ 30$\frac{\%}{hour}$}
-\label{rhochange}
-\end{figure}
-\clearpage
+
 
 \begin{figure}[htp!]
 \centering
-\includegraphics[scale=0.5]{paperfigures/stormavs-dst-nof107.eps}
-\includegraphics[scale=0.6]{paperfigures/f107removed.eps}
+\includegraphics[scale=0.45]{paperfigures/stormavs-diffden-10amu.eps}
+\includegraphics[scale=0.45]{paperfigures/stormavs-diffden-30percent.eps}
+\caption{(a) diff($\rho_{eq}$) $>$ 10$\frac{amu}{hour}$. (b) diff($\rho_{eq}$) $>$ 30$\frac{\%}{hour}$}
+\label{rhochange}
+\end{figure}
+
+\begin{figure}[htp!]
+\centering
+\includegraphics[scale=0.45]{paperfigures/stormavs-dst-nof107.eps}
+\includegraphics[scale=0.5]{paperfigures/f107removed.eps}
 \caption{$D_{st}$ events where $\rho_{eq}$ has $F_{10.7}$ dependence removed, and Difference between original $\rho_{eq}$ and $F_{10.7}$-less $\rho_{eq}$}
 \label{nof107}
 \end{figure}
 \clearpage
 
+
 \begin{figure}[htp]
 \centering
 \includegraphics[scale=0.75]{paperfigures/blockmedian.eps}
 \includegraphics[scale=0.75]{paperfigures/blockmedian-prenoon.eps}
-\caption{Comparing median values calculated as median of all 1-hour points in the 12 day block, and as the daily median of all hourly-mediated storms. (b) Same, but only storms starting between 0-12 UTC}
+\caption{Comparing median values calculated as median of all 1-hour points in the 12 day block, and as the daily median of all hourly-mediated events. (b) Same, but only events starting between 0-12 UTC}
 \label{blockmedian}
 \end{figure}
 \clearpage
@@ -233,7 +221,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \begin{figure}[htp]
 \centering
 \includegraphics[scale=0.9]{paperfigures/allstorms.eps}
-\caption{Comparing all storms to their median and $1\sigma$ range}
+\caption{Comparing all events to their median and $1\sigma$ range}
 \label{allstorms}
 \end{figure}
 \clearpage

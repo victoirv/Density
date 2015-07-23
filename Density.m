@@ -8,8 +8,8 @@ if(~exist('data/WGhourFS_72_13.txt'))
 end
 FILLED=dlmread('data/WGhourFS_72_13.txt',',',1,0);
 FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
-FILLED=FILLED(FILLED(:,1)>1988,:);
-FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
+%FILLED=FILLED(FILLED(:,1)>1988,:);
+%FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
 headers=textread('data/WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
 VBz=FILLED(:,6).*FILLED(:,5);
@@ -105,8 +105,8 @@ MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpli
 FILLED=[FILLED F107];
 headers{end+1}='F107';
 
-LongTimeScale=24;%24*27; %How many hours to average over. Best stick to 1, 24, or 24*27
-
+LongTimeScale=1;%24*27; %How many hours to average over. Best stick to 1, 24, or 24*27
+cutoffduration=1; %If you want to get rid of short (spurious?) storms, set larger than 1
 %Select kind of storm to look for
 stormcase=1;
 switch stormcase
@@ -118,6 +118,16 @@ switch stormcase
         storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
     case 4
         storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
+    case 5
+        storms=diff([0 (FILLED(:,15)<-50)' 0]);
+        cutoffduration=12; %12 hour DST storm
+    case 6
+        storms=diff([0 (MassDensityNanSpline>40)' 0]);
+        cutoffduration=12;
+    case 7
+         storms=diff([0 (FILLED(:,15)<-80)' 0]);
+    case 8
+        storms=diff([0 (MassDensityNanSpline>70)' 0]);        
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -149,8 +159,8 @@ if(LongTimeScale>0)
 end
 %}
 
-durationcaveat=''; %empty string if no cutoff set
-cutoffduration=1; %If you want to get rid of short (spurious?) storms, set larger than 1
+durationcaveat=''; %empty string if no cutoff set 
+
 if(cutoffduration>1)
     starti=starti(duration>cutoffduration);
     endi=endi(duration>cutoffduration);
@@ -217,15 +227,16 @@ if(LongTimeScale>1)
     
     xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
     AVMDblock=nanmedian(reshape(AVMDMat(:,14:end),[],length(-timewidth:LongTimeScale:timewidth*2)-1));
-end
 
-AVMD2=zeros(length(starti),13);
-AVMD2(:,1)=nanmedian(AVMDMat(:,1:12),2);
-for i=1:length(-timewidth:LongTimeScale:timewidth*2)-2
-   AVMD2(:,i+1)=nanmedian(AVMDMat(:,i*LongTimeScale+1-12:i*LongTimeScale+12),2);
+
+    AVMD2=zeros(length(starti),13);
+    AVMD2(:,1)=nanmedian(AVMDMat(:,1:12),2);
+    for i=1:length(-timewidth:LongTimeScale:timewidth*2)-2
+       AVMD2(:,i+1)=nanmedian(AVMDMat(:,i*LongTimeScale+1-12:i*LongTimeScale+12),2);
+    end
+    AVMD2(:,13)=nanmedian(AVMDMat(:,end-12:end),2);
+    AVMD2=nanmedian(AVMD2);
 end
-AVMD2(:,13)=nanmedian(AVMDMat(:,end-12:end),2);
-AVMD2=nanmedian(AVMD2);
 
 %%%%%Make Plots
 MakePlots=0;
@@ -257,7 +268,7 @@ if(MakePaperPlots && LongTimeScale>1)
 end
 
 %All storms plotted together with median
-if(MakePaperPlots)
+if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     plot(-timewidth:1:timewidth*2,AVMDMat,'.')
     hold on;
@@ -284,12 +295,12 @@ end
 if(MakePaperPlots)
     h=figure('Visible',visible);
     orient tall;
-    h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); ylabel('B_z (nT)'); %Bz
-    h2=subplot('position',subplotstack(5,2));plot(OMNITime,FILLED(:,6),'.'); ylabel('V_{SW} (km/s)'); ylim([300,900]);%V_sw
-    h3=subplot('position',subplotstack(5,3));plot(OMNITime,FILLED(:,15),'.');yl=ylabel('D_{st} (nT)'); set(yl,'Units','Normalized','Position',[-.03 0.5 0]); ylim([-300,100]);
+    h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %Bz
+    h2=subplot('position',subplotstack(5,2));plot(OMNITime,FILLED(:,6),'.'); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); ylim([300,900]);%V_sw
+    h3=subplot('position',subplotstack(5,3));plot(OMNITime,FILLED(:,15),'.');text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); ylim([-300,100]);
     hold on; plot([OMNITime(1) OMNITime(end)],[-40 -40],'r-.','LineWidth',4); hold off;
-    h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,29),'.');ylabel('F10.7 (s.f.u.)');%f107
-    h5=subplot('position',subplotstack(5,5));plot(OMNITime,MassDensitySpline,'r.');ylabel('\rho_{eq} (amu/cm^3)');%f107
+    h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,29),'.');text(0.01,0.9,'F_{10.7} (s.f.u.)','Units','normalized','FontSize',14); %f107
+    h5=subplot('position',subplotstack(5,5));plot(OMNITime,MassDensitySpline,'r.');text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14);%f107
     hold on; plot([OMNITime(1) OMNITime(end)],[40 40],'b-.','LineWidth',4); hold off;
     set(findobj('type','axes'),'xticklabel',{[]});
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
@@ -305,20 +316,20 @@ if(MakePaperPlots)
     xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
     h=figure('Visible',visible);
     orient tall;
-    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-'); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',12); %ylabel('V_{SW} (km/s)');%V_sw
+    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
     hold on; plot(xa,AVMatBars(:,:,6),'r-.'); 
-    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-'); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',12); %ylabel('B_z (nT)'); %Bz
+    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
     hold on; plot(xa,AVMatBars(:,:,5),'r-.');
-    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-'); text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',12); %ylabel('D_{st} (nT)'); %dst
+    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
     hold on; plot(xa,AVMatBars(:,:,15),'r-.'); 
-    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,29),'+-'); text(0.01,0.9,'F_{10.7} (s.f.u)','Units','normalized','FontSize',12); %ylabel('F10.7 (s.f.u.)');%f107
+    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,29),'+-','LineWidth',2); text(0.01,0.9,'F_{10.7} (s.f.u)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
     hold on; plot(xa,AVMatBars(:,:,29),'r-.');
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
     subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
     hold on; plot(xa,AVMDMatBars(:,:),'r-.');
-    set(AX(2),'Xlim',xv); set(AX(1),'Xlim',xv);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
-    text(0.01,0.87,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',12); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
+    set(H5,'LineWidth',2);set(AX(2),'Xlim',xv); set(AX(1),'Xlim',xv);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
+    text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
     ylabel(AX(2),'# of values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
