@@ -3,11 +3,14 @@ function Density
 close all;clear all;
 
 %Read filled dataset from Kondrashov(2014)
-FILLED=dlmread('WGhourFS_72_13.txt',',',1,0);
+if(~exist('data/WGhourFS_72_13.txt'))
+    urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/data/WGhourFS_72_13.txt','data/WGhourFS_72_13.txt');
+end
+FILLED=dlmread('data/WGhourFS_72_13.txt',',',1,0);
 FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
 FILLED=FILLED(FILLED(:,1)>1988,:);
 FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
-headers=textread('WGhourFS_72_13.txt','%s',28,'delimiter',',');
+headers=textread('data/WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
 VBz=FILLED(:,6).*FILLED(:,5);
 BS=1/2*(abs(FILLED(:,5))-FILLED(:,5));

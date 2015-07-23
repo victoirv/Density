@@ -2,7 +2,7 @@
 
 clear all;
 % http://github.com/rweigel/m-rsw/time
-addpath('../../m-rsw/time')
+addpath('../vveibell/m-rsw/time')
 
 % Read WGhourFS dataset from Kondrashov(2014)
 
@@ -125,6 +125,11 @@ else
     save(fnamem,'OH','ODN','OF107','ODst','OData');
 end
 
+
+%Move OMNI to Takahashi 2010 Fig 11 window
+ODN(ODN<datenum('Jan-01 1989'))=[];
+ODN(ODN>datenum('Jan-01 1992'))=[];
+
 % Select overlapping windows
 Io = max([ODN(1),DDN(1),KDN(1)]);
 If = min([ODN(end),DDN(end),KDN(end)]);
@@ -183,7 +188,7 @@ figure(1);clf;hold on;
     xlabel(['Minutes since ',datestr(DDN(1))])
     set(gca,'XLim',[0,1440-1])
 
-I = find(ODst(1:end-1) > -30 & ODst(2:end) < -30);
+I = find(ODst(1:end-1) > -50 & ODst(2:end) < -50);
 
 k = 1;
 for i = 1:length(I)
