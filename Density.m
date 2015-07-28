@@ -107,27 +107,63 @@ headers{end+1}='F107';
 
 LongTimeScale=1;%24*27; %How many hours to average over. Best stick to 1, 24, or 24*27
 cutoffduration=1; %If you want to get rid of short (spurious?) storms, set larger than 1
+cutconditions=0; %Look at only pre-noon
+removef107=0;
+DSTCut=0;
+MDCut=0;
+figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
 stormcase=1;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+        DSTCut=-50;
+        figurename=strcat(figurename,'dst.eps');
     case 2
         storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
+        MDCut=40;
+        figurename=strcat(figurename,'mass.eps');
     case 3
         storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
+        figurename=strcat(figurename,'diffden-10amu.eps');
     case 4
         storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
+        figurename=strcat(figurename,'diffden-30percent.eps');
     case 5
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
+        DSTCut=-50;
         cutoffduration=12; %12 hour DST storm
+        figurename=strcat(figurename,'dd12.eps');
     case 6
         storms=diff([0 (MassDensityNanSpline>40)' 0]);
+        MDCut=40;
         cutoffduration=12;
+        figurename=strcat(figurename,'md12.eps');
     case 7
          storms=diff([0 (FILLED(:,15)<-80)' 0]);
+         DSTCut=-80;
+         figurename=strcat(figurename,'d80.eps');
     case 8
-        storms=diff([0 (MassDensityNanSpline>70)' 0]);        
+        storms=diff([0 (MassDensityNanSpline>70)' 0]);  
+        MDCut=70;
+        figurename=strcat(figurename,'m70.eps');
+    case 9
+        storms=diff([0 (FILLED(:,15)<-50)' 0]);
+        DSTCut=-50;
+        removef107=1;
+        figurename=strcat(figurename,'dst-nof107.eps');
+    case 10 %Takahashi Fig 11
+        %Make sure to modify years 
+        storms=diff([0 (FILLED(:,15)<-50)' 0]);
+        DSTCut=-50;
+        cutconditions=1;
+        LongTimeScale=24;
+        figurename=strcat(figurename,'dst-50-tak.eps');
+    case 11
+        storms=diff([0 (FILLED(:,15)<-50)' 0]);
+        DSTCut=-50;
+        LongTimeScale=24;
+        figurename=strcat(figurename,'dst-day.eps');
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -142,25 +178,7 @@ while(1 && stormcase==1)
     starti(ind)=starti(ind)+1;
 end
 
-%{
-%To interpolate data onto long-scale time grids
-if(LongTimeScale>0); %Maybe add unique? And figure out how to make duration work then
-   starti=(ceil(starti./LongTimeScale))+1; %Not entirely sure why it's off by 1
-   endi=(ceil(endi./LongTimeScale))+1;
-   duration=(ceil(duration./LongTimeScale));
-end
-
-LongTimeInc=LongTimeScale*(OMNITime(2)-OMNITime(1));
-if(LongTimeScale>0)
-    MassDensitySpline=interptest(OMNITime,MassDensitySpline,OMNITime(1):LongTimeInc:OMNITime(end));
-    %F107Spline=interp1(OMNITime,F107Spline,OMNITime(1):LongTimeInc:OMNITime(end));
-    FILLED=interptest(OMNITime,FILLED,OMNITime(1):LongTimeInc:OMNITime(end));
-    OMNITime=OMNITime(1):LongTimeInc:OMNITime(end);
-end
-%}
-
 durationcaveat=''; %empty string if no cutoff set 
-
 if(cutoffduration>1)
     starti=starti(duration>cutoffduration);
     endi=endi(duration>cutoffduration);
@@ -169,7 +187,6 @@ if(cutoffduration>1)
 end
 
 %Remove F10.7 influence
-removef107=0;
 if(removef107)
     [~, ~, ~,xnew,~] = IR(MassDensitySpline,FILLED(:,end),0,1,0,0); %Remove F10.7 
     MassDensitySplineOriginal=MassDensitySpline;
@@ -180,7 +197,8 @@ stormi=1;
 AVMat=[];
 AVMDMat=[];
 timewidth=24; %How many hours before, and twice as many hours after, to select as the window for an event
-if(LongTimeScale>1),timewidth=96; end
+if(LongTimeScale==24),timewidth=96; end
+if(LongTimeScale==24*27),timewidth=96*27; end
 maxwidth=timewidth*2;
 
 %Remove storms where the window of interest extends past existing data
@@ -192,7 +210,6 @@ while(endi(end)+maxwidth>length(MassDensitySpline))
 end
 
 %Cut down found storms to only include pre-noon conditions
-cutconditions=1;
 if(cutconditions) 
    endi(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
    duration(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
@@ -322,12 +339,14 @@ if(MakePaperPlots)
     hold on; plot(xa,AVMatBars(:,:,5),'r-.');
     h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
     hold on; plot(xa,AVMatBars(:,:,15),'r-.'); 
+    if(DSTCut<0), plot([xa(1) xa(end)],[DSTCut DSTCut],'r-.','LineWidth',2); hold off; end
     h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,29),'+-','LineWidth',2); text(0.01,0.9,'F_{10.7} (s.f.u)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
     hold on; plot(xa,AVMatBars(:,:,29),'r-.');
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
     subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
     hold on; plot(xa,AVMDMatBars(:,:),'r-.');
+    if(MDCut>0), plot([xa(1) xa(end)],[MDCut MDCut],'r-.','LineWidth',2); end
     set(H5,'LineWidth',2);set(AX(2),'Xlim',xv); set(AX(1),'Xlim',xv);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
     text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
     ylabel(AX(2),'# of values');
@@ -338,36 +357,30 @@ if(MakePaperPlots)
     else xlabel('Time from start of event (hour)'); end
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end)));
-    print -depsc2 -r200 paperfigures/stormavs-1.eps
+    print('-depsc2','-r200',figurename);
     
 end
 
-%Correlation plot of F10.7 and rho at 27 day averages
-if(MakePaperPlots && LongTimeScale==24*27 && ~removef107) 
-    h=figure('Visible',visible); plot(FILLED(:,end),log(MassDensitySpline),'+') ;
-    xlabel('F_{10.7\_27d} (s.f.u.)'); ylabel('log(\rho_{eq\_27d}) (amu/cm^3)');
-    cc=corrcoef(FILLED(~isnan(MassDensitySpline),end),MassDensitySpline(~isnan(MassDensitySpline)));
-    title(sprintf('cc = %2.3f',cc(1,2)));
-    print -depsc2 -r200 paperfigures/ccplot.eps    
-end
-
 %Nans per hour
-if(MakePaperPlots && LongTimeScale==1) 
+if(MakePaperPlots && stormcase==1) 
     h=figure('Visible',visible);
     hist(FILLED(isnan(MassDensitySpline),3),0:23)
     axis([-1 24 0 3000])
-    xlabel('Hour')
+    xlabel('UT Hour')
     ylabel('Frequency')
     print -depsc2 -r200 paperfigures/nansbyhour.eps
 
     h=figure('Visible',visible);
     subplot(2,1,1)
     plot(xa,AVs(:,3))
+    axis tight;
     ylabel('Hour average')
     grid on
     subplot(2,1,2)
     plot(xa,AVMDs(1,:),'r')
+    hold on;
     plot(xa,AVnnans,'r')
+    axis tight;
     ylabel('Data available')
     xlabel('Time from event start (hr)')
     grid on
@@ -375,35 +388,50 @@ if(MakePaperPlots && LongTimeScale==1)
 end
 
 %DST vs rho_eq for 1 hour and 1 day
-if(MakePaperPlots && LongTimeScale==1) 
+if(MakePaperPlots && stormcase==1) 
     h=figure('Visible',visible);
     plot(FILLED(~isnan(MassDensitySpline),end),MassDensitySpline(~isnan(MassDensitySpline)),'.');
-    xlabel('F_{10.7}')
-    ylabel('\rho_{eq}')
+    xlabel('F_{10.7}','FontSize',16)
+    ylabel('\rho_{eq}','FontSize',16)
+    cc1=corrcoef(FILLED(~isnan(MassDensitySpline),end),MassDensitySpline(~isnan(MassDensitySpline)),'rows','pairwise');
+    cc1=cc1(1,2);
     
-    DSTDay=interptest(OMNITime,FILLED(:,end),OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
-    MDDay=interptest(OMNITime,MassDensitySpline,OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
+    F107Day=interptest(OMNITime,FILLED(:,end),OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
+    MDDay=interptest(OMNITime,MassDensitySpline',OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
     hold on;
-    plot(DSTDay,MDDay,'r+');
-    legend('One Hour','One Day Median');
+    plot(F107Day,MDDay,'r+');
+    cc2=corrcoef(F107Day,MDDay,'rows','pairwise');
+    cc2=cc2(1,2);
+    
+    legend(sprintf('One Hour cc=%2.2f',cc1),sprintf('One Day Median cc=%2.2f',cc2));
     axis tight;
     print -depsc2 -r200 paperfigures/F107vsMD.eps
+    
+    
+    %Correlation plot of F10.7 and log(rho) at 27 day averages
+    F10727Day=interptest(OMNITime,FILLED(:,end),OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end));
+    MD27Day=interptest(OMNITime,MassDensitySpline',OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end));
+    h=figure('Visible',visible); plot(F10727Day,log(MD27Day),'+') ;
+    xlabel('F_{10.7\_27d} (s.f.u.)','FontSize',16); ylabel('log(\rho_{eq\_27d}) (amu/cm^3)','FontSize',16);
+    cc=corrcoef(F10727Day,MD27Day,'rows','pairwise');
+    text(0.01,0.85,sprintf('cc = %2.3f',cc(1,2)),'Units','normalized','FontSize',14);
+    print -depsc2 -r200 paperfigures/ccplot.eps 
 end
 
 
-if(MakePaperPlots && ~removef107 && LongTimeScale==1)
+if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     NewTime=OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end);
-    [AX,H1,H2]=plotyy(NewTime,interptest(OMNITime,FILLED(:,end),NewTime),NewTime,interptest(OMNITime,MassDensitySpline,NewTime),'plot','plot');
-    set(H1,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'yscale','log')
+    [AX,H1,H2]=plotyy(NewTime,interptest(OMNITime,FILLED(:,end),NewTime),NewTime,interptest(OMNITime,MassDensitySpline',NewTime),'plot','plot');
+    set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'yscale','log'); set(AX(2),'XTick',[]);
     ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'\rho_{eq\_27d}');
-    xlabel('Year');
+    xlabel('Year','FontSize',16);
     datetick;
     print -depsc2 -r200 paperfigures/F107MDAllData.eps
 end
 
 %Statistical comparisons
-if(LongTimeScale==1)
+if(stormcase==1)
     %Show DST is significantly different during missing data times
     [p,h]=ranksum(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
     [h,p]=ttest2(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
