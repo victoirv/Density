@@ -113,7 +113,7 @@ DSTCut=0;
 MDCut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
-stormcase=1;
+stormcase=11;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -273,7 +273,7 @@ if(MakePlots)
 end
 
 %Median of medians vs block median
-if(MakePaperPlots && LongTimeScale>1)
+if(MakePaperPlots && LongTimeScale==24)
     h=figure('Visible',visible);
     plot(xa(2:end),AVMDblock)
     hold on; plot(xa(2:end),AVMDs(2:end),'r')
@@ -377,8 +377,6 @@ if(MakePaperPlots && stormcase==1)
     ylabel('Hour average')
     grid on
     subplot(2,1,2)
-    plot(xa,AVMDs(1,:),'r')
-    hold on;
     plot(xa,AVnnans,'r')
     axis tight;
     ylabel('Data available')
