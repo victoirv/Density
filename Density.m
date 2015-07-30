@@ -2,14 +2,21 @@ function Density
 
 close all;clear all;
 
+TakahashiCond=0;
+satnum=6;
+
 %Read filled dataset from Kondrashov(2014)
 if(~exist('data/WGhourFS_72_13.txt'))
     urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/data/WGhourFS_72_13.txt','data/WGhourFS_72_13.txt');
 end
-FILLED=dlmread('data/WGhourFS_72_13.txt',',',1,0);
+FILLED=dlmread('data/WGhourFS_72_13.txt',',',1,0); 
+%Data from supplementary section of http://onlinelibrary.wiley.com/doi/10.1002/2014GL059741/full
 FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
-%FILLED=FILLED(FILLED(:,1)>1988,:);
-%FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
+
+if(TakahashiCond)
+    FILLED=FILLED(FILLED(:,1)>1988,:);
+    FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
+end
 headers=textread('data/WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
 VBz=FILLED(:,6).*FILLED(:,5);
@@ -18,13 +25,14 @@ OMNIDensity=FILLED(:,7);
 OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
 %VBS=1/2*Plasma_bulk_speed.*(abs(Bz_GSM)-Bz_GSM);
 
+
 %Get Denton data (mostly just for mass density)
-if(exist('DentonDensityAndTime.mat','file'))
-    load('DentonDensityAndTime')
+if(exist(sprintf('DentonDensityAndTime_%d.mat',satnum),'file'))
+    load(sprintf('DentonDensityAndTime_%d',satnum))
 else
-    urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/massdensity.txt','/tmp/massdensity.txt');
-    IN=dlmread('/tmp/massdensity.txt');
-    IN(IN(:,1)~=7,:)=[]; %Only use satellite 7 (6 should also work)
+    urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/data/massdensity.txt','data/massdensity.txt');
+    IN=dlmread('data/massdensity.txt');
+    IN(IN(:,1)~=satnum,:)=[]; %Satellites 6 and 7 should work
     IN(IN==9999)=NaN;
     
     [DentonTime,uniquerows]=unique(datenum(IN(:,2),1,0) + IN(:,3)+IN(:,4)/24+IN(:,5)/(24*60),'rows');
@@ -37,7 +45,7 @@ else
     MLT=IN(uniquerows,8);
     MassDensity=IN(uniquerows,88);
     
-    save('DentonDensityAndTime','DentonTime','MassDensity','DBz','MLT','DBS','DVsw');
+    save(sprintf('DentonDensityAndTime_%d',satnum),'DentonTime','MassDensity','DBz','MLT','DBS','DVsw');
 end
 
 %Load F10.7 specifically 
@@ -68,13 +76,6 @@ BS=BS(gettime);
 OMNIDensity=OMNIDensity(gettime);
 FILLED=FILLED(gettime,:);
 
-%{
-getFtime=F107time>min(DentonTime);
-getFtime=getFtime+(F107time<max(DentonTime));
-getFtime=(getFtime==2);
-F107time=F107time(getFtime);
-F107=F107(getFtime);
-%}
 %Should only need to match it to OMNITime since OMNITime is already matched
 %to DentonTime at this point
 getFtime=F107time>=min(OMNITime);
@@ -86,15 +87,17 @@ F107=F107(getFtime);
 %Save interpolated values since it takes a while to interpolate the whole
 %dataset. "Spline" is a misnomer at this point but a proper find/replace might
 %take a while and introduce bugs
-if(exist('InterpedVals.mat','file'))
-    load('InterpedVals')
+interpname=sprintf('InterpedVals_%d',satnum);
+if(TakahashiCond), interpname=sprintf('%s_tak',interpname);end
+if(exist(sprintf('%s.mat',interpname),'file'))
+    load(interpname)
 else
     MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     MLTFit=interptest(DentonTime,MLT,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     %F107Spline=interptest(DentonTime,F107,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     MassDensitySpline=MassDensitySpline';
     %F107Spline=F107Spline';
-    save('InterpedVals','MassDensitySpline','MLTFit');%,'F107Spline');
+    save(interpname,'MassDensitySpline','MLTFit');%,'F107Spline');
 end
 
 %Find storm with enough data to analyze
@@ -113,7 +116,7 @@ DSTCut=0;
 MDCut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
-stormcase=11;
+stormcase=1;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -318,12 +321,14 @@ if(MakePaperPlots)
     hold on; plot([OMNITime(1) OMNITime(end)],[-40 -40],'r-.','LineWidth',4); hold off;
     h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,29),'.');text(0.01,0.9,'F_{10.7} (s.f.u.)','Units','normalized','FontSize',14); %f107
     h5=subplot('position',subplotstack(5,5));plot(OMNITime,MassDensitySpline,'r.');text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14);%f107
-    hold on; plot([OMNITime(1) OMNITime(end)],[40 40],'b-.','LineWidth',4); hold off;
+    hold on; plot([OMNITime(1) OMNITime(end)],[40 40],'b-.','LineWidth',4);
     set(findobj('type','axes'),'xticklabel',{[]});
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
-    datetick('x')
-    set(findobj('type','axes'),'xtick',get(h5,'xtick'))
+    
+    
     axis tight;
+    datetick('x','keeplimits')
+    set(findobj('type','axes'),'xtick',get(h5,'xtick'))
     linkaxes([h5 h1 h2 h3 h4],'x')
     xlabel('Year')
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on');
@@ -388,31 +393,27 @@ end
 %DST vs rho_eq for 1 hour and 1 day
 if(MakePaperPlots && stormcase==1) 
     h=figure('Visible',visible);
-    plot(FILLED(~isnan(MassDensitySpline),end),MassDensitySpline(~isnan(MassDensitySpline)),'.');
-    xlabel('F_{10.7}','FontSize',16)
-    ylabel('\rho_{eq}','FontSize',16)
-    cc1=corrcoef(FILLED(~isnan(MassDensitySpline),end),MassDensitySpline(~isnan(MassDensitySpline)),'rows','pairwise');
+    plot(FILLED(~isnan(MassDensitySpline),end),log10(MassDensitySpline(~isnan(MassDensitySpline))),'.');
+    xlabel('F_{10.7} (s.f.u.)','FontSize',16)
+    ylabel('log(\rho_{eq}) (amu/cm^3)','FontSize',16)
+    cc1=corrcoef(FILLED(~isnan(MassDensitySpline),end),log10(MassDensitySpline(~isnan(MassDensitySpline))),'rows','pairwise');
     cc1=cc1(1,2);
     
     F107Day=interptest(OMNITime,FILLED(:,end),OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
     MDDay=interptest(OMNITime,MassDensitySpline',OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
-    hold on;
-    plot(F107Day,MDDay,'r+');
-    cc2=corrcoef(F107Day,MDDay,'rows','pairwise');
-    cc2=cc2(1,2);
-    
-    legend(sprintf('One Hour cc=%2.2f',cc1),sprintf('One Day Median cc=%2.2f',cc2));
-    axis tight;
-    print -depsc2 -r200 paperfigures/F107vsMD.eps
-    
-    
-    %Correlation plot of F10.7 and log(rho) at 27 day averages
     F10727Day=interptest(OMNITime,FILLED(:,end),OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end));
     MD27Day=interptest(OMNITime,MassDensitySpline',OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end));
-    h=figure('Visible',visible); plot(F10727Day,log(MD27Day),'+') ;
-    xlabel('F_{10.7\_27d} (s.f.u.)','FontSize',16); ylabel('log(\rho_{eq\_27d}) (amu/cm^3)','FontSize',16);
-    cc=corrcoef(F10727Day,MD27Day,'rows','pairwise');
-    text(0.01,0.85,sprintf('cc = %2.3f',cc(1,2)),'Units','normalized','FontSize',14);
+    hold on;
+    plot(F107Day,log10(MDDay),'r+');
+    cc2=corrcoef(F107Day,log10(MDDay),'rows','pairwise');
+    cc2=cc2(1,2);
+    
+    plot(F10727Day,log10(MD27Day),'go','MarkerFaceColor','g') ;
+    cc3=corrcoef(F10727Day,log10(MD27Day),'rows','pairwise');
+    cc3=cc3(1,2);
+    
+    legend(sprintf('One Hour cc=%2.2f',cc1),sprintf('One Day Median cc=%2.2f',cc2),sprintf('27-Day Median cc=%2.2f',cc3),'Location','NorthWest');
+    axis tight;
     print -depsc2 -r200 paperfigures/ccplot.eps 
 end
 
@@ -424,7 +425,9 @@ if(MakePaperPlots && stormcase==1)
     set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'yscale','log'); set(AX(2),'XTick',[]);
     ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'\rho_{eq\_27d}');
     xlabel('Year','FontSize',16);
+    linkaxes(AX,'x')
     datetick;
+    grid on
     print -depsc2 -r200 paperfigures/F107MDAllData.eps
 end
 

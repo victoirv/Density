@@ -10,7 +10,7 @@
 \usepackage[paperwidth=8.5in, paperheight=11in,top=1in, bottom=1in, left=1in, right=1in]{geometry}
 \usepackage[compact]{titlesec}
 \usepackage{abstract}
-\usepackage{subcaption}
+\usepackage[position=t,singlelinecheck=off,justification=raggedleft]{subcaption}
 
 \usepackage[authoryear,square]{natbib}
 \pagestyle{fancy}
@@ -145,13 +145,11 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 
 \begin{figure}[htp!]
 \centering
-\subcaptionbox{All data of $F_{10.7\_27d}$ and $\rho_{eq\_27d}$ \label{ccplot:a}}
+\subcaptionbox{\label{ccplot:a}}
 {\includegraphics[scale=0.42]{paperfigures/F107MDAllData.eps}}
-\subcaptionbox{ Correlation between $log(\rho_{eq\_27d})$ and $F_{10.7\_27d}$, compare to \cite{Takahashi2010} Fig. 14  \label{ccplot:b}}
+\subcaptionbox{\label{ccplot:b}}
 {\includegraphics[scale=0.42]{paperfigures/ccplot.eps}}
-\subcaptionbox{$D_{st}$ against $\rho_{eq}$ at one hour and one-day median values. \label{ccplot:c}}
-{\includegraphics[scale=0.42]{paperfigures/F107vsMD.eps}}
-\caption{Correlation and comparisons between $F_{10.7}$ and $\rho_{eq}$}
+\caption{(a) All data of $F_{10.7\_27d}$ and $\rho_{eq\_27d}$. (b) Correlation between $log(\rho_{eq})$ and $F_{10.7}$ at hour, day, and 27-day intervals; compare to \cite{Takahashi2010} Fig. 14}
 \label{ccplot}
 \end{figure}
 \clearpage
