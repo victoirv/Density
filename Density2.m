@@ -248,6 +248,7 @@ for sat = [2,3,5,6,7]
     fprintf('cc(OF107,log10(DDensityMean)   = %.3f\n',tmp(2));
 
     I = find(DDstMedian(1:end-1) > -50 & DDstMedian(2:end) < -50);
+    clear *Storm*
 
     k = 1;
     for i = 1:length(I)
@@ -261,44 +262,49 @@ for sat = [2,3,5,6,7]
         k = k+1;
     end
 
-    t = [-24:24];
-    figure(1);clf;hold on;grid on;
-        plot(t,nanmean(DDensityMedianStorm),'b','LineWidth',3)
-        plot(t,nanmean(-DDstStorm),'g','LineWidth',3)
-        plot(t,nanmean(DNGoodStorm),'k','LineWidth',1)
-        title(sprintf('GOES-%d; %s-%s',sat,datestr(Io),datestr(If)))
-        xlabel('Time since onset [hrs]')
-        legend('Density [amu/cm^3]','-Dst [nT]','# values','Location','NorthWest')
-        fname = sprintf('Dst_Event_GOES%d_%s_%s',sat,datestr(Io,29),datestr(If,29));
-        title(sprintf('GOES-%d; %s-%s; %d Dst Events',sat,datestr(Io),datestr(If),length(I)));
-        set(gca,'XTick',[-24:2:24])
-        plotcmds(fname,1)
+    if (length(I) > 0)
+        t = [-24:24];
+        figure(1);clf;hold on;grid on;
+            plot(t,nanmean(DDensityMedianStorm),'b','LineWidth',3)
+            plot(t,nanmean(-DDstStorm),'g','LineWidth',3)
+            plot(t,nanmean(DNGoodStorm),'k','LineWidth',1)
+            title(sprintf('GOES-%d; %s-%s',sat,datestr(Io),datestr(If)))
+            xlabel('Time since onset [hrs]')
+            legend('Density [amu/cm^3]','-Dst [nT]','# values','Location','NorthWest')
+            fname = sprintf('Dst_Event_GOES%d_%s_%s',sat,datestr(Io,29),datestr(If,29));
+            title(sprintf('GOES-%d; %s-%s; %d Dst Events',sat,datestr(Io),datestr(If),length(I)));
+            set(gca,'XTick',[-24:2:24])
+            plotcmds(fname,1)
+    end
 
     I = find(DDensityMedian(1:end-1) < 30 & DDensityMedian(2:end) > 30);
+    clear *Storm*
 
-    k = 1;
-    for i = 1:length(I)
-        a = I(i)-24;
-        b = I(i)+24;
-        if (a < 1),continue,end
-        if (b > length(DDensityMedian)),break,end
-        DDensityMedianStorm(k,:) = DDensityMedian(a:b);
-        DDstStorm(k,:)  = DDstMedian(a:b);
-        DNGoodStorm(k,:) = DNGood(a:b);
-        k = k+1;
+    if (length(I) == 0)
+        k = 1;
+        for i = 1:length(I)
+            a = I(i)-24;
+            b = I(i)+24;
+            if (a < 1),continue,end
+            if (b > length(DDensityMedian)),break,end
+            DDensityMedianStorm(k,:) = DDensityMedian(a:b);
+            DDstStorm(k,:)  = DDstMedian(a:b);
+            DNGoodStorm(k,:) = DNGood(a:b);
+            k = k+1;
+        end
+
+        t = [-24:24];
+        figure(2);clf;hold on;grid on;
+            plot(t,nanmean(DDensityMedianStorm),'b','LineWidth',3)
+            plot(t,nanmean(-DDstStorm),'g','LineWidth',3)
+            plot(t,nanmean(DNGoodStorm),'k','LineWidth',1)
+            title(sprintf('GOES-%d; %s-%s',sat,datestr(Io),datestr(If)))
+            xlabel('Time since onset [hrs]')
+            legend('Density [amu/cm^3]','-Dst [nT]','# values','Location','NorthWest')
+            fname = sprintf('Density_Event_GOES%d_%s_%s',sat,datestr(Io,29),datestr(If,29));
+            title(sprintf('GOES-%d; %s-%s; %d \\rho_{eq} Events',sat,datestr(Io),datestr(If),length(I)));
+            set(gca,'XTick',[-24:2:24])
+            plotcmds(fname,1)
     end
-
-    t = [-24:24];
-    figure(2);clf;hold on;grid on;
-        plot(t,nanmean(DDensityMedianStorm),'b','LineWidth',3)
-        plot(t,nanmean(-DDstStorm),'g','LineWidth',3)
-        plot(t,nanmean(DNGoodStorm),'k','LineWidth',1)
-        title(sprintf('GOES-%d; %s-%s',sat,datestr(Io),datestr(If)))
-        xlabel('Time since onset [hrs]')
-        legend('Density [amu/cm^3]','-Dst [nT]','# values','Location','NorthWest')
-        fname = sprintf('Density_Event_GOES%d_%s_%s',sat,datestr(Io,29),datestr(If,29));
-        title(sprintf('GOES-%d; %s-%s; %d \\rho_{eq} Events',sat,datestr(Io),datestr(If),length(I)));
-        set(gca,'XTick',[-24:2:24])
-        plotcmds(fname,1)
 
 end
