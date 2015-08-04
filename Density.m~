@@ -2,6 +2,9 @@ function Density
 
 close all;clear all;
 
+TakahashiCond=0;
+satnum=6;
+
 %Read filled dataset from Kondrashov(2014)
 if(~exist('data/WGhourFS_72_13.txt'))
     urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/data/WGhourFS_72_13.txt','data/WGhourFS_72_13.txt');
@@ -9,8 +12,11 @@ end
 FILLED=dlmread('data/WGhourFS_72_13.txt',',',1,0); 
 %Data from supplementary section of http://onlinelibrary.wiley.com/doi/10.1002/2014GL059741/full
 FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
-%FILLED=FILLED(FILLED(:,1)>1988,:);
-%FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
+
+if(TakahashiCond)
+    FILLED=FILLED(FILLED(:,1)>1988,:);
+    FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
+end
 headers=textread('data/WGhourFS_72_13.txt','%s',28,'delimiter',',');
 VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
 VBz=FILLED(:,6).*FILLED(:,5);
@@ -19,12 +25,12 @@ OMNIDensity=FILLED(:,7);
 OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
 %VBS=1/2*Plasma_bulk_speed.*(abs(Bz_GSM)-Bz_GSM);
 
-satnum=6;
+
 %Get Denton data (mostly just for mass density)
 if(exist(sprintf('DentonDensityAndTime_%d.mat',satnum),'file'))
     load(sprintf('DentonDensityAndTime_%d',satnum))
 else
-    urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/massdensity.txt','/tmp/massdensity.txt');
+    urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/data/massdensity.txt','data/massdensity.txt');
     IN=dlmread('data/massdensity.txt');
     IN(IN(:,1)~=satnum,:)=[]; %Satellites 6 and 7 should work
     IN(IN==9999)=NaN;
@@ -70,13 +76,6 @@ BS=BS(gettime);
 OMNIDensity=OMNIDensity(gettime);
 FILLED=FILLED(gettime,:);
 
-%{
-getFtime=F107time>min(DentonTime);
-getFtime=getFtime+(F107time<max(DentonTime));
-getFtime=(getFtime==2);
-F107time=F107time(getFtime);
-F107=F107(getFtime);
-%}
 %Should only need to match it to OMNITime since OMNITime is already matched
 %to DentonTime at this point
 getFtime=F107time>=min(OMNITime);
@@ -88,15 +87,17 @@ F107=F107(getFtime);
 %Save interpolated values since it takes a while to interpolate the whole
 %dataset. "Spline" is a misnomer at this point but a proper find/replace might
 %take a while and introduce bugs
-if(exist('InterpedVals.mat','file'))
-    load('InterpedVals')
+interpname=sprintf('InterpedVals_%d',satnum);
+if(TakahashiCond), interpname=sprintf('%s_tak',interpname);end
+if(exist(sprintf('%s.mat',interpname),'file'))
+    load(interpname)
 else
     MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     MLTFit=interptest(DentonTime,MLT,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     %F107Spline=interptest(DentonTime,F107,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     MassDensitySpline=MassDensitySpline';
     %F107Spline=F107Spline';
-    save('InterpedVals','MassDensitySpline','MLTFit');%,'F107Spline');
+    save(interpname,'MassDensitySpline','MLTFit');%,'F107Spline');
 end
 
 %Find storm with enough data to analyze
@@ -115,7 +116,7 @@ DSTCut=0;
 MDCut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
-stormcase=1;
+stormcase=3;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -161,11 +162,23 @@ switch stormcase
         cutconditions=1;
         LongTimeScale=24;
         figurename=strcat(figurename,'dst-50-tak.eps');
-    case 11
+    case 11 %Takahashi but Mass Storm
+        %Make sure to modify years 
+        storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
+        MDCut=40;
+        cutconditions=1;
+        LongTimeScale=24;
+        figurename=strcat(figurename,'mass-tak.eps');
+    case 12
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         LongTimeScale=24;
         figurename=strcat(figurename,'dst-day.eps');
+    case 13
+        storms=diff([0 (MassDensityNanSpline>40)' 0]); 
+        MDCut=40;
+        LongTimeScale=24;
+        figurename=strcat(figurename,'mass-day.eps');
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -337,6 +350,7 @@ if(MakePaperPlots)
     xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
     h=figure('Visible',visible);
     orient tall;
+    
     h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
     hold on; plot(xa,AVMatBars(:,:,6),'r-.'); 
     h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
@@ -356,7 +370,8 @@ if(MakePaperPlots)
     ylabel(AX(2),'# of values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
-    %axis tight;
+    if(DSTCut<0), title(h1,sprintf('DST < %d for %d-%d',DSTCut,year(OMNITime(1)),year(OMNITime(end)))); end
+    if(MDCut>0), title(h1,sprintf('\\rho_{eq} > %d for %d-%d',MDCut,year(OMNITime(1)),year(OMNITime(end)))); end
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
@@ -364,6 +379,8 @@ if(MakePaperPlots)
     print('-depsc2','-r200',figurename);
     
 end
+
+
 
 %Nans per hour
 if(MakePaperPlots && stormcase==1) 
@@ -424,7 +441,9 @@ if(MakePaperPlots && stormcase==1)
     set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'yscale','log'); set(AX(2),'XTick',[]);
     ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'\rho_{eq\_27d}');
     xlabel('Year','FontSize',16);
+    linkaxes(AX,'x')
     datetick;
+    grid on
     print -depsc2 -r200 paperfigures/F107MDAllData.eps
 end
 

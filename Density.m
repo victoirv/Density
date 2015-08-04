@@ -116,7 +116,7 @@ DSTCut=0;
 MDCut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
-stormcase=2;
+stormcase=8;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -162,11 +162,23 @@ switch stormcase
         cutconditions=1;
         LongTimeScale=24;
         figurename=strcat(figurename,'dst-50-tak.eps');
-    case 11
+    case 11 %Takahashi but Mass Storm
+        %Make sure to modify years 
+        storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
+        MDCut=40;
+        cutconditions=1;
+        LongTimeScale=24;
+        figurename=strcat(figurename,'mass-tak.eps');
+    case 12
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         LongTimeScale=24;
         figurename=strcat(figurename,'dst-day.eps');
+    case 13
+        storms=diff([0 (MassDensityNanSpline>40)' 0]); 
+        MDCut=40;
+        LongTimeScale=24;
+        figurename=strcat(figurename,'mass-day.eps');
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -338,6 +350,7 @@ if(MakePaperPlots)
     xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
     h=figure('Visible',visible);
     orient tall;
+    
     h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
     hold on; plot(xa,AVMatBars(:,:,6),'r-.'); 
     h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
@@ -357,7 +370,8 @@ if(MakePaperPlots)
     ylabel(AX(2),'# of values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
-    %axis tight;
+    if(DSTCut<0), title(h1,sprintf('DST < %d for %d-%d',DSTCut,year(OMNITime(1)),year(OMNITime(end)))); end
+    if(MDCut>0), title(h1,sprintf('\\rho_{eq} > %d for %d-%d',MDCut,year(OMNITime(1)),year(OMNITime(end)))); end
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
@@ -365,6 +379,8 @@ if(MakePaperPlots)
     print('-depsc2','-r200',figurename);
     
 end
+
+
 
 %Nans per hour
 if(MakePaperPlots && stormcase==1) 

@@ -164,62 +164,74 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \begin{figure}[htp!]
 \centering
 \includegraphics[scale=0.45]{paperfigures/stormavs-dst-50-tak.eps}
-\includegraphics[scale=0.45]{paperfigures/stormavs-dst-day.eps}
-\caption{(a) Verifying \cite{Takahashi2010} Fig. 11 conditions: $D_{st}<-50nT$ between 1989 and 1991 and (b) Same as (a) but for 1987 to 1991, and not just pre-noon events}
+\rule[1ex]{5cm}{0.5pt}
+\includegraphics[scale=0.45]{paperfigures/stormavs-mass-tak.eps}
+\caption{(a) Verifying \cite{Takahashi2010} Fig. 11 conditions: $D_{st}<-50nT$ between 1989 and 1991 and (b) Same as (a) but for $\rho_{eq}$ events}
 \label{DailyAverages}
 \end{figure}
 
 \begin{figure}[htp!]
 \centering
+\includegraphics[scale=0.45]{paperfigures/stormavs-dst-day.eps}
+\rule[1ex]{5cm}{0.5pt}
+\includegraphics[scale=0.45]{paperfigures/stormavs-mass-day.eps}
+\caption{Daily averages for all events in full time range for (a) $D_{st}<-50~nT$ events and (b) $\rho_{eq}>40~amu/cm^3$ events}
+\label{DailyAveragesAllData}
+\end{figure}
+\clearpage
+
+\begin{figure}[htp!]
+\centering
 \includegraphics[scale=0.45]{paperfigures/stormavs-dst.eps}
+\rule[1ex]{5cm}{0.5pt}
 \includegraphics[scale=0.45]{paperfigures/stormavs-mass.eps}
 \caption{(a) Average of solar wind and near-Earth measurements around the time $D_{st}$ crossed below $-50~nT$ onset. (b) Same as (a) except around time intervals where mass density crossed above $40~amu/cm^3$.  The bottom panel shows the number of mass density data points that were used for the average.}
 \label{Storms}
 \end{figure}
-\clearpage
-
 
 \begin{figure}[htp!]
 \centering
 \includegraphics[scale=0.45]{paperfigures/stormavs-dd12.eps}
+\rule[1ex]{5cm}{0.5pt}
 \includegraphics[scale=0.45]{paperfigures/stormavs-md12.eps}
 \caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ stayed below $-50~nT$ for at least 12~hours. (b) Same as Figure \ref{Storms}(b) except for constrain that $\rho_{eq}$ stayed above $50~amu/cm^3$ for at least 12 hours.}
 \label{Mspec}
 \end{figure}
+\clearpage
+
 
 \begin{figure}[htp!]
 \centering
 \includegraphics[scale=0.45]{paperfigures/stormavs-d80.eps}
+\rule[1ex]{5cm}{0.5pt}
 \includegraphics[scale=0.45]{paperfigures/stormavs-m70.eps}
 \caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ crossed below $-80nT$ (b) Same as Figure \ref{Storms}(b) except for constrain that $\rho_{eq}$ crossed above $70~amu/cm^3$.}
 \label{Dspec}
 \end{figure}
-\clearpage
-
-
 
 \begin{figure}[htp!]
 \centering
 \includegraphics[scale=0.45]{paperfigures/stormavs-diffden-10amu.eps}
+\rule[1ex]{5cm}{0.5pt}
 \includegraphics[scale=0.45]{paperfigures/stormavs-diffden-30percent.eps}
 \caption{(a) diff($\rho_{eq}$) $>$ 10$\frac{amu}{hour}$. (b) diff($\rho_{eq}$) $>$ 30$\frac{\%}{hour}$}
 \label{rhochange}
 \end{figure}
+\clearpage
+
 
 \begin{figure}[htp!]
 \centering
 \includegraphics[scale=0.45]{paperfigures/stormavs-dst-nof107.eps}
-\includegraphics[scale=0.5]{paperfigures/f107removed.eps}
+\includegraphics[scale=0.45]{paperfigures/f107removed.eps}
 \caption{$D_{st}$ events where $\rho_{eq}$ has $F_{10.7}$ dependence removed, and Difference between original $\rho_{eq}$ and $F_{10.7}$-less $\rho_{eq}$}
 \label{nof107}
 \end{figure}
-\clearpage
-
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.75]{paperfigures/blockmedian.eps}
-\includegraphics[scale=0.75]{paperfigures/blockmedian-prenoon.eps}
+\includegraphics[scale=0.45]{paperfigures/blockmedian.eps}
+\includegraphics[scale=0.45]{paperfigures/blockmedian-prenoon.eps}
 \caption{Comparing median values calculated as median of all 1-hour points in the 12 day block, and as the daily median of all hourly-mediated events. (b) Same, but only events starting between 0-12 UTC}
 \label{blockmedian}
 \end{figure}
