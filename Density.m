@@ -2,7 +2,7 @@ function Density
 
 close all;clear all;
 
-TakahashiCond=0;
+TakahashiCond=1;
 satnum=6;
 
 %Read filled dataset from Kondrashov(2014)
@@ -116,7 +116,7 @@ DSTCut=0;
 MDCut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
-stormcase=8;
+stormcase=12;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -169,12 +169,17 @@ switch stormcase
         cutconditions=1;
         LongTimeScale=24;
         figurename=strcat(figurename,'mass-tak.eps');
-    case 12
+    case 12 %Takahashi hourly dst
+        storms=diff([0 (FILLED(:,15)<-50)' 0]);
+        DSTCut=-50;
+        cutconditions=1;
+        figurename=strcat(figurename,'dst-50-tak-hour.eps');
+    case 13
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         LongTimeScale=24;
         figurename=strcat(figurename,'dst-day.eps');
-    case 13
+    case 14
         storms=diff([0 (MassDensityNanSpline>40)' 0]); 
         MDCut=40;
         LongTimeScale=24;
@@ -185,7 +190,7 @@ endi=find(storms<0)-1;
 duration=endi-starti+1;
 
 %Shift event start points to next local DST minimum 
-while(1 && stormcase==1) 
+while(0) 
     ind=FILLED(starti+1,15)<FILLED(starti,15);
     if(sum(ind)==0)
         break
@@ -301,13 +306,7 @@ end
 
 %All storms plotted together with median
 if(MakePaperPlots && stormcase==1)
-    h=figure('Visible',visible);
-    plot(-timewidth:1:timewidth*2,AVMDMat,'.')
-    hold on;
-    xa=(-timewidth:LongTimeScale:timewidth*2);
-    plot(xa,AVMDs(1,:),'r','LineWidth',3);
-    hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
-    print -depsc2 -r200 paperfigures/allstorms.eps
+
 end
 
 %Showing 'detrending' by removing F10.7 influencex`
@@ -323,8 +322,7 @@ if(MakePaperPlots && removef107)
     print -depsc2 -r200 paperfigures/f107removed.eps
 end
 
-%Make main stack plots
-if(MakePaperPlots)
+if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     orient tall;
     h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %Bz
@@ -336,8 +334,6 @@ if(MakePaperPlots)
     hold on; plot([OMNITime(1) OMNITime(end)],[40 40],'b-.','LineWidth',4);
     set(findobj('type','axes'),'xticklabel',{[]});
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
-    
-    
     axis tight;
     datetick('x','keeplimits')
     set(findobj('type','axes'),'xtick',get(h5,'xtick'))
@@ -347,6 +343,17 @@ if(MakePaperPlots)
     print -depsc2 -r200 paperfigures/alldata.eps
     
     
+    h=figure('Visible',visible);
+    plot(-timewidth:1:timewidth*2,AVMDMat,'.')
+    hold on;
+    xa=(-timewidth:LongTimeScale:timewidth*2);
+    plot(xa,AVMDs(1,:),'r','LineWidth',3);
+    hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
+    print -depsc2 -r200 paperfigures/allstorms.eps
+end
+
+%Make main stack plots
+if(MakePaperPlots)
     xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
     h=figure('Visible',visible);
     orient tall;
@@ -370,8 +377,8 @@ if(MakePaperPlots)
     ylabel(AX(2),'# of values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
-    if(DSTCut<0), title(h1,sprintf('DST < %d for %d-%d',DSTCut,year(OMNITime(1)),year(OMNITime(end)))); end
-    if(MDCut>0), title(h1,sprintf('\\rho_{eq} > %d for %d-%d',MDCut,year(OMNITime(1)),year(OMNITime(end)))); end
+    if(DSTCut<0), title(h1,sprintf('%d events of DST < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end)))); end
+    if(MDCut>0), title(h1,sprintf('%d events of \\rho_{eq} > %damu/cm^3 for %d-%d',length(starti),MDCut,year(OMNITime(1)),year(OMNITime(end)))); end
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
@@ -437,9 +444,9 @@ end
 if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     NewTime=OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end);
-    [AX,H1,H2]=plotyy(NewTime,interptest(OMNITime,FILLED(:,end),NewTime),NewTime,interptest(OMNITime,MassDensitySpline',NewTime),'plot','plot');
-    set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'yscale','log'); set(AX(2),'XTick',[]);
-    ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'\rho_{eq\_27d}');
+    [AX,H1,H2]=plotyy(NewTime,interptest(OMNITime,FILLED(:,end),NewTime),NewTime,log10(interptest(OMNITime,MassDensitySpline',NewTime)),'plot','plot');
+    set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'log(\rho_{eq\_27d})');
     xlabel('Year','FontSize',16);
     linkaxes(AX,'x')
     datetick;

@@ -116,7 +116,7 @@ DSTCut=0;
 MDCut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
-stormcase=3;
+stormcase=1;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -323,6 +323,8 @@ if(MakePaperPlots && removef107)
     print -depsc2 -r200 paperfigures/f107removed.eps
 end
 
+if(MakePaperPlots && stormcase==1
+
 %Make main stack plots
 if(MakePaperPlots)
     h=figure('Visible',visible);
@@ -370,8 +372,8 @@ if(MakePaperPlots)
     ylabel(AX(2),'# of values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
-    if(DSTCut<0), title(h1,sprintf('DST < %d for %d-%d',DSTCut,year(OMNITime(1)),year(OMNITime(end)))); end
-    if(MDCut>0), title(h1,sprintf('\\rho_{eq} > %d for %d-%d',MDCut,year(OMNITime(1)),year(OMNITime(end)))); end
+    if(DSTCut<0), title(h1,sprintf('%d events of DST < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end)))); end
+    if(MDCut>0), title(h1,sprintf('%d events of \\rho_{eq} > %damu/cm^3 for %d-%d',length(starti),MDCut,year(OMNITime(1)),year(OMNITime(end)))); end
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
@@ -437,9 +439,9 @@ end
 if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     NewTime=OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end);
-    [AX,H1,H2]=plotyy(NewTime,interptest(OMNITime,FILLED(:,end),NewTime),NewTime,interptest(OMNITime,MassDensitySpline',NewTime),'plot','plot');
-    set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'yscale','log'); set(AX(2),'XTick',[]);
-    ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'\rho_{eq\_27d}');
+    [AX,H1,H2]=plotyy(NewTime,interptest(OMNITime,FILLED(:,end),NewTime),NewTime,log10(interptest(OMNITime,MassDensitySpline',NewTime)),'plot','plot');
+    set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'log(\rho_{eq\_27d})');
     xlabel('Year','FontSize',16);
     linkaxes(AX,'x')
     datetick;
