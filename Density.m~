@@ -2,7 +2,7 @@ function Density
 
 close all;clear all;
 
-TakahashiCond=0;
+TakahashiCond=1;
 satnum=6;
 
 %Read filled dataset from Kondrashov(2014)
@@ -169,12 +169,18 @@ switch stormcase
         cutconditions=1;
         LongTimeScale=24;
         figurename=strcat(figurename,'mass-tak.eps');
-    case 12
+    case 12 %Takahashi hourly dst
+        storms=diff([0 (FILLED(:,15)<=-50)' 0]);
+        DSTCut=-50;
+        cutconditions=1;
+        %cutoffduration=12;
+        figurename=strcat(figurename,'dst-50-tak-hour.eps');
+    case 13
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         LongTimeScale=24;
         figurename=strcat(figurename,'dst-day.eps');
-    case 13
+    case 14
         storms=diff([0 (MassDensityNanSpline>40)' 0]); 
         MDCut=40;
         LongTimeScale=24;
@@ -185,7 +191,7 @@ endi=find(storms<0)-1;
 duration=endi-starti+1;
 
 %Shift event start points to next local DST minimum 
-while(1 && stormcase==1) 
+while(0) 
     ind=FILLED(starti+1,15)<FILLED(starti,15);
     if(sum(ind)==0)
         break
@@ -299,16 +305,6 @@ if(MakePaperPlots && LongTimeScale==24)
     print -depsc2 -r200 paperfigures/blockmedian.eps
 end
 
-%All storms plotted together with median
-if(MakePaperPlots && stormcase==1)
-    h=figure('Visible',visible);
-    plot(-timewidth:1:timewidth*2,AVMDMat,'.')
-    hold on;
-    xa=(-timewidth:LongTimeScale:timewidth*2);
-    plot(xa,AVMDs(1,:),'r','LineWidth',3);
-    hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
-    print -depsc2 -r200 paperfigures/allstorms.eps
-end
 
 %Showing 'detrending' by removing F10.7 influencex`
 if(MakePaperPlots && removef107)
@@ -323,10 +319,7 @@ if(MakePaperPlots && removef107)
     print -depsc2 -r200 paperfigures/f107removed.eps
 end
 
-if(MakePaperPlots && stormcase==1
-
-%Make main stack plots
-if(MakePaperPlots)
+if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     orient tall;
     h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %Bz
@@ -338,8 +331,6 @@ if(MakePaperPlots)
     hold on; plot([OMNITime(1) OMNITime(end)],[40 40],'b-.','LineWidth',4);
     set(findobj('type','axes'),'xticklabel',{[]});
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
-    
-    
     axis tight;
     datetick('x','keeplimits')
     set(findobj('type','axes'),'xtick',get(h5,'xtick'))
@@ -349,6 +340,29 @@ if(MakePaperPlots)
     print -depsc2 -r200 paperfigures/alldata.eps
     
     
+    h=figure('Visible',visible);
+    plot(-timewidth:1:timewidth*2,AVMDMat,'.')
+    hold on;
+    xa=(-timewidth:LongTimeScale:timewidth*2);
+    plot(xa,AVMDs(1,:),'r','LineWidth',3);
+    hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
+    print -depsc2 -r200 paperfigures/allstorms.eps
+    
+    h=figure('Visible',visible);
+    medf107=median(FILLED(:,end));
+    highsplit=median(FILLED(FILLED(:,end)>medf107, end));
+    lowsplit=median(FILLED(FILLED(:,end)<medf107, end));
+    midhighf107dst=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,15),1);
+    midlowf107dst=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,15),1);
+    highf107dst=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,15),1);
+    lowf107dst=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,15),1);
+    plot(xa,[highf107dst; midhighf107dst; midlowf107dst; lowf107dst]);
+    legend('High','Mid-High','Mid-Low','Low',;);
+    print -depsc2 -r200 paperfigures/HighLowF107.eps
+end
+
+%Make main stack plots
+if(MakePaperPlots)
     xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
     h=figure('Visible',visible);
     orient tall;

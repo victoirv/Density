@@ -2,7 +2,7 @@ function Density
 
 close all;clear all;
 
-TakahashiCond=1;
+TakahashiCond=0;
 satnum=6;
 
 %Read filled dataset from Kondrashov(2014)
@@ -116,7 +116,7 @@ DSTCut=0;
 MDCut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
-stormcase=12;
+stormcase=1;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -170,9 +170,10 @@ switch stormcase
         LongTimeScale=24;
         figurename=strcat(figurename,'mass-tak.eps');
     case 12 %Takahashi hourly dst
-        storms=diff([0 (FILLED(:,15)<-50)' 0]);
+        storms=diff([0 (FILLED(:,15)<=-50)' 0]);
         DSTCut=-50;
         cutconditions=1;
+        %cutoffduration=12;
         figurename=strcat(figurename,'dst-50-tak-hour.eps');
     case 13
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
@@ -304,10 +305,6 @@ if(MakePaperPlots && LongTimeScale==24)
     print -depsc2 -r200 paperfigures/blockmedian.eps
 end
 
-%All storms plotted together with median
-if(MakePaperPlots && stormcase==1)
-
-end
 
 %Showing 'detrending' by removing F10.7 influencex`
 if(MakePaperPlots && removef107)
@@ -350,6 +347,19 @@ if(MakePaperPlots && stormcase==1)
     plot(xa,AVMDs(1,:),'r','LineWidth',3);
     hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
     print -depsc2 -r200 paperfigures/allstorms.eps
+    
+    h=figure('Visible',visible);
+    medf107=nanmedian(FILLED(:,end));
+    highsplit=nanmedian(FILLED(FILLED(:,end)>medf107, end));
+    lowsplit=nanmedian(FILLED(FILLED(:,end)<medf107, end));
+    midhighf107dst=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,15),1);
+    midlowf107dst=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,15),1);
+    highf107dst=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,15),1);
+    lowf107dst=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,15),1);
+    plot(xa,[highf107dst; midhighf107dst; midlowf107dst; lowf107dst]);
+    legend('High F_{10.7}','Mid-High F_{10.7}','Mid-Low F_{10.7}','Low F_{10.7}','Location','SouthWest');
+    title(sprintf('%d events of DST < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowF107.eps
 end
 
 %Make main stack plots
