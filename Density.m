@@ -357,8 +357,9 @@ if(MakePaperPlots && stormcase==1)
     highf107dst=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,15),1);
     lowf107dst=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,15),1);
     plot(xa,[highf107dst; midhighf107dst; midlowf107dst; lowf107dst]);
+    ylabel('D_{st} (nT)')
     legend('High F_{10.7}','Mid-High F_{10.7}','Mid-Low F_{10.7}','Low F_{10.7}','Location','SouthWest');
-    title(sprintf('%d events of DST < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    title(sprintf('%d events of D_{st} < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107.eps
 end
 
