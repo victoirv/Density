@@ -372,8 +372,20 @@ if(MakePaperPlots && stormcase==1)
     ylabel('\rho_{eq} (amu/cm^3)')
     xlabel('Time from start of event (hour)')
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
-    title(sprintf('%d events of \rho_{eq} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107rho.eps
+    
+    h=figure('Visible',visible);
+    midhighf107bz=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,5),1);
+    midlowf107bz=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,5),1);
+    highf107bz=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,5),1);
+    lowf107bz=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,5),1);
+    plot(xa,[highf107bz; midhighf107bz; midlowf107bz; lowf107bz]);
+    ylabel('B_z (nT)')
+    xlabel('Time from start of event (hour)')
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
+    title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowF107Bz.eps
 end
 
 %Make main stack plots
