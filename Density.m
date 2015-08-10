@@ -358,9 +358,22 @@ if(MakePaperPlots && stormcase==1)
     lowf107dst=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,15),1);
     plot(xa,[highf107dst; midhighf107dst; midlowf107dst; lowf107dst]);
     ylabel('D_{st} (nT)')
-    legend('High F_{10.7}','Mid-High F_{10.7}','Mid-Low F_{10.7}','Low F_{10.7}','Location','SouthWest');
+    xlabel('Time from start of event (hour)')
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
     title(sprintf('%d events of D_{st} < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
-    print -depsc2 -r200 paperfigures/HighLowF107.eps
+    print -depsc2 -r200 paperfigures/HighLowF107dst.eps
+    
+    h=figure('Visible',visible);
+    midhighf107rho=nanmedian(AVMDMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:),1);
+    midlowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:),1);
+    highf107rho=nanmedian(AVMDMat(FILLED(starti,29)>highsplit,:),1);
+    lowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<lowsplit,:),1);
+    plot(xa,[highf107rho; midhighf107rho; midlowf107rho; lowf107rho]);
+    ylabel('\rho_{eq} (amu/cm^3)')
+    xlabel('Time from start of event (hour)')
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
+    title(sprintf('%d events of \rho_{eq} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowF107rho.eps
 end
 
 %Make main stack plots

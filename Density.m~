@@ -2,7 +2,7 @@ function Density
 
 close all;clear all;
 
-TakahashiCond=1;
+TakahashiCond=0;
 satnum=6;
 
 %Read filled dataset from Kondrashov(2014)
@@ -349,16 +349,30 @@ if(MakePaperPlots && stormcase==1)
     print -depsc2 -r200 paperfigures/allstorms.eps
     
     h=figure('Visible',visible);
-    medf107=median(FILLED(:,end));
-    highsplit=median(FILLED(FILLED(:,end)>medf107, end));
-    lowsplit=median(FILLED(FILLED(:,end)<medf107, end));
+    medf107=nanmedian(FILLED(:,end));
+    highsplit=nanmedian(FILLED(FILLED(:,end)>medf107, end));
+    lowsplit=nanmedian(FILLED(FILLED(:,end)<medf107, end));
     midhighf107dst=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,15),1);
     midlowf107dst=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,15),1);
     highf107dst=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,15),1);
     lowf107dst=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,15),1);
     plot(xa,[highf107dst; midhighf107dst; midlowf107dst; lowf107dst]);
-    legend('High','Mid-High','Mid-Low','Low',;);
-    print -depsc2 -r200 paperfigures/HighLowF107.eps
+    ylabel('D_{st} (nT)')
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
+    title(sprintf('%d events of D_{st} < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowF107dst.eps
+    
+      h=figure('Visible',visible);
+   
+    midhighf107rho=nanmedian(AVMDMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:),1);
+    midlowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:),1);
+    highf107rho=nanmedian(AVMDMat(FILLED(starti,29)>highsplit,:),1);
+    lowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<lowsplit,:),1);
+    plot(xa,[highf107rho; midhighf107rho; midlowf107rho; lowf107rho]);
+    ylabel('\rho_{eq} (amu/cm^3)')
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
+    title(sprintf('%d events of \rho_{eq} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowF107dst.eps
 end
 
 %Make main stack plots
