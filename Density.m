@@ -338,6 +338,7 @@ if(MakePaperPlots && stormcase==1)
     xlabel('Year')
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on');
     print -depsc2 -r200 paperfigures/alldata.eps
+    print -dpng -r200 paperfigures/PNGs/alldata.png
     
     
     h=figure('Visible',visible);
@@ -347,6 +348,7 @@ if(MakePaperPlots && stormcase==1)
     plot(xa,AVMDs(1,:),'r','LineWidth',3);
     hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
     print -depsc2 -r200 paperfigures/allstorms.eps
+    print -dpng -r200 paperfigures/PNGs/allstorms.png
     
     h=figure('Visible',visible);
     medf107=nanmedian(FILLED(:,end));
@@ -362,6 +364,7 @@ if(MakePaperPlots && stormcase==1)
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
     title(sprintf('%d events of D_{st} < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107dst.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107dst.png
     
     h=figure('Visible',visible);
     midhighf107rho=nanmedian(AVMDMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:),1);
@@ -374,6 +377,7 @@ if(MakePaperPlots && stormcase==1)
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
     title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107rho.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107rho.png
     
     h=figure('Visible',visible);
     midhighf107bz=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,5),1);
@@ -386,6 +390,7 @@ if(MakePaperPlots && stormcase==1)
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
     title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107Bz.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107Bz.png
     
     
     h=figure('Visible',visible);
@@ -402,6 +407,7 @@ if(MakePaperPlots && stormcase==1)
     legend(sprintf('\\rho_{eq}>%2.0f',highsplitrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',highsplitrho,medrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',medrho,lowsplitrho),sprintf('%2.0f>\\rho_{eq}',lowsplitrho),'Location','SouthWest');
     title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowRhoBz.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowRhoBz.png
 end
 
 %Make main stack plots
