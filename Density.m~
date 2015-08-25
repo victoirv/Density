@@ -2,7 +2,7 @@ function Density
 
 close all;clear all;
 
-TakahashiCond=1;
+TakahashiCond=0;
 satnum=6;
 
 %Read filled dataset from Kondrashov(2014)
@@ -116,7 +116,7 @@ DSTCut=0;
 MDCut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
-stormcase=10;
+stormcase=1;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -338,6 +338,7 @@ if(MakePaperPlots && stormcase==1)
     xlabel('Year')
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on');
     print -depsc2 -r200 paperfigures/alldata.eps
+    print -dpng -r200 paperfigures/PNGs/alldata.png
     
     
     h=figure('Visible',visible);
@@ -347,6 +348,7 @@ if(MakePaperPlots && stormcase==1)
     plot(xa,AVMDs(1,:),'r','LineWidth',3);
     hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
     print -depsc2 -r200 paperfigures/allstorms.eps
+    print -dpng -r200 paperfigures/PNGs/allstorms.png
     
     h=figure('Visible',visible);
     medf107=nanmedian(FILLED(:,end));
@@ -362,46 +364,61 @@ if(MakePaperPlots && stormcase==1)
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
     title(sprintf('%d events of D_{st} < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107dst.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107dst.png
     
     h=figure('Visible',visible);
     midhighf107rho=nanmedian(AVMDMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:),1);
     midlowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:),1);
     highf107rho=nanmedian(AVMDMat(FILLED(starti,29)>highsplit,:),1);
     lowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<lowsplit,:),1);
+    HighIndex=FILLED(starti,29)>highsplit;
+    LowIndex=FILLED(starti,29)<lowsplit;
+    HighMatBars=[nanmedian(AVMDMat(HighIndex,:))-nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:)))) ; nanmedian(AVMDMat(HighIndex,:))+nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:))))];
+    LowMatBars=[nanmedian(AVMDMat(LowIndex,:))-nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:)))) ; nanmedian(AVMDMat(LowIndex,:))+nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:))))];
     plot(xa,[highf107rho; midhighf107rho; midlowf107rho; lowf107rho]);
+    hold on; plot(xa,HighMatBars,'b-.'); plot(xa,LowMatBars,'c-.');
     ylabel('\rho_{eq} (amu/cm^3)')
     xlabel('Time from start of event (hour)')
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
     title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107rho.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107rho.png
     
     h=figure('Visible',visible);
     midhighf107bz=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,5),1);
     midlowf107bz=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,5),1);
     highf107bz=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,5),1);
     lowf107bz=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,5),1);
+    
+    HighIndex=FILLED(starti,29)>highsplit;
+    LowIndex=FILLED(starti,29)<lowsplit;
+    HighMatBars=[nanmedian(AVMat(HighIndex,:,5))-nanstd(AVMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:)))) ; nanmedian(AVMDMat(HighIndex,:))+nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:))))];
+    LowMatBars=[nanmedian(AVMat(LowIndex,:,5))-nanstd(AVMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:)))) ; nanmedian(AVMDMat(LowIndex,:))+nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:))))];
+    
     plot(xa,[highf107bz; midhighf107bz; midlowf107bz; lowf107bz]);
     ylabel('B_z (nT)')
     xlabel('Time from start of event (hour)')
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
     title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107Bz.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107Bz.png
     
     
     h=figure('Visible',visible);
     medrho=nanmedian(MassDensitySpline);
     highsplitrho=nanmedian(MassDensitySpline(MassDensitySpline>medrho));
     lowsplitrho=nanmedian(MassDensitySpline(MassDensitySpline<medrho));
-    midhighrhobz=nanmedian(AVMat(MassDensitySpline>medrho & MassDensitySpline<highsplitrho,:,5),1);
-    midlowrhobz=nanmedian(AVMat(MassDensitySpline<medrho & FILLED(starti,29)>lowsplitrho,:,5),1);
-    highrhobz=nanmedian(AVMat(MassDensitySpline>highsplitrho,:,5),1);
-    lowrhobz=nanmedian(AVMat(FILLED(starti,29)<lowsplitrho,:,5),1);
+    midhighrhobz=nanmedian(AVMat(MassDensitySpline(starti)>medrho & MassDensitySpline(starti)<highsplitrho,:,5),1);
+    midlowrhobz=nanmedian(AVMat(MassDensitySpline(starti)<medrho & MassDensitySpline(starti)>lowsplitrho,:,5),1);
+    highrhobz=nanmedian(AVMat(MassDensitySpline(starti)>highsplitrho,:,5),1);
+    lowrhobz=nanmedian(AVMat(MassDensitySpline(starti)<lowsplitrho,:,5),1);
     plot(xa,[highrhobz; midhighrhobz; midlowrhobz; lowrhobz]);
     ylabel('B_z (nT)')
     xlabel('Time from start of event (hour)')
-    legend(sprintf('\rho_{eq}>%2.0f',highsplit),sprintf('%2.0f>\rho_{eq}>%2.0f',highsplit,medf107),sprintf('%2.0f>\rho_{eq}>%2.0f',medf107,lowsplit),sprintf('%2.0f>\rho_{eq}',lowsplit),'Location','SouthWest');
+    legend(sprintf('\\rho_{eq}>%2.0f',highsplitrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',highsplitrho,medrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',medrho,lowsplitrho),sprintf('%2.0f>\\rho_{eq}',lowsplitrho),'Location','SouthWest');
     title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowRhoBz.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowRhoBz.png
 end
 
 %Make main stack plots

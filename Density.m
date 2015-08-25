@@ -371,7 +371,12 @@ if(MakePaperPlots && stormcase==1)
     midlowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:),1);
     highf107rho=nanmedian(AVMDMat(FILLED(starti,29)>highsplit,:),1);
     lowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<lowsplit,:),1);
+    HighIndex=FILLED(starti,29)>highsplit;
+    LowIndex=FILLED(starti,29)<lowsplit;
+    HighMatBars=[nanmedian(AVMDMat(HighIndex,:))-nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:)))) ; nanmedian(AVMDMat(HighIndex,:))+nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:))))];
+    LowMatBars=[nanmedian(AVMDMat(LowIndex,:))-nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:)))) ; nanmedian(AVMDMat(LowIndex,:))+nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:))))];
     plot(xa,[highf107rho; midhighf107rho; midlowf107rho; lowf107rho]);
+    hold on; plot(xa,HighMatBars,'b-.'); plot(xa,LowMatBars,'c-.');
     ylabel('\rho_{eq} (amu/cm^3)')
     xlabel('Time from start of event (hour)')
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
@@ -384,7 +389,14 @@ if(MakePaperPlots && stormcase==1)
     midlowf107bz=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,5),1);
     highf107bz=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,5),1);
     lowf107bz=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,5),1);
+    
+    HighIndex=FILLED(starti,29)>highsplit;
+    LowIndex=FILLED(starti,29)<lowsplit;
+    HighMatBars=[nanmedian(AVMat(HighIndex,:,5))-nanstd(AVMat(HighIndex,:,5))./sqrt(sum(~isnan(AVMat(HighIndex,:,5)))) ; nanmedian(AVMat(HighIndex,:,5))+nanstd(AVMat(HighIndex,:,5))./sqrt(sum(~isnan(AVMat(HighIndex,:,5))))];
+    LowMatBars=[nanmedian(AVMat(LowIndex,:,5))-nanstd(AVMat(LowIndex,:,5))./sqrt(sum(~isnan(AVMat(LowIndex,:,5)))) ; nanmedian(AVMat(LowIndex,:,5))+nanstd(AVMat(LowIndex,:,5))./sqrt(sum(~isnan(AVMat(LowIndex,:,5))))];
+    
     plot(xa,[highf107bz; midhighf107bz; midlowf107bz; lowf107bz]);
+    hold on; plot(xa,HighMatBars,'b-.'); plot(xa,LowMatBars,'c-.');
     ylabel('B_z (nT)')
     xlabel('Time from start of event (hour)')
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
