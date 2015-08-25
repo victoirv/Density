@@ -175,7 +175,7 @@ switch stormcase
         cutconditions=1;
         %cutoffduration=12;
         figurename=strcat(figurename,'dst-50-tak-hour.eps');
-    case 13
+    case 13 %Full time range, daily medians
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         LongTimeScale=24;
@@ -294,7 +294,7 @@ if(MakePlots)
 end
 
 %Median of medians vs block median
-if(MakePaperPlots && LongTimeScale==24)
+if(MakePaperPlots && LongTimeScale==24 && stormcase==10)
     h=figure('Visible',visible);
     plot(xa(2:end),AVMDblock)
     hold on; plot(xa(2:end),AVMDs(2:end),'r')
@@ -386,6 +386,22 @@ if(MakePaperPlots && stormcase==1)
     legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
     title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107Bz.eps
+    
+    
+    h=figure('Visible',visible);
+    medrho=nanmedian(MassDensitySpline);
+    highsplitrho=nanmedian(MassDensitySpline(MassDensitySpline>medrho));
+    lowsplitrho=nanmedian(MassDensitySpline(MassDensitySpline<medrho));
+    midhighrhobz=nanmedian(AVMat(MassDensitySpline(starti)>medrho & MassDensitySpline(starti)<highsplitrho,:,5),1);
+    midlowrhobz=nanmedian(AVMat(MassDensitySpline(starti)<medrho & MassDensitySpline(starti)>lowsplitrho,:,5),1);
+    highrhobz=nanmedian(AVMat(MassDensitySpline(starti)>highsplitrho,:,5),1);
+    lowrhobz=nanmedian(AVMat(MassDensitySpline(starti)<lowsplitrho,:,5),1);
+    plot(xa,[highrhobz; midhighrhobz; midlowrhobz; lowrhobz]);
+    ylabel('B_z (nT)')
+    xlabel('Time from start of event (hour)')
+    legend(sprintf('\\rho_{eq}>%2.0f',highsplitrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',highsplitrho,medrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',medrho,lowsplitrho),sprintf('%2.0f>\\rho_{eq}',lowsplitrho),'Location','SouthWest');
+    title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowRhoBz.eps
 end
 
 %Make main stack plots
