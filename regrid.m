@@ -18,15 +18,6 @@ DNf(To+1)   = DN;
 HMf(To+1,:) = HM;
 Xf(To+1,:)  = X;
 
-% Place NaNs in all rows where last column of Xf (Density) is a NaN
-If = find(isnan(Xf(:,end)));
-Tf(If)    = NaN;
-DNf(If)   = NaN;
-HMf(If,:) = NaN;
-for i = 1:size(Xf,2)-1
-	Xf(If,i) = NaN;
-end
-
 % Reshape 1-min grid arrays have columns with 60 rows
 DNfr = reshape(DNf,60,length(DNf)/60);
 Tfr = reshape(Tf,60,length(Tf)/60);
@@ -55,6 +46,7 @@ for i = 1:Nc
 	XMedian(:,i) = nanmedian(Xfr{i},1);
 	XMean(:,i)   = nanmean(Xfr{i},1);
 end
+
 if (0)
 figure(1);clf;hold on;
     plot(To,X(:,end),'b.','MarkerSize',30)
