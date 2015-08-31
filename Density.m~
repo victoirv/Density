@@ -116,7 +116,7 @@ DSTCut=0;
 MDCut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
-stormcase=3;
+stormcase=1;
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -169,12 +169,18 @@ switch stormcase
         cutconditions=1;
         LongTimeScale=24;
         figurename=strcat(figurename,'mass-tak.eps');
-    case 12
+    case 12 %Takahashi hourly dst
+        storms=diff([0 (FILLED(:,15)<=-50)' 0]);
+        DSTCut=-50;
+        cutconditions=1;
+        %cutoffduration=12;
+        figurename=strcat(figurename,'dst-50-tak-hour.eps');
+    case 13 %Full time range, daily medians
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         LongTimeScale=24;
         figurename=strcat(figurename,'dst-day.eps');
-    case 13
+    case 14
         storms=diff([0 (MassDensityNanSpline>40)' 0]); 
         MDCut=40;
         LongTimeScale=24;
@@ -185,7 +191,7 @@ endi=find(storms<0)-1;
 duration=endi-starti+1;
 
 %Shift event start points to next local DST minimum 
-while(1 && stormcase==1) 
+while(0) 
     ind=FILLED(starti+1,15)<FILLED(starti,15);
     if(sum(ind)==0)
         break
@@ -288,7 +294,7 @@ if(MakePlots)
 end
 
 %Median of medians vs block median
-if(MakePaperPlots && LongTimeScale==24)
+if(MakePaperPlots && LongTimeScale==24 && stormcase==10)
     h=figure('Visible',visible);
     plot(xa(2:end),AVMDblock)
     hold on; plot(xa(2:end),AVMDs(2:end),'r')
@@ -299,16 +305,6 @@ if(MakePaperPlots && LongTimeScale==24)
     print -depsc2 -r200 paperfigures/blockmedian.eps
 end
 
-%All storms plotted together with median
-if(MakePaperPlots && stormcase==1)
-    h=figure('Visible',visible);
-    plot(-timewidth:1:timewidth*2,AVMDMat,'.')
-    hold on;
-    xa=(-timewidth:LongTimeScale:timewidth*2);
-    plot(xa,AVMDs(1,:),'r','LineWidth',3);
-    hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
-    print -depsc2 -r200 paperfigures/allstorms.eps
-end
 
 %Showing 'detrending' by removing F10.7 influencex`
 if(MakePaperPlots && removef107)
@@ -323,8 +319,7 @@ if(MakePaperPlots && removef107)
     print -depsc2 -r200 paperfigures/f107removed.eps
 end
 
-%Make main stack plots
-if(MakePaperPlots)
+if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     orient tall;
     h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %Bz
@@ -336,8 +331,6 @@ if(MakePaperPlots)
     hold on; plot([OMNITime(1) OMNITime(end)],[40 40],'b-.','LineWidth',4);
     set(findobj('type','axes'),'xticklabel',{[]});
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
-    
-    
     axis tight;
     datetick('x','keeplimits')
     set(findobj('type','axes'),'xtick',get(h5,'xtick'))
@@ -345,8 +338,91 @@ if(MakePaperPlots)
     xlabel('Year')
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on');
     print -depsc2 -r200 paperfigures/alldata.eps
+    print -dpng -r200 paperfigures/PNGs/alldata.png
     
     
+    h=figure('Visible',visible);
+    plot(-timewidth:1:timewidth*2,AVMDMat,'.')
+    hold on;
+    xa=(-timewidth:LongTimeScale:timewidth*2);
+    plot(xa,AVMDs(1,:),'r','LineWidth',3);
+    hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
+    print -depsc2 -r200 paperfigures/allstorms.eps
+    print -dpng -r200 paperfigures/PNGs/allstorms.png
+    
+    h=figure('Visible',visible);
+    medf107=nanmedian(FILLED(:,end));
+    highsplit=nanmedian(FILLED(FILLED(:,end)>medf107, end));
+    lowsplit=nanmedian(FILLED(FILLED(:,end)<medf107, end));
+    midhighf107dst=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,15),1);
+    midlowf107dst=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,15),1);
+    highf107dst=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,15),1);
+    lowf107dst=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,15),1);
+    plot(xa,[highf107dst; midhighf107dst; midlowf107dst; lowf107dst]);
+    ylabel('D_{st} (nT)')
+    xlabel('Time from start of event (hour)')
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
+    title(sprintf('%d events of D_{st} < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowF107dst.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107dst.png
+    
+    h=figure('Visible',visible);
+    midhighf107rho=nanmedian(AVMDMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:),1);
+    midlowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:),1);
+    highf107rho=nanmedian(AVMDMat(FILLED(starti,29)>highsplit,:),1);
+    lowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<lowsplit,:),1);
+    HighIndex=FILLED(starti,29)>highsplit;
+    LowIndex=FILLED(starti,29)<lowsplit;
+    HighMatBars=[nanmedian(AVMDMat(HighIndex,:))-nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:)))) ; nanmedian(AVMDMat(HighIndex,:))+nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:))))];
+    LowMatBars=[nanmedian(AVMDMat(LowIndex,:))-nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:)))) ; nanmedian(AVMDMat(LowIndex,:))+nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:))))];
+    plot(xa,[highf107rho; midhighf107rho; midlowf107rho; lowf107rho]);
+    hold on; plot(xa,HighMatBars,'b-.'); plot(xa,LowMatBars,'c-.');
+    ylabel('\rho_{eq} (amu/cm^3)')
+    xlabel('Time from start of event (hour)')
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
+    title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowF107rho.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107rho.png
+    
+    h=figure('Visible',visible);
+    midhighf107bz=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,5),1);
+    midlowf107bz=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,5),1);
+    highf107bz=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,5),1);
+    lowf107bz=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,5),1);
+    
+    HighIndex=FILLED(starti,29)>highsplit;
+    LowIndex=FILLED(starti,29)<lowsplit;
+    HighMatBars=[nanmedian(AVMat(HighIndex,:,5))-nanstd(AVMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:)))) ; nanmedian(AVMDMat(HighIndex,:))+nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:))))];
+    LowMatBars=[nanmedian(AVMat(LowIndex,:,5))-nanstd(AVMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:)))) ; nanmedian(AVMDMat(LowIndex,:))+nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:))))];
+    
+    plot(xa,[highf107bz; midhighf107bz; midlowf107bz; lowf107bz]);
+    ylabel('B_z (nT)')
+    xlabel('Time from start of event (hour)')
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
+    title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowF107Bz.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107Bz.png
+    
+    
+    h=figure('Visible',visible);
+    medrho=nanmedian(MassDensitySpline);
+    highsplitrho=nanmedian(MassDensitySpline(MassDensitySpline>medrho));
+    lowsplitrho=nanmedian(MassDensitySpline(MassDensitySpline<medrho));
+    midhighrhobz=nanmedian(AVMat(MassDensitySpline(starti)>medrho & MassDensitySpline(starti)<highsplitrho,:,5),1);
+    midlowrhobz=nanmedian(AVMat(MassDensitySpline(starti)<medrho & MassDensitySpline(starti)>lowsplitrho,:,5),1);
+    highrhobz=nanmedian(AVMat(MassDensitySpline(starti)>highsplitrho,:,5),1);
+    lowrhobz=nanmedian(AVMat(MassDensitySpline(starti)<lowsplitrho,:,5),1);
+    plot(xa,[highrhobz; midhighrhobz; midlowrhobz; lowrhobz]);
+    ylabel('B_z (nT)')
+    xlabel('Time from start of event (hour)')
+    legend(sprintf('\\rho_{eq}>%2.0f',highsplitrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',highsplitrho,medrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',medrho,lowsplitrho),sprintf('%2.0f>\\rho_{eq}',lowsplitrho),'Location','SouthWest');
+    title(sprintf('%d events of D_{st} > %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowRhoBz.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowRhoBz.png
+end
+
+%Make main stack plots
+if(MakePaperPlots)
     xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
     h=figure('Visible',visible);
     orient tall;
@@ -370,8 +446,8 @@ if(MakePaperPlots)
     ylabel(AX(2),'# of values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
-    if(DSTCut<0), title(h1,sprintf('DST < %d for %d-%d',DSTCut,year(OMNITime(1)),year(OMNITime(end)))); end
-    if(MDCut>0), title(h1,sprintf('\\rho_{eq} > %d for %d-%d',MDCut,year(OMNITime(1)),year(OMNITime(end)))); end
+    if(DSTCut<0), title(h1,sprintf('%d events of DST < %dnT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end)))); end
+    if(MDCut>0), title(h1,sprintf('%d events of \\rho_{eq} > %damu/cm^3 for %d-%d',length(starti),MDCut,year(OMNITime(1)),year(OMNITime(end)))); end
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
@@ -437,9 +513,9 @@ end
 if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     NewTime=OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end);
-    [AX,H1,H2]=plotyy(NewTime,interptest(OMNITime,FILLED(:,end),NewTime),NewTime,interptest(OMNITime,MassDensitySpline',NewTime),'plot','plot');
-    set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'yscale','log'); set(AX(2),'XTick',[]);
-    ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'\rho_{eq\_27d}');
+    [AX,H1,H2]=plotyy(NewTime,interptest(OMNITime,FILLED(:,end),NewTime),NewTime,log10(interptest(OMNITime,MassDensitySpline',NewTime)),'plot','plot');
+    set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'log(\rho_{eq\_27d})');
     xlabel('Year','FontSize',16);
     linkaxes(AX,'x')
     datetick;
