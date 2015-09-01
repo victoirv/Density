@@ -36,8 +36,9 @@ R.S. Weigel\footnote{rweigel@gmu.edu}}
 \maketitle
 \hrule
 \begin{abstract}
-This paper compares various magnetosphere conditions around the onset of geomagnetic events. It confirms results from previous papers that a sudden drop in $D_{st}$ correlates with a spike in equatorial mass density under certain conditions, while adding a level of depth and specification to the applicability of their results. It compares data at 1-hour averages to data at 1-day averages to examine if the trend holds at varying time scales and finds that it does, so long as the data is pre-processed to linearly remove a large time scale $F_{10.7}$ dependence. 
-By then looking at an hourly average of parameters from 24 hours before event onset to 48 hours after, short timescale trends can be discerned.
+This paper compares various magnetosphere conditions around the onset of geomagnetic events, defined as decreases in $D_{st}$ below a threshold value or $\rho_{eq}$ above a threshold value. 
+
+%It confirms results from previous papers that a sudden drop in $D_{st}$ correlates with a spike in equatorial mass density under certain conditions, while adding a level of depth and specification to the applicability of their results. It compares data at 1-hour averages to data at 1-day averages to examine if the trend holds at varying time scales and finds that it does, so long as the data is pre-processed to linearly remove a large time scale $F_{10.7}$ dependence. By then looking at an hourly average of parameters from 24 hours before event onset to 48 hours after, short timescale trends can be discerned.
 
 \vspace{2em}
 \end{abstract}
@@ -47,46 +48,50 @@ By then looking at an hourly average of parameters from 24 hours before event on
 \saythanks
 
 \section{Introduction}
-% try is colloqual.  
-% hope is colloqual.
-% intends is colloqual.
 
-\cite{Takahashi2006}, show how trends in storm dependence on mass/density only appear in longer timescales. Looking at $K_p$ vs mass ($amu$) in the range of 6 to 7 $R_E$, a trend shows up in the 1.5 day averages that doesn't appear in the 3 hour averages.
+\cite{Takahashi2006} estimated magnetospheric mass density using measurements from the CRRES satellite during a 73-day period and 1991 and found that the average ion mass density, $M=\rho/n_e$, depended on geomagnetic activity, with lower $D_{st}$ values corresponding to slightly average ion mass densities.  They also found a $K_p$ dependence between the average ion mass and 1.5- and 3-day averages of $K_p$ were compared to $M$.  Most measurements occurred in the MLT range of 12:00 and 18:00 MLT in the plasma trough (in equatorial plane?)
 
-\cite{Denton2006} show how $D_{st}$ affects the distribution of plasma density along different magnetic latitudes, and specifically along the same field lines as looked at in later papers (6-8$R_E$). Though this shows that the trends for density may differ between field lines, it's mentioned mostly as a point for future research as the data used in this paper is already adjusted for one field line, as described by \cite{Takahashi2010}.
+\cite{Takahashi2010} developed a mass density dataset using measurements from the GOES satellites over the years 1980 through 1992, with most measurements in the range $L=6.8\pm0.2$ The equatorial mass density, $\rho_eq$ was estimated from the estimated mass density a power law dependence on the geocentric radius $R$, $\rho=\rho_{eq}(LR_E/R)$. A key result was that when daily-averaged measurements were considered, an enhancment in $\rho_{eq}$ appeared, indicating the possibility of a geomagnetic storm control over $\rho_{eq}$.
 
-\cite{Yao2008} looks at the differences in how $D_{st}$ correlates with number density for different ions in different regions (ring current and plasma sheet), but still finds a general correlation during each of the four storms selected.
+\cite{Takahashi2010} noted that downward spikes in the $D_{st}$ index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8~$R_E$. For five storms over a 20 day period, two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$. They then show an epoch analysis where $\rho_{eq}$ is seen to spike the day of a $D_{st}$ drop, using a daily average of 30 minute $\rho_{eq}$ and one hour $D_{st}$ measurements. 
 
-\cite{Takahashi2010} state that spikes in the Disturbance Storm Time ($D_{st}$) index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8$R_E$. For five storms over a 20 day period two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$. They then show an epoch analysis where $\rho_{eq}$ is seen to spike the day of a $D_{st}$ drop, using a daily average of 30 minute $\rho_{eq}$ and one hour $D_{st}$ measurements. 
+The results of \cite{Takahashi2006} and \cite{Takahashi2010} are consistent with other results on changes in mass density in the plasma trough region.  \cite{Hamilton1988} ... \cite{Gallagher1988} .... \cite{Yao2008} studied the relationship between $D_{st}$ and ion number density for different ions in different regions (ring current and plasma sheet) and found a general correlation during each of the four storms considered.
+
+%\cite{Denton2006} show how $D_{st}$ affects the distribution of plasma density along different magnetic latitudes, and specifically along the same field lines as looked at in later papers (6-8$R_E$). Though this shows that the trends for density may differ between field lines, it's mentioned mostly as a point for future research as the data used in this paper is already adjusted for one field line, as described by \cite{Takahashi2010}.
+
 
 %\cite{Lavraud2006} show that storms preceded by a northward interplanetary magnetic field (IMF) tend to have higher plasma density than those preceded by a southward IMF, and suggest an increased geoeffectiveness from a northward IMF and dense plasma sheet.
 
 %\cite{Tsurutani1997} show how the density of a corotating interaction region (CIR) shows strong preconditioning for a drop in $D_{st}$ and spike in magnetic field intensity. Assuming a reasonable amount of coupling between that region's density and the plasmaspheric density, this result could be relatable to others focusing on the plasmasphere. 
 
-
-
 \section{Data Preparation}
-The parameters $\rho_{eq}$ used in this work is from the dataset associated with \cite{Denton}, with data available from 1980-1991 on a non-uniform 10 minute grid. The $F_{10.7}$ parameter comes from the OMNIWeb data collection at \cite{OMNIWeb} and covers 1980-2000 on an hourly grid, but with one daily value repeated for each hour of the day. All other parameters are from \cite{Reconstruction} over the time range of 1972-2013, which are on a 1-hour time grid. $\rho_{eq}$ is the inferred mass density based on the 3rd harmonic frequency of magnetic field measurements.  The smallest cadence for $\rho_{eq}$ values is 10 minutes.  To compute an hourly average over the same time range as the solar wind parameters, the median of all values in a given hourly range was used.  Fill values were used for hours when no measurements were available.  In cases where $\rho_{eq}$ was available from multiple Geostationary Operational Environmental Satellites (GOES) satellites at the same time in the \cite{Denton} dataset, the value from GOES 6 was selected to avoid overlapping data points.  In the dataset, measurements from GOES 6 had the longest time span of coverage.  An overview of the data is given in Figure~\ref{AllData}.
 
+The parameters $\rho_{eq}$ and $F_{10.7}$ used in this work are from the dataset associated with \cite{Denton}, with data available from 1980-1991; all other parameters are from \cite{Reconstruction} over the time range of 1972-2013, which are on a 1-hour time grid. $\rho_{eq}$ is the inferred mass density based on the 3rd harmonic frequency of magnetic field measurements.  The smallest cadence for $\rho_{eq}$ values is 10 minutes.  To compute an hourly average over the same interval for which the solar wind parameters were averaged, the median of all $\rho_{eq}$ values in a given hourly range was used.  Fill values were used for hours in which no measurements were available.  In cases where $\rho_{eq}$ was available from multiple Geostationary Operational Environmental Satellites (GOES) satellites at the same time in the \cite{Denton} dataset, the value from GOES 7 was selected.  In the dataset, measurements from GOES 7 had the longest time span of coverage.  An overview of the data is given in Figure~\ref{AllData}.
 
-In this work events are defined to occur when $D_{st}$ or $\rho_{eq}$ crosses a threshold value, as indicated in by horizontal dashed lines in the respective panels of Figure~\ref{AllData}.  In finding events, all fill values were replaced with linearly interpolated values.  Figure \ref{AllData} shows the values of $B_z$, $V_{SW}$, $D_{st}$, $F_{10.7}$, and Mass Density for the duration of the dataset. 
+% How does GOES 7 only effect result.
+
+In this work events defined to occur when $D_{st}$ or $\rho_{eq}$ crosses a threshold value, as indicated in by horizontal dashed lines in the respective panels of Figure~\ref{AllData}.  In finding events, all fill values were replaced with linearly interpolated values.  Figure \ref{AllData} shows the values of $B_z$, $V_{SW}$, $D_{st}$, $F_{10.7}$, and $\rho{eq}$ for the duration of the dataset. 
 
 % Though this may skew the onset time slightly, it's thought to be less skewed than trying to determine start and end times with the NaNs in place. This interpolation was only used for determining storm times, and not for any analysis.
 % If you say this, you need to do an experiement.  A review will say ``seems like it is an easy statement to check.  Why didn't you?''
 
 \section{Results}
-Figure \ref{AllData} shows values of solar wind averages and mass density used in this study. We will briefly compare our results to other published results to verify our methods and handling of data. 
+Figure \ref{AllData} shows values of solar wind averages and mass density used in this study.  
 
-\subsection{Previous Results}
+Figure~\ref{ccplot:a} shows the long-term trends of $log(\rho_{eq})$ and $F_{10.7}$ computed using the median values in 27-day (non-overalpping?) windows using all non--fill hourly values.  A scatter plot of these two lines is shown in Figure~\ref{ccplot:b}.  The linear correlation is found to be $0.87$.  In comparison, \cite{Takahashi2010} found a correlation coefficient of $0.94$ using measurements from all satellites in the time interval of 1980 through 1991.
 
-Figure~\ref{ccplot:a} shows the long-term trends of $log(\rho_{eq})$ and $F_{10.7}$ by computing the median in 27-day windows using all non--fill hourly values.  A scatter plot of these two lines is shown in Figure~\ref{ccplot:b}.  The linear correlation is found to be $0.87$.  In comparison, \cite{Takahashi2010} found a correlation coefficient of $0.94$ using measurements from all satellites in the time interval of 1980 to 1992.
+\subsection{D$_{st}$ and $\rho_{eq}$ Events}
 
-The correlation seen between 27-day averages $log(\rho_{eq\_27d})$ and $F_{10.7\_27d}$ isn't quite as good in this data as in \cite{Takahashi2010}, but shows the same trend as seen in Figure \ref{ccplot}.
+Two types of events are considered. The first is a drop in $D_{st}$ below the threshold of $-40nT$.  The second is an increase in $\rho_{eq}$ above 40~$amu/cm^3$.
 
-Figure \ref{DailyAverages} show that the trends observed by \cite{Takahashi2010} for one day averages only seems to hold true for the one-day averaged data. Namely that a drop in median daily $D_{st}$ between 1989 and 1991 coincides with a significant spike in $\rho_{eq}$. 
+Our first analysis uses data only from the time interval 1989-1991.  In this interval, there were (?) $D_{st}$ events and (?) $\rho_{eq}$ events.  For both types of events, the hour of the threshold crossing defines the zero epoch time, and for each event $8\cdot24$ hours were kept after each event and $4\cdot24$ hours before each event.  To compute the epoch averages on a daily time scale, the median value of all measurements for all events centered window of $\pm 12$ hours was computed, and these windows were shifted in increments of $24$~hours. (Similar results are obtained if we first reduce each event time series to have a 1-day cadence by computing medians in 1-day bins and then compute the medians accross events.)  Error bars for each parameter were computed using (2x ?) the standard deviation of the number of values used in computing the median dividied by the square root of the number of values used.
 
-\subsection{D$_{st}$ Events}
-Two event indicators are looked at in this study. The first is looking for a drop in DST below the threshold of $-40nT$ specified in \cite{Takahashi2010}, dubbed the "onset", and then considering the timeframe an event until $D_{st}$ passes back above the $-40nT$ threshold. This method finds 669 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. Figure \ref{Storms} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{Storms}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-40nT$. The dashed red lines indicate plus and minus one standard deviation of values from all events that went into the average. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other parameters in the stack. A subset of longer duration events will be looked at later. 
+In the upper panel of \label{DailyAverages}, $D_{st}$ events are shown.  The minimum $D_{st}$ median is $-48~nT$.  Consistent with \cite{Takahashi2010}, $D_{st}$ events corrspond to elevated $\rho_{eq}$, although the magnitude of increase observed here is on the order of $~2 amu/cm^3$ instead of $~10 amu/cm^3$ found in \cite{Takahashi2010}.  The vertical green bars in the $\rho_{eq}$ plot show the number of $\rho_{eq}$ values that were used to compute its median and error bars.  Note that for $D_{st}$, the number of measurements used in computing the medians is much larger as we use all available $D_{st}$ measurements instead of restricting to only values where a non-fill $\rho_{eq}$ value existed.  
+
+In the lower panel of \label{DailyAverages}, $\rho_{eq}$ events are shown.  Here we see that $\rho_{eq}$ enhancements do not clearly correspond to a signature in $D_{st}$, but that there is a trend for such enhancments to occur when $B_{z}$ in the IMF is positive.  This is consistent with \cite{Takahashi2010} who note that very large increases in $\rho_{eq}$ often corresponded to movement of the plasmasphere to beyond geosynchronous distances. 
+
+
+This method finds 669 such periods between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours. Figure \ref{Storms} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{Storms}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-40nT$. The dashed red lines indicate plus and minus one standard deviation of values from all events that went into the average. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other parameters in the stack. A subset of longer duration events will be looked at later. 
 
 This figure shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $DST$, but no obvious change in mass density at an hourly timescale. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation since there's no obvious connection on a short timescale. One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long term correlation of density and $D_{st}$.
 
@@ -162,7 +167,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \includegraphics[scale=0.45]{paperfigures/stormavs-dst-50-tak.eps}
 \rule[1ex]{5cm}{0.5pt}
 \includegraphics[scale=0.45]{paperfigures/stormavs-mass-tak.eps}
-\caption{(a) Verifying \cite{Takahashi2010} Fig. 11 conditions: $D_{st}<-50nT$ between 1989 and 1991 and (b) Same as (a) but for $\rho_{eq}$ events}
+\caption{Events in the interval 1989-1991. Upper panel: $D_{st}$ events. Lower panel: $\rho_{eq}$ events.}
 \label{DailyAverages}
 \end{figure}
 
@@ -171,7 +176,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \includegraphics[scale=0.45]{paperfigures/stormavs-dst-day.eps}
 \rule[1ex]{5cm}{0.5pt}
 \includegraphics[scale=0.45]{paperfigures/stormavs-mass-day.eps}
-\caption{Daily averages for all events in full time range for (a) $D_{st}<-50~nT$ events and (b) $\rho_{eq}>40~amu/cm^3$ events}
+\caption{Events in the interval 1983-1991.  Upper panel: $D_{st}$ events. Lower panel: $\rho_{eq}$ events.}
 \label{DailyAveragesAllData}
 \end{figure}
 \clearpage
