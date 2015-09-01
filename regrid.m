@@ -12,13 +12,13 @@ Tf  = NaN*ones(n,1);
 DNf = NaN*ones(n,1);
 HMf = NaN*ones(n,2);
 
-% Replace NaNs with valid values.
+% Replace NaNs with valid values. f = filled.
 Tf(To+1)    = To;
 DNf(To+1)   = DN;
 HMf(To+1,:) = HM;
 Xf(To+1,:)  = X;
 
-% Reshape 1-min grid arrays have columns with 60 rows
+% Reshape 1-min grid arrays have columns with 60 rows. r = reshaped.
 DNfr = reshape(DNf,60,length(DNf)/60);
 Tfr = reshape(Tf,60,length(Tf)/60);
 
@@ -45,20 +45,4 @@ for i = 1:Nc
 	% Find median and mean of non-nan points in 60-minute windows.
 	XMedian(:,i) = nanmedian(Xfr{i},1);
 	XMean(:,i)   = nanmean(Xfr{i},1);
-end
-
-if (0)
-figure(1);clf;hold on;
-    plot(To,X(:,end),'b.','MarkerSize',30)
-    plot(Tf,Xf(:,end),'g.','MarkerSize',20)
-    plot(TMedian,XMedian(:,end),'k.','MarkerSize',10)
-    for i = 1:100
-        text(TMedian(i),XMedian(i,end)*1.01,num2str(NGood(i)));
-    end
-    legend('Original Data','Original on 1-min grid','Median in 60 minute window')
-    for i = 600:60:1400
-    	plot([i,i],[3,11],'k')
-    end
-    xlabel(['Minutes since ',datestr(DN(1))])
-    set(gca,'XLim',[0,1440-1])
 end
