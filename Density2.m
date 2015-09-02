@@ -163,7 +163,7 @@ for sat = [6]
 
     % Select overlapping windows
     Io = max([ODN(1),DDN(1),KDN(1)]);
-    Io = datenum('1989-01-01');
+    %Io = datenum('1989-01-01');
     If = min([ODN(end),DDN(end),KDN(end)]);
 
     fprintf('Overlapping time window is %s through %s\n',datestr(Io),datestr(If));
@@ -176,6 +176,16 @@ for sat = [6]
     KDensitySW = KDensitySW(IK);
     KDst  = KDst(IK);
     KData = KData(IK,:);
+
+    IO = find(ODN>=Io & ODN <=If);
+    ODN = ODN(IO);
+    OH = OH(IO);
+    OBz = OBz(IO);
+    OVsw = OVsw(IO);
+    OF107 = OF107(IO);
+    ODst = ODst(IO);
+    OData = OData(IO,:);
+    %[ODN(1),OH(1);ODN(end),OH(end)]
 
     ID  = find(DDN>=Io & DDN <=If);
     DDN = DDN(ID);
@@ -208,16 +218,6 @@ for sat = [6]
     DF107Mean = DXMean(:,5);
     DMLTMean = DXMean(:,6);
     DDensityMean = DXMean(:,7);
-
-    IO = find(ODN>=Io & ODN <=If);
-    ODN = ODN(IO);
-    OH = OH(IO);
-    OBz = OBz(IO);
-    OVsw = OVsw(IO);
-    OF107 = OF107(IO);
-    ODst = ODst(IO);
-    OData = OData(IO,:);
-    %[ODN(1),OH(1);ODN(end),OH(end)]
 
     tmp = corrcoef(KBz,OBz,'rows','complete');
     fprintf('cc(KBz,OBz)                    = %.3f\n',tmp(2));
@@ -257,7 +257,7 @@ for sat = [6]
 
     %I = find(DDstMedian(1:end-1) > -50 & DDstMedian(2:end) < -50);
     %I = find(ODst(1:end-1) > -50 & ODst(2:end) < -50);
-    I = find(KDst(1:end-1) > -50 & KDst(2:end) <= -50);
+    I = find(KDst(1:end-1) >= -50 & KDst(2:end) < -50);
     %I = find(KDst(1:end-1) > -50 & KDst(2:end) < -50);
     clear *Storm*
 
@@ -280,36 +280,60 @@ for sat = [6]
         k = k+1;
     end
 
+    Nd = 2; % Number of days before and after to consider
     t = [-24*Nd+12:24*Nd-12];
 
-    for j = 1:size(DDensityStorm,2)/24 % Time in event
-        a = 1+24*(j-1);
-        b = 24*j;
-        tmp1 = DDensityStorm(:,[a:b]);
-        tmp2 = nanmedian(tmp1,1);
-        tmp2n = sum(~isnan(tmp1(:,1)));
-        DDensityStorm1Day1(j) = nanmedian(tmp1(:));
-        DDensityStorm1Day2(j) = nanmedian(tmp2);
-        N1D1(j) = sum(~isnan(tmp1(:)));        
-        N1D2(j) = tmp2n;     
-
-        %DDensityStorm1Day(j) = nanmean(tmp(:));
-        tc(j) = mean(t(a:b));
-    end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Dst events
 
     if (length(I) > 0)
+        k = 1;  % Number of events
+        for i = 1:length(I)-1
+            a = I(i)-24*Nd+12;
+            b = I(i)+24*Nd-12;
+            %if ( DMLT(I(i)) < 6 || DMLT(I(i)) > 12 ),continue,end
+            %if (I(i+1) < I(i) + 12),continue,end
+            if (a < 1),continue,end
+            if (b > length(DDensityMedian)),break,end
+            fprintf('Event at %s %.1f %.1f %.1f\n',...
+                datestr(Io+I(i)/24),KDst(I(i)),KDst(I(i)+1),KDst(I(i)+2))
+            DDensityStorm(k,:) = DDensityMedian(a:b);
+            DDstStorm(k,:)   = DDstMedian(a:b);
+            ODstStorm(k,:)   = ODst(a:b);
+            DF107Storm(k,:)  = DF107Median(a:b);
+            DNGoodStorm(k,:) = DNGood(a:b);
+            k = k+1;
+        end
+
+        % Hourly averages
+        for j = 1:size(DDensityStorm,2)/24 % Time in event
+            a = 1+24*(j-1);
+            b = 24*j;
+            tmp1 = DDensityStorm(:,[a:b]);
+            tmp2 = nanmedian(tmp1,1);
+            tmp2n = sum(~isnan(tmp1(:,1)));
+            DDensityStorm1Day1(j) = nanmedian(tmp1(:));
+            DDensityStorm1Day2(j) = nanmedian(tmp2);
+            N1D1(j) = sum(~isnan(tmp1(:)));        
+            N1D2(j) = tmp2n;     
+
+            %DDensityStorm1Day(j) = nanmean(tmp(:));
+            tc(j) = mean(t(a:b));
+        end
+
         figure(1);clf;hold on;grid on;
             plot(t,nanmedian(DDensityStorm),'b','LineWidth',3)
             plot(t,nanmedian(-DDstStorm),'g','LineWidth',3)
             plot(t,nanmean(-ODstStorm),'k','LineWidth',3)
             plot(t,nanmedian(DF107Storm)/10,'m','LineWidth',2)
-            plot(t,mean(DNGoodStorm),'k','LineWidth',1)
+            plot(t,sum(DNGoodStorm)/10,'k','LineWidth',1)
             %plot(tc,DDensityStorm1Day,'k.','MarkerSize',30)
             title(sprintf('GOES-%d; %s-%s',sat,datestr(Io),datestr(If)))
             xlabel('Time since onset [hrs]')
             legend('Density [amu/cm^3]','-Dst [nT]',...
                     '-Dst [nT] (OMNI)','F10.7/10',...
                     '# values','Location','NorthWest')
+                    '# Density values/10','Location','NorthWest')
             fname = sprintf('Dst_Events_GOES%d_%s_%s',...
                     sat,datestr(Io,29),datestr(If,29));
             title(sprintf('GOES-%d; %s-%s; %d Dst Events',...
@@ -317,7 +341,10 @@ for sat = [6]
             %set(gca,'XTick',[-24:2:24])
             plotcmds(fname,1)
     end
-
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Density events
     I = find(DDensityMedian(1:end-1) < 30 & DDensityMedian(2:end) > 30);
     clear *Storm*
 
@@ -352,5 +379,5 @@ for sat = [6]
             %set(gca,'XTick',[-24:2:24])
             plotcmds(fname,1)
     end
-
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 end
