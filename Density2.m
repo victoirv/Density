@@ -6,6 +6,9 @@ if ~exist('m-rsw')
     system('git clone http://github.com/rweigel/m-rsw')
     addpath('./m-rsw/time')
 end
+if ~exist('data')
+    mkdir('data');
+end
 
 %for sat = [2,3,5,6,7]
 for sat = [6]
@@ -267,7 +270,8 @@ for sat = [6]
         %if (I(i+1) < I(i) + 12),continue,end
         if (a < 1),continue,end
         if (b > length(DDensityMedian)),break,end
-        fprintf('Event at %s %.1f %.1f %.1f\n',datestr(Io+I(i)/24),KDst(I(i)),KDst(I(i)+1),KDst(I(i)+2))
+        fprintf('Event at %s %.1f %.1f %.1f\n',...
+            datestr(Io+I(i)/24),KDst(I(i)),KDst(I(i)+1),KDst(I(i)+2))
         DDensityStorm(k,:) = DDensityMedian(a:b);
         DDstStorm(k,:)  = DDstMedian(a:b);
         ODstStorm(k,:)  = ODst(a:b);
@@ -303,7 +307,8 @@ for sat = [6]
             %plot(tc,DDensityStorm1Day,'k.','MarkerSize',30)
             title(sprintf('GOES-%d; %s-%s',sat,datestr(Io),datestr(If)))
             xlabel('Time since onset [hrs]')
-            legend('Density [amu/cm^3]','-Dst [nT]','-Dst [nT] (OMNI)','F10.7/10',...
+            legend('Density [amu/cm^3]','-Dst [nT]',...
+                    '-Dst [nT] (OMNI)','F10.7/10',...
                     '# values','Location','NorthWest')
             fname = sprintf('Dst_Events_GOES%d_%s_%s',...
                     sat,datestr(Io,29),datestr(If,29));
