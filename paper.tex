@@ -48,13 +48,15 @@ This paper compares various magnetosphere conditions around the onset of geomagn
 
 \section{Introduction}
 
-\cite{Takahashi2006} estimated magnetospheric mass density using measurements from the CRRES satellite during a 73-day period and 1991 and found that the average ion mass density, $M=\rho/n_e$, correlated with geomagnetic activity, with lower $D_{st}$ values corresponding to slightly average ion mass densities.  They also found a relationship between the average ion mass and 1.5- and 3-day averages of $K_p$ were compared to $M$.  Most measurements occurred in the MLT range of 12:00 and 18:00 in the plasma trough (in equatorial plane?)
+\cite{Takahashi2006} estimated magnetospheric mass density using measurements from the CRRES satellite during a 73-day period and 1991 and found that the average ion mass density, $M=\rho/n_e$, correlated with geomagnetic activity, with lower $D_{st}$ values corresponding to slightly average ion mass densities.  They also found a relationship between the average ion mass and 1.5- and 3-day averages of $K_p$ were compared to $M$.  Most measurements occurred in the MLT range of 12:00 and 18:00 in the plasma trough, and CRRES had a nearly equatorial orbit.
 
-\cite{Takahashi2010} developed a mass density dataset using measurements from the GOES satellites over the years 1980 through 1992, with most measurements in the range $L=6.8\pm0.2$ The equatorial mass density, $\rho_{eq}$ was estimated from the estimated mass density a power law dependence on the geocentric radius $R$, $\rho=\rho_{eq}(LR_E/R)$. A key result was that when daily-averaged measurements were considered, an enhancment in $\rho_{eq}$ appeared, indicating the possibility of a solar wind control over $\rho_{eq}$.
+\cite{Takahashi2010} developed a mass density dataset using measurements from the GOES satellites over the years 1980 through 1992, with most measurements in the range $L=6.8\pm0.2$. The equatorial mass density, $\rho_{eq}$ was estimated from the estimated mass density using a power law dependence on the geocentric distance to the field line of the observation, $R$, $\rho=\rho_{eq}(LR_E/R)$. The mass density $\rho$ was estimated using the the Alfven wave velocity relationship, $V_A=(\mu_0\rho)^{1/2}$, a magnetic field model, and a numerical solution to a wave equation with an ionospheric boundary and the assumption of an infinitely conducting ionosphere.  
 
-\cite{Takahashi2010} noted that downward spikes in the $D_{st}$ index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8~$R_E$. For five storms over a 20 day period, two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$. They then show an epoch analysis where $\rho_{eq}$ is seen to spike the day of a $D_{st}$ drop, using a daily average of 30 minute $\rho_{eq}$ and one hour $D_{st}$ measurements. 
+\cite{Takahashi2010} noted that downward spikes in the $D_{st}$ index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8~$R_E$. For five storms over a 20-day period, two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$.  A key result was that when daily-averaged measurements were considered, an enhancment in $\rho_{eq}$ appeared on the same day as minimum $D_{st}$, indicating the possibility of a solar wind control over $\rho_{eq}$.
 
-The results of \cite{Takahashi2006} and \cite{Takahashi2010} are consistent with other results on changes in mass density in the plasma trough region.  \cite{Hamilton1988} ... \cite{Gallagher1988} .... \cite{Yao2008} studied the relationship between $D_{st}$ and ion number density for different ions in different regions (ring current and plasma sheet) and found a general correlation during each of the four storms considered.
+The results of \cite{Takahashi2006} and \cite{Takahashi2010} are consistent with other results on changes in mass density in the plasma trough region.  \cite{Yao2008} studied the relationship between $D_{st}$ and ion number density for different ions in different regions (ring current and plasma sheet) and found a general correlation during each of the four storms considered.
+
+\cite{Hamilton1988} ... \cite{Gallagher1988} .... 
 
 %\cite{Denton2006} show how $D_{st}$ affects the distribution of plasma density along different magnetic latitudes, and specifically along the same field lines as looked at in later papers (6-8$R_E$). Though this shows that the trends for density may differ between field lines, it's mentioned mostly as a point for future research as the data used in this paper is already adjusted for one field line, as described by \cite{Takahashi2010}.
 
@@ -64,7 +66,7 @@ The results of \cite{Takahashi2006} and \cite{Takahashi2010} are consistent with
 
 \section{Data Preparation}
 
-The parameters $\rho_{eq}$ and $F_{10.7}$ used in this work are from the dataset associated with \cite{Denton}, with data available from 1980-1991; all other parameters are from \cite{Reconstruction} over the time range of 1972-2013, which are on a 1-hour time grid. $\rho_{eq}$ is the inferred mass density based on the 3rd harmonic frequency of magnetic field measurements.  The smallest cadence for $\rho_{eq}$ values is 10 minutes.  To compute an hourly average over the same interval for which the solar wind parameters were averaged, the median of all $\rho_{eq}$ values in a given hourly range was used.  Fill values were used for hours in which no measurements were available.  In cases where $\rho_{eq}$ was available from multiple Geostationary Operational Environmental Satellites (GOES) satellites at the same time in the \cite{Denton} dataset, the value from GOES 6 was selected.  In the dataset, measurements from GOES 6 had the longest time span of coverage.  An overview of the data is given in Figure~\ref{AllData}.
+The parameters $\rho_{eq}$ and $F_{10.7}$ used in this work are from the dataset associated with \cite{Denton}, with data available from 1980 through 1991; all other parameters are from \cite{Reconstruction} over the time range of 1972 through 2013, which are on a 1--hour time grid. $\rho_{eq}$ is the inferred equatorial mass density based on the 3rd harmonic torodial frequency of magnetic field measurements.  The smallest cadence for $\rho_{eq}$ values is 10 minutes.  To compute an hourly average over the same interval for which the solar wind parameters were averaged, the median of all $\rho_{eq}$ values in a given hourly range was used.  Fill values were used for hours in which no measurements were available.  In cases where $\rho_{eq}$ was available from multiple Geostationary Operational Environmental Satellites (GOES) satellites at the same time in the \cite{Denton} dataset, the value from GOES 6 was selected.  In the dataset, measurements from GOES 6 had the longest time span of coverage.  An overview of the data is shown in Figure~\ref{AllData}.
 
 % How does GOES 7 only effect result.
 
@@ -141,7 +143,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \newpage
 \footnotesize
 \bibliographystyle{plainnat}
-\bibliography{reportbib}
+\bibliography{paper}
 
 \clearpage
 \section{Figures}
@@ -156,89 +158,89 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \begin{figure}[htp!]
 \centering
 \subcaptionbox{\label{ccplot:a}}
-{\includegraphics[scale=0.42]{paperfigures/F107MDAllData.eps}}
+{\includegraphics[scale=0.40]{paperfigures/F107MDAllData.eps}}
 \subcaptionbox{\label{ccplot:b}}
-{\includegraphics[scale=0.42]{paperfigures/ccplot.eps}}
+{\includegraphics[scale=0.40]{paperfigures/ccplot.eps}}
 \caption{(a) 27-day averages of $F_{10.7}$ and $\rho_{eq}$. (b) Correlation between $log(\rho_{eq})$ and $F_{10.7}$ using hour, day, and 27-day averaging intervals; compare to \cite{Takahashi2010} Fig.~14.}
 \label{ccplot}
 \end{figure}
 \clearpage
 
-\begin{figure}[htp!]
+\begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.45]{paperfigures/stormavs-dst-50-tak.eps}
-\rule[1ex]{5cm}{0.5pt}
-\includegraphics[scale=0.45]{paperfigures/stormavs-mass-tak.eps}
+\includegraphics[scale=0.40]{paperfigures/stormavs-dst-50-tak.eps}
+\rule[1ex]{5cm}{1pt}
+\includegraphics[scale=0.40]{paperfigures/stormavs-mass-tak.eps}
 \caption{Events in the interval 1989-1991. Upper panel: $D_{st}$ events. Lower panel: $\rho_{eq}$ events.}
 \label{DailyAverages}
 \end{figure}
 
-\begin{figure}[htp!]
+\begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.45]{paperfigures/stormavs-dst-day.eps}
-\rule[1ex]{5cm}{0.5pt}
-\includegraphics[scale=0.45]{paperfigures/stormavs-mass-day.eps}
+\includegraphics[scale=0.40]{paperfigures/stormavs-dst-day.eps}
+\rule[1ex]{5cm}{1pt}
+\includegraphics[scale=0.40]{paperfigures/stormavs-mass-day.eps}
 \caption{Events in the interval 1983-1991.  Upper panel: $D_{st}$ events. Lower panel: $\rho_{eq}$ events.}
 \label{DailyAveragesAllData}
 \end{figure}
 \clearpage
 
-\begin{figure}[htp!]
+\begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.45]{paperfigures/stormavs-dst.eps}
-\rule[1ex]{5cm}{0.5pt}
-\includegraphics[scale=0.45]{paperfigures/stormavs-mass.eps}
+\includegraphics[scale=0.40]{paperfigures/stormavs-dst.eps}
+\rule[1ex]{5cm}{1pt}
+\includegraphics[scale=0.40]{paperfigures/stormavs-mass.eps}
 \caption{(a) Average of solar wind and near-Earth measurements around the time $D_{st}$ crossed below $-50$~nT onset. (b) Same as (a) except around time intervals where mass density crossed above $40$~amu/cm$^3$.}
 \label{Storms}
 \end{figure}
 
-\begin{figure}[htp!]
+\begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.45]{paperfigures/stormavs-dd12.eps}
-\rule[1ex]{5cm}{0.5pt}
-\includegraphics[scale=0.45]{paperfigures/stormavs-md12.eps}
+\includegraphics[scale=0.40]{paperfigures/stormavs-dd12.eps}
+\rule[1ex]{5cm}{1pt}
+\includegraphics[scale=0.40]{paperfigures/stormavs-md12.eps}
 \caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ stayed below $-50$~nT for at least 12~hours. (b) Same as Figure \ref{Storms}(b) except for constrain that $\rho_{eq}$ stayed above $50$~amu/cm$^3$ for at least 12 hours.}
 \label{Mspec}
 \end{figure}
 \clearpage
 
-\begin{figure}[htp!]
+\begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.45]{paperfigures/stormavs-d80.eps}
-\rule[1ex]{5cm}{0.5pt}
-\includegraphics[scale=0.45]{paperfigures/stormavs-m70.eps}
+\includegraphics[scale=0.40]{paperfigures/stormavs-d80.eps}
+\rule[1ex]{5cm}{1pt}
+\includegraphics[scale=0.40]{paperfigures/stormavs-m70.eps}
 \caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ crossed below $-80$~nT (b) Same as Figure \ref{Storms}(b) except for constrain that $\rho_{eq}$ crossed above $70~amu/cm^3$.}
 \label{Dspec}
 \end{figure}
 
-\begin{figure}[htp!]
+\begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.45]{paperfigures/stormavs-diffden-10amu.eps}
-\rule[1ex]{5cm}{0.5pt}
-\includegraphics[scale=0.45]{paperfigures/stormavs-diffden-30percent.eps}
+\includegraphics[scale=0.40]{paperfigures/stormavs-diffden-10amu.eps}
+\rule[1ex]{5cm}{1pt}
+\includegraphics[scale=0.40]{paperfigures/stormavs-diffden-30percent.eps}
 \caption{(a) diff($\rho_{eq}$) $>$ 10$\frac{amu}{hour}$. (b) diff($\rho_{eq}$) $>$ 30$\frac{\%}{hour}$}
 \label{rhochange}
 \end{figure}
 \clearpage
 
-\begin{figure}[htp!]
+\begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.45]{paperfigures/stormavs-dst-nof107.eps}
-\includegraphics[scale=0.45]{paperfigures/f107removed.eps}
+\includegraphics[scale=0.40]{paperfigures/stormavs-dst-nof107.eps}
+\includegraphics[scale=0.40]{paperfigures/f107removed.eps}
 \caption{$D_{st}$ events where $\rho_{eq}$ has $F_{10.7}$ dependence removed, and Difference between original $\rho_{eq}$ and $F_{10.7}$-less $\rho_{eq}$}
 \label{nof107}
 \end{figure}
 
-\begin{figure}[htp]
+\begin{figure}[tp]
 \centering
-\includegraphics[scale=0.45]{paperfigures/blockmedian.eps}
-\includegraphics[scale=0.45]{paperfigures/blockmedian-prenoon.eps}
+\includegraphics[scale=0.40]{paperfigures/blockmedian.eps}
+\includegraphics[scale=0.40]{paperfigures/blockmedian-prenoon.eps}
 \caption{Comparing median values calculated as median of all 1-hour points in the 12 day block, and as the daily median of all hourly-mediated events. (b) Same, but only events starting between 0-12 UTC}
 \label{blockmedian}
 \end{figure}
 \clearpage
 
-\begin{figure}[htp]
+\begin{figure}[tp]
 \centering
 \includegraphics[scale=0.9]{paperfigures/allstorms.eps}
 \caption{Comparing all events to their median and $1\sigma$ range}
@@ -246,7 +248,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \end{figure}
 \clearpage
 
-\begin{figure}[htp]
+\begin{figure}[tp]
 \centering
 \includegraphics[scale=0.5]{paperfigures/nansbyhour.eps}
 \includegraphics[scale=0.5]{paperfigures/nansbyhour_storm.eps}

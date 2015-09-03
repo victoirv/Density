@@ -1,4 +1,7 @@
 all:
+	latex paper
+	bibtex paper
+	latex paper
 	bibtex paper
 	pdflatex paper
 	make clean
