@@ -78,7 +78,7 @@ In this work, events defined to occur when $D_{st}$ or $\rho_{eq}$ crosses a thr
 \section{Results}
 Figure \ref{AllData} shows values of solar wind averages and mass density used in this study.  
 
-Figure~\ref{ccplot:a} shows the long-term trends of $\log(\rho_{eq})$ and $F_{10.7}$ computed using the median values in 27-day (non-overalpping?) windows using all non--fill hourly values.  A scatter plot of these two lines is shown in Figure~\ref{ccplot:b}.  The linear correlation is found to be $0.87$ (? plot says 0.94!).  In comparison, \cite{Takahashi2010} found a correlation coefficient of $0.94$ using measurements from all satellites in the time interval of 1980 through 1991.
+Figure~\ref{ccplot:a} shows the long-term trends of $log(\rho_{eq})$ and $F_{10.7}$ computed using the median values in 27-day (non-overalpping?) windows using all non--fill hourly values.  A scatter plot of these two lines is shown in Figure~\ref{ccplot:b}.  The linear correlation is found to be $0.94$ matching the value found by \cite{Takahashi2010} who used measurements from all satellites in the time interval of 1980 through 1991.
 
 \subsection{$D_{st}$ and $\rho_{eq}$ Events}
 
@@ -123,14 +123,12 @@ Neither of these seem to indicate anything too significant, so looking at $D_{st
 Unfortunately there are no events in this time frame that are longer than 12 hours with $D_{st}$ minima lower than $-80$~nT that have existing mass density data around onset, so an analysis of this particular relationship can't be made.
 
 \subsection{Change in $\rho_{eq}$}
-If instead of looking for events based on a threshold of $\rho_{eq}$, we instead look for a certain amount of change in $\rho_{eq}$ as the basis for event onset, we get Figure \ref{rhochange}.
-
-Both raw change and percent change were done in case of bias towards high or low $\rho_{eq}$ periods, respectively. This shows a distinct lack of correlation in either case to a change in $D_{st}$. The percent change in $\rho_{eq}$ does, however, seem to be preconditioned by changes in $B_z$ and $F_{10.7}$.
+Instead of looking for events based on a threshold of $\rho_{eq}$, we instead looked for a certain amount of change in $\rho_{eq}$ as the basis for event onset. Both raw change and percent change were done in case of bias towards high or low $\rho_{eq}$ periods, respectively, but neither showed any correlation to a change in $D_{st}$. 
 
 \section{F10.7 dependence}
 In an effort to analyze the dependence of $\rho_{eq}$ on $F_{10.7}$, a few tests were performed. \cite{Takahashi2010} mention a strong correlation between the two. The long term correlation could be a bias for $D_{st}$'s effects, so a linear model was created, recreating mass density purely from $F_{10.7}$ in the form of $\rho_{eq}(t)=A\cdot F_{10.7}(t)$. This re-created $\rho_{eq}$ shows around a 45\% correlation with the actual $\rho_{eq}$, suggesting a strong influence, while doing the same procedure with $D_{st}$ shows only a 20-25\% correlation. 
 
-Taking this re-created data set and subtracting it from the original should remove the $F_{10.7}$ dependence from the data, and allow for a less biased analysis of the relationship between $D_{st}$ and $\rho_{eq}$. Figure \ref{nof107} shows the stack plot for the reduced $F_{10.7}$, where a more distinct peak after event onset can be seen. It also shows what that removed trend looks like, of the form $\rho_{eq}-\rho_{eq,F_{10.7}}$.
+Figure \ref{f107bin} takes the events and bins them by the value of $F_{10.7}$ at event onset, then looks at both $\rho_{eq}$ and $B_z$. A significant difference is seen in $\rho_{eq}$ between events taking place during periods of high $F_{10.7}$ and low $F_{10.7}$, while a much less significant, but still noticeable, difference is seen in $B_z$. 
 
 \section{Appendix}
 \subsection{Bias}
@@ -209,7 +207,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \includegraphics[scale=0.40]{paperfigures/stormavs-d80.eps}
 \rule[1ex]{5cm}{1pt}
 \includegraphics[scale=0.40]{paperfigures/stormavs-m70.eps}
-\caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ crossed below $-80$~nT (b) Same as Figure \ref{Storms}(b) except for constrain that $\rho_{eq}$ crossed above $70~amu/cm^3$.}
+\caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ crossed below $-80$~nT (b) Same as Figure \ref{Storms}(b) except for constrain that $\rho_{eq}$ crossed above $70$~amu/cm$^3$.}
 \label{Dspec}
 \end{figure}
 
@@ -225,10 +223,11 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 
 \begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.40]{paperfigures/stormavs-dst-nof107.eps}
-\includegraphics[scale=0.40]{paperfigures/f107removed.eps}
-\caption{$D_{st}$ events where $\rho_{eq}$ has $F_{10.7}$ dependence removed, and Difference between original $\rho_{eq}$ and $F_{10.7}$-less $\rho_{eq}$}
-\label{nof107}
+\includegraphics[scale=0.40]{paperfigures/HighLowF107rho.eps}
+\includegraphics[scale=0.40]{paperfigures/HighLowF107Bz.eps}
+\includegraphics[scale=0.40]{paperfigures/HighLowF107valid.eps}
+\caption{Binning events by $F_{10.7}$ value at onset for $\rho_{eq}$ and, in the middle panel, $B_z$. Lower panel shows number of valid points in each bin}
+\label{f107bin}
 \end{figure}
 
 \begin{figure}[tp]
