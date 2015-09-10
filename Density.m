@@ -209,6 +209,11 @@ switch stormcase
         LongTimeScale=24;
         figurename=strcat(figurename,'mass-day.eps');
         yr=1;
+    case 15
+        storms=diff([0 (FILLED(:,15)<-30)' 0]); %DST Storm
+        DSTCut=-30;
+        figurename=strcat(figurename,'dst-30.eps');
+        yr=2;
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -374,6 +379,10 @@ if(MakePaperPlots && stormcase==1)
     print -depsc2 -r200 paperfigures/allstorms.eps
     print -dpng -r200 paperfigures/PNGs/allstorms.png
     
+    
+    %Testing binplot
+    %binplot(AVMat(:,:,15),FILLED(:,end),starti,timewidth,LongTimeScale,-50,{'D_{st}';'F_{10.7}'},{'nT';'s.f.u'},'on')
+    
     h=figure('Visible',visible);
     medf107=nanmedian(FILLED(starti,end));
     highsplit=nanmedian(FILLED(starti(FILLED(starti,end)>medf107), end));
@@ -386,7 +395,7 @@ if(MakePaperPlots && stormcase==1)
     ylabel('D_{st} (nT)')
     xlabel('Time from start of event (hour)')
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
-    legend(sprintf('F_{10.7}>%2.0f - %d',highsplit,length(highf107dst)),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
     title(sprintf('%d events of D_{st} < %d nT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
     print -depsc2 -r200 paperfigures/HighLowF107dst.eps
     print -dpng -r200 paperfigures/PNGs/HighLowF107dst.png

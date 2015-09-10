@@ -1,0 +1,38 @@
+function h=binplot(plotter,sorter,events,timewidth,LongTimeScale,names,visible)
+
+if nargin<4
+    fprintf('Usage:')
+    fprintf('h=binplot(plotter,sorter,events,timewidth,LongTimeScale,names)')
+    fprintf('names=[plotvar name; sortvar name]')
+    return
+end
+    plotname=names(1);
+    sortname=names(2);
+    safeplotname=regexprep(plotname,'[^a-zA-Z0-9]','');
+    safesortname=regexprep(sortname,'[^a-zA-Z0-9]','');
+    
+    xa=(-timewidth:LongTimeScale:timewidth*2);
+    
+    medsplit=nanmedian(sorter(events));
+    highsplit=nanmedian(sorter(events(sorter(events)>medsplit)));
+    lowsplit=nanmedian(sorter(events(sorter(events)<medsplit)));
+    
+    midhigh=nanmedian(plotter(sorter(events)>medsplit & sorter(events)<highsplit,:),1);
+    midlow=nanmedian(plotter(sorter(events)<medsplit & sorter(events)>lowsplit,:),1);
+    high=nanmedian(plotter(sorter(events)>highsplit,:),1);
+    low=nanmedian(plotter(sorter(events)<lowsplit,:),1);
+    HighIndex=sorter(events)>highsplit;
+    LowIndex=sorter(events)<lowsplit;
+    HighMatBars=[nanmedian(plotter(HighIndex,:))-nanstd(plotter(HighIndex,:))./sqrt(sum(~isnan(plotter(HighIndex,:)))) ; nanmedian(plotter(HighIndex,:))+nanstd(plotter(HighIndex,:))./sqrt(sum(~isnan(plotter(HighIndex,:))))];
+    LowMatBars=[nanmedian(plotter(LowIndex,:))-nanstd(plotter(LowIndex,:))./sqrt(sum(~isnan(plotter(LowIndex,:)))) ; nanmedian(plotter(LowIndex,:))+nanstd(plotter(LowIndex,:))./sqrt(sum(~isnan(plotter(LowIndex,:))))];
+    
+    h=figure('visible',visible);
+    plot(xa,[high; midhigh; midlow; low]);
+    hold on; plot(xa,HighMatBars,'b-.'); plot(xa,LowMatBars,'c-.');
+    ylabel('\rho_{eq} (amu/cm^3)')
+    xlabel('Time from start of event (hour)')
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
+    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medsplit),sprintf('%2.0f>F_{10.7}>%2.0f',medsplit,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','NorthEast');
+    title(sprintf('%d evenly-binned events of D_{st} < %d nT for %d-%d',length(events),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
+    print -depsc2 -r200 paperfigures/HighLowF107rho.eps
+    print -dpng -r200 paperfigures/PNGs/HighLowF107rho.png

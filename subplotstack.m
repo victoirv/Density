@@ -1,5 +1,7 @@
 function p = subplotstack(m,ROW)
 %SUBPLOTSTACK
+%   Copied from: https://github.com/rweigel/m-rsw
+%   With small modifications to gaps
 %
 %   p = SUBPLOTSTACK(m,r) returns a position array that can be passed to
 %   SUBPLOT. 
