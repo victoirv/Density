@@ -10,32 +10,45 @@ else
 end
 satnum=6;
 
+MakePlots=0;
+MakePaperPlots=1;
+MakeBinPlots=0;
+visible='off';
+
 %Read filled dataset from Kondrashov(2014)
 if(~exist('data/WGhourFS_72_13.txt'))
     urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/data/WGhourFS_72_13.txt','data/WGhourFS_72_13.txt');
 end
-FILLED=dlmread('data/WGhourFS_72_13.txt',',',1,0); 
-%Data from supplementary section of http://onlinelibrary.wiley.com/doi/10.1002/2014GL059741/full
-FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
 
-if(TakahashiCond)
-    FILLED=FILLED(FILLED(:,1)>1988,:);
-    FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
+filledname=sprintf('FILLED_%d',satnum);
+if(TakahashiCond), filledname=sprintf('%s_tak',filledname);end
+if(exist(sprintf('%s.mat',filledname),'file'))
+    load(filledname)
+else
+    %Data from supplementary section of http://onlinelibrary.wiley.com/doi/10.1002/2014GL059741/full
+    FILLED=dlmread('data/WGhourFS_72_13.txt',',',1,0); 
+    headers=textread('data/WGhourFS_72_13.txt','%s',28,'delimiter',',');
+    FILLED=FILLED(FILLED(:,1)>1980,:); %Just to get into Denton time
+    if(TakahashiCond)
+        FILLED=FILLED(FILLED(:,1)>1988,:);
+        FILLED=FILLED(FILLED(:,1)<1992,:); %For comparing to Takahashi 2010 Fig 11
+    end
+    
+    OMNIDensity=FILLED(:,7);
+    OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
+    
+    save(filledname,'FILLED','headers','OMNIDensity','OMNITime');
 end
-headers=textread('data/WGhourFS_72_13.txt','%s',28,'delimiter',',');
-VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
-VBz=FILLED(:,6).*FILLED(:,5);
-BS=1/2*(abs(FILLED(:,5))-FILLED(:,5));
-OMNIDensity=FILLED(:,7);
-OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
-%VBS=1/2*Plasma_bulk_speed.*(abs(Bz_GSM)-Bz_GSM);
+
 
 
 %Get Denton data (mostly just for mass density)
 if(exist(sprintf('DentonDensityAndTime_%d.mat',satnum),'file'))
     load(sprintf('DentonDensityAndTime_%d',satnum))
 else
-    urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/data/massdensity.txt','data/massdensity.txt');
+    if(~exist('data/massdensity.txt','file'))
+        urlwrite('http://mag.gmu.edu/git-data/victoirv/Density/data/massdensity.txt','data/massdensity.txt');
+    end
     IN=dlmread('data/massdensity.txt');
     IN(IN(:,1)~=satnum,:)=[]; %Satellites 6 and 7 should work
     IN(IN==9999)=NaN;
@@ -47,10 +60,11 @@ else
     DBz=IN(uniquerows,31);
     DVsw=IN(uniquerows,32);
     DBS=1/2*IN(uniquerows,32).*(abs(DBz)-DBz);
+    AE=IN(uniquerows,12);
     MLT=IN(uniquerows,8);
     MassDensity=IN(uniquerows,88);
     
-    save(sprintf('DentonDensityAndTime_%d',satnum),'DentonTime','MassDensity','DBz','MLT','DBS','DVsw');
+    save(sprintf('DentonDensityAndTime_%d',satnum),'DentonTime','MassDensity','DBz','MLT','DBS','DVsw','AE');
 end
 
 %Load F10.7 specifically 
@@ -74,9 +88,9 @@ gettime=gettime+(OMNITime<max(DentonTime));
 gettime=(gettime==2);
 
 OMNITime=OMNITime(gettime);
-VBS=VBS(gettime);
-VBz=VBz(gettime);
-BS=BS(gettime);
+
+%Start and end year, for titles
+sy=str2num(datestr(OMNITime(1),10)); ey=str2num(datestr(OMNITime(end),10));
 
 OMNIDensity=OMNIDensity(gettime);
 FILLED=FILLED(gettime,:);
@@ -99,10 +113,11 @@ if(exist(sprintf('%s.mat',interpname),'file'))
 else
     MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     MLTFit=interptest(DentonTime,MLT,OMNITime,(OMNITime(2)-OMNITime(1))/2);
+    AEFit=interptest(DentonTime,AE,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     %F107Spline=interptest(DentonTime,F107,OMNITime,(OMNITime(2)-OMNITime(1))/2);
     MassDensitySpline=MassDensitySpline';
     %F107Spline=F107Spline';
-    save(interpname,'MassDensitySpline','MLTFit');%,'F107Spline');
+    save(interpname,'MassDensitySpline','MLTFit','AEFit');%,'F107Spline');
 end
 
 %Find storm with enough data to analyze
@@ -113,17 +128,19 @@ MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpli
 FILLED=[FILLED F107];
 headers{end+1}='F107';
 
-yranges=zeros(3,4,2);
+yranges=zeros(4,4,2);
 yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230];
 yranges(2,:,:)=[-8 3; 350 600; -90 0; 160 210];
-yranges(3,:,:)=[-8 3; 350 580; -60 0; 170 200];
+yranges(3,:,:)=[-8 3; 350 580; -90 0; 170 200];
+yranges(4,:,:)=[-3 2; 450 550; -30 -10; 80 120];
 
 LongTimeScale=1;%24*27; %How many hours to average over. Best stick to 1, 24, or 24*27
-cutoffduration=1; %If you want to get rid of short (spurious?) storms, set larger than 1
-cutconditions=0; %Look at only pre-noon
+cutoffduration=1; %Minimum duration of events, in hours
+cutconditions=0; %1=Look at only pre-noon
 removef107=0;
 DSTCut=0;
 MDCut=0;
+AECut=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
 
@@ -133,11 +150,13 @@ switch stormcase
         DSTCut=-50;
         figurename=strcat(figurename,'dst.eps');
         yr=2;
+        MakeBinPlots=1;
     case 2
         storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
         MDCut=40;
         figurename=strcat(figurename,'mass.eps');
         yr=2;
+        MakeBinPlots=1;
     case 3
         storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
         figurename=strcat(figurename,'diffden-10amu.eps');
@@ -211,9 +230,16 @@ switch stormcase
         yr=1;
     case 15
         storms=diff([0 (FILLED(:,15)<-30)' 0]); %DST Storm
-        DSTCut=-30;
+        DSTCut=-30; 
         figurename=strcat(figurename,'dst-30.eps');
         yr=2;
+        MakeBinPlots=1;
+    case 16
+        storms=diff([0 (AEFit>400)' 0]); %DST Storm
+        AECut=400;
+        figurename=strcat(figurename,'AE.eps');
+        yr=4;
+        MakeBinPlots=1;
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -305,11 +331,6 @@ if(LongTimeScale>1)
     AVMD2=nanmedian(AVMD2);
 end
 
-%%%%%Make Plots
-MakePlots=0;
-MakePaperPlots=1;
-visible='off';
-
 %Compare the two densities
 if(MakePlots)
     h=figure('Visible',visible); plot(OMNITime,MassDensitySpline);hold on; 
@@ -379,96 +400,33 @@ if(MakePaperPlots && stormcase==1)
     print -depsc2 -r200 paperfigures/allstorms.eps
     print -dpng -r200 paperfigures/PNGs/allstorms.png
     
+end
+
+if(MakePaperPlots && MakeBinPlots)
+    if(DSTCut<0)
+        plotthresh=sprintf('< %d',DSTCut);
+        stormtype='D_{st}'; stormunits='nT';
+    elseif(AECut>0)
+        plotthresh=sprintf('> %d',AECut);
+        stormtype='AE'; stormunits='nT';
+    else
+        plotthresh=sprintf('> %d',MDCut);
+        stormtype='\rho_{eq}'; stormunits='amu/cm^3';
+    end
     
-    %Testing binplot
-    %binplot(AVMat(:,:,15),FILLED(:,end),starti,timewidth,LongTimeScale,-50,{'D_{st}';'F_{10.7}'},{'nT';'s.f.u'},'on')
+    %plot dst, sort by f10.7
+    binplot(AVMat(:,:,15),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'D_{st}';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],visible);
+    %plot rho, sort f10.7
+    binplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],visible);
+    %plot Bz, sort f10.7
+    binplot(AVMat(:,:,5),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],visible);
+    %plot Bz, sort rho
+    binplot(AVMat(:,:,5),MassDensitySpline,starti,timewidth,LongTimeScale,plotthresh,{'B_z';'\rho_{eq}';stormtype},{'nT';'amu/cm^3';stormunits},[sy; ey],visible);
+    %plot rho, sort dst
+    binplot(AVMDMat(:,:),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'D_{st}';stormtype},{'amu/cm^3';'nT';stormunits},[sy; ey],visible);
+    %plot Bz, sort dst
+    binplot(AVMat(:,:,5),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'D_{st}';stormtype},{'nT';'nT';stormunits},[sy; ey],visible);
     
-    h=figure('Visible',visible);
-    medf107=nanmedian(FILLED(starti,end));
-    highsplit=nanmedian(FILLED(starti(FILLED(starti,end)>medf107), end));
-    lowsplit=nanmedian(FILLED(starti(FILLED(starti,end)<medf107), end));
-    midhighf107dst=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,15),1);
-    midlowf107dst=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,15),1);
-    highf107dst=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,15),1);
-    lowf107dst=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,15),1);
-    plot(xa,[highf107dst; midhighf107dst; midlowf107dst; lowf107dst]);
-    ylabel('D_{st} (nT)')
-    xlabel('Time from start of event (hour)')
-    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
-    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
-    title(sprintf('%d events of D_{st} < %d nT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
-    print -depsc2 -r200 paperfigures/HighLowF107dst.eps
-    print -dpng -r200 paperfigures/PNGs/HighLowF107dst.png
-    
-    h=figure('Visible',visible);
-    midhighf107rho=nanmedian(AVMDMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:),1);
-    midlowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:),1);
-    highf107rho=nanmedian(AVMDMat(FILLED(starti,29)>highsplit,:),1);
-    lowf107rho=nanmedian(AVMDMat(FILLED(starti,29)<lowsplit,:),1);
-    HighIndex=FILLED(starti,29)>highsplit;
-    LowIndex=FILLED(starti,29)<lowsplit;
-    HighMatBars=[nanmedian(AVMDMat(HighIndex,:))-nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:)))) ; nanmedian(AVMDMat(HighIndex,:))+nanstd(AVMDMat(HighIndex,:))./sqrt(sum(~isnan(AVMDMat(HighIndex,:))))];
-    LowMatBars=[nanmedian(AVMDMat(LowIndex,:))-nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:)))) ; nanmedian(AVMDMat(LowIndex,:))+nanstd(AVMDMat(LowIndex,:))./sqrt(sum(~isnan(AVMDMat(LowIndex,:))))];
-    plot(xa,[highf107rho; midhighf107rho; midlowf107rho; lowf107rho]);
-    hold on; plot(xa,HighMatBars,'b-.'); plot(xa,LowMatBars,'c-.');
-    ylabel('\rho_{eq} (amu/cm^3)')
-    xlabel('Time from start of event (hour)')
-    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
-    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','NorthEast');
-    title(sprintf('%d evenly-binned events of D_{st} < %d nT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
-    print -depsc2 -r200 paperfigures/HighLowF107rho.eps
-    print -dpng -r200 paperfigures/PNGs/HighLowF107rho.png
-    
-    h=figure('Visible',visible);
-    plot(xa,sum(~isnan(AVMDMat(FILLED(starti,29)>highsplit,:))))
-    hold on;
-    plot(xa,sum(~isnan(AVMDMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:))),'g')
-    plot(xa,sum(~isnan(AVMDMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:))),'r')
-    plot(xa,sum(~isnan(AVMDMat(FILLED(starti,29)<lowsplit,:))),'c')
-    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthEast');
-    xlabel('Time from start of event (hour)')
-    ylabel('Valid hourly data points')
-    axis tight;
-    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
-    print -depsc2 -r200 paperfigures/HighLowF107valid.eps
-    print -dpng -r200 paperfigures/PNGs/HighLowF107valid.png
-    
-    h=figure('Visible',visible);
-    midhighf107bz=nanmedian(AVMat(FILLED(starti,29)>medf107 & FILLED(starti,29)<highsplit,:,5),1);
-    midlowf107bz=nanmedian(AVMat(FILLED(starti,29)<medf107 & FILLED(starti,29)>lowsplit,:,5),1);
-    highf107bz=nanmedian(AVMat(FILLED(starti,29)>highsplit,:,5),1);
-    lowf107bz=nanmedian(AVMat(FILLED(starti,29)<lowsplit,:,5),1);
-    
-    HighIndex=FILLED(starti,29)>highsplit;
-    LowIndex=FILLED(starti,29)<lowsplit;
-    HighMatBars=[nanmedian(AVMat(HighIndex,:,5))-nanstd(AVMat(HighIndex,:,5))./sqrt(sum(~isnan(AVMat(HighIndex,:,5)))) ; nanmedian(AVMat(HighIndex,:,5))+nanstd(AVMat(HighIndex,:,5))./sqrt(sum(~isnan(AVMat(HighIndex,:,5))))];
-    LowMatBars=[nanmedian(AVMat(LowIndex,:,5))-nanstd(AVMat(LowIndex,:,5))./sqrt(sum(~isnan(AVMat(LowIndex,:,5)))) ; nanmedian(AVMat(LowIndex,:,5))+nanstd(AVMat(LowIndex,:,5))./sqrt(sum(~isnan(AVMat(LowIndex,:,5))))];
-    
-    plot(xa,[highf107bz; midhighf107bz; midlowf107bz; lowf107bz]);
-    hold on; plot(xa,HighMatBars,'b-.'); plot(xa,LowMatBars,'c-.');
-    ylabel('B_z (nT)')
-    xlabel('Time from start of event (hour)')
-    legend(sprintf('F_{10.7}>%2.0f',highsplit),sprintf('%2.0f>F_{10.7}>%2.0f',highsplit,medf107),sprintf('%2.0f>F_{10.7}>%2.0f',medf107,lowsplit),sprintf('%2.0f>F_{10.7}',lowsplit),'Location','SouthWest');
-    title(sprintf('%d events of D_{st} < %d nT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
-    print -depsc2 -r200 paperfigures/HighLowF107Bz.eps
-    print -dpng -r200 paperfigures/PNGs/HighLowF107Bz.png
-    
-    
-    h=figure('Visible',visible);
-    medrho=nanmedian(MassDensitySpline(starti));
-    highsplitrho=nanmedian(MassDensitySpline(starti(MassDensitySpline(starti)>medrho)));
-    lowsplitrho=nanmedian(MassDensitySpline(starti(MassDensitySpline(starti)<medrho)));
-    midhighrhobz=nanmedian(AVMat(MassDensitySpline(starti)>medrho & MassDensitySpline(starti)<highsplitrho,:,5),1);
-    midlowrhobz=nanmedian(AVMat(MassDensitySpline(starti)<medrho & MassDensitySpline(starti)>lowsplitrho,:,5),1);
-    highrhobz=nanmedian(AVMat(MassDensitySpline(starti)>highsplitrho,:,5),1);
-    lowrhobz=nanmedian(AVMat(MassDensitySpline(starti)<lowsplitrho,:,5),1);
-    plot(xa,[highrhobz; midhighrhobz; midlowrhobz; lowrhobz]);
-    ylabel('B_z (nT)')
-    xlabel('Time from start of event (hour)')
-    legend(sprintf('\\rho_{eq}>%2.0f',highsplitrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',highsplitrho,medrho),sprintf('%2.0f>\\rho_{eq}>%2.0f',medrho,lowsplitrho),sprintf('%2.0f>\\rho_{eq}',lowsplitrho),'Location','SouthWest');
-    title(sprintf('%d events of D_{st} < %d nT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end))))
-    print -depsc2 -r200 paperfigures/HighLowRhoBz.eps
-    print -dpng -r200 paperfigures/PNGs/HighLowRhoBz.png
 end
 
 %Make main stack plots
@@ -496,12 +454,12 @@ if(MakePaperPlots)
     ylabel(AX(2),'# valid hourly values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
-    if(DSTCut<0), title(h1,sprintf('%d events of D_{st} < %d nT for %d-%d',length(starti),DSTCut,year(OMNITime(1)),year(OMNITime(end)))); end
-    if(MDCut>0), title(h1,sprintf('%d events of \\rho_{eq} > %damu/cm^3 for %d-%d',length(starti),MDCut,year(OMNITime(1)),year(OMNITime(end)))); end
+    if(DSTCut<0), title(h1,sprintf('%d events of D_{st} < %d nT for %d-%d',length(starti),DSTCut,sy,ey)); end
+    if(AECut<0), title(h1,sprintf('%d events of AE > %d for %d-%d',length(starti),AECut,sy,ey)); end
+    if(MDCut>0), title(h1,sprintf('%d events of \\rho_{eq} > %damu/cm^3 for %d-%d',length(starti),MDCut,sy,ey)); end
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
-    %set(gcf,'NextPlot','add'); axes; h = title(sprintf('Average of %d storms %s (%d to %d)',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end))));set(gca,'Visible','off');set(h,'Visible','on');
-    fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, year(OMNITime(1)),year(OMNITime(end)));
+    fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);
     print('-depsc2','-r200',figurename);
     
 end
@@ -601,6 +559,12 @@ end
 %making correlation tables
 
 %{
+
+VBS=1/2*FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5));
+VBz=FILLED(:,6).*FILLED(:,5);
+BS=1/2*(abs(FILLED(:,5))-FILLED(:,5));
+OMNIDensity=FILLED(:,7);
+
 %Get re-scaled values for the sake of plotting overlays
 OverlayFilled=FILLED;
 OHr=FILLED(:,3);

@@ -221,7 +221,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 
 \begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.40]{paperfigures/HighLowF107rho.eps}
+\includegraphics[scale=0.40]{paperfigures/HighLowF107rhoeq.eps}
 \includegraphics[scale=0.40]{paperfigures/HighLowF107Bz.eps}
 \includegraphics[scale=0.40]{paperfigures/HighLowF107valid.eps}
 \caption{Binning events by $F_{10.7}$ value at onset for $\rho_{eq}$ and, in the middle panel, $B_z$. Lower panel shows number of valid points in each bin}
@@ -253,5 +253,42 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \label{nanperhour}
 \end{figure}
 \clearpage
+
+
+
+\section{Appendix}
+\hfill
+\begin{figure}[htp!]
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst30.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst30-valid.eps}
+\caption{$D_{st} < -30$ nT events, $\rho_{eq}$ binned by $F_{10.7}$. Lower panel: valid hourly points}
+\end{figure}
+\hfill
+\begin{figure}[htp!]
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-rhoeq40.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-rhoeq40-valid.eps}
+\caption{$\rho_{eq} > 40$ amu/cm$^3$ events, $\rho_{eq}$ binned by $F_{10.7}$}
+\end{figure}
+\clearpage
+
+\begin{figure}[htp!]
+\includegraphics[scale=0.40]{paperfigures/HighLowF107rhoeq-AE300.eps}
+\includegraphics[scale=0.40]{paperfigures/HighLowF107rhoeq-AE300-valid.eps}
+\includegraphics[scale=0.35]{paperfigures/stormavs-AE.eps}
+\caption{Top: $AE > 400$ nT events, $\rho_{eq}$ binned by $F_{10.7}$ Bottom: averages of $AE > 300$ events}
+\end{figure}
+\hfill
+\begin{figure}[htp!]
+\includegraphics[scale=0.45]{paperfigures/HighLowDstrhoeq-AE400.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowDstrhoeq-Dst50.eps}
+\caption{Top: $AE > 400$ nT events. Bottom: $D_{st} < -50$ nT events. Both $\rho_{eq}$ binned by $D_{st}$.}
+\end{figure}
+\clearpage
+
+\begin{figure}[htp!]
+\includegraphics[scale=0.45]{paperfigures/HighLowDstBz-Dst50.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowDstBz-AE400.eps}
+\caption{Top: $B_z$ binned by $D_{st}$ for $D_{st} < -50$ nT events. Bottom: $B_z$ binned by $D_{st}$ for $AE > 400$ nT events}
+\end{figure}
 
 \end{document}
