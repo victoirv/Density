@@ -400,6 +400,17 @@ if(MakePaperPlots && stormcase==1)
     print -depsc2 -r200 paperfigures/allstorms.eps
     print -dpng -r200 paperfigures/PNGs/allstorms.png
     
+    for i=1:24
+        avrhos(i)=nanmedian(MassDensity(round(MLT)==(i-1)));
+    end
+    h=figure('Visible',visible);
+    plot(0:23,avrhos,'+-')
+    ylabel('Median \rho_{eq}')
+    xlabel('MLT (hour)')
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
+    print -depsc2 -r200 paperfigures/rhoMLT.eps
+    print -dpng -r200 paperfigures/PNGs/rhoMLT.png
+    
 end
 
 if(MakePaperPlots && MakeBinPlots)
