@@ -405,11 +405,23 @@ if(MakePaperPlots && stormcase==1)
     end
     h=figure('Visible',visible);
     plot(0:23,avrhos,'+-')
-    ylabel('Median \rho_{eq}')
+    ylabel('Median \rho_{eq} (amu/cm^3)')
     xlabel('MLT (hour)')
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
     print -depsc2 -r200 paperfigures/rhoMLT.eps
     print -dpng -r200 paperfigures/PNGs/rhoMLT.png
+    
+    DHr=str2num(datestr(DentonTime,'HH'));
+    for i=1:24
+        avrhos(i)=nanmedian(MassDensity(DHr==(i-1)));
+    end
+    h=figure('Visible',visible);
+    plot(0:23,avrhos,'+-')
+    ylabel('Median \rho_{eq} (amu/cm^3)')
+    xlabel('Local Time (hour)')
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
+    print -depsc2 -r200 paperfigures/rhoLT.eps
+    print -dpng -r200 paperfigures/PNGs/rhoLT.png
     
 end
 
