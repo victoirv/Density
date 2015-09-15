@@ -132,7 +132,7 @@ yranges=zeros(4,4,2);
 yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230];
 yranges(2,:,:)=[-8 3; 350 600; -90 0; 160 210];
 yranges(3,:,:)=[-8 3; 350 580; -90 0; 170 200];
-yranges(4,:,:)=[-3 2; 450 550; -30 -10; 80 120];
+yranges(4,:,:)=[-3 2; 400 550; -30 -10; 80 120];
 
 LongTimeScale=1;%24*27; %How many hours to average over. Best stick to 1, 24, or 24*27
 cutoffduration=1; %Minimum duration of events, in hours
@@ -238,6 +238,18 @@ switch stormcase
         storms=diff([0 (AEFit>400)' 0]); %DST Storm
         AECut=400;
         figurename=strcat(figurename,'AE.eps');
+        yr=4;
+        MakeBinPlots=1;
+    case 17
+        starti = randsample(1:length(MassDensitySpline),700,false);
+        storms=zeros(1,length(MassDensitySpline));
+        storms(starti)=1; storms(starti+1)=-1;
+        while(sum(storms)~=0)
+            starti = randsample(1:length(MassDensitySpline),700,false);
+            storms=zeros(1,length(MassDensitySpline));
+            storms(starti)=1; storms(starti+1)=-1;
+        end
+        figurename=strcat(figurename,'random.eps');
         yr=4;
         MakeBinPlots=1;
 end
@@ -423,6 +435,28 @@ if(MakePaperPlots && stormcase==1)
     print -depsc2 -r200 paperfigures/rhoLT.eps
     print -dpng -r200 paperfigures/PNGs/rhoLT.png
     
+    for i=1:24
+        avrhos(i)=nanmedian(AE(DHr==(i-1)));
+    end
+    h=figure('Visible',visible);
+    plot(0:23,avrhos,'+-')
+    ylabel('Median AE (nT)')
+    xlabel('Local Time (hour)')
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
+    print -depsc2 -r200 paperfigures/AELT.eps
+    print -dpng -r200 paperfigures/PNGs/AELT.png
+    
+    for i=1:24
+        avrhos(i)=nanmedian(FILLED(FILLED(:,3)==(i-1),15));
+    end
+    h=figure('Visible',visible);
+    plot(0:23,avrhos,'+-')
+    ylabel('Median D_{st} (nT)')
+    xlabel('Local Time (hour)')
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
+    print -depsc2 -r200 paperfigures/DstLT.eps
+    print -dpng -r200 paperfigures/PNGs/DstLT.png
+    
 end
 
 if(MakePaperPlots && MakeBinPlots)
@@ -432,6 +466,9 @@ if(MakePaperPlots && MakeBinPlots)
     elseif(AECut>0)
         plotthresh=sprintf('> %d',AECut);
         stormtype='AE'; stormunits='nT';
+    elseif(stormcase==17)
+        plotthresh='';
+        stormtype='random'; stormunits='';
     else
         plotthresh=sprintf('> %d',MDCut);
         stormtype='\rho_{eq}'; stormunits='amu/cm^3';
