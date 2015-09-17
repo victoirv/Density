@@ -103,6 +103,8 @@ getFtime=(getFtime==2);
 F107time=F107time(getFtime);
 F107=F107(getFtime);
 
+
+
 %Save interpolated values since it takes a while to interpolate the whole
 %dataset. "Spline" is a misnomer at this point but a proper find/replace might
 %take a while and introduce bugs
@@ -235,8 +237,13 @@ switch stormcase
         yr=2;
         MakeBinPlots=1;
     case 16
-        storms=diff([0 (AEFit>400)' 0]); %DST Storm
-        AECut=400;
+        Hrs=hour(OMNITime);
+        for i=1:24
+            avrhos(i)=nanmedian(AEFit(Hrs==(i-1)));
+        end
+        AEFit=AEFit-avrhos(Hrs+1)';
+        AECut=300;
+        storms=diff([0 (AEFit>AECut)' 0]); %DST Storm
         figurename=strcat(figurename,'AE.eps');
         yr=4;
         MakeBinPlots=1;

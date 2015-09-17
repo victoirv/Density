@@ -309,6 +309,20 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \includegraphics[scale=0.45]{paperfigures/AELT.eps}
 \caption{Median $D_{st}$ vs universal time, and median AE vs universal time}
 \end{figure}
+\clearpage
+
+
+\begin{figure}[htp!]
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat6.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat7.eps}
+\caption{GOES Satellite 6 and 7}
+\end{figure}
+
+\begin{figure}[htp!]
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat2.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat5.eps}
+\caption{GOES Satellite 2 and 5}
+\end{figure}
 
 
 
