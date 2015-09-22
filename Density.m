@@ -87,6 +87,8 @@ gettime=OMNITime>min(DentonTime);
 gettime=gettime+(OMNITime<max(DentonTime));
 gettime=(gettime==2);
 
+
+
 OMNITime=OMNITime(gettime);
 
 %Start and end year, for titles
@@ -196,7 +198,6 @@ switch stormcase
         figurename=strcat(figurename,'dst-nof107.eps');
         yr=3; %Dont know
     case 10 %Takahashi Fig 11
-        %Make sure to modify years 
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         cutconditions=1;
@@ -204,7 +205,6 @@ switch stormcase
         figurename=strcat(figurename,'dst-50-tak.eps');
         yr=1;
     case 11 %Takahashi but Mass Storm
-        %Make sure to modify years 
         storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
         MDCut=40;
         cutconditions=1;
@@ -218,6 +218,7 @@ switch stormcase
         %cutoffduration=12;
         figurename=strcat(figurename,'dst-50-tak-hour.eps');
         yr=1;%Don't know
+        %MakeBinPlots=1;
     case 13 %Full time range, daily medians
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
@@ -236,18 +237,18 @@ switch stormcase
         figurename=strcat(figurename,'dst-30.eps');
         yr=2;
         MakeBinPlots=1;
-    case 16
+    case 16 %AE Events
         Hrs=hour(OMNITime);
         for i=1:24
             avrhos(i)=nanmedian(AEFit(Hrs==(i-1)));
         end
         AEFit=AEFit-avrhos(Hrs+1)';
         AECut=300;
-        storms=diff([0 (AEFit>AECut)' 0]); %DST Storm
+        storms=diff([0 (AEFit>AECut)' 0]);
         figurename=strcat(figurename,'AE.eps');
         yr=4;
         MakeBinPlots=1;
-    case 17
+    case 17 %Random events
         starti = randsample(1:length(MassDensitySpline),700,false);
         storms=zeros(1,length(MassDensitySpline));
         storms(starti)=1; storms(starti+1)=-1;
@@ -258,6 +259,16 @@ switch stormcase
         end
         figurename=strcat(figurename,'random.eps');
         yr=4;
+        MakeBinPlots=1;
+    case 18    
+    for i=1:24
+        avrhos(i)=nanmedian(MassDensitySpline(FILLED(:,3)==(i-1)));
+    end
+    MassDensitySpline=MassDensitySpline-avrhos(FILLED(:,3)+1);
+    storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+        DSTCut=-50;
+        figurename=strcat(figurename,'dst-detrended.eps');
+        yr=2;
         MakeBinPlots=1;
 end
 starti=find(storms>0);
@@ -493,7 +504,6 @@ if(MakePaperPlots && MakeBinPlots)
     binplot(AVMDMat(:,:),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'D_{st}';stormtype},{'amu/cm^3';'nT';stormunits},[sy; ey],visible);
     %plot Bz, sort dst
     binplot(AVMat(:,:,5),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'D_{st}';stormtype},{'nT';'nT';stormunits},[sy; ey],visible);
-    
 end
 
 %Make main stack plots
@@ -532,13 +542,24 @@ if(MakePaperPlots)
 end
 
 
+if(MakePaperPlots && stormcase==16)
+    h=figure('Visible',visible);
+    hist(FILLED(starti,3),0:23)
+    axis([-1 24 0 100])
+    grid on
+    xlabel('UT Hour')
+    ylabel('Frequency')
+    title(sprintf('%d events of AE > %d for %d-%d',length(starti),AECut,sy,ey));
+    print -depsc2 -r200 paperfigures/AEbyhour.eps
+    print -dpng -r200 paperfigures/PNGs/AEbyhour.png
+end
 
 %Nans per hour
 if(MakePaperPlots && stormcase==1) 
     h=figure('Visible',visible);
     hist(FILLED(isnan(MassDensitySpline),3),0:23)
     axis([-1 24 0 3000])
-    xlabel('UT Hour')
+    xlabel('UT Hour of event start')
     ylabel('Frequency')
     print -depsc2 -r200 paperfigures/nansbyhour.eps
     print -dpng -r200 paperfigures/PNGs/nansbyhour.png
