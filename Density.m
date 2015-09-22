@@ -270,6 +270,12 @@ switch stormcase
         figurename=strcat(figurename,'dst-detrended.eps');
         yr=2;
         MakeBinPlots=1;
+    case 19
+        DSTCut=-80;
+        storms=diff([0 (FILLED(:,15)<DSTCut)' 0]); %DST Storm
+        figurename=strcat(figurename,'dst80.eps');
+        yr=2;
+        MakeBinPlots=1;
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
