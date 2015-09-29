@@ -8,7 +8,7 @@ if(any(stormcase==10:12))
 else
     TakahashiCond=0;
 end
-satnum=6;
+satnum=2;
 
 MakePlots=0;
 MakePaperPlots=1;
@@ -276,6 +276,12 @@ switch stormcase
         figurename=strcat(figurename,'dst80.eps');
         yr=2;
         MakeBinPlots=1;
+    case 20 %Specifically for a case later that loops over DST threshholds 
+        DSTCut=-30;
+        storms=diff([0 (FILLED(:,15)<DSTCut)' 0]); %DST Storm
+        figurename=strcat(figurename,'dst30.eps');
+        yr=2;
+        MakeDstThreshPlot=1;
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -305,9 +311,7 @@ if(removef107)
     MassDensitySpline=MassDensitySpline-xnew;
 end
 
-stormi=1;
-AVMat=[];
-AVMDMat=[];
+
 timewidth=24; %How many hours before, and twice as many hours after, to select as the window for an event
 if(LongTimeScale==24),timewidth=96; end
 if(LongTimeScale==24*27),timewidth=96*27; end
@@ -329,6 +333,9 @@ if(cutconditions)
 end
 
 %Build matrices storing all storms
+stormi=1;
+AVMat=[];
+AVMDMat=[];
 for i=1:length(starti)
     %datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
     AVMat(stormi,:,:)=FILLED((starti(i)-timewidth):starti(i)+timewidth*2,:); 
@@ -403,6 +410,20 @@ if(MakePaperPlots && removef107)
     xlabel('Year')
     datetick
     print -depsc2 -r200 paperfigures/f107removed.eps
+end
+
+if(MakePaperPlots && stormcase==1)
+    xa=(-12:1:24);
+    idx=arrayfun(@colon,starti(1:5)-12,starti(1:5)+24,'Uniform',false);
+    plot(repmat(xa,5,1)',reshape(MassDensitySpline([idx{:}]),37,5),'r')
+    hold on;
+    idx2=arrayfun(@colon,starti(end-4:end)-12,starti(end-4:end)+24,'Uniform',false);
+    plot(repmat(xa,5,1)',reshape(MassDensitySpline([idx2{:}]),37,5),'b')
+    ylabel('\rho_{eq} (amu/cm^3)')
+    xlabel('Hours from onset')
+    title(sprintf('First 5 (red) and last 5 (blue) events from %d-%d',sy,ey));
+    print -depsc2 -r200 paperfigures/TenEvents.eps
+    print -dpng -r200 paperfigures/PNGs/TenEvents.png
 end
 
 if(MakePaperPlots && stormcase==1)
@@ -510,6 +531,49 @@ if(MakePaperPlots && MakeBinPlots)
     binplot(AVMDMat(:,:),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'D_{st}';stormtype},{'amu/cm^3';'nT';stormunits},[sy; ey],visible);
     %plot Bz, sort dst
     binplot(AVMat(:,:,5),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'D_{st}';stormtype},{'nT';'nT';stormunits},[sy; ey],visible);
+end
+
+if(MakePaperPlots && MakeDstThreshPlot)
+    stormtype='D_{st}'; stormunits='nT';
+    DCs=-30:-5:-90;
+    s=zeros(1,length(DCs));
+    st=s;
+    numevents=s;
+    DCi=1;
+    for DC=DCs
+        storms=diff([0 (FILLED(:,15)<DC)' 0]);
+        starti=find(storms>0);
+        endi=find(storms<0)-1;
+        stormi=1;
+        AVMDMat=[];
+        while(starti(1)-maxwidth<1)
+            starti(1)=[]; endi(1)=[];
+        end
+        while(endi(end)+maxwidth>length(MassDensitySpline))
+            starti(end)=[]; endi(end)=[];
+        end
+        for i=1:length(starti)
+            AVMDMat(stormi,:)=MassDensitySpline((starti(i)-timewidth):starti(i)+timewidth*2);
+            stormi=stormi+1;
+        end
+        plotthresh=sprintf('< %d',DC);
+        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],visible); 
+        numevents(DCi)=length(starti);
+        DCi=DCi+1;
+        
+    end
+    h=figure('visible',visible);
+    plot(DCs,s,'r')
+    hold on; plot(DCs,s+st,'r-.'); plot(DCs,s-st,'r-.');
+    %plot(DCs,log10(numevents),'b-.')
+    plot(DCs,zeros(1,length(DCs)),'k-','LineWidth',3)
+    %legend('\rho_{eq}','log(# events)');
+    xlabel('D_{st} threshold (nT)');
+    ylabel('\rho_{eq} (amu/cm^3)')
+    title(sprintf('High F_{10.7} events - Low F_{10.7} events, both with baselines removed, %d-%d',sy,ey))
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
+    print('-depsc2','-r200', sprintf('paperfigures/DstRhoThresh-%d-%d.eps',sy,ey));
+    print('-dpng','-r200', sprintf('paperfigures/PNGs/DstRhoThresh-%d-%d.png',sy,ey));
 end
 
 %Make main stack plots
