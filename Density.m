@@ -8,7 +8,7 @@ if(any(stormcase==10:12))
 else
     TakahashiCond=0;
 end
-satnum=2;
+satnum=6;
 
 MakePlots=0;
 MakePaperPlots=1;
@@ -574,6 +574,56 @@ if(MakePaperPlots && MakeDstThreshPlot)
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
     print('-depsc2','-r200', sprintf('paperfigures/DstRhoThresh-%d-%d.eps',sy,ey));
     print('-dpng','-r200', sprintf('paperfigures/PNGs/DstRhoThresh-%d-%d.png',sy,ey));
+    
+    
+    
+    stormtype='Random'; stormunits='units';
+    DCs=800:-100:300;
+    s=zeros(1,length(DCs));
+    st=s;
+    numevents=s;
+    DCi=1;
+    for DC=DCs
+        starti = randsample(1:length(MassDensitySpline),DC,false);
+        storms=zeros(1,length(MassDensitySpline));
+        storms(starti)=1; storms(starti+1)=-1;
+        while(sum(storms)~=0)
+            starti = randsample(1:length(MassDensitySpline),DC,false);
+            storms=zeros(1,length(MassDensitySpline));
+            storms(starti)=1; storms(starti+1)=-1;
+        end
+        starti=find(storms>0);
+        endi=find(storms<0)-1;
+        stormi=1;
+        AVMDMat=[];
+        while(starti(1)-maxwidth<1)
+            starti(1)=[]; endi(1)=[];
+        end
+        while(endi(end)+maxwidth>length(MassDensitySpline))
+            starti(end)=[]; endi(end)=[];
+        end
+        for i=1:length(starti)
+            AVMDMat(stormi,:)=MassDensitySpline((starti(i)-timewidth):starti(i)+timewidth*2);
+            stormi=stormi+1;
+        end
+        plotthresh=sprintf('< %d',DC);
+        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],visible); 
+        numevents(DCi)=length(starti);
+        DCi=DCi+1;
+        
+    end
+    h=figure('visible',visible);
+    plot(DCs,s,'r')
+    hold on; plot(DCs,s+st,'r-.'); plot(DCs,s-st,'r-.');
+    %plot(DCs,log10(numevents),'b-.')
+    plot(DCs,zeros(1,length(DCs)),'k-','LineWidth',3)
+    %legend('\rho_{eq}','log(# events)');
+    xlabel('Random Sample Size');
+    ylabel('\rho_{eq} (amu/cm^3)')
+    title(sprintf('High F_{10.7} events - Low F_{10.7} events, both with baselines removed, %d-%d',sy,ey))
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
+    print('-depsc2','-r200', sprintf('paperfigures/RandRhoThresh-%d-%d.eps',sy,ey));
+    print('-dpng','-r200', sprintf('paperfigures/PNGs/RandRhoThresh-%d-%d.png',sy,ey));
 end
 
 %Make main stack plots
