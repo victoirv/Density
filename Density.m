@@ -1,6 +1,13 @@
-function Density(stormcase)
+function Density(stormcase,satnum,cutyears)
 if nargin < 1
-  stormcase=1;
+    stormcase=1;
+    satnum=6;
+    cutyears=[1900 2100]; %Just to use all data. The years only serve to constrict, if possible
+elseif nargin < 2
+    satnum=6;
+    cutyears=[1900 2100];
+elseif nargin < 3
+    cutyears=[1900 2100];
 end
 
 if(any(stormcase==10:12))
@@ -8,11 +15,11 @@ if(any(stormcase==10:12))
 else
     TakahashiCond=0;
 end
-satnum=6;
 
 MakePlots=0;
 MakePaperPlots=1;
 MakeBinPlots=0;
+MakeDstThreshPlot=0;
 visible='off';
 
 %Read filled dataset from Kondrashov(2014)
@@ -82,31 +89,6 @@ if(~exist('figures','dir'))
     mkdir('figures');
 end
 
-%Get everything onto the same time grid
-gettime=OMNITime>min(DentonTime);
-gettime=gettime+(OMNITime<max(DentonTime));
-gettime=(gettime==2);
-
-
-
-OMNITime=OMNITime(gettime);
-
-%Start and end year, for titles
-sy=str2num(datestr(OMNITime(1),10)); ey=str2num(datestr(OMNITime(end),10));
-
-OMNIDensity=OMNIDensity(gettime);
-FILLED=FILLED(gettime,:);
-
-%Should only need to match it to OMNITime since OMNITime is already matched
-%to DentonTime at this point
-getFtime=F107time>=min(OMNITime);
-getFtime=getFtime+(F107time<=max(OMNITime));
-getFtime=(getFtime==2);
-F107time=F107time(getFtime);
-F107=F107(getFtime);
-
-
-
 %Save interpolated values since it takes a while to interpolate the whole
 %dataset. "Spline" is a misnomer at this point but a proper find/replace might
 %take a while and introduce bugs
@@ -123,6 +105,39 @@ else
     %F107Spline=F107Spline';
     save(interpname,'MassDensitySpline','MLTFit','AEFit');%,'F107Spline');
 end
+
+
+%Get everything onto the same time grid
+gettime=OMNITime>min(DentonTime);
+gettime=gettime+(OMNITime<max(DentonTime));
+gettime=gettime+(OMNITime<datenum(cutyears(2)+1,1,1)); %If user wants to cut down time range. Assuming they want entire end year
+gettime=gettime+(OMNITime>datenum(cutyears(1),1,1));
+gettime=(gettime==4);
+
+
+
+%Move everything already created onto desired time grid
+OMNITime=OMNITime(gettime);
+OMNIDensity=OMNIDensity(gettime);
+FILLED=FILLED(gettime,:);
+MassDensitySpline=MassDensitySpline(gettime);
+MLTFit=MLTFit(gettime);
+AEFit=AEFit(gettime);
+
+%Start and end year, for titles
+sy=str2num(datestr(OMNITime(1),10)); ey=str2num(datestr(OMNITime(end),10));
+
+%Should only need to match it to OMNITime since OMNITime is already matched
+%to DentonTime at this point
+getFtime=F107time>=min(OMNITime);
+getFtime=getFtime+(F107time<=max(OMNITime));
+getFtime=(getFtime==2);
+F107time=F107time(getFtime);
+F107=F107(getFtime);
+
+
+
+
 
 %Find storm with enough data to analyze
 MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');

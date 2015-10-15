@@ -24,9 +24,9 @@ medsplit=nanmedian(sorter(events));
 
 HighIndex=sorter(events)>medsplit;
 LowIndex=sorter(events)<=medsplit;
-HighIndices=HighIndex'.*(1:length(HighIndex));
+HighIndices=HighIndex'.*(1:length(HighIndex)); %change [1 0 0 1 0 1 0] to actual indices [1 0 0 4 0 6 0]
 LowIndices=LowIndex'.*(1:length(LowIndex));
-HighIndices(HighIndices==0)=[];
+HighIndices(HighIndices==0)=[]; %Cut out zeros so randsample just picks from good indices
 LowIndices(LowIndices==0)=[];
 
 high=nanmedian(plotter(HighIndex,:),1);

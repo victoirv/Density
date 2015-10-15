@@ -350,6 +350,14 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \includegraphics[scale=0.45]{paperfigures/RandRhoThresh-1983-1991.eps}
 \caption{High $F_{10.7}$ events - Low $F_{10.7}$ events, both with baselines removed. 83-87 and 81-83. Bottom: Random "events" from 1983-1991, of sample sizes: 800:-100:300}
 \end{figure}
+\clearpage
+
+\begin{figure}[htp!]
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-87-91.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat7.eps}
+\caption{Comparing Satellite 6 data, satellite 6 from 87-91, and satellite 7 (from 87-91)}
+\end{figure}
 
 
 \end{document}
