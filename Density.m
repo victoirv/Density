@@ -464,8 +464,8 @@ if(MakePaperPlots && stormcase==1)
     linkaxes([h5 h1 h2 h3 h4],'x')
     xlabel('Year')
     %set(gcf,'NextPlot','add'); axes; h = title(sprintf('All data',length(duration)));set(gca,'Visible','off');set(h,'Visible','on');
-    print -depsc2 -r200 paperfigures/alldata.eps
-    print -dpng -r200 paperfigures/PNGs/alldata.png
+    print('-depsc2','-r200',sprintf('paperfigures/alldata-GOES%d-%d-%d.eps',satnum,sy,ey));
+    print('-dpng','-r200',sprintf('paperfigures/PNGs/alldata-GOES%d-%d-%d.png',satnum,sy,ey));
     
     
     h=figure('Visible',visible);
