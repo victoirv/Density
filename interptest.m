@@ -3,14 +3,53 @@ if nargin == 3
     dt=(tnew(2)-tnew(1))/2; %halfway to the points on either side
 end
 
-%tic
+tnew=tnew(:); %Force orientation
+t=t(:);
+
+dt2=floor(dt/(t(2)-t(1)));
+t2=tnew(1):(t(2)-t(1)):tnew(end);
+x2=nan(length(t2),min(size(x)));
+
+indices=floor((t-t(1))/(t(2)-t(1))+1); %Indices on expanded uniform grid of t (not tnew yet)
+offset=find(diff([0 t(1)<=tnew' 0])>0)-1;
+x2(indices+offset)=x; %Go from nonuniform time grid to uniform time grid with NaNs
+
+snip=0;
+while(mod(length(x2),(dt2*2))~=0)
+    x2(end+1)=NaN; %Adding nans shouldn't affect final median, just buffer for size
+    snip=snip+1;
+end
+datanew=reshape(x2,dt2*2,length(x2)/(dt2*2)); %Reshape and median to smaller uniform time grid
+datanew=nanmedian(datanew)';
+
+
+%{
+if(tnew(1)<t(1))
+    prebuffer=tnew(1):(tnew(2)-tnew(1)):t(1);
+    prebuffer=prebuffer(1:end-1);
+    datanew=[nan(1,length(prebuffer)) datanew];
+end
+if(tnew(end)>t(end))
+    postbuffer=t(end):(tnew(2)-tnew(1)):tnew(end);
+    postbuffer=postbuffer(2:end);
+    datanew=[datanew nan(1,length(postbuffer))];
+end
+
+
+toc
+
+tic
+%}
+
 datanew=zeros(length(tnew),min(size(x)));
 for i=1:length(tnew)
     datanew(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); %Center
     %datanew(i,:)=nanmedian(x(t>=(tnew(i)) & t<(tnew(i)+2*dt),:)); %Forwards time
 end
 %toc
-%datanew;
+
+
+
 
 %{
 tic

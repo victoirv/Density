@@ -20,6 +20,7 @@ MakePlots=0;
 MakePaperPlots=1;
 MakeBinPlots=0;
 MakeDstThreshPlot=0;
+MakeRandThreshPlot=0;
 visible='off';
 
 %Read filled dataset from Kondrashov(2014)
@@ -134,8 +135,6 @@ getFtime=getFtime+(F107time<=max(OMNITime));
 getFtime=(getFtime==2);
 F107time=F107time(getFtime);
 F107=F107(getFtime);
-
-
 
 
 
@@ -292,11 +291,17 @@ switch stormcase
         yr=2;
         MakeBinPlots=1;
     case 20 %Specifically for a case later that loops over DST threshholds 
-        DSTCut=-30;
+        DSTCut=-30; %This doesn't really matter
         storms=diff([0 (FILLED(:,15)<DSTCut)' 0]); %DST Storm
         figurename=strcat(figurename,'dst30.eps');
         yr=2;
         MakeDstThreshPlot=1;
+    case 21 %Specifically for a case later that loops over DST threshholds 
+        DSTCut=-30; %This doesn't really matter
+        storms=diff([0 (FILLED(:,15)<DSTCut)' 0]); %DST Storm
+        figurename=strcat(figurename,'dst30.eps');
+        yr=2;
+        MakeRandThreshPlot=1;
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -535,17 +540,17 @@ if(MakePaperPlots && MakeBinPlots)
     end
     
     %plot dst, sort by f10.7
-    binplot(AVMat(:,:,15),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'D_{st}';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],visible);
+    binplot(AVMat(:,:,15),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'D_{st}';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],satnum,visible);
     %plot rho, sort f10.7
-    binplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],visible);
+    binplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],satnum,visible);
     %plot Bz, sort f10.7
-    binplot(AVMat(:,:,5),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],visible);
+    binplot(AVMat(:,:,5),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],satnum,visible);
     %plot Bz, sort rho
-    binplot(AVMat(:,:,5),MassDensitySpline,starti,timewidth,LongTimeScale,plotthresh,{'B_z';'\rho_{eq}';stormtype},{'nT';'amu/cm^3';stormunits},[sy; ey],visible);
+    binplot(AVMat(:,:,5),MassDensitySpline,starti,timewidth,LongTimeScale,plotthresh,{'B_z';'\rho_{eq}';stormtype},{'nT';'amu/cm^3';stormunits},[sy; ey],satnum,visible);
     %plot rho, sort dst
-    binplot(AVMDMat(:,:),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'D_{st}';stormtype},{'amu/cm^3';'nT';stormunits},[sy; ey],visible);
+    binplot(AVMDMat(:,:),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'D_{st}';stormtype},{'amu/cm^3';'nT';stormunits},[sy; ey],satnum,visible);
     %plot Bz, sort dst
-    binplot(AVMat(:,:,5),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'D_{st}';stormtype},{'nT';'nT';stormunits},[sy; ey],visible);
+    binplot(AVMat(:,:,5),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'D_{st}';stormtype},{'nT';'nT';stormunits},[sy; ey],satnum,visible);
 end
 
 if(MakePaperPlots && MakeDstThreshPlot)
@@ -572,7 +577,7 @@ if(MakePaperPlots && MakeDstThreshPlot)
             stormi=stormi+1;
         end
         plotthresh=sprintf('< %d',DC);
-        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],visible); 
+        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],satnum,visible); 
         numevents(DCi)=length(starti);
         DCi=DCi+1;
         
@@ -590,7 +595,8 @@ if(MakePaperPlots && MakeDstThreshPlot)
     print('-depsc2','-r200', sprintf('paperfigures/DstRhoThresh-%d-%d.eps',sy,ey));
     print('-dpng','-r200', sprintf('paperfigures/PNGs/DstRhoThresh-%d-%d.png',sy,ey));
     
-    
+end
+if(MakePaperPlots && MakeRandThreshPlot)
     
     stormtype='Random'; stormunits='units';
     DCs=800:-100:300;
@@ -622,7 +628,7 @@ if(MakePaperPlots && MakeDstThreshPlot)
             stormi=stormi+1;
         end
         plotthresh=sprintf('< %d',DC);
-        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],visible); 
+        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],satnum,visible); 
         numevents(DCi)=length(starti);
         DCi=DCi+1;
         

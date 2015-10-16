@@ -1,4 +1,4 @@
-function h=binplot(plotter,sorter,events,timewidth,LongTimeScale,plotthresh,names,units,timerange,visible)
+function h=binplot(plotter,sorter,events,timewidth,LongTimeScale,plotthresh,names,units,timerange,satnum,visible)
 
 if nargin<4
     fprintf('Usage:')
@@ -40,9 +40,9 @@ ylabel(sprintf('%s (%s)',plotname,plotunits))
 xlabel('Time from start of event (hour)')
 set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
 legend(sprintf('%s>%2.0f',sortname,highsplit),sprintf('%2.0f>%s>%2.0f',highsplit,sortname,medsplit),sprintf('%2.0f>%s>%2.0f',medsplit,sortname,lowsplit),sprintf('%2.0f>%s',lowsplit,sortname),'Location','NorthEast');
-title(sprintf('%d evenly-binned events of %s %s (%s) for %d-%d',length(events),eventname,plotthresh,eventunits,timerange(1),timerange(2)))
-print('-depsc2','-r200',sprintf('paperfigures/HighLow%s%s-%s%s.eps',safesortname,safeplotname,safeeventname,safethresh))
-print('-dpng','-r200',sprintf('paperfigures/PNGs/HighLow%s%s-%s%s.png',safesortname,safeplotname,safeeventname,safethresh))
+title(sprintf('%d evenly-binned events of %s %s (%s) for GOES%d: %d-%d',length(events),eventname,plotthresh,eventunits,satnum,timerange(1),timerange(2)))
+print('-depsc2','-r200',sprintf('paperfigures/HighLow%s%s-%s%s-GOES%d-%d-%d.eps',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
+print('-dpng','-r200',sprintf('paperfigures/PNGs/HighLow%s%s-%s%s-GOES%d-%d-%d.png',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
 
 if(sum(sum(isnan(plotter)))) %If any nan points
     h=figure('Visible',visible);
@@ -54,9 +54,9 @@ if(sum(sum(isnan(plotter)))) %If any nan points
     legend(sprintf('%s>%2.0f',sortname,highsplit),sprintf('%2.0f>%s>%2.0f',highsplit,sortname,medsplit),sprintf('%2.0f>%s>%2.0f',medsplit,sortname,lowsplit),sprintf('%2.0f>%s',lowsplit,sortname),'Location','NorthEast');
     xlabel('Time from start of event (hour)')
     ylabel('Valid hourly data points')
-    title(sprintf('%d evenly-binned events of %s %s (%s) for %d-%d',length(events),eventname,plotthresh,eventunits,timerange(1),timerange(2)))
+    title(sprintf('%d evenly-binned events of %s %s (%s) for GOES%d: %d-%d',length(events),eventname,plotthresh,eventunits,satnum,timerange(1),timerange(2)))
     axis tight;
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
-    print('-depsc2','-r200',sprintf('paperfigures/HighLow%s%s-%s%s-valid.eps',safesortname,safeplotname,safeeventname,safethresh))
-    print('-dpng','-r200',sprintf('paperfigures/PNGs/HighLow%s%s-%s%s-valid.png',safesortname,safeplotname,safeeventname,safethresh))
+    print('-depsc2','-r200',sprintf('paperfigures/HighLow%s%s-%s%s-GOES%d-%d-%d-valid.eps',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
+    print('-dpng','-r200',sprintf('paperfigures/PNGs/HighLow%s%s-%s%s-GOES%d-%d-%d-valid.png',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
 end

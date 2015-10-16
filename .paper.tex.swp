@@ -313,28 +313,27 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 
 
 \begin{figure}[htp!]
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat6.eps}
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat7.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-GOES6-1983-1991.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-GOES7-1987-1991.eps}
 \caption{GOES Satellite 6 and 7}
 \end{figure}
 
 \begin{figure}[htp!]
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat2.eps}
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat5.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-GOES2-1981-1983.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-GOES5-1983-1987.eps}
 \caption{GOES Satellite 2 and 5}
 \end{figure}
 \clearpage
 
 \begin{figure}[htp!]
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-tak.eps}
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-detrend.eps}
-\caption{Top: From 89-91. Bottom: With $\rho_{eq}$ LT medians subtracted}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-GOES6-1989-1991.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst80.eps}
+\caption{Top: From 89-91 (compare to Takahashi 2010). Bottom:  $D_{st}<-80$~nT.}
 \end{figure}
 
 \begin{figure}[htp!]
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst80.eps}
 \includegraphics[scale=0.45]{paperfigures/AEbyhour.eps}
-\caption{Top: $D_{st}<-80$~nT. Bottom: $AE$ events by their hour of onset}
+\caption{$AE$ events by their hour of onset}
 \end{figure}
 \clearpage
 
@@ -348,15 +347,20 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \includegraphics[scale=0.45]{paperfigures/DstRhoThresh-1983-1987.eps}
 \includegraphics[scale=0.45]{paperfigures/DstRhoThresh-1981-1983.eps}
 \includegraphics[scale=0.45]{paperfigures/RandRhoThresh-1983-1991.eps}
-\caption{High $F_{10.7}$ events - Low $F_{10.7}$ events, both with baselines removed. 83-87 and 81-83. Bottom: Random "events" from 1983-1991, of sample sizes: 800:-100:300}
+\caption{High $F_{10.7}$ events - Low $F_{10.7}$ events, both with baselines removed. 83-87 and 81-83. Bottom: Random "events" from 1983-1991}
 \end{figure}
 \clearpage
 
 \begin{figure}[htp!]
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50.eps}
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-87-91.eps}
-\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-sat7.eps}
-\caption{Comparing Satellite 6 data, satellite 6 from 87-91, and satellite 7 (from 87-91)}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-GOES6-1983-1991.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-GOES7-1987-1991.eps}
+\caption{Comparing GOES 6 to GOES 7}
+\end{figure}
+
+\begin{figure}[htp!]
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-GOES6-1983-1987.eps}
+\includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst50-GOES6-1987-1991.eps}
+\caption{GOES 6 from 83-87 and 87-91}
 \end{figure}
 
 

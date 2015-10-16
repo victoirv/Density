@@ -1,4 +1,4 @@
-function [s, st]=twobinplot(plotter,sorter,events,timewidth,LongTimeScale,plotthresh,names,units,timerange,visible)
+function [s, st]=twobinplot(plotter,sorter,events,timewidth,LongTimeScale,plotthresh,names,units,timerange,satnum,visible)
 
 if nargin<4
     fprintf('Usage:')
@@ -41,11 +41,12 @@ for i=1:100
     %bootstdhigh(i,:)=nanstd(plotter(randsample(HighIndex,size(plotter,1),true),:));
     %bootstdlow(i,:)=nanstd(plotter(randsample(LowIndex,size(plotter,1),true),:));
     ss(i)=sum((bootshigh(i,:)-highbase)-(bootslow(i,:)-lowbase));
-    sts(i)=std((bootshigh(i,:)-highbase)-(bootslow(i,:)-lowbase));
+%    sts(i)=std((bootshigh(i,:)-highbase)-(bootslow(i,:)-lowbase));
 end
 
 s=nanmean(ss);
-st=nanmean(sts);
+%st=nanmean(sts);
+st=nanstd(ss);
 
 
 %s=sum((high-highbase)-(low-lowbase));
@@ -68,9 +69,9 @@ ylabel(sprintf('%s (%s)',plotname,plotunits))
 xlabel('Time from start of event (hour)')
 set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
 legend(sprintf('%s>%2.0f',sortname,medsplit),sprintf('%2.0f>%s',medsplit,sortname),'Location','NorthEast');
-title(sprintf('%d evenly-binned events of %s %s (%s) for %d-%d, baseline removed',length(events),eventname,plotthresh,eventunits,timerange(1),timerange(2)))
-print('-depsc2','-r200',sprintf('figures/HighLowBase%s%s-%s%s.eps',safesortname,safeplotname,safeeventname,safethresh))
-print('-dpng','-r200',sprintf('figures/HighLowBase%s%s-%s%s.png',safesortname,safeplotname,safeeventname,safethresh))
+title(sprintf('%d evenly-binned events of %s %s (%s) for GOES%d: %d-%d, baseline removed',length(events),eventname,plotthresh,eventunits,satnum,timerange(1),timerange(2)))
+print('-depsc2','-r200',sprintf('figures/HighLowBase%s%s-%s%s-GOES%d-%d-%d.eps',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
+print('-dpng','-r200',sprintf('figures/HighLowBase%s%s-%s%s-GOES%d-%d-%d.png',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
 
 %{
 if(sum(sum(isnan(plotter)))) %If any nan points
