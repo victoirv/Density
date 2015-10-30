@@ -7,12 +7,18 @@ tnew=tnew(:); %Force orientation
 t=t(:);
 
 dt2=floor(dt/(t(2)-t(1)));
-t2=tnew(1):(t(2)-t(1)):tnew(end);
+t2=tnew(1)-dt:(t(2)-t(1)):tnew(end)+dt;
 x2=nan(length(t2),min(size(x)));
 
 indices=floor((t-t(1))/(t(2)-t(1))+1); %Indices on expanded uniform grid of t (not tnew yet)
-offset=find(diff([0 t(1)<=tnew' 0])>0)-1;
-x2(indices+offset)=x; %Go from nonuniform time grid to uniform time grid with NaNs
+
+if(tnew(1)>t(1)) %If new time starts later than data provided, cut down x
+    offset=find(diff([0 t'>=(tnew(1)-dt) 0])>0)-1;
+    x2(indices(offset:end)-indices(offset)+1)=x(offset:end);
+else %New time wants data from before data exists
+    offset=find(diff([0 (t(1)-dt)<=tnew' 0])>0)-1; %Find first valid point
+    x2(indices+offset)=x; %Go from nonuniform time grid to uniform time grid with NaNs
+end
 
 snip=0;
 while(mod(length(x2),(dt2*2))~=0)
@@ -21,7 +27,7 @@ while(mod(length(x2),(dt2*2))~=0)
 end
 datanew=reshape(x2,dt2*2,length(x2)/(dt2*2)); %Reshape and median to smaller uniform time grid
 datanew=nanmedian(datanew)';
-
+datasave=datanew;
 
 %{
 if(tnew(1)<t(1))
@@ -46,6 +52,7 @@ for i=1:length(tnew)
     datanew(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); %Center
     %datanew(i,:)=nanmedian(x(t>=(tnew(i)) & t<(tnew(i)+2*dt),:)); %Forwards time
 end
+test=0;
 %toc
 
 
