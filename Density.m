@@ -159,6 +159,7 @@ removef107=0;
 DSTCut=0;
 MDCut=0;
 AECut=0;
+nnanalysis=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
 
@@ -302,6 +303,12 @@ switch stormcase
         figurename=strcat(figurename,'dst30.eps');
         yr=2;
         MakeRandThreshPlot=1;
+    case 22
+        nnanalysis=1;
+        storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+        DSTCut=-50;
+        figurename=strcat(figurename,'dst.eps');
+        yr=2;
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -392,6 +399,46 @@ if(LongTimeScale>1)
     end
     AVMD2(:,13)=nanmedian(AVMDMat(:,end-12:end),2);
     AVMD2=nanmedian(AVMD2);
+end
+
+if(nnanalysis) %Because the nn validation and test sets vary so much in effectiveness, just do it a bunch and get the mean/sd
+    %{
+    loops=100;
+    CCMs=zeros(loops,2,3);
+    for i=1:loops
+        CCMs(i,:,:)=nntest(nanmedian(AVMat(:,20:25,[5 6 15 end]),2),AVMDMat(:,26),1,1); 
+    end
+    CCMsm=squeeze(nanmean(CCMs,1));
+    CCMssd=squeeze(nanstd(CCMs,1));
+    %}
+    
+    PermNames={'Bz','Vsw','Dst','F107'};
+    PermCols=[5 6 15 29];
+    
+    table=fopen('NNtable.txt','w');
+    fprintf(table,'<pre>\n');
+    fprintf(table,'Vars \t \t  CCtr  NNtr  CCt   NNt   CCv   NNv\n');
+    Perms=combnk(1:4,1);
+    for i=1:length(Perms)
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),AVMDMat(:,26),1,1);
+        fprintf(table,'%s      \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
+    end   
+    Perms=combnk(1:4,2);
+    for i=1:length(Perms)
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),AVMDMat(:,26),1,1);
+        fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
+    end    
+    Perms=combnk(1:4,3);
+    for i=1:length(Perms)
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),AVMDMat(:,26),1,1);
+        fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
+    end 
+    Perms=combnk(1:4,4);
+    CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(:))),2),AVMDMat(:,26),1,1);
+    fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(:)),'+'),CCMs(:));
+
+    
+    fclose(table);
 end
 
 %Compare the two densities
