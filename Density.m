@@ -402,8 +402,8 @@ if(LongTimeScale>1)
 end
 
 if(nnanalysis) %Because the nn validation and test sets vary so much in effectiveness, just do it a bunch and get the mean/sd
-    %{
     loops=100;
+    %{
     CCMs=zeros(loops,2,3);
     for i=1:loops
         CCMs(i,:,:)=nntest(nanmedian(AVMat(:,20:25,[5 6 15 end]),2),AVMDMat(:,26),1,1); 
@@ -420,21 +420,21 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     fprintf(table,'Vars \t \t  CCtr  NNtr  CCt   NNt   CCv   NNv\n');
     Perms=combnk(1:4,1);
     for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),AVMDMat(:,26),1,10);
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s      \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end   
     Perms=combnk(1:4,2);
     for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),AVMDMat(:,26),1,10);
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end    
     Perms=combnk(1:4,3);
     for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),AVMDMat(:,26),1,10);
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end 
     Perms=combnk(1:4,4);
-    CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(:))),2),AVMDMat(:,26),1,10);
+    CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
     fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(:)),'+'),CCMs(:));
 
     
