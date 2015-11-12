@@ -411,12 +411,49 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     CCMsm=squeeze(nanmean(CCMs,1));
     CCMssd=squeeze(nanstd(CCMs,1));
     %}
+    xtest=linspace(nanmean(FILLED(:,5))-nanstd(FILLED(:,5)),nanmean(FILLED(:,5))+nanstd(FILLED(:,5)));
     
-    [~, ~, net]=nntest(nanmedian(AVMat(:,20:25,5),2),nanmedian(AVMDMat(:,26:30),2),1,1,1);
+    [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,5),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
     
-    tryBzs=linspace(min(FILLED(:,5)),max(FILLED(:,5)),30)
-    outputs=net(tryBzs);    
+    plot(xtest(2:end),testmean,'.')
+    hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
+    xlabel('Bz')
+    ylabel('\rho_{eq}')
+    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
+    print -dpng figures/NNBzRho.png
     
+    outputs=[];
+    ytest=linspace(nanmean(FILLED(:,29))-nanstd(FILLED(:,29)),nanmean(FILLED(:,29))+nanstd(FILLED(:,29)));
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[5 29]),2),nanmedian(AVMDMat(:,26:30),2),xtest,ytest,1,loops);
+    
+    %{
+    trynum=1;
+    [~, ~, net]=nntest([nanmedian(AVMat(:,20:25,[5 29]),2)],nanmedian(AVMDMat(:,26:30),2),1,1,1);
+    for tryf107=linspace(min(FILLED(:,29)),max(FILLED(:,29)))
+        [tryBzs,tryBzstates]=preparets(net,tonndata([linspace(min(FILLED(:,5)),max(FILLED(:,5))); tryf107.*ones(1,100)],true,false));
+        outputs(trynum,:)=fromnndata(net(tryBzs,tryBzstates),true,true,false);
+        trynum=trynum+1;
+    end
+    inputs=fromnndata(tryBzs,true,true,false);
+    surf(linspace(min(FILLED(:,29)),max(FILLED(:,29))),inputs(1,:),outputs')
+    %}
+    
+    figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
+    view(0,90)
+    ylabel('F10.7')
+    xlabel('Bz')
+    title(sprintf('Mean predicted \rho_{eq} over %d loops',loops))
+    colorbar
+    print -dpng figures/NNF107BzRho.png
+    
+    figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
+    view(0,90)
+    ylabel('F10.7')
+    xlabel('Bz')
+    title(sprintf('Standard deviation of %d loops predicting \rho_{eq}',loops))
+    colorbar
+    print -dpng figures/NNF107BzRho-sd.png
+
     
     PermNames={'Bz','Vsw','Dst','F107'};
     PermCols=[5 6 15 29];
