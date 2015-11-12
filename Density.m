@@ -412,6 +412,12 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     CCMssd=squeeze(nanstd(CCMs,1));
     %}
     
+    [~, ~, net]=nntest(nanmedian(AVMat(:,20:25,5),2),nanmedian(AVMDMat(:,26:30),2),1,1,1);
+    
+    tryBzs=linspace(min(FILLED(:,5)),max(FILLED(:,5)),30)
+    outputs=net(tryBzs);    
+    
+    
     PermNames={'Bz','Vsw','Dst','F107'};
     PermCols=[5 6 15 29];
     

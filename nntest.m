@@ -1,4 +1,4 @@
-function [CCMm, CCMsd] = nntest(x,y,delays,loops,silent)
+function [CCMm, CCMsd, net] = nntest(x,y,delays,loops,silent)
 if(nargin<2)
     x=rand(1,1000);
     y=[0.4.*x(2:end)-0.2.*x(1:end-1) 0];
@@ -32,12 +32,15 @@ for loop=1:loops
     inputDelays = 1:delays;
     feedbackDelays = 1:delays;
     hiddenLayerSize = 10;
-    net = narxnet(inputDelays,feedbackDelays,hiddenLayerSize);
-    net = removedelay(net);
-    [inputs,inputStates,layerStates,targets] = preparets(net,tonndata(x,false,false),{},tonndata(y,false,false));
+    %net = narxnet(inputDelays,feedbackDelays,hiddenLayerSize);
+    net=timedelaynet(1:delays,10);
+    %net = removedelay(net);
+    
+    %[inputs,inputStates,layerStates,targets] = preparets(net,tonndata(x,false,false),{},tonndata(y,false,false));
+    [inputs,inputStates,layerStates,targets] = preparets(net,tonndata(x,false,false),tonndata(y,false,false));
     
     net.divideParam.trainRatio = 70/100;
-    net.divideParam.valRatio = 15/100;
+    net.divideParam.valRatio = 15/100;  
     net.divideParam.testRatio = 15/100;
     
     if(silent)
