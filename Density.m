@@ -143,7 +143,8 @@ MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpli
 
 %FILLED=[FILLED F107Spline]; %When F107 is from Denton, use
 %interpolated version
-FILLED=[FILLED F107];
+FILLED=[FILLED MLTFit F107];
+headers{end+1}='MLT';
 headers{end+1}='F107';
 
 yranges=zeros(4,4,2);
@@ -403,19 +404,22 @@ end
 
 if(nnanalysis) %Because the nn validation and test sets vary so much in effectiveness, just do it a bunch and get the mean/sd
     loops=100;
-    %{
-    CCMs=zeros(loops,2,3);
-    for i=1:loops
-        CCMs(i,:,:)=nntest(nanmedian(AVMat(:,20:25,[5 6 15 end]),2),AVMDMat(:,26),1,1); 
-    end
-    CCMsm=squeeze(nanmean(CCMs,1));
-    CCMssd=squeeze(nanstd(CCMs,1));
-    %}
-    xtest=linspace(nanmean(FILLED(:,5))-nanstd(FILLED(:,5)),nanmean(FILLED(:,5))+nanstd(FILLED(:,5)));
     
+    xtest=linspace(nanmean(FILLED(:,30))-nanstd(FILLED(:,30)),nanmean(FILLED(:,30))+nanstd(FILLED(:,30)));
+    [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,30),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
+    
+    figure; plot(xtest(2:end),testmean,'.')
+    hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
+    xlabel('F_{10.7}')
+    ylabel('\rho_{eq}')
+    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
+    print -dpng figures/NNF107Rho.png
+    
+    
+    xtest=linspace(nanmean(FILLED(:,5))-nanstd(FILLED(:,5)),nanmean(FILLED(:,5))+nanstd(FILLED(:,5)));
     [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,5),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
     
-    plot(xtest(2:end),testmean,'.')
+    figure; plot(xtest(2:end),testmean,'.')
     hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
     xlabel('Bz')
     ylabel('\rho_{eq}')
@@ -423,63 +427,112 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     print -dpng figures/NNBzRho.png
     
     outputs=[];
-    ytest=linspace(nanmean(FILLED(:,29))-nanstd(FILLED(:,29)),nanmean(FILLED(:,29))+nanstd(FILLED(:,29)));
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[5 29]),2),nanmedian(AVMDMat(:,26:30),2),xtest,ytest,1,loops);
+    ytest=linspace(nanmean(FILLED(:,30))-nanstd(FILLED(:,30)),nanmean(FILLED(:,30))+nanstd(FILLED(:,30)));
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[5 30]),2),nanmedian(AVMDMat(:,26:30),2),xtest,ytest,1,loops);
     
-    %{
-    trynum=1;
-    [~, ~, net]=nntest([nanmedian(AVMat(:,20:25,[5 29]),2)],nanmedian(AVMDMat(:,26:30),2),1,1,1);
-    for tryf107=linspace(min(FILLED(:,29)),max(FILLED(:,29)))
-        [tryBzs,tryBzstates]=preparets(net,tonndata([linspace(min(FILLED(:,5)),max(FILLED(:,5))); tryf107.*ones(1,100)],true,false));
-        outputs(trynum,:)=fromnndata(net(tryBzs,tryBzstates),true,true,false);
-        trynum=trynum+1;
-    end
-    inputs=fromnndata(tryBzs,true,true,false);
-    surf(linspace(min(FILLED(:,29)),max(FILLED(:,29))),inputs(1,:),outputs')
-    %}
+    figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
+    view(0,90); ylabel('F10.7'); xlabel('Bz'); colorbar
+    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
+    print -dpng figures/NNF107BzRho.png
+    
+    figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
+    view(0,90); ylabel('F10.7'); xlabel('Bz'); colorbar
+    title(sprintf('Standard deviation of %d loops predicting \rho_{eq}',loops))
+    print -dpng figures/NNF107BzRho-sd.png
+    
+    %Same thing but Vsw
+    xtest=linspace(nanmean(FILLED(:,6))-nanstd(FILLED(:,6)),nanmean(FILLED(:,6))+nanstd(FILLED(:,6)));
+    [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,6),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
+    
+    figure; plot(xtest(2:end),testmean,'.')
+    hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
+    xlabel('Vsw')
+    ylabel('\rho_{eq}')
+    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
+    print -dpng figures/NNVswRho.png
+    
+    outputs=[];
+    ytest=linspace(nanmean(FILLED(:,30))-nanstd(FILLED(:,30)),nanmean(FILLED(:,30))+nanstd(FILLED(:,30)));
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[6 30]),2),nanmedian(AVMDMat(:,26:30),2),xtest,ytest,1,loops);
     
     figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
     view(0,90)
     ylabel('F10.7')
-    xlabel('Bz')
+    xlabel('Vsw')
     title(sprintf('Mean predicted \rho_{eq} over %d loops',loops))
     colorbar
-    print -dpng figures/NNF107BzRho.png
+    print -dpng figures/NNF107VswRho.png
     
     figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
     view(0,90)
     ylabel('F10.7')
-    xlabel('Bz')
+    xlabel('Vsw')
     title(sprintf('Standard deviation of %d loops predicting \rho_{eq}',loops))
     colorbar
-    print -dpng figures/NNF107BzRho-sd.png
+    print -dpng figures/NNF107VswRho-sd.png
+    
+    %Same thing but MLT
+     xtest=linspace(nanmean(FILLED(:,29))-nanstd(FILLED(:,29)),nanmean(FILLED(:,29))+nanstd(FILLED(:,29)));
+    
+    [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,29),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
+    
+    figure; plot(xtest(2:end),testmean,'.')
+    hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
+    xlabel('MLT')
+    ylabel('\rho_{eq}')
+    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
+    print -dpng figures/NNMLTRho.png
+    
+    outputs=[];
+    ytest=linspace(nanmean(FILLED(:,30))-nanstd(FILLED(:,30)),nanmean(FILLED(:,30))+nanstd(FILLED(:,30)));
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[29 30]),2),nanmedian(AVMDMat(:,26:30),2),xtest,ytest,1,loops);
+    
+    figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
+    view(0,90)
+    ylabel('F10.7')
+    xlabel('MLT')
+    title(sprintf('Mean predicted \rho_{eq} over %d loops',loops))
+    colorbar
+    print -dpng figures/NNF107MLTRho.png
+    
+    figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
+    view(0,90)
+    ylabel('F10.7')
+    xlabel('MLT')
+    title(sprintf('Standard deviation of %d loops predicting \rho_{eq}',loops))
+    colorbar
+    print -dpng figures/NNF107MLTRho-sd.png
 
     
-    PermNames={'Bz','Vsw','Dst','F107'};
-    PermCols=[5 6 15 29];
+    PermNames={'Bz','Vsw','Dst','MLT','F107'};
+    PermCols=[5 6 15 29 30];
     
     table=fopen('NNtable.txt','w');
     fprintf(table,'<pre>\n');
     fprintf(table,'Vars \t \t  CCtr  NNtr  CCt   NNt   CCv   NNv\n');
-    Perms=combnk(1:4,1);
+    Perms=combnk(1:5,1);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s      \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end   
-    Perms=combnk(1:4,2);
+    Perms=combnk(1:5,2);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end    
-    Perms=combnk(1:4,3);
+    Perms=combnk(1:5,3);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end 
-    Perms=combnk(1:4,4);
+    Perms=combnk(1:5,4);
+    for i=1:length(Perms)
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
+        fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(:)),'+'),CCMs(:));
+    end
+    Perms=combnk(1:5,5);
     CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
     fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(:)),'+'),CCMs(:));
-
     
     fclose(table);
 end
@@ -543,7 +596,7 @@ if(MakePaperPlots && stormcase==1)
     h2=subplot('position',subplotstack(5,2));plot(OMNITime,FILLED(:,6),'.'); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); ylim([300,900]);%V_sw
     h3=subplot('position',subplotstack(5,3));plot(OMNITime,FILLED(:,15),'.');text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); ylim([-300,100]);
     hold on; plot([OMNITime(1) OMNITime(end)],[-40 -40],'r-.','LineWidth',4); hold off;
-    h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,29),'.');text(0.01,0.9,'F_{10.7} (s.f.u.)','Units','normalized','FontSize',14); %f107
+    h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,30),'.');text(0.01,0.9,'F_{10.7} (s.f.u.)','Units','normalized','FontSize',14); %f107
     h5=subplot('position',subplotstack(5,5));plot(OMNITime,MassDensitySpline,'r.');text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14);%f107
     hold on; plot([OMNITime(1) OMNITime(end)],[40 40],'b-.','LineWidth',4);
     set(findobj('type','axes'),'xticklabel',{[]});
@@ -750,8 +803,8 @@ if(MakePaperPlots)
     h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
     hold on; plot(xa,AVMatBars(:,:,15),'r-.'); ylim(yranges(yr,3,:))
     if(DSTCut<0), plot([xa(1) xa(end)],[DSTCut DSTCut],'r-.','LineWidth',2); hold off; end
-    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,29),'+-','LineWidth',2); text(0.01,0.9,'F_{10.7} (s.f.u)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
-    hold on; plot(xa,AVMatBars(:,:,29),'r-.'); ylim(yranges(yr,4,:))
+    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,30),'+-','LineWidth',2); text(0.01,0.9,'F_{10.7} (s.f.u)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
+    hold on; plot(xa,AVMatBars(:,:,30),'r-.'); ylim(yranges(yr,4,:))
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
     subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
