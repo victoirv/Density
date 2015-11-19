@@ -403,10 +403,11 @@ if(LongTimeScale>1)
 end
 
 if(nnanalysis) %Because the nn validation and test sets vary so much in effectiveness, just do it a bunch and get the mean/sd
-    loops=100;
-    
-    xtest=linspace(nanmean(FILLED(:,30))-nanstd(FILLED(:,30)),nanmean(FILLED(:,30))+nanstd(FILLED(:,30)));
-    [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,30),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
+    loops=40;
+    x=nanmedian(AVMat(:,20:25,30),2);
+    z=nanmedian(AVMDMat(:,26:30),2);
+    xtest=linspace(nanmean(x)-nanstd(x),nanmean(x)+nanstd(x));
+    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops);
     
     figure; plot(xtest(2:end),testmean,'.')
     hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
@@ -415,9 +416,9 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
     print -dpng figures/NNF107Rho.png
     
-    
-    xtest=linspace(nanmean(FILLED(:,5))-nanstd(FILLED(:,5)),nanmean(FILLED(:,5))+nanstd(FILLED(:,5)));
-    [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,5),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
+    x=nanmedian(AVMat(:,20:25,5),2);
+    xtest=linspace(nanmean(x)-nanstd(x),nanmean(x)+nanstd(x));
+    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops);
     
     figure; plot(xtest(2:end),testmean,'.')
     hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
@@ -427,12 +428,14 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     print -dpng figures/NNBzRho.png
     
     outputs=[];
-    ytest=linspace(nanmean(FILLED(:,30))-nanstd(FILLED(:,30)),nanmean(FILLED(:,30))+nanstd(FILLED(:,30)));
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[5 30]),2),nanmedian(AVMDMat(:,26:30),2),xtest,ytest,1,loops);
+    y=nanmedian(AVMat(:,20:25,30),2);
+    ytest=linspace(nanmean(y)-nanstd(y),nanmean(y)+nanstd(y));
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[5 30]),2),z,xtest,ytest,1,loops);
     
     figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
     view(0,90); ylabel('F10.7'); xlabel('Bz'); colorbar
     title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
+    hold on; plot3(x,y,repmat(100,1,length(y)),'k.')
     print -dpng figures/NNF107BzRho.png
     
     figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
@@ -441,8 +444,9 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     print -dpng figures/NNF107BzRho-sd.png
     
     %Same thing but Vsw
-    xtest=linspace(nanmean(FILLED(:,6))-nanstd(FILLED(:,6)),nanmean(FILLED(:,6))+nanstd(FILLED(:,6)));
-    [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,6),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
+    x=nanmedian(AVMat(:,20:25,6),2);
+    xtest=linspace(nanmean(x)-nanstd(x),nanmean(x)+nanstd(x));
+    [testmean,testsd]=nnbehavior(x,y,xtest,1,loops);
     
     figure; plot(xtest(2:end),testmean,'.')
     hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
@@ -452,7 +456,8 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     print -dpng figures/NNVswRho.png
     
     outputs=[];
-    ytest=linspace(nanmean(FILLED(:,30))-nanstd(FILLED(:,30)),nanmean(FILLED(:,30))+nanstd(FILLED(:,30)));
+    y=nanmedian(AVMat(:,20:25,30),2);
+    ytest=linspace(nanmean(y)-nanstd(y),nanmean(y)+nanstd(y));
     [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[6 30]),2),nanmedian(AVMDMat(:,26:30),2),xtest,ytest,1,loops);
     
     figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
@@ -461,6 +466,7 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     xlabel('Vsw')
     title(sprintf('Mean predicted \rho_{eq} over %d loops',loops))
     colorbar
+    hold on; plot3(x,y,repmat(100,1,length(y)),'k.')
     print -dpng figures/NNF107VswRho.png
     
     figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
@@ -472,7 +478,7 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     print -dpng figures/NNF107VswRho-sd.png
     
     %Same thing but MLT
-     xtest=linspace(nanmean(FILLED(:,29))-nanstd(FILLED(:,29)),nanmean(FILLED(:,29))+nanstd(FILLED(:,29)));
+    xtest=linspace(0,24);
     
     [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,29),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
     
@@ -484,8 +490,9 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     print -dpng figures/NNMLTRho.png
     
     outputs=[];
-    ytest=linspace(nanmean(FILLED(:,30))-nanstd(FILLED(:,30)),nanmean(FILLED(:,30))+nanstd(FILLED(:,30)));
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[29 30]),2),nanmedian(AVMDMat(:,26:30),2),xtest,ytest,1,loops);
+    y=nanmedian(AVMat(:,20:25,30),2);
+    ytest=linspace(nanmean(y)-nanstd(y),nanmean(y)+nanstd(y));
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[29 30]),2),y,xtest,ytest,1,loops);
     
     figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
     view(0,90)
@@ -493,6 +500,7 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     xlabel('MLT')
     title(sprintf('Mean predicted \rho_{eq} over %d loops',loops))
     colorbar
+    hold on; plot3(x,y,repmat(100,1,length(y)),'k.')
     print -dpng figures/NNF107MLTRho.png
     
     figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
@@ -504,33 +512,39 @@ if(nnanalysis) %Because the nn validation and test sets vary so much in effectiv
     print -dpng figures/NNF107MLTRho-sd.png
 
     
-    PermNames={'Bz','Vsw','Dst','MLT','F107'};
-    PermCols=[5 6 15 29 30];
+    fprintf('Figures done. Doing table\n');
+    PermNames={'doy','Bz','Vsw','Dst','MLT','F107'};
+    PermCols=[2 5 6 15 29 30];
     
     table=fopen('NNtable.txt','w');
     fprintf(table,'<pre>\n');
     fprintf(table,'Vars \t \t  CCtr  NNtr  CCt   NNt   CCv   NNv\n');
-    Perms=combnk(1:5,1);
+    Perms=combnk(1:6,1);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s      \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end   
-    Perms=combnk(1:5,2);
+    Perms=combnk(1:6,2);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end    
-    Perms=combnk(1:5,3);
+    Perms=combnk(1:6,3);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end 
-    Perms=combnk(1:5,4);
+    Perms=combnk(1:6,4);
     for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
-        fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(:)),'+'),CCMs(:));
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
+        fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end
-    Perms=combnk(1:5,5);
+    Perms=combnk(1:6,5);
+    for i=1:length(Perms)
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
+        fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
+    end
+    Perms=combnk(1:6,6);
     CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
     fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(:)),'+'),CCMs(:));
     
