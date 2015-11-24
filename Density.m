@@ -402,121 +402,44 @@ if(LongTimeScale>1)
     AVMD2=nanmedian(AVMD2);
 end
 
-if(nnanalysis) %Because the nn validation and test sets vary so much in effectiveness, just do it a bunch and get the mean/sd
+if(nnanalysis) 
     loops=40;
+    disp('NN - Bz')
     x=nanmedian(AVMat(:,20:25,30),2);
     z=nanmedian(AVMDMat(:,26:30),2);
-    xtest=linspace(nanmean(x)-nanstd(x),nanmean(x)+nanstd(x));
-    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops);
-    
-    figure; plot(xtest(2:end),testmean,'.')
-    hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
-    xlabel('F_{10.7}')
-    ylabel('\rho_{eq}')
-    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
-    print -dpng figures/NNF107Rho.png
+    xtest=linspace(min(x),max(x));
+    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'F10.7','rho_eq'},satnum);
     
     x=nanmedian(AVMat(:,20:25,5),2);
-    xtest=linspace(nanmean(x)-nanstd(x),nanmean(x)+nanstd(x));
-    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops);
+    xtest=linspace(min(x),max(x));
+    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Bz','rho_eq'},satnum);
     
-    figure; plot(xtest(2:end),testmean,'.')
-    hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
-    xlabel('Bz')
-    ylabel('\rho_{eq}')
-    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
-    print -dpng figures/NNBzRho.png
-    
-    outputs=[];
-    y=nanmedian(AVMat(:,20:25,30),2);
-    ytest=linspace(nanmean(y)-nanstd(y),nanmean(y)+nanstd(y));
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[5 30]),2),z,xtest,ytest,1,loops);
-    
-    figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
-    view(0,90); ylabel('F10.7'); xlabel('Bz'); colorbar
-    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
-    hold on; plot3(x,y,repmat(100,1,length(y)),'k.')
-    print -dpng figures/NNF107BzRho.png
-    
-    figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
-    view(0,90); ylabel('F10.7'); xlabel('Bz'); colorbar
-    title(sprintf('Standard deviation of %d loops predicting \rho_{eq}',loops))
-    print -dpng figures/NNF107BzRho-sd.png
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[5 30]),2),z,1,loops,{'Bz','F10.7','rho_eq'},satnum);
+ 
     
     %Same thing but Vsw
+    disp('NN - Vsw')
     x=nanmedian(AVMat(:,20:25,6),2);
-    xtest=linspace(nanmean(x)-nanstd(x),nanmean(x)+nanstd(x));
-    [testmean,testsd]=nnbehavior(x,y,xtest,1,loops);
+    xtest=linspace(min(x),max(x));
+    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Vsw','rho_eq'},satnum);
     
-    figure; plot(xtest(2:end),testmean,'.')
-    hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
-    xlabel('Vsw')
-    ylabel('\rho_{eq}')
-    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
-    print -dpng figures/NNVswRho.png
-    
-    outputs=[];
-    y=nanmedian(AVMat(:,20:25,30),2);
-    ytest=linspace(nanmean(y)-nanstd(y),nanmean(y)+nanstd(y));
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[6 30]),2),nanmedian(AVMDMat(:,26:30),2),xtest,ytest,1,loops);
-    
-    figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
-    view(0,90)
-    ylabel('F10.7')
-    xlabel('Vsw')
-    title(sprintf('Mean predicted \rho_{eq} over %d loops',loops))
-    colorbar
-    hold on; plot3(x,y,repmat(100,1,length(y)),'k.')
-    print -dpng figures/NNF107VswRho.png
-    
-    figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
-    view(0,90)
-    ylabel('F10.7')
-    xlabel('Vsw')
-    title(sprintf('Standard deviation of %d loops predicting \rho_{eq}',loops))
-    colorbar
-    print -dpng figures/NNF107VswRho-sd.png
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[6 30]),2),z,1,loops,{'Vsw','F10.7','rho_eq'},satnum);
     
     %Same thing but MLT
+    disp('NN - MLT')
     xtest=linspace(0,24);
+    x=nanmedian(AVMat(:,20:25,29),2);
+    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'MLT','rho_eq'},satnum);
     
-    [testmean,testsd]=nnbehavior(nanmedian(AVMat(:,20:25,29),2),nanmedian(AVMDMat(:,26:30),2),xtest,1,loops);
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[29 30]),2),z,1,loops,{'MLT','F10.7','rho_eq'},satnum);
     
-    figure; plot(xtest(2:end),testmean,'.')
-    hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
-    xlabel('MLT')
-    ylabel('\rho_{eq}')
-    title(sprintf('Mean +- sd of %d loops predicting \rho_{eq}',loops))
-    print -dpng figures/NNMLTRho.png
-    
-    outputs=[];
-    y=nanmedian(AVMat(:,20:25,30),2);
-    ytest=linspace(nanmean(y)-nanstd(y),nanmean(y)+nanstd(y));
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[29 30]),2),y,xtest,ytest,1,loops);
-    
-    figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
-    view(0,90)
-    ylabel('F10.7')
-    xlabel('MLT')
-    title(sprintf('Mean predicted \rho_{eq} over %d loops',loops))
-    colorbar
-    hold on; plot3(x,y,repmat(100,1,length(y)),'k.')
-    print -dpng figures/NNF107MLTRho.png
-    
-    figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
-    view(0,90)
-    ylabel('F10.7')
-    xlabel('MLT')
-    title(sprintf('Standard deviation of %d loops predicting \rho_{eq}',loops))
-    colorbar
-    print -dpng figures/NNF107MLTRho-sd.png
 
-    
+    %Print correlations as table of linear vs neural net coefficients
     fprintf('Figures done. Doing table\n');
     PermNames={'doy','Bz','Vsw','Dst','MLT','F107'};
     PermCols=[2 5 6 15 29 30];
     
-    table=fopen('NNtable.txt','w');
+    table=fopen(sprintf('NNtable-GOES%d.txt',satnum),'w');
     fprintf(table,'<pre>\n');
     fprintf(table,'Vars \t \t  CCtr  NNtr  CCt   NNt   CCv   NNv\n');
     Perms=combnk(1:6,1);

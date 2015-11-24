@@ -1,9 +1,14 @@
-function [testmean, testsd, net] = nnbehavior(x,target,xtest,delays,loops)
+function [testmean, testsd] = nnbehavior(x,target,xtest,delays,loops,plotvars,satnum)
 if(nargin<4)
     delays=1;
     loops=10;
 elseif(nargin<5)
     loops=10;
+end
+
+plotv=0;
+if(exist('plotvars','var'))
+    plotv=1;
 end
 
 %Make column vectors
@@ -21,14 +26,18 @@ end
 x=Z(:,1:end-1);
 target=Z(:,end);
 
+xtest=linspace(nanmean(x)-nanstd(x),nanmean(x)+nanstd(x))'; %Only test across points still valid after culling
+
 hiddenLayerSize = 10;
 
 
-for loop=1:loops
+net=timedelaynet(1:delays,hiddenLayerSize);
+[testinputs,testinputStates,testlayerStates] = preparets(net,tonndata(xtest,false,false));
+outputs=zeros(loops,length(xtest)-1);
+
+parfor loop=1:loops
     net=timedelaynet(1:delays,hiddenLayerSize);
     [inputs,inputStates,layerStates,targets] = preparets(net,tonndata(x,false,false),tonndata(target,false,false));
-    
-    if(loop==1), [testinputs,testinputStates,testlayerStates] = preparets(net,tonndata(xtest,false,false)); end
     
     net.divideParam.trainRatio = 70/100;
     net.divideParam.valRatio = 15/100;  
@@ -46,5 +55,14 @@ if(loops>1)
 else
     testmean=squeeze(outputs);
     testsd=nan(size(testmean));
+end
+
+if(plotv)
+    figure; plot(xtest(2:end),testmean,'.')
+    hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
+    xlabel(plotvars{1})
+    ylabel(plotvars{2})
+    title(sprintf('Mean predicted %s over %d loops for GOES %d',plotvars{2},loops,satnum))
+    print('-dpng',sprintf('figures/NN%s-GOES%d.png',strjoin(plotvars,'-'),satnum))
 end
 
