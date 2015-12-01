@@ -43,9 +43,9 @@ else
     end
     
     OMNIDensity=FILLED(:,7);
-    OMNITime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
+    FILLEDTime=datenum(FILLED(:,1),1,0)+FILLED(:,2)+FILLED(:,3)/24;
     
-    save(filledname,'FILLED','headers','OMNIDensity','OMNITime');
+    save(filledname,'FILLED','headers','OMNIDensity','FILLEDTime');
 end
 
 
@@ -76,14 +76,16 @@ else
 end
 
 %Load F10.7 specifically 
-if(exist('OMNIF107.mat','file'))
-    load('OMNIF107.mat')
+if(exist('OMNIdata.mat','file'))
+    load('OMNIdata.mat')
 else
-    F107in=dlmread('omni2_1980_2000.lst');
-    F107time=datenum(F107in(:,1),1,F107in(:,2),F107in(:,3),0,0);
-    F107=F107in(:,5); %column 4 is dst
+    OMNIin=dlmread('data/omni2_12536.lst');
+    OMNIin(OMNIin==999.9)=NaN;
+    OMNITime=datenum(OMNIin(:,1),1,OMNIin(:,2),OMNIin(:,3),0,0);
+    F107=OMNIin(:,13); 
+    OMNIRho=OMNIin(:,7);
     F107(F107==999.9)=NaN;
-    save('OMNIF107','F107time','F107');
+    save('OMNIdata','OMNITime','F107','OMNIRho');
 end
 
 if(~exist('figures','dir'))
@@ -98,10 +100,10 @@ if(TakahashiCond), interpname=sprintf('%s_tak',interpname);end
 if(exist(sprintf('%s.mat',interpname),'file'))
     load(interpname)
 else
-    MassDensitySpline=interptest(DentonTime,MassDensity,OMNITime,(OMNITime(2)-OMNITime(1))/2);
-    MLTFit=interptest(DentonTime,MLT,OMNITime,(OMNITime(2)-OMNITime(1))/2);
-    AEFit=interptest(DentonTime,AE,OMNITime,(OMNITime(2)-OMNITime(1))/2);
-    %F107Spline=interptest(DentonTime,F107,OMNITime,(OMNITime(2)-OMNITime(1))/2);
+    MassDensitySpline=interptest(DentonTime,MassDensity,FILLEDTime,(FILLEDTime(2)-FILLEDTime(1))/2);
+    MLTFit=interptest(DentonTime,MLT,FILLEDTime,(FILLEDTime(2)-FILLEDTime(1))/2);
+    AEFit=interptest(DentonTime,AE,FILLEDTime,(FILLEDTime(2)-FILLEDTime(1))/2);
+    %F107Spline=interptest(DentonTime,F107,FILLEDTime,(FILLEDTime(2)-FILLEDTime(1))/2);
     MassDensitySpline=MassDensitySpline';
     %F107Spline=F107Spline';
     save(interpname,'MassDensitySpline','MLTFit','AEFit');%,'F107Spline');
@@ -109,16 +111,16 @@ end
 
 
 %Get everything onto the same time grid
-gettime=OMNITime>min(DentonTime);
-gettime=gettime+(OMNITime<max(DentonTime));
-gettime=gettime+(OMNITime<datenum(cutyears(2)+1,1,1)); %If user wants to cut down time range. Assuming they want entire end year
-gettime=gettime+(OMNITime>datenum(cutyears(1),1,1));
+gettime=FILLEDTime>min(DentonTime);
+gettime=gettime+(FILLEDTime<max(DentonTime));
+gettime=gettime+(FILLEDTime<datenum(cutyears(2)+1,1,1)); %If user wants to cut down time range. Assuming they want entire end year
+gettime=gettime+(FILLEDTime>datenum(cutyears(1),1,1));
 gettime=(gettime==4);
 
 
 
 %Move everything already created onto desired time grid
-OMNITime=OMNITime(gettime);
+FILLEDTime=FILLEDTime(gettime);
 OMNIDensity=OMNIDensity(gettime);
 FILLED=FILLED(gettime,:);
 MassDensitySpline=MassDensitySpline(gettime);
@@ -126,26 +128,28 @@ MLTFit=MLTFit(gettime);
 AEFit=AEFit(gettime);
 
 %Start and end year, for titles
-sy=str2num(datestr(OMNITime(1),10)); ey=str2num(datestr(OMNITime(end),10));
+sy=str2num(datestr(FILLEDTime(1),10)); ey=str2num(datestr(FILLEDTime(end),10));
 
-%Should only need to match it to OMNITime since OMNITime is already matched
+%Should only need to match it to FILLEDTime since FILLEDTime is already matched
 %to DentonTime at this point
-getFtime=F107time>=min(OMNITime);
-getFtime=getFtime+(F107time<=max(OMNITime));
+getFtime=OMNITime>=min(FILLEDTime);
+getFtime=getFtime+(OMNITime<=max(FILLEDTime));
 getFtime=(getFtime==2);
-F107time=F107time(getFtime);
+OMNITime=OMNITime(getFtime);
 F107=F107(getFtime);
+OMNIRho=OMNIRho(getFtime);
 
 
 
 %Find storm with enough data to analyze
-MassDensityNanSpline=interp1(OMNITime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),OMNITime,'linear');
+MassDensityNanSpline=interp1(FILLEDTime(~isnan(MassDensitySpline)),MassDensitySpline(~isnan(MassDensitySpline)),FILLEDTime,'linear');
 
 %FILLED=[FILLED F107Spline]; %When F107 is from Denton, use
 %interpolated version
-FILLED=[FILLED MLTFit F107];
+FILLED=[FILLED MLTFit F107 OMNIRho];
 headers{end+1}='MLT';
 headers{end+1}='F107';
+headers{end+1}='OMNIRho';
 
 yranges=zeros(4,4,2);
 yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230];
@@ -254,7 +258,7 @@ switch stormcase
         yr=2;
         MakeBinPlots=1;
     case 16 %AE Events
-        Hrs=hour(OMNITime);
+        Hrs=hour(FILLEDTime);
         for i=1:24
             avrhos(i)=nanmedian(AEFit(Hrs==(i-1)));
         end
@@ -334,7 +338,7 @@ end
 
 %Remove F10.7 influence
 if(removef107)
-    [~, ~, ~,xnew,~] = IR(MassDensitySpline,FILLED(:,end),0,1,0,0); %Remove F10.7 
+    [~, ~, ~,xnew,~] = IR(MassDensitySpline,FILLED(:,30),0,1,0,0); %Remove F10.7 
     MassDensitySplineOriginal=MassDensitySpline;
     MassDensitySpline=MassDensitySpline-xnew;
 end
@@ -433,30 +437,54 @@ if(nnanalysis)
     
     [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[29 30]),2),z,1,loops,{'MLT','F10.7','rho_eq'},satnum);
     
+    %DST
+    disp('NN - Dst')
+    x=nanmedian(AVMat(:,20:25,15),2);
+    xtest=linspace(min(x),max(x));
+    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Dst','rho_eq'},satnum);
+    
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[15 30]),2),z,1,loops,{'Dst','F10.7','rho_eq'},satnum);
+    
+    %Doy
+    disp('NN - Doy')
+    x=nanmedian(AVMat(:,20:25,2),2);
+    xtest=linspace(1,365);
+    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Doy','rho_eq'},satnum);
+    
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[2 30]),2),z,1,loops,{'Doy','F10.7','rho_eq'},satnum);
+    
+    %Rhosw
+    disp('NN - Rhosw')
+    x=nanmedian(AVMat(:,20:25,31),2);
+    xtest=linspace(min(x),max(x));
+    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Rhosw','rho_eq'},satnum);
+    
+    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[31 30]),2),z,1,loops,{'Rhosw','F10.7','rho_eq'},satnum);
 
     %Print correlations as table of linear vs neural net coefficients
     fprintf('Figures done. Doing table\n');
-    PermNames={'doy','Bz','Vsw','Dst','MLT','F107'};
-    PermCols=[2 5 6 15 29 30];
+    PermNames={'doy','Bz','Vsw','Dst','MLT','F107','Rhosw'};
+    PermCols=[2 5 6 15 29 30 31];
     
     table=fopen(sprintf('NNtable-GOES%d.txt',satnum),'w');
     fprintf(table,'<pre>\n');
     fprintf(table,'Vars \t \t  CCtr  NNtr  CCt   NNt   CCv   NNv\n');
-    Perms=combnk(1:6,1);
+    Perms=combnk(1:7,1);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s      \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end   
-    Perms=combnk(1:6,2);
+    Perms=combnk(1:7,2);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end    
-    Perms=combnk(1:6,3);
+    Perms=combnk(1:7,3);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end 
+    %{
     Perms=combnk(1:6,4);
     for i=1:length(Perms)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
@@ -467,7 +495,8 @@ if(nnanalysis)
         CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
         fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end
-    Perms=combnk(1:6,6);
+    %}
+    Perms=combnk(1:7,7);
     CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
     fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(:)),'+'),CCMs(:));
     
@@ -476,8 +505,8 @@ end
 
 %Compare the two densities
 if(MakePlots)
-    h=figure('Visible',visible); plot(OMNITime,MassDensitySpline);hold on; 
-    plot(OMNITime,OMNIDensity,'r')
+    h=figure('Visible',visible); plot(FILLEDTime,MassDensitySpline);hold on; 
+    plot(FILLEDTime,OMNIDensity,'r')
     legend('Denton','OMNI','Location','NorthEast')
     title('OMNI Density vs Denton Density')
     ylabel('Density')
@@ -502,9 +531,9 @@ end
 %Showing 'detrending' by removing F10.7 influencex`
 if(MakePaperPlots && removef107)
     h=figure('Visible',visible);
-    %plot(OMNITime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal)),'-')
-    plot(OMNITime,MassDensitySplineOriginal,'r.')
-    hold on; plot(OMNITime,MassDensitySpline,'b.')
+    %plot(FILLEDTime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal)),'-')
+    plot(FILLEDTime,MassDensitySplineOriginal,'r.')
+    hold on; plot(FILLEDTime,MassDensitySpline,'b.')
     legend('Original','F_{10.7} Removed');
     ylabel('\rho_{eq} (amu/cm^3)')
     xlabel('Year')
@@ -529,13 +558,13 @@ end
 if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     orient tall;
-    h1=subplot('position',subplotstack(5,1));plot(OMNITime,FILLED(:,5),'.'); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %Bz
-    h2=subplot('position',subplotstack(5,2));plot(OMNITime,FILLED(:,6),'.'); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); ylim([300,900]);%V_sw
-    h3=subplot('position',subplotstack(5,3));plot(OMNITime,FILLED(:,15),'.');text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); ylim([-300,100]);
-    hold on; plot([OMNITime(1) OMNITime(end)],[-40 -40],'r-.','LineWidth',4); hold off;
-    h4=subplot('position',subplotstack(5,4));plot(OMNITime,FILLED(:,30),'.');text(0.01,0.9,'F_{10.7} (s.f.u.)','Units','normalized','FontSize',14); %f107
-    h5=subplot('position',subplotstack(5,5));plot(OMNITime,MassDensitySpline,'r.');text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14);%f107
-    hold on; plot([OMNITime(1) OMNITime(end)],[40 40],'b-.','LineWidth',4);
+    h1=subplot('position',subplotstack(5,1));plot(FILLEDTime,FILLED(:,5),'.'); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %Bz
+    h2=subplot('position',subplotstack(5,2));plot(FILLEDTime,FILLED(:,6),'.'); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); ylim([300,900]);%V_sw
+    h3=subplot('position',subplotstack(5,3));plot(FILLEDTime,FILLED(:,15),'.');text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); ylim([-300,100]);
+    hold on; plot([FILLEDTime(1) FILLEDTime(end)],[-40 -40],'r-.','LineWidth',4); hold off;
+    h4=subplot('position',subplotstack(5,4));plot(FILLEDTime,FILLED(:,30),'.');text(0.01,0.9,'F_{10.7} (s.f.u.)','Units','normalized','FontSize',14); %f107
+    h5=subplot('position',subplotstack(5,5));plot(FILLEDTime,MassDensitySpline,'r.');text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14);%f107
+    hold on; plot([FILLEDTime(1) FILLEDTime(end)],[40 40],'b-.','LineWidth',4);
     set(findobj('type','axes'),'xticklabel',{[]});
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
     axis tight;
@@ -620,11 +649,11 @@ if(MakePaperPlots && MakeBinPlots)
     end
     
     %plot dst, sort by f10.7
-    binplot(AVMat(:,:,15),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'D_{st}';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],satnum,visible);
+    binplot(AVMat(:,:,15),FILLED(:,30),starti,timewidth,LongTimeScale,plotthresh,{'D_{st}';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],satnum,visible);
     %plot rho, sort f10.7
-    binplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],satnum,visible);
+    binplot(AVMDMat(:,:),FILLED(:,30),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],satnum,visible);
     %plot Bz, sort f10.7
-    binplot(AVMat(:,:,5),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],satnum,visible);
+    binplot(AVMat(:,:,5),FILLED(:,30),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'F_{10.7}';stormtype},{'nT';'s.f.u';stormunits},[sy; ey],satnum,visible);
     %plot Bz, sort rho
     binplot(AVMat(:,:,5),MassDensitySpline,starti,timewidth,LongTimeScale,plotthresh,{'B_z';'\rho_{eq}';stormtype},{'nT';'amu/cm^3';stormunits},[sy; ey],satnum,visible);
     %plot rho, sort dst
@@ -657,7 +686,7 @@ if(MakePaperPlots && MakeDstThreshPlot)
             stormi=stormi+1;
         end
         plotthresh=sprintf('< %d',DC);
-        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],satnum,visible); 
+        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,30),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],satnum,visible); 
         numevents(DCi)=length(starti);
         DCi=DCi+1;
         
@@ -708,7 +737,7 @@ if(MakePaperPlots && MakeRandThreshPlot)
             stormi=stormi+1;
         end
         plotthresh=sprintf('< %d',DC);
-        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,end),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],satnum,visible); 
+        [s(DCi),st(DCi)]=twobinplot(AVMDMat(:,:),FILLED(:,30),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'F_{10.7}';stormtype},{'amu/cm^3';'s.f.u';stormunits},[sy; ey],satnum,visible); 
         numevents(DCi)=length(starti);
         DCi=DCi+1;
         
@@ -803,21 +832,21 @@ end
 
 %DST vs rho_eq for 1 hour and 1 day
 if(MakePaperPlots && stormcase==1) 
-    F107Day=interptest(OMNITime,FILLED(:,end),OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
-    MDDay=interptest(OMNITime,MassDensitySpline',OMNITime(1):24*(OMNITime(2)-OMNITime(1)):OMNITime(end));
-    F10727Day=interptest(OMNITime,FILLED(:,end),OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end));
-    MD27Day=interptest(OMNITime,MassDensitySpline',OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end));
+    F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end));
+    MDDay=interptest(FILLEDTime,MassDensitySpline',FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end));
+    F10727Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*27*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end));
+    MD27Day=interptest(FILLEDTime,MassDensitySpline',FILLEDTime(1):24*27*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end));
     
     h=figure('Visible',visible);
     
-    plot(FILLED(~isnan(MassDensitySpline),end),log10(MassDensitySpline(~isnan(MassDensitySpline))),'.','MarkerSize',3);
+    plot(FILLED(~isnan(MassDensitySpline),30),log10(MassDensitySpline(~isnan(MassDensitySpline))),'.','MarkerSize',3);
     hold on;
     plot(F107Day,log10(MDDay),'r.','MarkerSize',8);    
     plot(F10727Day,log10(MD27Day),'go','LineWidth',1.5,'MarkerSize',12) ;
     xlabel('F_{10.7} (s.f.u.)','FontSize',16)
     ylabel('log(\rho_{eq}) (amu/cm^3)','FontSize',16)
     
-    cc1=corrcoef(FILLED(~isnan(MassDensitySpline),end),log10(MassDensitySpline(~isnan(MassDensitySpline))),'rows','pairwise');
+    cc1=corrcoef(FILLED(~isnan(MassDensitySpline),30),log10(MassDensitySpline(~isnan(MassDensitySpline))),'rows','pairwise');
     cc1=cc1(1,2);
     cc2=corrcoef(F107Day,log10(MDDay),'rows','pairwise');
     cc2=cc2(1,2);
@@ -834,8 +863,8 @@ end
 
 if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
-    NewTime=OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end);
-    [AX,H1,H2]=plotyy(NewTime,interptest(OMNITime,FILLED(:,end),NewTime),NewTime,log10(interptest(OMNITime,MassDensitySpline',NewTime)),'plot','plot');
+    NewTime=FILLEDTime(1):24*27*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end);
+    [AX,H1,H2]=plotyy(NewTime,interptest(FILLEDTime,FILLED(:,30),NewTime),NewTime,log10(interptest(FILLEDTime,MassDensitySpline',NewTime)),'plot','plot');
     set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
     ylim(AX(2),[0.5,1.5])
     ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'log(\rho_{eq\_27d})');
@@ -908,7 +937,7 @@ end
 if(MakePlots)
     NanPH=zeros(1,24);
     for i=0:23
-        NanPH(i+1)=sum(isnan(MassDensitySpline(hour(OMNITime)==i)));
+        NanPH(i+1)=sum(isnan(MassDensitySpline(hour(FILLEDTime)==i)));
     end
     plot(0:23,NanPH);
     ylabel('Nans per hour')
@@ -1022,7 +1051,7 @@ DOverlayFilled=[OverlayDBS, OverlayF107, log(OverlayF107), OverlayDBz];
 if(MakePlots && ~exist(sprintf('figures/OMNI_%s.png',headers{1}),'file'))
     for i=1:length(headers)
         close all;
-        h=figure('Visible',visible);plot(OMNITime,FILLED(:,i))
+        h=figure('Visible',visible);plot(FILLEDTime,FILLED(:,i))
         datetick
         ylabel(headers{i})
         xlabel('Time')
@@ -1080,10 +1109,10 @@ for i=1:length(headers)
         [~, cb, ~,xnew,corr] = IR(x,f,Na,Nb,lag,advance);
     end
     pe1=pe_nonflag(x,xnew1);
-    if(MakePlots), densityplot(OMNITime,[x,xnew1,OverlayFilled(:,i)],headers{i},Na,Nb1,corr1,pe1,visible), end
+    if(MakePlots), densityplot(FILLEDTime,[x,xnew1,OverlayFilled(:,i)],headers{i},Na,Nb1,corr1,pe1,visible), end
     pe=pe_nonflag(x,xnew);
     BigTable=[BigTable;{headers{i},corr1,corr,pe1,pe}];
-    if(MakePlots), densityplot(OMNITime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe,visible), end
+    if(MakePlots), densityplot(FILLEDTime,[x,xnew,OverlayFilled(:,i)],headers{i},Na,Nb,corr,pe,visible), end
     if(MakePlots), densitycoefplot(-advance:Nb-advance-1,flipud(cb),headers{i},Na,Nb,corr,pe,visible), end
 end
 

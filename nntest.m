@@ -60,7 +60,7 @@ for loop=1:loops
     if(max(tr.testInd)>=length(y)), tr.testInd(end)=[]; end
     if(max(tr.valInd)>=length(y)), tr.valInd(end)=[]; end
     
-    Ztr=[x(tr.trainInd,:) y(tr.trainInd+1)];
+    Ztr=[x(tr.trainInd,:) ones(length(tr.trainInd),1) y(tr.trainInd+1)];
     %{
 for col=1:min(size(Ztr))
     Ztr(isnan(Ztr(:,col)),:)=[];
@@ -70,7 +70,7 @@ end
     cctr=corrcoef(Ztr(:,1:end-1)*coef,Ztr(:,end)); cctr=cctr(1,2);
     nntr=corrcoef(fromnndata(targets(tr.trainInd),1,0,0),fromnndata(outputs(tr.trainInd),1,0,0),'rows','pairwise'); nntr=nntr(1,2);
     
-    Zt=[x(tr.testInd,:) y(tr.testInd+1)];
+    Zt=[x(tr.testInd,:) ones(length(tr.testInd),1) y(tr.testInd+1)];
     for col=1:min(size(Zt))
         Zt(isnan(Zt(:,col)),:)=[];
     end
@@ -78,7 +78,7 @@ end
     cct=corrcoef(Zt(:,1:end-1)*coef,Zt(:,end)); cct=cct(1,2);
     nnt=corrcoef(fromnndata(targets(tr.testInd),1,0,0),fromnndata(outputs(tr.testInd),1,0,0),'rows','pairwise'); nnt=nnt(1,2);
     
-    Zv=[x(tr.valInd,:) y(tr.valInd+1)];
+    Zv=[x(tr.valInd,:) ones(length(tr.valInd),1) y(tr.valInd+1)];
     for col=1:min(size(Zv))
         Zv(isnan(Zv(:,col)),:)=[];
     end

@@ -79,12 +79,17 @@ if(plotv)
     [Zx, Zy]=meshgrid(xtest,ytest);
     Z=Zx.*coef(1)+Zy.*coef(2)+1.*coef(3);
     figure;
-    surf(xtest,ytest,Z)
+    surf(xtest,ytest,Z,'EdgeColor','none','LineStyle','none','FaceLighting','phong')
     view(0,90)
     ylabel(plotvars{2})
     xlabel(plotvars{1})
+    if(strcmp(plotvars{1},'Bz'))
     xlim([-10,10])
+    elseif(strcmp(plotvars{1},'Vsw'))
+       xlim([200 800]) 
+    end
     zlim([0,50])
+    caxis([0 50])
     title(sprintf('Linear predicted %s over %d loops with GOES %d',plotvars{3},loops,satnum))
     colorbar
     hold on; scatter3(x(:,1),x(:,2),repmat(50,1,length(x(:,1))),target,'k')
