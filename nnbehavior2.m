@@ -40,7 +40,9 @@ for loop=1:loops
     net.divideParam.valRatio = 15/100;  
     net.divideParam.testRatio = 15/100;
     net.trainParam.showWindow=0;
-    net = train(net,inputs,targets,inputStates,layerStates); 
+    [net, tr] = train(net,inputs,targets,inputStates,layerStates); 
+    
+    coefs(:,loop)=[x(tr.trainInd,:) ones(length(tr.trainInd),1)]\target(tr.trainInd);
     
     parfor yloop=1:length(ytest)
         [testinputs,testinputStates,testlayerStates] = preparets(net,tonndata([xtest ones(length(xtest),1).*ytest(yloop)],0,0) ); 
@@ -76,8 +78,10 @@ if(plotv)
     print('-dpng',sprintf('figures/NN%s-sd-GOES%d.png',strjoin(plotvars,'-'),satnum))
     
     coef=[x ones(length(x),1)]\target;
+    coef=nanmedian(coefs,2);
     [Zx, Zy]=meshgrid(xtest,ytest);
     Z=Zx.*coef(1)+Zy.*coef(2)+1.*coef(3);
+    cc=corrcoef([x ones(length(x),1)]*coef,target);
     figure;
     surf(xtest,ytest,Z,'EdgeColor','none','LineStyle','none','FaceLighting','phong')
     view(0,90)
@@ -88,11 +92,14 @@ if(plotv)
     elseif(strcmp(plotvars{1},'Vsw'))
        xlim([200 800]) 
     end
-    zlim([0,50])
+    if(strcmp(plotvars{2},'F10.7'))
+        ylim([50 350])
+    end
+    zlim([0,500])
     caxis([0 50])
-    title(sprintf('Linear predicted %s over %d loops with GOES %d',plotvars{3},loops,satnum))
+    title(sprintf('Linear predicted %s over %d loops with GOES %d - CC%2.2f',plotvars{3},loops,satnum,cc(1,2)))
     colorbar
-    hold on; scatter3(x(:,1),x(:,2),repmat(50,1,length(x(:,1))),target,'k')
+    hold on; scatter3(x(:,1),x(:,2),repmat(500,1,length(x(:,1))),target,'k')
     print('-dpng',sprintf('figures/Linear%s-GOES%d.png',strjoin(plotvars,'-'),satnum))
     
 end

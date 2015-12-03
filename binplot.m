@@ -39,7 +39,8 @@ hold on; plot(xa,HighMatBars,'b-.'); plot(xa,LowMatBars,'c-.');
 ylabel(sprintf('%s (%s)',plotname,plotunits))
 xlabel('Time from start of event (hour)')
 set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
-legend(sprintf('%s>%2.0f',sortname,highsplit),sprintf('%2.0f>%s>%2.0f',highsplit,sortname,medsplit),sprintf('%2.0f>%s>%2.0f',medsplit,sortname,lowsplit),sprintf('%2.0f>%s',lowsplit,sortname),'Location','NorthEast');
+[~,objh]=legend(sprintf('%s>%2.0f',sortname,highsplit),sprintf('%2.0f>%s>%2.0f',highsplit,sortname,medsplit),sprintf('%2.0f>%s>%2.0f',medsplit,sortname,lowsplit),sprintf('%2.0f>%s',lowsplit,sortname),'Location','NorthEast');
+set(objh,'linewidth',2);
 title(sprintf('%d evenly-binned events of %s %s (%s) for GOES%d: %d-%d',length(events),eventname,plotthresh,eventunits,satnum,timerange(1),timerange(2)))
 print('-depsc2','-r200',sprintf('paperfigures/HighLow%s%s-%s%s-GOES%d-%d-%d.eps',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
 print('-dpng','-r200',sprintf('paperfigures/PNGs/HighLow%s%s-%s%s-GOES%d-%d-%d.png',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
@@ -51,7 +52,8 @@ if(sum(sum(isnan(plotter)))) %If any nan points
     plot(xa,sum(~isnan(plotter(sorter(events)>medsplit & sorter(events)<highsplit,:))),'g')
     plot(xa,sum(~isnan(plotter(sorter(events)<medsplit & sorter(events)>lowsplit,:))),'r')
     plot(xa,sum(~isnan(plotter(sorter(events)<lowsplit,:))),'c')
-    legend(sprintf('%s>%2.0f',sortname,highsplit),sprintf('%2.0f>%s>%2.0f',highsplit,sortname,medsplit),sprintf('%2.0f>%s>%2.0f',medsplit,sortname,lowsplit),sprintf('%2.0f>%s',lowsplit,sortname),'Location','NorthEast');
+    [~,objh]=legend(sprintf('%s>%2.0f',sortname,highsplit),sprintf('%2.0f>%s>%2.0f',highsplit,sortname,medsplit),sprintf('%2.0f>%s>%2.0f',medsplit,sortname,lowsplit),sprintf('%2.0f>%s',lowsplit,sortname),'Location','NorthEast');
+    set(objh,'linewidth',2);
     xlabel('Time from start of event (hour)')
     ylabel('Valid hourly data points')
     title(sprintf('%d evenly-binned events of %s %s (%s) for GOES%d: %d-%d',length(events),eventname,plotthresh,eventunits,satnum,timerange(1),timerange(2)))

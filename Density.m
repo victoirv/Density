@@ -412,54 +412,54 @@ if(nnanalysis)
     x=nanmedian(AVMat(:,20:25,30),2);
     z=nanmedian(AVMDMat(:,26:30),2);
     xtest=linspace(min(x),max(x));
-    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'F10.7','rho_eq'},satnum);
+    nnbehavior(x,z,xtest,1,loops,{'F10.7','rho_eq'},satnum);
     
     x=nanmedian(AVMat(:,20:25,5),2);
     xtest=linspace(min(x),max(x));
-    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Bz','rho_eq'},satnum);
+    nnbehavior(x,z,xtest,1,loops,{'Bz','rho_eq'},satnum);
     
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[5 30]),2),z,1,loops,{'Bz','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:25,[5 30]),2),z,1,loops,{'Bz','F10.7','rho_eq'},satnum);
  
     
     %Same thing but Vsw
     disp('NN - Vsw')
     x=nanmedian(AVMat(:,20:25,6),2);
     xtest=linspace(min(x),max(x));
-    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Vsw','rho_eq'},satnum);
+    nnbehavior(x,z,xtest,1,loops,{'Vsw','rho_eq'},satnum);
     
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[6 30]),2),z,1,loops,{'Vsw','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:25,[6 30]),2),z,1,loops,{'Vsw','F10.7','rho_eq'},satnum);
     
     %Same thing but MLT
     disp('NN - MLT')
     xtest=linspace(0,24);
     x=nanmedian(AVMat(:,20:25,29),2);
-    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'MLT','rho_eq'},satnum);
+    nnbehavior(x,z,xtest,1,loops,{'MLT','rho_eq'},satnum);
     
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[29 30]),2),z,1,loops,{'MLT','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:25,[29 30]),2),z,1,loops,{'MLT','F10.7','rho_eq'},satnum);
     
     %DST
     disp('NN - Dst')
     x=nanmedian(AVMat(:,20:25,15),2);
     xtest=linspace(min(x),max(x));
-    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Dst','rho_eq'},satnum);
+    nnbehavior(x,z,xtest,1,loops,{'Dst','rho_eq'},satnum);
     
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[15 30]),2),z,1,loops,{'Dst','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:25,[15 30]),2),z,1,loops,{'Dst','F10.7','rho_eq'},satnum);
     
     %Doy
     disp('NN - Doy')
     x=nanmedian(AVMat(:,20:25,2),2);
     xtest=linspace(1,365);
-    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Doy','rho_eq'},satnum);
+    nnbehavior(x,z,xtest,1,loops,{'Doy','rho_eq'},satnum);
     
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[2 30]),2),z,1,loops,{'Doy','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:25,[2 30]),2),z,1,loops,{'Doy','F10.7','rho_eq'},satnum);
     
     %Rhosw
     disp('NN - Rhosw')
     x=nanmedian(AVMat(:,20:25,31),2);
     xtest=linspace(min(x),max(x));
-    [testmean,testsd]=nnbehavior(x,z,xtest,1,loops,{'Rhosw','rho_eq'},satnum);
+    nnbehavior(x,z,xtest,1,loops,{'Rhosw','rho_eq'},satnum);
     
-    [testmean,testsd]=nnbehavior2(nanmedian(AVMat(:,20:25,[31 30]),2),z,1,loops,{'Rhosw','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:25,[31 30]),2),z,1,loops,{'Rhosw','F10.7','rho_eq'},satnum);
 
     %Print correlations as table of linear vs neural net coefficients
     fprintf('Figures done. Doing table\n');
@@ -505,7 +505,7 @@ end
 
 %Compare the two densities
 if(MakePlots)
-    h=figure('Visible',visible); plot(FILLEDTime,MassDensitySpline);hold on; 
+    figure('Visible',visible); plot(FILLEDTime,MassDensitySpline);hold on; 
     plot(FILLEDTime,OMNIDensity,'r')
     legend('Denton','OMNI','Location','NorthEast')
     title('OMNI Density vs Denton Density')
@@ -530,7 +530,7 @@ end
 
 %Showing 'detrending' by removing F10.7 influencex`
 if(MakePaperPlots && removef107)
-    h=figure('Visible',visible);
+    figure('Visible',visible);
     %plot(FILLEDTime,MassDensitySplineOriginal-(MassDensitySpline-nanmean(MassDensitySplineOriginal)),'-')
     plot(FILLEDTime,MassDensitySplineOriginal,'r.')
     hold on; plot(FILLEDTime,MassDensitySpline,'b.')
@@ -586,10 +586,11 @@ if(MakePaperPlots && stormcase==1)
     print -depsc2 -r200 paperfigures/allstorms.eps
     print -dpng -r200 paperfigures/PNGs/allstorms.png
     
+    avrhos=zeros(1,24);
     for i=1:24
         avrhos(i)=nanmedian(MassDensity(round(MLT)==(i-1)));
     end
-    h=figure('Visible',visible);
+    figure('Visible',visible);
     plot(0:23,avrhos,'+-')
     ylabel('Median \rho_{eq} (amu/cm^3)')
     xlabel('MLT (hour)')
@@ -612,7 +613,7 @@ if(MakePaperPlots && stormcase==1)
     for i=1:24
         avrhos(i)=nanmedian(AE(DHr==(i-1)));
     end
-    h=figure('Visible',visible);
+    figure('Visible',visible);
     plot(0:23,avrhos,'+-')
     ylabel('Median AE (nT)')
     xlabel('Local Time (hour)')
@@ -623,7 +624,7 @@ if(MakePaperPlots && stormcase==1)
     for i=1:24
         avrhos(i)=nanmedian(FILLED(FILLED(:,3)==(i-1),15));
     end
-    h=figure('Visible',visible);
+    figure('Visible',visible);
     plot(0:23,avrhos,'+-')
     ylabel('Median D_{st} (nT)')
     xlabel('Local Time (hour)')

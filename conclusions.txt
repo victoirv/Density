@@ -1,0 +1,9 @@
+1. Takahashi 2006 shows a KP dependence on average ion mass that only shows up when taking daily averages. We show the related quantities Dst and mass density have no such dependence at 1 day averages
+
+2. Takahashi 2010 shows a mass density spike following a Dst drop for mid-high F10.7 values(His Fig10). We confirmed this for 3 of 4 satellites looked at(My Fig21-22). We also showed this trend does not show up as significantly when looking at all Dst drops disregarding F10.7, despite the same paper showing it does in an epoch analysis of 1989-1991 (His Fig11, my Fig 3a)
+
+3. General trends are seen when modelling the entire data space and predicted a grid of points. Namely: Higher mass density correlates with higher F10.7 values, positive Bz, and larger solar wind densities.
+
+4. The difference between mass density in high F10.7 events and low F10.7 events increases as the threshold for a Dst "event" gets more negative for all satellites except GOES 7.
+
+5. We found multiple data biases that may or may not impact results (untested). AE values exist predominantly at post-noon UT hours, as well as having larger values post-noon. Median mass density peaks around 6 LT, and 23 MLT. All data have issues with availability, and corresponding plots are included where appropriate and relevant.
