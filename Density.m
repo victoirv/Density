@@ -70,9 +70,10 @@ else
     DBS=1/2*IN(uniquerows,32).*(abs(DBz)-DBz);
     AE=IN(uniquerows,12);
     MLT=IN(uniquerows,8);
-    MassDensity=IN(uniquerows,88);
+    MassDensity=IN(uniquerows,85); %85 is at magnetic equator, 88 is at spacecraft
+    M=IN(uniquerows,85)./IN(uniquerows,65); %65 is nei_n or electron density topside ionosphere
     
-    save(sprintf('DentonDensityAndTime_%d',satnum),'DentonTime','MassDensity','DBz','MLT','DBS','DVsw','AE');
+    save(sprintf('DentonDensityAndTime_%d',satnum),'DentonTime','MassDensity','DBz','MLT','DBS','DVsw','AE','M');
 end
 
 %Load F10.7 specifically 
@@ -103,10 +104,11 @@ else
     MassDensitySpline=interptest(DentonTime,MassDensity,FILLEDTime,(FILLEDTime(2)-FILLEDTime(1))/2);
     MLTFit=interptest(DentonTime,MLT,FILLEDTime,(FILLEDTime(2)-FILLEDTime(1))/2);
     AEFit=interptest(DentonTime,AE,FILLEDTime,(FILLEDTime(2)-FILLEDTime(1))/2);
+    MFit=interptest(DentonTime,M,FILLEDTime,(FILLEDTime(2)-FILLEDTime(1))/2);
     %F107Spline=interptest(DentonTime,F107,FILLEDTime,(FILLEDTime(2)-FILLEDTime(1))/2);
     MassDensitySpline=MassDensitySpline';
     %F107Spline=F107Spline';
-    save(interpname,'MassDensitySpline','MLTFit','AEFit');%,'F107Spline');
+    save(interpname,'MassDensitySpline','MLTFit','AEFit','MFit');%,'F107Spline');
 end
 
 
@@ -126,6 +128,7 @@ FILLED=FILLED(gettime,:);
 MassDensitySpline=MassDensitySpline(gettime);
 MLTFit=MLTFit(gettime);
 AEFit=AEFit(gettime);
+MFit=MFit(gettime);
 
 %Start and end year, for titles
 sy=str2num(datestr(FILLEDTime(1),10)); ey=str2num(datestr(FILLEDTime(end),10));
@@ -146,10 +149,11 @@ MassDensityNanSpline=interp1(FILLEDTime(~isnan(MassDensitySpline)),MassDensitySp
 
 %FILLED=[FILLED F107Spline]; %When F107 is from Denton, use
 %interpolated version
-FILLED=[FILLED MLTFit F107 OMNIRho];
+FILLED=[FILLED MLTFit F107 OMNIRho MFit];
 headers{end+1}='MLT';
 headers{end+1}='F107';
 headers{end+1}='OMNIRho';
+headers{end+1}='M';
 
 yranges=zeros(4,4,2);
 yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230];
@@ -525,6 +529,59 @@ if(MakePaperPlots && LongTimeScale==24 && stormcase==10)
     ylabel('\rho_{eq} (amu/cm^3)')
     legend('Block median','MoM storm, day','MoM day, storm')
     print -depsc2 -r200 paperfigures/blockmedian.eps
+end
+
+%Tak2006 Fig 10 Kp vs M
+if(MakePaperPlots && stormcase==1)
+   figure('Visible',visible);
+   subplot(311)
+   x=starti;y=starti;
+   for i=1:length(starti)
+    x(i)=nanmedian(FILLED(starti(i)-3:starti(i),13) );
+    y(i)=nanmean(FILLED(starti(i)-3:starti(i),32).*exp(-(3:-1:0)./3)');
+   end
+   plot(x,y,'.'); %KP vs M
+   bins=unique(x); ymid=bins; ysd=bins;
+   for i=1:length(bins)
+       ymid(i)=nanmedian(y(x==bins(i)));
+       ysd(i)=nanstd(y(x==bins(i)));
+   end
+   hold on; plot(bins, ymid,'r-.','MarkerSize',10); plot(bins, ymid-ysd,'k-.','MarkerSize',10); plot(bins, ymid+ysd,'k-.','MarkerSize',10);
+   title(sprintf('%d events from GOES-%d, %d-%d',length(~isnan(y)),satnum,sy,ey))
+   legend('3 hour means')
+   
+   subplot(312) %Go from 1 hour to 1 day
+   for i=1:length(starti)
+    x(i)=nanmedian(FILLED(starti(i)-24:starti(i),13));
+    y(i)=nanmean(FILLED(starti(i)-24:starti(i),32).*exp(-(24:-1:0)./24)');
+   end
+   plot(x,y,'.');
+   bins=unique(x); ymid=bins; ysd=bins;
+   for i=1:length(bins)
+       ymid(i)=nanmedian(y(x==bins(i)));
+       ysd(i)=nanstd(y(x==bins(i)));
+   end
+   hold on; plot(bins, ymid,'r-.','MarkerSize',10); plot(bins, ymid-ysd,'k-.','MarkerSize',10); plot(bins, ymid+ysd,'k-.','MarkerSize',10);
+   legend('1 day means')
+   
+   subplot(313) %1 hour to 3 days
+   for i=1:length(starti)
+    x(i)=nanmedian(FILLED(starti(i)-24*3:starti(i),13));
+    y(i)=nanmean(FILLED(starti(i)-24*3:starti(i),32).*exp(-(24*3:-1:0)./(24*3))');
+   end
+   plot(x,y,'.');
+   bins=unique(x); ymid=bins; ysd=bins;
+   for i=1:length(bins)
+       ymid(i)=nanmedian(y(x==bins(i)));
+       ysd(i)=nanstd(y(x==bins(i)));
+   end
+   hold on; plot(bins, ymid,'r-.','MarkerSize',10); plot(bins, ymid-ysd,'k-.','MarkerSize',10); plot(bins, ymid+ysd,'k-.','MarkerSize',10);
+   xlabel('Kp')
+   ylabel('M (amu)')
+   legend('3 day means')
+   
+   print -depsc2 -r200 paperfigures/KpvsM.eps
+   
 end
 
 

@@ -16,7 +16,7 @@
 \fancyhead[L]{}
 
 \begin{document}
-\title{Relationship between solar wind, $D_{st}$, and plasmasphere trough mass density on one-hour time scales}
+\title{Relationship between solar wind, $D_{st}$, and plasmasphere mass density on one-hour time scales}
 \author{
 Victoir Veibell\footnote{vveibell@gmu.edu}
 \and
@@ -48,13 +48,13 @@ This paper compares various magnetosphere conditions around the onset of geomagn
 
 \section{Introduction}
 
-\cite{Takahashi2006} estimated magnetospheric mass density using measurements from the CRRES satellite during a 73-day period and 1991 and found that the average ion mass density, $M=\rho/n_e$, correlated with geomagnetic activity, with lower $D_{st}$ values corresponding to slightly higher average ion mass densities.  They also found a relationship between the average ion mass and 1.5- and 3-day averages of $K_p$ were compared to $M$.  Most measurements occurred in the MLT range of 12:00 and 18:00 in the plasma trough, and CRRES had a nearly equatorial orbit.
+\cite{Takahashi2006} estimated magnetospheric mass density using measurements from the CRRES satellite during a 73-day period and 1991 and found that the average ion mass density, $M=\rho/n_e$, correlated with geomagnetic activity, with lower $D_{st}$ values corresponding to slightly average ion mass densities.  They also found a relationship between the average ion mass and 1.5- and 3-day averages of $K_p$ were compared to $M$.  Most measurements occurred in the MLT range of 12:00 and 18:00 in the plasma trough, and CRRES had a nearly equatorial orbit.
 
-\cite{Takahashi2010} developed a mass density dataset using measurements from the GOES satellites over the years 1980 through 1992, with most measurements in the range $L=6.8\pm0.2$. The mass density $\rho$ was estimated using the the Alfven wave velocity relationship, $V_A=B/\sqrt{\mu_0\rho}$, a magnetic field model, and a numerical solution to a wave equation with an ionospheric boundary and the assumption of a zero resistance ionosphere.  The equatorial mass density, $\rho_{eq}$, was estimated from the estimated mass density using a power law dependence on the geocentric distance to the field line of the observation, $R$, $\rho=\rho_{eq}L/(R/R_E)$. 
+\cite{Takahashi2010} developed a mass density dataset using measurements from the GOES satellites over the years 1980 through 1992, with most measurements in the range $L=6.8\pm0.2$. The equatorial mass density, $\rho_{eq}$ was estimated from the estimated mass density using a power law dependence on the geocentric distance to the field line of the observation, $R$, $\rho=\rho_{eq}L/(R/R_E)$. The mass density $\rho$ was estimated using the the Alfven wave velocity relationship, $V_A=B/\sqrt{\mu_0\rho}$, a magnetic field model, and a numerical solution to a wave equation with an ionospheric boundary and the assumption of an infinitely conducting ionosphere.  
 
 \cite{Takahashi2010} noted that downward spikes in the $D_{st}$ index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8~$R_E$. For five storms over a 20-day period, two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$.  A key result was that when daily-averaged measurements were considered, an enhancment in $\rho_{eq}$ appeared on the same day as minimum $D_{st}$, indicating the possibility of a solar wind control over $\rho_{eq}$.
 
-The results of \cite{Takahashi2006} and \cite{Takahashi2010} are consistent with other results on changes in mass density in the plasma trough region.  \cite{Yao2008} studied the relationship between $D_{st}$ and ion number density for different ion species in different regions (ring current and plasma sheet) and found a general correlation during each of the four storms considered.
+The results of \cite{Takahashi2006} and \cite{Takahashi2010} are consistent with other results on changes in mass density in the plasma trough region.  \cite{Yao2008} studied the relationship between $D_{st}$ and ion number density for different ions in different regions (ring current and plasma sheet) and found a general correlation during each of the four storms considered.
 
 \cite{Hamilton1988} ... \cite{Gallagher1988} .... 
 
