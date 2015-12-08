@@ -1,10 +1,8 @@
-%function Density
-
 clear all;
-% http://github.com/rweigel/m-rsw/time
 if ~exist('m-rsw')
-    system('git clone http://github.com/rweigel/m-rsw')
-    addpath('./m-rsw/time')
+    % http://github.com/rweigel/m-rsw/time
+    system('git clone http://github.com/rweigel/m-rsw');
+    addpath('./m-rsw/time');
 end
 if ~exist('data')
     mkdir('data');
@@ -57,12 +55,11 @@ for sat = [6]
 
     % Load data from OMNI2 dataset
     % http://omniweb.gsfc.nasa.gov/form/dx1.html
-    % Accessed on 07/29/2015
-
+    % Accessed on 09/24/2015
     %fnamem = './data/omni2_1980_2000.mat';
     %fnamet = './data/omni2_1980_2000.lst';
-    fnamem = 'data/omni2_6477.mat';
-    fnamet = 'data/omni2_6477.lst';
+    fnamem = 'data/omni2_5499.mat';
+    fnamet = 'data/omni2_5499.lst';
     if(exist(fnamem,'file'))
         %fprintf('Loading %s\n',fnamem);   
         load(fnamem);
@@ -257,8 +254,8 @@ for sat = [6]
 
     %I = find(DDstMedian(1:end-1) > -50 & DDstMedian(2:end) < -50);
     %I = find(ODst(1:end-1) > -50 & ODst(2:end) < -50);
-    I = find(KDst(1:end-1) >= -50 & KDst(2:end) < -50);
-    %I = find(KDst(1:end-1) > -50 & KDst(2:end) < -50);
+    %I = find(KDst(1:end-1) >= -50 & KDst(2:end) < -50);
+    I = find(KDst(1:end-1) > -70 & KDst(2:end) < -70);
     clear *Storm*
 
     Nd = 2;
@@ -321,24 +318,32 @@ for sat = [6]
             tc(j) = mean(t(a:b));
         end
 
+        [tmps,I] = sort(nanmedian(DF107Storm(:,49:50),2));
+        Ih = find(I > round(length(I)*0.5));
+        Is = I(Ih);
+
+        %Is = [1:size(DDensityStorm,2)];
+
         figure(1);clf;hold on;grid on;
-            plot(t,nanmedian(DDensityStorm),'b','LineWidth',3)
-            plot(t,nanmedian(-DDstStorm),'g','LineWidth',3)
-            plot(t,nanmean(-ODstStorm),'k','LineWidth',3)
-            plot(t,nanmedian(DF107Storm)/10,'m','LineWidth',2)
-            plot(t,sum(DNGoodStorm)/10,'k','LineWidth',1)
+            plot(t,nanmedian(DDensityStorm(Is,:)),'b','LineWidth',3)
+            plot(t,nanmedian(-DDstStorm(Is,:)),'g','LineWidth',3)
+            plot(t,nanmean(-ODstStorm(Is,:)),'k','LineWidth',3)
+            plot(t,nanmedian(DF107Storm(Is,:))/10,'m','LineWidth',2)
+            plot(t,sum(DNGoodStorm(Is,:))/10,'k','LineWidth',1)
             %plot(tc,DDensityStorm1Day,'k.','MarkerSize',30)
             title(sprintf('GOES-%d; %s-%s',sat,datestr(Io),datestr(If)))
             xlabel('Time since onset [hrs]')
-            legend('Density [amu/cm^3]','-Dst [nT]',...
-                    '-Dst [nT] (OMNI)','F10.7/10',...
-                    '# values','Location','NorthWest')
+            legend('Density [amu/cm^3]',...
+                    '-Dst [nT]',...
+                    '-Dst [nT] (OMNI)',...
+                    'F10.7/10',...
                     '# Density values/10','Location','NorthWest')
             fname = sprintf('Dst_Events_GOES%d_%s_%s',...
                     sat,datestr(Io,29),datestr(If,29));
-            title(sprintf('GOES-%d; %s-%s; %d Dst Events',...
-                    sat,datestr(Io),datestr(If),length(DDstStorm)));
+            title(sprintf('GOES-%d; %s to %s; %d Dst Events',...
+                    sat,datestr(Io),datestr(If),size(DDstStorm,1)));
             %set(gca,'XTick',[-24:2:24])
+break
             plotcmds(fname,1)
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
