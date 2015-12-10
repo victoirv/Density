@@ -70,8 +70,8 @@ else
     DBS=1/2*IN(uniquerows,32).*(abs(DBz)-DBz);
     AE=IN(uniquerows,12);
     MLT=IN(uniquerows,8);
-    MassDensity=IN(uniquerows,85); %85 is at magnetic equator, 88 is at spacecraft
-    M=IN(uniquerows,85)./IN(uniquerows,65); %65 is nei_n or electron density topside ionosphere
+    MassDensity=IN(uniquerows,88); %88 is rho_eq
+    M=IN(uniquerows,88)./IN(uniquerows,68); %65 is nei_n or electron density topside ionosphere
     
     save(sprintf('DentonDensityAndTime_%d',satnum),'DentonTime','MassDensity','DBz','MLT','DBS','DVsw','AE','M');
 end
@@ -599,6 +599,7 @@ if(MakePaperPlots && removef107)
 end
 
 if(MakePaperPlots && stormcase==1)
+    figure('Visible',visible);
     xa=(-12:1:24);
     idx=arrayfun(@colon,starti(1:5)-12,starti(1:5)+24,'Uniform',false);
     plot(repmat(xa,5,1)',reshape(MassDensitySpline([idx{:}]),37,5),'r')
