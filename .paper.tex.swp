@@ -70,7 +70,7 @@ The parameters $\rho_{eq}$ and $F_{10.7}$ used in this work are from the dataset
 
 % How does GOES 7 only effect result.
 
-In this work, events defined to occur when $D_{st}$ or $\rho_{eq}$ crosses a threshold value, as indicated in by horizontal dashed lines in the respective panels of Figure~\ref{AllData}.  In finding events, all fill values were replaced with linearly interpolated values. 
+In this work, events defined to occur when $D_{st}$ or $\rho_{eq}$ crosses a threshold value, as indicated in by horizontal dashed lines in the respective panels of Figure~\ref{AllData}.  In finding $\rho_{eq}$ events, all fill values were replaced with linearly interpolated values. 
 
 % Though this may skew the onset time slightly, it's thought to be less skewed than trying to determine start and end times with the NaNs in place. This interpolation was only used for determining storm times, and not for any analysis.
 % If you say this, you need to do an experiement.  A review will say ``seems like it is an easy statement to check.  Why didn't you?''
@@ -109,20 +109,22 @@ A total of 668 events were found in the interval of May 1983 through August 1991
 This figure shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $D_{st}$, but no obvious change in mass density at an hourly timescale. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation since there's no obvious connection on a short timescale. One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long term correlation of density and $D_{st}$.
 
 
-\section{More specific events}
-It's hypothesized that progressively picking more specific event criteria will allow for the possibility of more significant results, at the expense of more bias in the selection process and potentially less overall usefulness of the results. That said, the predictability of extreme events is of definite interest, so an attempt has been made to find some reproducible method of prediction. Looking at events that last longer than 12 hours and events with an onset threshhold less than $-80$nT results in Figure \ref{Dspec}. A spike in mass density is seen, but also a definite lack of data availability to the point where that spike may be coming from less than five of the total 211 events. 
 
-Unfortunately there are no events in this time frame that are longer than 12 hours with $D_{st}$ minima lower than $-80$~nT that have existing mass density data around onset, so an analysis of this particular combination of factors can't be made.
+\section{More specific events}
+It's hypothesized that progressively picking more specific event criteria will allow for the possibility of more significant results, at the expense of more bias in the selection process and potentially less overall usefulness of the results. That said, the predictability of extreme events is of definite interest, so an attempt has been made to find some reproducible method of prediction. Looking at events that last longer than 12 hours and events with an onset threshhold less than $-80$nT finds both result in a spike in mass density, but also a definite lack of data availability to the point where that spike may be coming from less than five of the total 211 events. 
 
 \subsection{Change in $\rho_{eq}$}
-Instead of looking for events based on a threshold of $\rho_{eq}$, we instead looked for a certain amount of change in $\rho_{eq}$ as the basis for event onset. Both raw change and percent change were done in case of bias towards high or low $\rho_{eq}$ periods, respectively, but neither showed any correlation to a change in $D_{st}$. 
+Instead of looking for events based on a threshold of $D_{st}$, we instead looked for a certain amount of change in $\rho_{eq}$ as the basis for event onset. Both raw change and percent change were done in case of bias towards high or low $\rho_{eq}$ periods, respectively, but neither showed any correlation to a change in $D_{st}$. 
 
 \section{F10.7 dependence}
 In an effort to analyze the dependence of $\rho_{eq}$ on $F_{10.7}$, a few tests were performed. \cite{Takahashi2010} mention a strong correlation between the two. The long term correlation could be a bias for $D_{st}$'s effects, so a linear model was created, recreating mass density purely from $F_{10.7}$ in the form of $\rho_{eq}(t)=a\cdot F_{10.7}(t)$. This re-created $\rho_{eq}$ shows around a 45\% correlation with the actual $\rho_{eq}$, suggesting a strong influence, while doing the same procedure with $D_{st}$ shows only a 20-25\% correlation. 
 
 Figure \ref{f107bin} takes the events and bins them by the value of $F_{10.7}$ at event onset, then looks at both $\rho_{eq}$ and $B_z$. Error bars calculated in the same manner as before are added to the highest and lowest bins. A significant difference is seen in $\rho_{eq}$ between events taking place during periods of high $F_{10.7}$ and low $F_{10.7}$, while a much less significant, but still noticeable, difference is seen in $B_z$. Also of interest is how $\rho_{eq}$ only sharply reacts to $D_{st}$ events during periods of high $F_{10.7}$. The positive relationship seen in \cite{Takahashi2010} could be due to the short time period looked at, and that it coincides with periods of higher $F_{10.7}$.
 
-Looking at GOES 2,5,6, and 7 (Figures \ref{GOES67,GOES25}) shows that this post-onset $D_{st}$ spike happens in almost every case for periods of high $F_{10.7}$.
+Looking at GOES 2,5,6, and 7 shows that this post-onset $D_{st}$ spike happens in almost every case for periods of high $F_{10.7}$. Creating a linear model directly relating variables (and combinations of variables) to $\rho_{eq}$ also shows that $F_{10.7}$ most often has the highest correlation with $\rho_{eq}$. A sample of these correlations is shown in Table \ref{perltable}. The correlations were made by training a one-input linear model of 5-hour post-onset medians of each variable (or variables) against the median of $\rho_{eq}$ at, and four hours after, event onset. This was done by randomly sampling half of the data, generating the model, and testing against the other half, doing this process 100 times and then taking the median correlations.
+
+
+\input{"tables/perltable.tex"}
 
 \section{Appendix}
 \subsection{Bias}
@@ -176,13 +178,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 
 \clearpage
 
-\begin{figure}[tp!]
-\centering
-\includegraphics[scale=0.40]{paperfigures/stormavs-d80.eps}
-\rule[1ex]{5cm}{1pt}
-\caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ crossed below $-80$~nT }
-\label{Dspec}
-\end{figure}
+
 
 \begin{figure}[tp!]
 \centering
@@ -191,6 +187,19 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \includegraphics[scale=0.40]{paperfigures/HighLowF107valid.eps}
 \caption{Binning events by $F_{10.7}$ value at onset for $\rho_{eq}$ and, in the middle panel, $B_z$. Lower panel shows number of valid points in each bin}
 \label{f107bin}
+\end{figure}
+
+\clearpage
+
+\section{Appendix}
+\hfill
+
+\begin{figure}[htp!]
+\centering
+\includegraphics[scale=0.40]{paperfigures/stormavs-d80.eps}
+\rule[1ex]{5cm}{1pt}
+\caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ crossed below $-80$~nT }
+\label{Dspec}
 \end{figure}
 
 \clearpage
@@ -227,7 +236,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \clearpage
 
 
-\section{Appendix}
+
 \hfill
 \begin{figure}[htp!]
 \includegraphics[scale=0.45]{paperfigures/HighLowF107rhoeq-Dst30.eps}
@@ -281,23 +290,6 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \caption{Median $D_{st}$ vs universal time, and median AE vs universal time}
 \end{figure}
 \clearpage
-
-
-
-\begin{figure}[htp!]
-\includegraphics[scale=0.45]{paperfigures/DstRhoThresh-1983-1991.eps}
-\includegraphics[scale=0.45]{paperfigures/DstRhoThresh-1987-1991.eps}
-\caption{High $F_{10.7}$ events - Low $F_{10.7}$ events, both with baselines removed. 83-91 and 87-91}
-\end{figure}
-
-\begin{figure}[htp!]
-\includegraphics[scale=0.45]{paperfigures/DstRhoThresh-1983-1987.eps}
-\includegraphics[scale=0.45]{paperfigures/DstRhoThresh-1981-1983.eps}
-\includegraphics[scale=0.45]{paperfigures/RandRhoThresh-1983-1991.eps}
-\caption{High $F_{10.7}$ events - Low $F_{10.7}$ events, both with baselines removed. 83-87 and 81-83. Bottom: Random "events" from 1983-1991}
-\end{figure}
-\clearpage
-
 
 
 

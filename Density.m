@@ -169,6 +169,7 @@ DSTCut=0;
 MDCut=0;
 AECut=0;
 nnanalysis=0;
+ccanalysis=0;
 figurename='paperfigures/stormavs-';
 %Select kind of storm to look for
 
@@ -318,6 +319,12 @@ switch stormcase
         DSTCut=-50;
         figurename=strcat(figurename,'dst.eps');
         yr=2;
+    case 23
+        ccanalysis=1;
+        storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+        DSTCut=-50;
+        figurename=strcat(figurename,'dst.eps');
+        yr=2;
 end
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -410,60 +417,155 @@ if(LongTimeScale>1)
     AVMD2=nanmedian(AVMD2);
 end
 
+if(ccanalysis)
+    loops=100;
+    trainpercent=0.50;
+    
+    table=fopen(sprintf('tables/CCtable-GOES%d.txt',satnum),'w');
+    fprintf(table,'<pre>\n');
+    fprintf(table,'Vars \t \t  CCtr  CCt\n');
+    
+    PermNames={'doy','Bz','Vsw','Dst','MLT','F107','Rhosw'};
+    PermCols=[2 5 6 15 29 30 31];
+    
+    Perms=combnk(1:7,1);
+    for i=1:length(Perms)
+        x=nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2);
+        y=nanmedian(AVMDMat(:,25:29),2);
+        Z=[x y];
+        for col=1:min(size(Z))
+            Z(isnan(Z(:,col)),:)=[];
+        end
+        x=Z(:,1:end-1);
+        y=Z(:,end);
+        
+        for j=1:loops
+            tri=randsample(1:length(y),floor(trainpercent*length(y)));
+            ti=setdiff(1:length(y),tri);
+            
+            Ztr=[x(tri,:) ones(length(tri),1) y(tri)];
+            Zt=[x(ti,:) ones(length(ti),1) y(ti)];
+            coef=Ztr(:,1:end-1)\Ztr(:,end);
+            cctrm=corrcoef(Ztr(:,1:end-1)*coef,Ztr(:,end));
+            cctm=corrcoef(Zt(:,1:end-1)*coef,Zt(:,end));
+            cct(j,1)=cctrm(1,2);
+            cct(j,2)=cctm(1,2);
+        end
+        CCMs=nanmedian(cct);
+        fprintf(table,'%s      \t- %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
+    end
+    
+    Perms=combnk(1:7,2);
+    for i=1:length(Perms)
+        x=nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2);
+        x=reshape(x,length(x),[]);
+        y=nanmedian(AVMDMat(:,25:29),2);
+        Z=[x y];
+        for col=1:min(size(Z))
+            Z(isnan(Z(:,col)),:)=[];
+        end
+        x=Z(:,1:end-1);
+        y=Z(:,end);
+        
+        for j=1:loops
+            tri=randsample(1:length(y),floor(trainpercent*length(y)));
+            ti=setdiff(1:length(y),tri);
+            
+            Ztr=[x(tri,:) ones(length(tri),1) y(tri)];
+            Zt=[x(ti,:) ones(length(ti),1) y(ti)];
+            coef=Ztr(:,1:end-1)\Ztr(:,end);
+            cctrm=corrcoef(Ztr(:,1:end-1)*coef,Ztr(:,end));
+            cctm=corrcoef(Zt(:,1:end-1)*coef,Zt(:,end));
+            cct(j,1)=cctrm(1,2);
+            cct(j,2)=cctm(1,2);
+        end
+        CCMs=nanmedian(cct);
+        fprintf(table,'%s   \t- %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
+    end
+    
+    Perms=combnk(1:7,7);
+    x=nanmedian(AVMat(:,20:24,PermCols(Perms(:))),2);
+    x=reshape(x,length(x),[]);
+    y=nanmedian(AVMDMat(:,25:29),2);
+    Z=[x y];
+    for col=1:min(size(Z))
+        Z(isnan(Z(:,col)),:)=[];
+    end
+    x=Z(:,1:end-1);
+    y=Z(:,end);
+    
+    for j=1:loops
+        tri=randsample(1:length(y),floor(trainpercent*length(y)));
+        ti=setdiff(1:length(y),tri);
+        
+        Ztr=[x(tri,:) ones(length(tri),1) y(tri)];
+        Zt=[x(ti,:) ones(length(ti),1) y(ti)];
+        coef=Ztr(:,1:end-1)\Ztr(:,end);
+        cctrm=corrcoef(Ztr(:,1:end-1)*coef,Ztr(:,end));
+        cctm=corrcoef(Zt(:,1:end-1)*coef,Zt(:,end));
+        cct(j,1)=cctrm(1,2);
+        cct(j,2)=cctm(1,2);
+    end
+    CCMs=nanmedian(cct);
+    fprintf(table,'All\t- %+2.2f %+2.2f \n',CCMs(:));
+    
+    fclose(table);    
+end
+
 if(nnanalysis) 
     loops=40;
     disp('NN - Bz')
-    x=nanmedian(AVMat(:,20:25,30),2);
-    z=nanmedian(AVMDMat(:,26:30),2);
+    x=nanmedian(AVMat(:,20:24,30),2);
+    z=nanmedian(AVMDMat(:,25:29),2);
     xtest=linspace(min(x),max(x));
     nnbehavior(x,z,xtest,1,loops,{'F10.7','rho_eq'},satnum);
     
-    x=nanmedian(AVMat(:,20:25,5),2);
+    x=nanmedian(AVMat(:,20:24,5),2);
     xtest=linspace(min(x),max(x));
     nnbehavior(x,z,xtest,1,loops,{'Bz','rho_eq'},satnum);
     
-    nnbehavior2(nanmedian(AVMat(:,20:25,[5 30]),2),z,1,loops,{'Bz','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:24,[5 30]),2),z,1,loops,{'Bz','F10.7','rho_eq'},satnum);
  
     
     %Same thing but Vsw
     disp('NN - Vsw')
-    x=nanmedian(AVMat(:,20:25,6),2);
+    x=nanmedian(AVMat(:,20:24,6),2);
     xtest=linspace(min(x),max(x));
     nnbehavior(x,z,xtest,1,loops,{'Vsw','rho_eq'},satnum);
     
-    nnbehavior2(nanmedian(AVMat(:,20:25,[6 30]),2),z,1,loops,{'Vsw','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:24,[6 30]),2),z,1,loops,{'Vsw','F10.7','rho_eq'},satnum);
     
     %Same thing but MLT
     disp('NN - MLT')
     xtest=linspace(0,24);
-    x=nanmedian(AVMat(:,20:25,29),2);
+    x=nanmedian(AVMat(:,20:24,29),2);
     nnbehavior(x,z,xtest,1,loops,{'MLT','rho_eq'},satnum);
     
-    nnbehavior2(nanmedian(AVMat(:,20:25,[29 30]),2),z,1,loops,{'MLT','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:24,[29 30]),2),z,1,loops,{'MLT','F10.7','rho_eq'},satnum);
     
     %DST
     disp('NN - Dst')
-    x=nanmedian(AVMat(:,20:25,15),2);
+    x=nanmedian(AVMat(:,20:24,15),2);
     xtest=linspace(min(x),max(x));
     nnbehavior(x,z,xtest,1,loops,{'Dst','rho_eq'},satnum);
     
-    nnbehavior2(nanmedian(AVMat(:,20:25,[15 30]),2),z,1,loops,{'Dst','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:24,[15 30]),2),z,1,loops,{'Dst','F10.7','rho_eq'},satnum);
     
     %Doy
     disp('NN - Doy')
-    x=nanmedian(AVMat(:,20:25,2),2);
+    x=nanmedian(AVMat(:,20:24,2),2);
     xtest=linspace(1,365);
     nnbehavior(x,z,xtest,1,loops,{'Doy','rho_eq'},satnum);
     
-    nnbehavior2(nanmedian(AVMat(:,20:25,[2 30]),2),z,1,loops,{'Doy','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:24,[2 30]),2),z,1,loops,{'Doy','F10.7','rho_eq'},satnum);
     
     %Rhosw
     disp('NN - Rhosw')
-    x=nanmedian(AVMat(:,20:25,31),2);
+    x=nanmedian(AVMat(:,20:24,31),2);
     xtest=linspace(min(x),max(x));
     nnbehavior(x,z,xtest,1,loops,{'Rhosw','rho_eq'},satnum);
     
-    nnbehavior2(nanmedian(AVMat(:,20:25,[31 30]),2),z,1,loops,{'Rhosw','F10.7','rho_eq'},satnum);
+    nnbehavior2(nanmedian(AVMat(:,20:24,[31 30]),2),z,1,loops,{'Rhosw','F10.7','rho_eq'},satnum);
 
     %Print correlations as table of linear vs neural net coefficients
     fprintf('Figures done. Doing table\n');
@@ -475,33 +577,33 @@ if(nnanalysis)
     fprintf(table,'Vars \t \t  CCtr  NNtr  CCt   NNt   CCv   NNv\n');
     Perms=combnk(1:7,1);
     for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
         fprintf(table,'%s      \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end   
     Perms=combnk(1:7,2);
     for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end    
     Perms=combnk(1:7,3);
     for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
         fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end 
     %{
     Perms=combnk(1:6,4);
     for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
         fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end
     Perms=combnk(1:6,5);
     for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
+        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
         fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
     end
     %}
     Perms=combnk(1:7,7);
-    CCMs(:,:)=nntest(nanmedian(AVMat(:,20:25,PermCols(Perms(:))),2),nanmedian(AVMDMat(:,26:30),2),1,loops,1);
+    CCMs(:,:)=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
     fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(:)),'+'),CCMs(:));
     
     fclose(table);
