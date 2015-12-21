@@ -149,7 +149,7 @@ MassDensityNanSpline=interp1(FILLEDTime(~isnan(MassDensitySpline)),MassDensitySp
 
 %FILLED=[FILLED F107Spline]; %When F107 is from Denton, use
 %interpolated version
-FILLED=[FILLED MLTFit F107 OMNIRho MFit];
+FILLED=[FILLED MLTFit F107 OMNIRho MFit]; %28 cols of F, 29 is mlt, 30 is f107, etc
 headers{end+1}='MLT';
 headers{end+1}='F107';
 headers{end+1}='OMNIRho';
@@ -1025,16 +1025,36 @@ end
 if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     NewTime=FILLEDTime(1):24*27*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end);
-    [AX,H1,H2]=plotyy(NewTime,interptest(FILLEDTime,FILLED(:,30),NewTime),NewTime,log10(interptest(FILLEDTime,MassDensitySpline',NewTime)),'plot','plot');
+    x=interptest(FILLEDTime,FILLED(:,30),NewTime);
+    y=log10(interptest(FILLEDTime,MassDensitySpline',NewTime));
+    cc=corrcoef(x,y,'rows','pairwise');
+    [AX,H1,H2]=plotyy(NewTime,x,NewTime,y,'plot','plot');
     set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
     ylim(AX(2),[0.5,1.5])
     ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'log(\rho_{eq\_27d})');
     xlabel('Year','FontSize',16);
+    title(sprintf('Data comparison for GOES %d - CC: %2.2f',satnum,cc(1,2)))
     linkaxes(AX,'x')
     datetick('keeplimits');
     grid on
-    print -depsc2 -r200 paperfigures/F107MDAllData.eps
-    print -dpng -r200 paperfigures/PNGs/F107MDAllData.png
+    print('-depsc2', '-r200', sprintf('paperfigures/F107MD27d-GOES%d.eps',satnum))
+    print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107MD27d-GOES%d.png',satnum))
+    
+    h=figure('Visible',visible);
+    x=FILLED(:,30);
+    y=log10(MassDensitySpline');
+    cc=corrcoef(x,y,'rows','pairwise');
+    [AX,H1,H2]=plotyy(FILLEDTime,x,FILLEDTime,y,'plot','plot');
+    set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    ylim(AX(2),[0.5,1.5])
+    ylabel(AX(1),'F_{10.7}'); ylabel(AX(2),'log(\rho_{eq})');
+    xlabel('Year','FontSize',16);
+    title(sprintf('Data comparison for GOES %d - CC: %2.2f',satnum,cc(1,2)))
+    linkaxes(AX,'x')
+    datetick('keeplimits');
+    grid on
+    print('-depsc2', '-r200', sprintf('paperfigures/F107MD1h-GOES%d.eps',satnum))
+    print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107MD1h-GOES%d.png',satnum))
 end
 
 %Statistical comparisons

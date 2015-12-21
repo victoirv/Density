@@ -151,7 +151,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 
 \begin{figure}[htp!]
 \centering
-\includegraphics[scale=0.40]{paperfigures/F107MDAllData.eps}
+\includegraphics[scale=0.40]{paperfigures/F107MD27d-GOES6.eps}
 \includegraphics[scale=0.40]{paperfigures/ccplot.eps}
 \caption{(a) 27-day averages of $F_{10.7}$ and $\rho_{eq}$. (b) Correlation between $\log(\rho_{eq})$ and $F_{10.7}$ using hour, day, and 27-day averaging intervals; compare to \cite{Takahashi2010} Fig.~14.}
 \label{ccplot}
