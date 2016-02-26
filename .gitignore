@@ -2,4 +2,13 @@ data/*
 massdensity.txt
 papers/*
 paperfigures/*pdf
+paperfigures/Hide/*
 *.m~
+*.aux
+*.log
+*.lot
+*.lof
+*.blg
+*.bbl
+*.toc
+*.tks

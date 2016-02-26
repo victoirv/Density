@@ -96,8 +96,8 @@ end
 %Get everything onto the same time grid
 gettime=FILLEDTime>min(DentonTime);
 gettime=gettime+(FILLEDTime<max(DentonTime));
-gettime=gettime+(FILLEDTime<datenum(cutyears(2)+1,1,1)); %If user wants to cut down time range. Assuming they want entire end year
-gettime=gettime+(FILLEDTime>datenum(cutyears(1),1,1));
+gettime=gettime+(FILLEDTime<cuttime(2)); %If user wants to cut down time range. 
+gettime=gettime+(FILLEDTime>cuttime(1));
 gettime=(gettime==4);
 
 

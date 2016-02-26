@@ -1,15 +1,19 @@
-function stackplot(Time,Data, labels, satnum, ylims, datelimits)
+function stackplot(Time,Data, labels, satnum, ylims, datelimits,visible)
 %To ignore ylimits, pass ylims=0
 %TODO: include filename argument?
 
 if(nargin < 5)
     ylims=0;
     datelimits=[0 datenum('Jan-01-3001')];
+    visible='off';
 elseif nargin < 6
     datelimits=[0 datenum('Jan-01-3001')];
+    visible='off';
+elseif nargin < 7
+    visible='off';
 end
 
-h=figure;%('Visible',visible);
+h=figure('Visible',visible);
 orient tall;
 hold on;
 numvars=length(labels);

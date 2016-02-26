@@ -11,9 +11,14 @@
 \usepackage{abstract}
 \usepackage[position=t,singlelinecheck=off,justification=raggedleft]{subcaption}
 \usepackage[authoryear,square]{natbib}
+\usepackage{aas_macros}
 \pagestyle{fancy}
 \fancyhead[R]{Veibell \thepage}
 \fancyhead[L]{}
+
+\newcommand{\vinote}[1]{\textcolor{red}{\textbf{#1}}} %If you want \inote{#} instead of just \note #, for inline notes
+\def\vnote#1\par{\textcolor{red}{\textbf{#1}}\\} %Make note bold and red, re-add newline
+\newcommand{\req}{\ensuremath{\rho_{eq}}}
 
 \begin{document}
 \title{Relationship between solar wind, $D_{st}$, and plasmasphere trough mass density on one-hour time scales}
@@ -37,6 +42,8 @@ R.S. Weigel\footnote{rweigel@gmu.edu}}
 \begin{abstract}
 This paper compares various magnetosphere conditions around the onset of geomagnetic events, defined as decreases in $D_{st}$ below a threshold value or $\rho_{eq}$ above a threshold value. 
 
+\vnote More detail
+
 %It confirms results from previous papers that a sudden drop in $D_{st}$ correlates with a spike in equatorial mass density under certain conditions, while adding a level of depth and specification to the applicability of their results. It compares data at 1-hour averages to data at 1-day averages to examine if the trend holds at varying time scales and finds that it does, so long as the data is pre-processed to linearly remove a large time scale $F_{10.7}$ dependence. By then looking at an hourly average of parameters from 24 hours before event onset to 48 hours after, short timescale trends can be discerned.
 
 \vspace{2em}
@@ -47,16 +54,17 @@ This paper compares various magnetosphere conditions around the onset of geomagn
 \saythanks
 
 \section{Introduction}
+\cite{Gallagher1988EmpiricalModelPlasmasphere} \vinote{Too far back?} first models the the plasmasphere as a simple linear fit dependent on L shell, geographic height, geomagnetic latitude, and $K_p$. \cite{Hamilton1988RingCurrentDevelopment} simultaneously analyzes a strong geomagnetic storm by comparing empirical energy measurements of the ring current to $D_{st}$, along with measuring ring current compositions before, during, and after the storm. 
 
-\cite{Takahashi2006} estimated magnetospheric mass density using measurements from the CRRES satellite during a 73-day period and 1991 and found that the average ion mass density, $M=\rho/n_e$, correlated with geomagnetic activity, with lower $D_{st}$ values corresponding to slightly higher average ion mass densities.  They also found a relationship between the average ion mass and 1.5- and 3-day averages of $K_p$ were compared to $M$.  Most measurements occurred in the MLT range of 12:00 and 18:00 in the plasma trough, and CRRES had a nearly equatorial orbit.
+\cite{Lotoaniu1999PlasmaMassDensity} uses CRRES to compare in-situ measured plasma mass density to that inferred by ground-based ULF wave measurements extended to the plasmatrough. 
 
-\cite{Takahashi2010} developed a mass density dataset using measurements from the GOES satellites over the years 1980 through 1992, with most measurements in the range $L=6.8\pm0.2$. The mass density $\rho$ was estimated using the the Alfven wave velocity relationship, $V_A=B/\sqrt{\mu_0\rho}$, a magnetic field model, and a numerical solution to a wave equation with an ionospheric boundary and the assumption of a zero resistance ionosphere.  The equatorial mass density, $\rho_{eq}$, was estimated from the estimated mass density using a power law dependence on the geocentric distance to the field line of the observation, $R$, $\rho=\rho_{eq}L/(R/R_E)$. 
+\cite{Takahashi2006} estimated magnetospheric mass density using measurements from the CRRES satellite during a 73-day period in 1991 and found that the average ion mass, $M=\rho/n_e$, correlated with geomagnetic activity, with more negative $D_{st}$ values corresponding to slightly higher average ion mass densities.  They also found a relationship between the average ion mass and 1.5- and 3-day averages of $K_p$, with an increasing correlation as $K_p$ was smoothed to longer timescales.  The CRRES measurements used occurred in the MLT range of 12:00 and 18:00 mostly in the plasma trough (between 2-7$R_E$) on an elliptical, nearly equatorial orbit.
 
-\cite{Takahashi2010} noted that downward spikes in the $D_{st}$ index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8~$R_E$. For five storms over a 20-day period, two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$.  A key result was that when daily-averaged measurements were considered, an enhancment in $\rho_{eq}$ appeared on the same day as minimum $D_{st}$, indicating the possibility of a solar wind control over $\rho_{eq}$.
+\cite{Takahashi2010} developed a mass density dataset using measurements from the GOES satellites over the years 1980 through 1992, with most measurements in the range $L=6.8\pm0.2 R_E$. The mass density $\rho$ was estimated using the the Alfven wave velocity relationship, $V_A=B/\sqrt{\mu_0\rho}$, a magnetic field model, and a numerical solution to a wave equation with an ionospheric boundary and the assumption of a zero resistance ionosphere.  The equatorial mass density, $\rho_{eq}$, was derived from the estimated mass density using a power law dependence on the geocentric distance to the field line of the observation, $R$, $\rho=\rho_{eq}L/(R/R_E)$. 
+
+\cite{Takahashi2010} \vinote{Necessary repetition?} noted that downward spikes in the $D_{st}$ index coincide with with significant changes in $\rho_{eq}$ at an L-shell of 6.8~$R_E$. For five storms over a 20-day period, two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$.  A key result was that when daily-averaged measurements were considered, an enhancment in $\rho_{eq}$ appeared on the same day as minimum $D_{st}$, indicating the possibility of a solar wind control over $\rho_{eq}$.
 
 The results of \cite{Takahashi2006} and \cite{Takahashi2010} are consistent with other results on changes in mass density in the plasma trough region.  \cite{Yao2008} studied the relationship between $D_{st}$ and ion number density for different ion species in different regions (ring current and plasma sheet) and found a general correlation during each of the four storms considered.
-
-\cite{Hamilton1988} ... \cite{Gallagher1988} .... 
 
 %\cite{Denton2006} show how $D_{st}$ affects the distribution of plasma density along different magnetic latitudes, and specifically along the same field lines as looked at in later papers (6-8$R_E$). Though this shows that the trends for density may differ between field lines, it's mentioned mostly as a point for future research as the data used in this paper is already adjusted for one field line, as described by \cite{Takahashi2010}.
 
