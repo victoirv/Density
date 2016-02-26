@@ -1,16 +1,14 @@
-all:
-	latex paper
-	bibtex paper
-	latex paper
-	bibtex paper
-	pdflatex paper
-	make clean
+COMP=pdflatex
+BIB=bibtex
+TEX=paper
+
+all: 
+	$(COMP) $(TEX).tex
+	$(BIB) $(TEX)
+	$(COMP) $(TEX).tex
+	$(COMP) $(TEX).tex
 
 clean:
-	- rm paper.log
-	- rm paper.aux
-	- rm paper.bbl
-	- rm paper.dvi
-	- rm paper.blg
-	- rm paper.out
-	- rm -f paperfigures/*converted-to.pdf
+	rm -f $(TEX).{ps,pdf,log,aux,out,dvi,bbl,blg,lof,lot,tks,toc}
+	rm -f *.{log,aux} #Avoid removing ps and pdf, but get rid of chapter build files
+

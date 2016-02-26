@@ -23,6 +23,7 @@ MakeDstThreshPlot=0;
 MakeRandThreshPlot=0;
 visible='off';
 
+profile on
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Script to read all Denton/OMNI data. In a separate script since multiple
@@ -229,7 +230,7 @@ end
 %%%%%%
 %Find storm indices and apply conditions to prune storms based on duration
 %or overlapping edges of data
-[starti,endi,duration]=FindStorms(storms,FILLED,cutoffduration,cutconditions,maxwidth,MLTFit);
+[starti,endi,duration]=FindStorms(storms,cutoffduration,cutconditions,maxwidth,MLTFit);
 
 %Build matrices storing all storms
 stormi=1;
@@ -305,12 +306,13 @@ PlotReproductions
 
 %Every plot left here is more advanced analysis
 
+profile viewer
 
 if(MakePaperPlots && stormcase==1)
-    stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum)
+    stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 DSTCut])
     
     if(satnum==6 && sy<=1989 && ey>=1989) %Make March 1989 Geomagnetic storm plot (if necessary time range still exists)
-        stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,0,[datenum('Mar-10-1989') datenum('Mar-18-1989')])
+        stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[],[],[datenum('Mar-10-1989') datenum('Mar-18-1989')])
     end
 
     h=figure('Visible',visible);
@@ -321,6 +323,7 @@ if(MakePaperPlots && stormcase==1)
     hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
     print -depsc2 -r200 paperfigures/allstorms.eps
     print -dpng -r200 paperfigures/PNGs/allstorms.png    
+    if(strcmp(visible,'off')),close(h);end;
 end
 
 if(MakePaperPlots && MakeBinPlots)
@@ -393,7 +396,7 @@ if(MakePaperPlots && MakeDstThreshPlot)
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
     print('-depsc2','-r200', sprintf('paperfigures/DstRhoThresh-%d-%d.eps',sy,ey));
     print('-dpng','-r200', sprintf('paperfigures/PNGs/DstRhoThresh-%d-%d.png',sy,ey));
-    
+    if(strcmp(visible,'off')),close(h);end;
 end
 
 
@@ -445,6 +448,7 @@ if(MakePaperPlots && MakeRandThreshPlot)
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
     print('-depsc2','-r200', sprintf('paperfigures/RandRhoThresh-%d-%d.eps',sy,ey));
     print('-dpng','-r200', sprintf('paperfigures/PNGs/RandRhoThresh-%d-%d.png',sy,ey));
+    if(strcmp(visible,'off')),close(h);end;
 end
 
 %Make main stack plots
@@ -479,7 +483,7 @@ if(MakePaperPlots)
     else xlabel('Time from start of event (hour)'); end
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);
     print('-depsc2','-r200',figurename);
-    
+    if(strcmp(visible,'off')),close(h);end;
 end
 
 
@@ -512,7 +516,7 @@ if(MakePaperPlots && stormcase==1)
     axis tight;
     print -depsc2 -r200 paperfigures/ccplot.eps 
     print -dpng -r200 paperfigures/PNGs/ccplot.png 
-
+if(strcmp(visible,'off')),close(h);end;
     
  
 end

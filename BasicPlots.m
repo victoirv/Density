@@ -12,8 +12,9 @@ if(MakePaperPlots && stormcase==1)
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
     print -depsc2 -r200 paperfigures/rhoMLT.eps
     print -dpng -r200 paperfigures/PNGs/rhoMLT.png
+    if(strcmp(visible,'off')),close(h);end;
     
-    DHr=str2num(datestr(DentonTime,'HH'));
+    [~,~,~,DHr]=datevec(DentonTime);
     for i=1:24
         avrhos(i)=nanmedian(MassDensity(DHr==(i-1)));
     end
@@ -24,6 +25,7 @@ if(MakePaperPlots && stormcase==1)
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
     print -depsc2 -r200 paperfigures/rhoLT.eps
     print -dpng -r200 paperfigures/PNGs/rhoLT.png
+    if(strcmp(visible,'off')),close(h);end;
     
     for i=1:24
         avrhos(i)=nanmedian(AE(DHr==(i-1)));
@@ -35,6 +37,7 @@ if(MakePaperPlots && stormcase==1)
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
     print -depsc2 -r200 paperfigures/AELT.eps
     print -dpng -r200 paperfigures/PNGs/AELT.png
+    if(strcmp(visible,'off')),close(h);end;
     
     for i=1:24
         avrhos(i)=nanmedian(FILLED(FILLED(:,3)==(i-1),15));
@@ -46,24 +49,10 @@ if(MakePaperPlots && stormcase==1)
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
     print -depsc2 -r200 paperfigures/DstLT.eps
     print -dpng -r200 paperfigures/PNGs/DstLT.png
+    if(strcmp(visible,'off')),close(h);end;
     
-end
-
-if(MakePaperPlots && stormcase==16)
-    h=figure('Visible',visible);
-    hist(FILLED(starti,3),0:23)
-    axis([-1 24 0 100])
-    grid on
-    xlabel('UT Hour')
-    ylabel('Frequency')
-    title(sprintf('%d events of AE > %d for %d-%d',length(starti),AECut,sy,ey));
-    print -depsc2 -r200 paperfigures/AEbyhour.eps
-    print -dpng -r200 paperfigures/PNGs/AEbyhour.png
-end
-
 
 %Nans per hour
-if(MakePaperPlots && stormcase==1) 
     h=figure('Visible',visible);
     hist(FILLED(isnan(MassDensitySpline),3),0:23)
     axis([-1 24 0 3000])
@@ -71,6 +60,7 @@ if(MakePaperPlots && stormcase==1)
     ylabel('Frequency')
     print -depsc2 -r200 paperfigures/nansbyhour.eps
     print -dpng -r200 paperfigures/PNGs/nansbyhour.png
+    if(strcmp(visible,'off')),close(h);end;
 
     h=figure('Visible',visible);
     subplot(2,1,1)
@@ -86,4 +76,19 @@ if(MakePaperPlots && stormcase==1)
     grid on
     print -depsc2 -r200 paperfigures/nansbyhour_storm.eps
     print -dpng -r200 paperfigures/PNGs/nansbyhour_storm.png
+    if(strcmp(visible,'off')),close(h);end;
+end
+
+
+if(MakePaperPlots && stormcase==16)
+    h=figure('Visible',visible);
+    hist(FILLED(starti,3),0:23)
+    axis([-1 24 0 100])
+    grid on
+    xlabel('UT Hour')
+    ylabel('Frequency')
+    title(sprintf('%d events of AE > %d for %d-%d',length(starti),AECut,sy,ey));
+    print -depsc2 -r200 paperfigures/AEbyhour.eps
+    print -dpng -r200 paperfigures/PNGs/AEbyhour.png
+    if(strcmp(visible,'off')),close(h);end;
 end
