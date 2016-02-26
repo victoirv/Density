@@ -1,6 +1,6 @@
 %Show ten events to make point about data availability
 if(MakePaperPlots && stormcase==1)
-    figure('Visible',visible);
+    h=figure('Visible',visible);
     xevents=(-12:1:24);
     idx=arrayfun(@colon,starti(1:5)-12,starti(1:5)+24,'Uniform',false);
     plot(repmat(xevents,5,1)',reshape(MassDensitySpline([idx{:}]),37,5),'r')
@@ -12,11 +12,12 @@ if(MakePaperPlots && stormcase==1)
     title(sprintf('First 5 (red) and last 5 (blue) events from %d-%d',sy,ey));
     print -depsc2 -r200 paperfigures/TenEvents.eps
     print -dpng -r200 paperfigures/PNGs/TenEvents.png
+    if(strcmp(visible,'off')),close(h);end;
 end
 
 %Compare the two densities
 if(MakePlots)
-    figure('Visible',visible); plot(FILLEDTime,MassDensitySpline);hold on; 
+    h=figure('Visible',visible); plot(FILLEDTime,MassDensitySpline);hold on; 
     plot(FILLEDTime,OMNIDensity,'r')
     legend('Denton','OMNI','Location','NorthEast')
     title('OMNI Density vs Denton Density')
@@ -25,11 +26,12 @@ if(MakePlots)
     datetick
     print -dpng figures/densitycomp.png
     print -depsc2 figures/densitycomp.eps
+    if(strcmp(visible,'off')),close(h);end;
 end
 
 %Showing 'detrending' by removing F10.7 influencex`
 if(MakePaperPlots && removef107)
-    figure('Visible',visible);
+    h=figure('Visible',visible);
     plot(FILLEDTime,MassDensitySplineOriginal,'r.')
     hold on; plot(FILLEDTime,MassDensitySpline,'b.')
     legend('Original','F_{10.7} Removed');
@@ -37,4 +39,5 @@ if(MakePaperPlots && removef107)
     xlabel('Year')
     datetick
     print -depsc2 -r200 paperfigures/f107removed.eps
+    if(strcmp(visible,'off')),close(h);end;
 end

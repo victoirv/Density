@@ -44,6 +44,7 @@ set(objh,'linewidth',2);
 title(sprintf('%d evenly-binned events of %s %s (%s) for GOES%d: %d-%d',length(events),eventname,plotthresh,eventunits,satnum,timerange(1),timerange(2)))
 print('-depsc2','-r200',sprintf('paperfigures/HighLow%s%s-%s%s-GOES%d-%d-%d.eps',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
 print('-dpng','-r200',sprintf('paperfigures/PNGs/HighLow%s%s-%s%s-GOES%d-%d-%d.png',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
+if(strcmp(visible,'off')),close(h);end;
 
 if(sum(sum(isnan(plotter)))) %If any nan points
     h=figure('Visible',visible);
@@ -61,4 +62,5 @@ if(sum(sum(isnan(plotter)))) %If any nan points
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     print('-depsc2','-r200',sprintf('paperfigures/HighLow%s%s-%s%s-GOES%d-%d-%d-valid.eps',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
     print('-dpng','-r200',sprintf('paperfigures/PNGs/HighLow%s%s-%s%s-GOES%d-%d-%d-valid.png',safesortname,safeplotname,safeeventname,safethresh,satnum,timerange(1),timerange(2)))
+    if(strcmp(visible,'off')),close(h);end;
 end

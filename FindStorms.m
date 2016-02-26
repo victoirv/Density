@@ -1,4 +1,5 @@
-function [starti,endi,duration]=FindStorms(storms,FILLED,cutoffduration,cutconditions,maxwidth,MLTFit)
+function [starti,endi,duration]=FindStorms(storms,cutoffduration,cutconditions,maxwidth,MLTFit,FILLED)
+%If reproduction of DST shifted events is needed, pass FILLED
 
 starti=find(storms>0);
 endi=find(storms<0)-1;
@@ -23,7 +24,7 @@ end
 while(starti(1)-maxwidth<1)
     starti(1)=[]; endi(1)=[];
 end
-while(starti(end)+maxwidth>=length(FILLED(:,1)))
+while(starti(end)+maxwidth>=length(storms)-1)
     starti(end)=[]; endi(end)=[];
 end
 

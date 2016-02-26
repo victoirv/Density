@@ -9,11 +9,12 @@ if(MakePaperPlots && stormcase==10)
     ylabel('\rho_{eq} (amu/cm^3)')
     legend('Block median','MoM storm, day','MoM day, storm')
     print -depsc2 -r200 paperfigures/blockmedian.eps
+    if(strcmp(visible,'off')),close(h);end;
 end
 
 %Tak2006 Fig 10 Kp vs M
 if(MakePaperPlots && stormcase==1)
-   figure('Visible',visible);
+   h=figure('Visible',visible);
    subplot(311)
    x=starti;y=starti;
    for i=1:length(starti)
@@ -61,6 +62,7 @@ if(MakePaperPlots && stormcase==1)
    legend('3 day means')
    
    print -depsc2 -r200 paperfigures/KpvsM.eps
+   if(strcmp(visible,'off')),close(h);end;
 
 
 %%%%%%%%%%%
@@ -82,6 +84,7 @@ if(MakePaperPlots && stormcase==1)
     grid on
     print('-depsc2', '-r200', sprintf('paperfigures/F107MD27d-GOES%d.eps',satnum))
     print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107MD27d-GOES%d.png',satnum))
+    if(strcmp(visible,'off')),close(h);end;
     
     h=figure('Visible',visible);
     NewTime=FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end);
@@ -99,4 +102,5 @@ if(MakePaperPlots && stormcase==1)
     grid on
     print('-depsc2', '-r200', sprintf('paperfigures/F107MD1d-GOES%d.eps',satnum))
     print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107MD1d-GOES%d.png',satnum))
+    if(strcmp(visible,'off')),close(h);end;
 end
