@@ -79,14 +79,13 @@ In this work we consider the dependence of plasmaspheric mass density in the \ci
 
 The parameters $\rho_{eq}$ and $F_{10.7}$ used in this work are from the dataset associated with \cite{Denton}, with data available from 1980 through 1991; all other parameters are from \cite{Reconstruction} from 1972 through 2013, which are on a 1--hour time grid. $\rho_{eq}$ is the inferred equatorial mass density based on the 3rd harmonic torodial frequency of magnetic field measurements.  The smallest cadence for $\rho_{eq}$ values is 10 minutes.  To compute an hourly average over the same interval for which the solar wind parameters were averaged, the median of all $\rho_{eq}$ values in a given hourly range was used.  Fill (NaN) values were used for hours in which no measurements were available.  In cases where $\rho_{eq}$ was available from multiple Geostationary Operational Environmental Satellites (GOES) satellites at the same time in the \cite{Denton} dataset, the value from GOES 6 was selected.  In the dataset, measurements from GOES 6 had the longest time span of coverage.  An overview of the data is shown in Figure~\ref{AllData}.
 
-% How does GOES 7 only effect result.
-
 In this work, events defined to occur when $D_{st}$ or $\rho_{eq}$ crosses a threshold value, as indicated in by horizontal dashed lines in the respective panels of Figure~\ref{AllData}.  In finding $\rho_{eq}$ events, all fill values were replaced with linearly interpolated values. 
 
-\section{Results}
-Figure \ref{AllData} shows values of solar wind averages and mass density used in this study.  
+Figure \ref{AllData} shows values of solar wind averages and mass density from GOES 6.  The corresponding 27-day correlations for GOES 2, 5, and 7 are 0.81, 0.78, and 0.87, and the time range of coverage of measurements from these satellites are 1980-01-01/1983-05-16, 1983-01-01/1987-02-28, and 1983-05-27/1991-08-29
 
-Figure~\ref{ccplot} shows the long-term trends of $log(\rho_{eq})$ and $F_{10.7}$ computed using the median values in 27-day (non-overalpping?) windows using all non--fill hourly values.  A scatter plot of these two lines is shown in Figure~\ref{ccplot}.  The linear correlation is found to be $0.94$ matching the value found by \cite{Takahashi2010} who used measurements from all satellites in the time interval of 1980 through 1991.
+Figure~\ref{ccplot} shows the long-term trends of GOES 6 based $log(\rho_{eq})$ and $F_{10.7}$ computed using the median values in 27-day (non-overalpping?) windows using all non--fill hourly values.  A scatter plot of these two lines is shown in Figure~\ref{ccplot}.  The linear correlation is found to be $0.94$ matching the value found by \cite{Takahashi2010} who used measurements from all satellites in the time interval of 1980 through 1991.  
+
+\section{Results}
 
 \subsection{$D_{st}$ and $\rho_{eq}$ Events}
 
@@ -151,7 +150,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \begin{figure}[htp!]
 \centering
 \includegraphics[scale=0.45]{paperfigures/alldata-GOES6-1983-1991.eps}
-\caption{Overview of data used in this study. The top four panels show parameters from \cite{Reconstruction} and the bottom panel is based on $\rho_{eq}$ from \cite{Denton} after interpolation and averaging described in the text. Dashed horizontal lines in the $D_{st}$ and $\rho_{eq}$ panels indicate sample event cutoff thresholds of $D_{st}=-50$~nT and $\rho_{eq}=40$~amu/cm$^3$}.
+\caption{Overview of data used in this study. The top four panels show parameters from \cite{Reconstruction} and the bottom panel contains $\rho_{eq}$ based on GOES 6 measurements from \cite{Denton} after interpolation and averaging described in the text. Dashed horizontal lines in the $D_{st}$ and $\rho_{eq}$ panels indicate sample event cutoff thresholds of $D_{st} = -50$~nT and $\rho_{eq} = 40$~amu/cm$^3$}.
 \label{AllData}
 \end{figure}
 
