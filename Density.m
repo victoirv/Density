@@ -34,11 +34,12 @@ DentonData
 
 %-----------
 
-yranges=zeros(4,4,2);
+yranges=zeros(5,4,2);
 yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230];
 yranges(2,:,:)=[-8 3; 350 600; -90 0; 160 210];
 yranges(3,:,:)=[-8 3; 350 580; -90 0; 170 200];
 yranges(4,:,:)=[-3 2; 400 550; -30 -10; 80 120];
+yranges(5,:,:)=[-10 10; 0 1000; -100 0; 00 200]; %Made for overwriting with specific cases
 
 LongTimeScale=1;%24*27; %How many hours to average over. Best stick to 1, 24, or 24*27
 cutoffduration=1; %Minimum duration of events, in hours
@@ -50,8 +51,9 @@ AECut=0;
 nnanalysis=0; %Also set 0 here, changed on per-case basis.
 ccanalysis=0;
 figurename='paperfigures/stormavs-';
-%Select kind of storm to look for
+BigFont=16; %Set size for larger, readable fonts
 
+%Select kind of storm to look for
 switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
@@ -227,7 +229,7 @@ end
 %%%%%%
 %Find storm indices and apply conditions to prune storms based on duration
 %or overlapping edges of data
-[starti,endi,duration]=FindStorms(storms,FILLED,cutoffduration,cutconditions,maxwidth);
+[starti,endi,duration]=FindStorms(storms,FILLED,cutoffduration,cutconditions,maxwidth,MLTFit);
 
 %Build matrices storing all storms
 stormi=1;

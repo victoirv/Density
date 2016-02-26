@@ -1,4 +1,4 @@
-function [starti,endi,duration]=FindStorms(storms,FILLED,cutoffduration,cutconditions,maxwidth)
+function [starti,endi,duration]=FindStorms(storms,FILLED,cutoffduration,cutconditions,maxwidth,MLTFit)
 
 starti=find(storms>0);
 endi=find(storms<0)-1;

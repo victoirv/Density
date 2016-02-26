@@ -25,7 +25,7 @@ Time(Time>datelimits(2))=[];
 
 for i=1:numvars
     h(i)=subplot('position',subplotstack(numvars,i));
-    plot(Time,Data(:,i),'.','MarkerSize',12); 
+    plot(Time,Data(:,i),'.','MarkerSize',10); 
     text(0.01,0.85,labels{i},'Units','normalized','FontSize',14); 
     if(ylims~=0)
         ylim(ylims(i,:));

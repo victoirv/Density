@@ -74,9 +74,9 @@ if(MakePaperPlots && stormcase==1)
     [AX,H1,H2]=plotyy(NewTime,x,NewTime,y,'plot','plot');
     set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
     ylim(AX(2),[0.5,1.5])
-    ylabel(AX(1),'F_{10.7\_27d}'); ylabel(AX(2),'log(\rho_{eq\_27d})');
-    xlabel('Year','FontSize',16);
-    title(sprintf('Data comparison for GOES %d - CC: %2.2f',satnum,cc(1,2)))
+    ylabel(AX(1),'F_{10.7\_27d}','FontSize',BigFont); ylabel(AX(2),'log(\rho_{eq\_27d})','FontSize',BigFont);
+    xlabel('Year','FontSize',BigFont);
+    title(sprintf('Data comparison for GOES %d - CC: %2.2f',satnum,cc(1,2)),'FontSize',BigFont)
     linkaxes(AX,'x')
     datetick('keeplimits');
     grid on
@@ -91,9 +91,9 @@ if(MakePaperPlots && stormcase==1)
     [AX,H1,H2]=plotyy(NewTime,x,NewTime,y,'plot','plot');
     set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
     ylim(AX(2),[0.5,1.5])
-    ylabel(AX(1),'F_{10.7\_1d}'); ylabel(AX(2),'log(\rho_{eq\_1d})');
-    xlabel('Year','FontSize',16);
-    title(sprintf('Data comparison for GOES %d - CC: %2.2f',satnum,cc(1,2)))
+    ylabel(AX(1),'F_{10.7\_1d}','FontSize',BigFont); ylabel(AX(2),'log(\rho_{eq\_1d})','FontSize',BigFont);
+    xlabel('Year','FontSize',BigFont);
+    title(sprintf('Data comparison for GOES %d - CC: %2.2f',satnum,cc(1,2)),'FontSize',BigFont)
     linkaxes(AX,'x')
     datetick('keeplimits');
     grid on
