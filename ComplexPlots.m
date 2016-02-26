@@ -155,22 +155,22 @@ if(MakePaperPlots)
     hold on; plot(xa,AVMatBars(:,:,6),'r-.'); ylim(yranges(yr,2,:))
     h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
     hold on; plot(xa,AVMatBars(:,:,15),'r-.'); ylim(yranges(yr,3,:))
-    if(DSTCut<0), plot([xa(1) xa(end)],[DSTCut DSTCut],'r-.','LineWidth',2); hold off; end
+    if(DSTCut<0), plot([xa(1) xa(end)],[DSTCut DSTCut],'k-.','LineWidth',2); hold off; end
     h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,30),'+-','LineWidth',2); text(0.01,0.9,'F_{10.7} (s.f.u)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
     hold on; plot(xa,AVMatBars(:,:,30),'r-.'); ylim(yranges(yr,4,:))
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
     subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
     hold on; plot(xa,AVMDMatBars(:,:),'r-.'); %ylim(AX(1),[0 90])
-    if(MDCut>0), plot([xa(1) xa(end)],[MDCut MDCut],'r-.','LineWidth',2); end
+    if(MDCut>0), plot([xa(1) xa(end)],[MDCut MDCut],'k-.','LineWidth',2); end
     set(H5,'LineWidth',2);set(AX(2),'Xlim',xv); set(AX(1),'Xlim',xv);  set(H5,'marker','+','color','red'); set(AX(1),'YColor','r'); set(AX(2),'YColor',[0 0.5 0.5]); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1)); set(AX(1),'Color','none'); set(AX(2),'Color','w');
     text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
     ylabel(AX(2),'# valid hourly values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
-    if(DSTCut<0), title(h1,sprintf('%d events of D_{st} < %d nT for %d-%d',length(starti),DSTCut,sy,ey)); end
-    if(AECut<0), title(h1,sprintf('%d events of AE > %d for %d-%d',length(starti),AECut,sy,ey)); end
-    if(MDCut>0), title(h1,sprintf('%d events of \\rho_{eq} > %damu/cm^3 for %d-%d',length(starti),MDCut,sy,ey)); end
+    if(DSTCut<0), title(h1,sprintf('%d D_{st} < %d nT events; %d-%d',length(starti),DSTCut,sy,ey)); end
+    if(AECut<0), title(h1,sprintf('%d AE > %d events; %d-%d',length(starti),AECut,sy,ey)); end
+    if(MDCut>0), title(h1,sprintf('%d \\rho_{eq} > %d amu/cm^3 events; %d-%d',length(starti),MDCut,sy,ey)); end
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);

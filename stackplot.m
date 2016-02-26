@@ -31,7 +31,7 @@ for i=1:numvars
     h(i)=subplot('position',subplotstack(numvars,i));
     plot(Time,Data(:,i),'.','MarkerSize',10);
     if(sum(ThreshLines(:,1)==i)>0)
-        hold on; plot(Time,ones(1,length(Time)).*(ThreshLines(ThreshLines(:,1)==i,2)),'r-.','LineWidth',2)
+        hold on; plot(Time,ones(1,length(Time)).*(ThreshLines(ThreshLines(:,1)==i,2)),'k-.','LineWidth',2)
     end
     text(0.01,0.85,labels{i},'Units','normalized','FontSize',14);
     if(ylims~=0)
