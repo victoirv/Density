@@ -74,15 +74,20 @@ if(MakePaperPlots && stormcase==1)
     y=log10(interptest(FILLEDTime,MassDensitySpline',NewTime));
     cc=corrcoef(x,y,'rows','pairwise');
     [AX,H1,H2]=plotyy(NewTime,x,NewTime,y,'plot','plot');
-    set(H1,'marker','.','color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    set(H1,'marker','.','color','blue'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    set(H2,'marker','.','color','red'); set(AX(2),'YColor','b');
+    ylim(AX(1),[0,300])
     ylim(AX(2),[0.5,1.5])
-    ylabel(AX(1),'F_{10.7\_27d}','FontSize',BigFont); ylabel(AX(2),'log(\rho_{eq\_27d})','FontSize',BigFont);
+    ylabel(AX(1),'F_{10.7\_27d} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'GOES-6 log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
+    set(AX(1),'YTick',0:50:300);
+    %set(AX(2),'YTick',.5:0.25:1.5);
     xlabel('Year','FontSize',BigFont);
-    title(sprintf('Data comparison for GOES %d - CC: %2.2f',satnum,cc(1,2)),'FontSize',BigFont)
+    title('27-day medians','FontSize',BigFont)
     linkaxes(AX,'x')
     datetick('keeplimits');
     grid on
     print('-depsc2', '-r200', sprintf('paperfigures/F107MD27d-GOES%d.eps',satnum))
+    print('-dpdf', sprintf('paperfigures/F107MD27d-GOES%d.pdf',satnum))
     print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107MD27d-GOES%d.png',satnum))
     if(strcmp(visible,'off')),close(h);end;
     
