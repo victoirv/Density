@@ -29,7 +29,11 @@ Time(Time>datelimits(2))=[];
 
 for i=1:numvars
     h(i)=subplot('position',subplotstack(numvars,i));
-    plot(Time,Data(:,i),'.','MarkerSize',10);
+    if(i<numvars)
+        plot(Time,Data(:,i),'.','MarkerSize',10);
+    else
+        plot(Time,Data(:,i),'r.','MarkerSize',10); %Plot last subplot in red
+    end
     if(sum(ThreshLines(:,1)==i)>0)
         hold on; plot(Time,ones(1,length(Time)).*(ThreshLines(ThreshLines(:,1)==i,2)),'k-.','LineWidth',2)
     end

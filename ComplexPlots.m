@@ -16,6 +16,70 @@ if(MakePaperPlots && stormcase==1)
     print -depsc2 -r200 paperfigures/allstorms.eps
     print -dpng -r200 paperfigures/PNGs/allstorms.png    
     if(strcmp(visible,'off')),close(h);end;
+    
+    
+    h=figure('Visible',visible);    
+    for i=1:length(AVMDMat(1,:))
+        top(i)=nanmean(AVMDMat(AVMat(:,i,5)>0,i));
+        topbar(i)=nanstd(AVMDMat(AVMat(:,i,5)>0,i));
+        bottom(i)=nanmean(AVMDMat(AVMat(:,i,5)<0,i));
+        bottombar(i)=nanstd(AVMDMat(AVMat(:,i,5)<0,i));
+    end
+    
+    plot(xa,top)
+    hold on; 
+    plot(xa,bottom,'r')
+    plot(xa,[top+topbar; top-topbar],'b-.')
+    plot(xa,[bottom+bottombar; bottom-bottombar],'r-.')
+    grid on;
+    legend('B_z > 0','B_z < 0')
+    ylabel('\rho_{eq} (amu/cm^3)')
+    xlabel('Time since onset (hours)')
+    print('-depsc2',sprintf('paperfigures/RhoBinnedBz-%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('paperfigures/PNGs/RhoBinnedBz-%d.png',satnum));  
+    
+    
+    
+    h=figure('Visible',visible);
+    hist(nanmean(AVMDMat(:,20:24),2),0:5:100)
+    h1 = findobj(gca,'Type','patch');
+    %set(h1,'FaceColor','r','EdgeColor','w','facealpha',0.75)
+    hold on;
+    hist(nanmean(AVMDMat(:,25:28),2),0:5:100)
+    h2 = findobj(gca,'Type','patch');
+    %set(h2,'facealpha',0.75);
+    legend('Before and at Onset','After Onset')
+    xlim([-5,105])
+    xlabel('Average \rho_{eq} (amu/cm^3)')
+    ylabel('Count')
+    title('Average \rho_{eq} Four Hours Before and After Storm Onset')
+    %Printing segfaults for some reason...
+    print('-depsc2',sprintf('paperfigures/rhobeforeafter-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('paperfigures/PNGs/rhobeforeafter-GOES%d.png',satnum));    
+    if(strcmp(visible,'off')),close(h);end;
+    
+    
+    
+    h=figure('Visible',visible);
+    for i=1:100
+        before(i)=nanmean(randsample(reshape(AVMDMat(:,21:25),[],1),4));
+        after(i)=nanmean(randsample(reshape(AVMDMat(:,26:29),[],1),4));
+    end
+    hist(before,0:5:100)
+    hold on;
+    hist(after,0:5:100)
+    legend('Before and at Onset','After Onset')
+    xlim([-5,105])
+    xlabel('Average \rho_{eq} (amu/cm^3)')
+    ylabel('Count')
+    title('Average \rho_{eq} Four Hours Before and After Storm Onset')
+    %Printing segfaults for some reason...
+    print('-depsc2',sprintf('paperfigures/rhobeforeafter-boot-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('paperfigures/PNGs/rhobeforeafter-boot-GOES%d.png',satnum));    
+    if(strcmp(visible,'off')),close(h);end;
+    
+    
+    
 end
 
 if(MakePaperPlots && MakeBinPlots)
@@ -218,4 +282,8 @@ if(MakePaperPlots && stormcase==1)
     if(strcmp(visible,'off')),close(h);end;
     
  
+    
+    
+    
+    
 end

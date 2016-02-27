@@ -28,7 +28,7 @@ MakeDstThreshPlot=0;
 MakeRandThreshPlot=0;
 visible='off';
 
-profile on
+%profile on
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Script to read all Denton/OMNI data. In a separate script since multiple
@@ -212,6 +212,12 @@ switch stormcase
         DSTCut=-50;
         figurename=strcat(figurename,'dst.eps');
         yr=2;
+    case 24
+                storms=diff([0 (MassDensityNanSpline>20)' 0]); %Mass Density Storm, started at 40
+        MDCut=20;
+        figurename=strcat(figurename,'mass.eps');
+        yr=2;
+        MakeBinPlots=1;
 end
 
 
@@ -317,7 +323,7 @@ PlotReproductions
 %Every plot left here is more advanced analysis
 ComplexPlots
 
-profile viewer
+%profile viewer
 
 
 
