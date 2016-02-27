@@ -18,6 +18,9 @@ if(MakePaperPlots && stormcase==1)
     if(strcmp(visible,'off')),close(h);end;
     
     
+end
+if(MakePaperPlots && (stormcase==2 || stormcase==24)) 
+    
     h=figure('Visible',visible);    
     for i=1:length(AVMDMat(1,:))
         top(i)=nanmean(AVMDMat(AVMat(:,i,5)>0,i));
@@ -43,7 +46,7 @@ if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     hist(nanmean(AVMDMat(:,20:24),2),0:5:100)
     h1 = findobj(gca,'Type','patch');
-    %set(h1,'FaceColor','r','EdgeColor','w','facealpha',0.75)
+    set(h1,'FaceColor','r','EdgeColor','w');%,'facealpha',0.75
     hold on;
     hist(nanmean(AVMDMat(:,25:28),2),0:5:100)
     h2 = findobj(gca,'Type','patch');
@@ -65,11 +68,16 @@ if(MakePaperPlots && stormcase==1)
         before(i)=nanmean(randsample(reshape(AVMDMat(:,21:25),[],1),4));
         after(i)=nanmean(randsample(reshape(AVMDMat(:,26:29),[],1),4));
     end
-    hist(before,0:5:100)
+    [n,x]=hist(before,0:2:50);
+    stairs(x,n,'LineWidth',2)
     hold on;
-    hist(after,0:5:100)
+    h1 = findobj(gca,'Type','patch');
+    set(h1,'FaceColor','r','EdgeColor','w');
+    [n,x]=hist(after,0:2:50);
+    stairs(x,n,'Color','r');
     legend('Before and at Onset','After Onset')
-    xlim([-5,105])
+    %xlim([-5,105])
+    axis tight;
     xlabel('Average \rho_{eq} (amu/cm^3)')
     ylabel('Count')
     title('Average \rho_{eq} Four Hours Before and After Storm Onset')

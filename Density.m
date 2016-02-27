@@ -215,8 +215,8 @@ switch stormcase
     case 24
                 storms=diff([0 (MassDensityNanSpline>20)' 0]); %Mass Density Storm, started at 40
         MDCut=20;
-        figurename=strcat(figurename,'mass.eps');
-        yr=2;
+        figurename=strcat(figurename,'mass-gt20-GOES',sprintf('%d',satnum),'.eps');
+        yr=1;
         MakeBinPlots=1;
 end
 
