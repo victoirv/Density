@@ -1,14 +1,27 @@
 #!/usr/bin/perl
 #Parses tables to combine into one table for the paper
 
+if($#ARGV+1 > 0) {
+ $Type=$ARGV[0];
+ if($Type!~m/(NN|CC)/){
+  print "Type must be NN or CC\n";
+  exit
+  }
+} else {
+ $Type="CC";
+}
 
-open(FH1,"<CCtable-GOES2.txt");
+$TypeString="linear";
+if($Type=~m/NN/)
+{$TypeString="nonlinear";}
+
+open(FH1,"<${Type}table-GOES2.txt");
 my @FH1s=<FH1>;
-open(FH2,"<CCtable-GOES5.txt");
+open(FH2,"<${Type}table-GOES5.txt");
 my @FH2s=<FH2>;
-open(FH3,"<CCtable-GOES6.txt");
+open(FH3,"<${Type}table-GOES6.txt");
 my @FH3s=<FH3>;
-open(FH4,"<CCtable-GOES7.txt");
+open(FH4,"<${Type}table-GOES7.txt");
 my @FH4s=<FH4>;
 close(FH1); 
 close(FH2);
@@ -50,7 +63,7 @@ for $line(@FH4s){
 my @Want=('doy','MLT','Bz','Vsw','Dst','Rhosw','F107','Bz+Vsw','Dst+F107','All');
 
 #Print
-open(FH,">perltable.tex");
+open(FH,">${Type}perltable.tex");
 print FH <<EOF;
 \\begin{table}[h]
 \\small
@@ -64,8 +77,8 @@ print FH "$wanted & $H1{$wanted} & $H2{$wanted} & $H3{$wanted} & $H4{$wanted} \\
 print FH <<EOF;
 \\hline
 \\end{tabular}
-\\caption{Table of linear model correlations showing the median of 100 random samples. Each sample trained on half of the data (via randomly selected rows of the least squares matrix) and tested on the other half} 
-\\label{perltable}
+\\caption{Table of $TypeString model correlations showing the median of 100 random samples. Each sample trained on half of the data (via randomly selected rows of the least squares matrix) and tested on the other half} 
+\\label{${Type}perltable}
 \\end{table}
 EOF
 
