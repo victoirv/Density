@@ -83,42 +83,44 @@ In this work, events are defined to occur when $D_{st}$ or $\rho_{eq}$ crosses a
 
 Figure~\ref{ccplot} shows the long-term trends of GOES 6 based $log(\rho_{eq})$ and $F_{10.7}$ computed using the median values in 27-day non-overlapping windows using all non-fill hourly values.  A scatter plot of these two lines is shown in the lower panel of Figure~\ref{ccplot}.  The linear correlation for GOES 6 is found to be $0.94$ matching the value found by \cite{Takahashi2010} who used measurements from all satellites in the time interval of 1980 through 1991.  The corresponding 27-day correlations for GOES 2, 5, and 7 are 0.81, 0.78, and 0.87, and the time range of coverage of measurements from these satellites are 1980-01-01/1983-05-16, 1983-01-01/1987-02-28, and 1983-05-27/1991-08-29 respectively.
 
-
-\section{Results Epoch}
-
-\subsection{$D_{st}$ and $\rho_{eq}$ Events}
+\section{Epoch Average Results}
 
 Two types of events are considered. The first is a drop in $D_{st}$ below the threshold of -50~nT.  The second is an increase in $\rho_{eq}$ above 40~amu/cm$^3$.
 
+\subsection{$D_{st}$ Events}
+
 Our first analysis uses data only from the time interval 1989-1991 to correspond with the analysis in \cite{Takahashi2010}. For both types of events, the hour of the threshold crossing defines the zero epoch time, and for each event $8\cdot24$ hours were kept after each event and $4\cdot24$ hours before each event.  To compute the epoch averages on a daily time scale, the median value of all measurements for all events centered on a window of $\pm 12$ hours was computed, and these windows were shifted in increments of $24$~hours. (Similar results are obtained if we first reduce each event time series to have a 1-day cadence by computing medians in 1-day bins and then compute the medians across events.)  Error bars for each parameter were computed using the standard deviation of the values used in computing the median divided by the square root of the number of values used.
 
-In the upper panel of Figure \ref{DailyAverages}, $D_{st}$ events are shown.  The minimum $D_{st}$ median is $-48$~nT.  Consistent with \cite{Takahashi2010}, $D_{st}$ events correspond to elevated $\rho_{eq}$, although the magnitude of increase observed here is $\sim 2$ amu/cm$^3$ instead of the value of $\sim 10$ amu/cm$^3$ found in \cite{Takahashi2010}.  The vertical green bars in the $\rho_{eq}$ plot show the number of $\rho_{eq}$ values that were used to compute its median and error bars.  Note that for the non-\req\ medians, the number of measurements used in computing the medians is typically equal to the number of events which is much larger than the number of \req\ values as we use all available measurements instead of restricting to only values where a non--fill $\rho_{eq}$ value existed. \vinote{Alternate: Note that for $D_{st}$ events, we computed median values using all available data, even when \req\ availability was sparse.}
+In the upper panel of Figure \ref{DailyAveragedDstEvents}, $D_{st}$ events are shown.  The minimum $D_{st}$ median is $-48$~nT.  Consistent with \cite{Takahashi2010}, $D_{st}$ events correspond to elevated $\rho_{eq}$, although the magnitude of increase observed here is $\sim 2$ amu/cm$^3$ instead of the value of $\sim 10$ amu/cm$^3$ found in \cite{Takahashi2010}.  The vertical green bars in the $\rho_{eq}$ plot show the number of $\rho_{eq}$ values that were used to compute its median and error bars.  Note that for the non-\req\ medians, the number of measurements used in computing the medians is typically equal to the number of events which is much larger than the number of \req\ values as we use all available measurements instead of restricting to only values where a non--fill $\rho_{eq}$ value existed. \vinote{Alternate: Note that for $D_{st}$ events, we computed median values using all available data, even when \req\ availability was sparse.}
 
-In the lower panel of Figure \ref{DailyAverages} it is shown that all trends seen in the analysis of 1989-1991 also hold for the entire run of GOES 6 over 1983-1991, including the magnitude of change in $\rho_{eq}$ across event onset.
+In the lower panel of Figure \ref{DailyAveragedDstEvents} it is shown that all trends seen in the analysis of 1989-1991 also hold for the entire run of GOES 6 over 1983-1991, including the magnitude of change in $\rho_{eq}$ across event onset.
 
 It was found that $\rho_{eq}$ enhancements do not clearly correspond to a signature in $D_{st}$, but that there is a trend for such enhancements to occur when $B_{z}$ in the IMF is positive.  This is consistent with \cite{Takahashi2010} who note that very large increases in $\rho_{eq}$ often corresponded to movement of the plasmasphere to beyond geosynchronous distances. 
 
-This method finds 669 periods of $D_{st}$ crossing beneath the selected threshold between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours \vinote{Make sure I defined "duration"}. Figure \ref{Storms} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{Storms}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-40$~nT. The dashed red lines indicate plus and minus one standard deviation of values from all events that were used to compute the median. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other parameters in the stack. 
+This method finds 669 periods of $D_{st}$ crossing beneath the selected threshold between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours \vinote{Make sure I defined "duration"}. Figure \ref{HourlyAveragedDstEvents} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{HourlyAveragedDstEvents}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-40$~nT. The dashed red lines indicate plus and minus one standard deviation of values from all events that were used to compute the median. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other parameters in the stack. 
 
-Figure \ref{Storms} shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $D_{st}$, but no obvious change in mass density at an hourly timescale. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation since there's no obvious connection on a short timescale. One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long term correlation of density and $D_{st}$.
+Figure \ref{HourlyAveragedDstEvents} shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $D_{st}$, but no obvious change in mass density at an hourly timescale. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation since there's no obvious connection on a short timescale. One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long term correlation of density and $D_{st}$.
 
 Two types of events are considered. The first is a drop in $D_{st}$ below the threshold of $-40$~nT.  The second is an increase in $\rho_{eq}$ above $40$~amu/cm$^3$.
 
 Our first analysis uses data only from the time interval 1989-1991.  In this interval, there were 329 $D_{st}$ events and 70 $\rho_{eq}$ events.  For both types of events, the hour of the threshold crossing defines the zero epoch time, and for each event $8\cdot24$ hours were kept after each event and $4\cdot24$ hours before each event.  To compute the epoch averages on a daily time scale, the median value of all measurements for all events centered window of $\pm 12$ hours was computed, and these windows were shifted in increments of $24$~hours. (Similar results are obtained if we first reduce each event time series to have a 1-day cadence by computing medians in 1-day bins and then compute the medians accross events.)  Error bars for each parameter were computed using the standard deviation of values used in computing the median dividied by the square root of the number of values used.
 
-In the upper panel of \ref{DailyAverages}, $D_{st}$ events are shown.  The minimum $D_{st}$ median is $-48$~nT.  Consistent with \cite{Takahashi2010}, $D_{st}$ events corrspond to elevated $\rho_{eq}$, although the magnitude of increase observed here is on the order of $\sim2$~amu/cm$^3$ instead of $\sim10$~amu/cm$^3$ found in \cite{Takahashi2010}.  The vertical green bars in the $\rho_{eq}$ plot show the number of $\rho_{eq}$ values that were used to compute its median and error bars.  Note that for $D_{st}$, the number of measurements used in computing the medians is much larger as we use all available $D_{st}$ measurements instead of restricting to only values where a non-fill $\rho_{eq}$ value existed.  
+In the upper panel of \ref{DailyAveragedDstEvents}, $D_{st}$ events are shown.  The minimum $D_{st}$ median is $-48$~nT.  Consistent with \cite{Takahashi2010}, $D_{st}$ events corrspond to elevated $\rho_{eq}$, although the magnitude of increase observed here is on the order of $\sim2$~amu/cm$^3$ instead of $\sim10$~amu/cm$^3$ found in \cite{Takahashi2010}.  The vertical green bars in the $\rho_{eq}$ plot show the number of $\rho_{eq}$ values that were used to compute its median and error bars.  Note that for $D_{st}$, the number of measurements used in computing the medians is much larger as we use all available $D_{st}$ measurements instead of restricting to only values where a non-fill $\rho_{eq}$ value existed.  
 
-In the lower panel of \ref{DailyAverages}, $\rho_{eq}$ events are shown.  Here we see that $\rho_{eq}$ enhancements do not clearly correspond to a signature in $D_{st}$, but that there is a trend for such enhancments to occur when $B_{z}$ in the IMF is positive.  This is consistent with \cite{Takahashi2010} who note that very large increases in $\rho_{eq}$ often corresponded to movement of the plasmasphere to beyond geosynchronous distances. 
+In the lower panel of \ref{DailyAveragedDstEvents}, $\rho_{eq}$ events are shown.  Here we see that $\rho_{eq}$ enhancements do not clearly correspond to a signature in $D_{st}$, but that there is a trend for such enhancments to occur when $B_{z}$ in the IMF is positive.  This is consistent with \cite{Takahashi2010} who note that very large increases in $\rho_{eq}$ often corresponded to movement of the plasmasphere to beyond geosynchronous distances. 
 
-A total of 668 events were found in the interval of May 1983 through August 1991 with an average duration of 9 hours and a median duration of 3 hours. Figure \ref{Storms} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{Storms}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-50$~nT. The dashed red lines indicate plus and minus one standard deviation of values from all events that went into the average. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other parameters in the stack. A subset of longer duration events will be looked at later. 
+A total of 668 events were found in the interval of May 1983 through August 1991 with an average duration of 9 hours and a median duration of 3 hours. Figure \ref{HourlyAveragedDstEvents} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{HourlyAveragedDstEvents}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-50$~nT. The dashed red lines indicate plus and minus one standard deviation of values from all events that went into the average. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other parameters in the stack. A subset of longer duration events will be looked at later. 
 
 This figure shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $D_{st}$, but no obvious change in mass density at an hourly timescale. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation since there's no obvious connection on a short timescale. One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long term correlation of density and $D_{st}$.
 
 \section{More specific events}
 It's hypothesized that progressively picking more specific event criteria will allow for the possibility of more significant results, at the expense of more bias in the selection process and potentially less overall usefulness of the results. That said, the predictability of extreme events is of definite interest, so an attempt has been made to find some reproducible method of prediction. Looking at events that last longer than 12 hours and events with an onset threshhold less than $-80$nT finds both result in a spike in mass density, but also a definite lack of data availability to the point where that spike may be coming from less than five of the total 211 events. 
 
-\subsection{Change in $\rho_{eq}$}
+\subsection{$\rho_{eq}$ Events}
+
 Instead of looking for events based on a threshold of $D_{st}$, we instead looked for a certain amount of change in $\rho_{eq}$ as the basis for event onset. Both raw change and percent change were done in case of bias towards high or low $\rho_{eq}$ periods, respectively, but neither showed any correlation to a change in $D_{st}$. 
+
+An alterntive type of event can be defined that corresponds to large increases in $\rho\ $.  Figure~\ref{HourlyAveragedRhoEvents} shows the epoch time series for events in which an increase of $\req\ $ above $20$~amu/cm$^2$ defines the start of the event.  Here we see the expected result that such events tend to be associated with positive $B_z^{IMF}$.  To determine if the sign of $B_z^{IMF}$ influences the $\rho\ $ epoch time series, we separated the events by the average of $B_z^{IMF}$ in a time window of $4$~hours centered on the event start time.  The epoch curves for $B_z^{IMF}\geq=0$ (257) events and $B_z^{IMF}\ge=0$ (139) have no statistically signifiant difference.
 
 \section{F10.7 dependence}
 In an effort to analyze the dependence of $\rho_{eq}$ on $F_{10.7}$, a few tests were performed. \cite{Takahashi2010} mention a strong correlation between the two. The long term correlation could be a bias for $D_{st}$'s effects, so a linear model was created, recreating mass density purely from $F_{10.7}$ in the form of $\rho_{eq}(t)=a\cdot F_{10.7}(t)$. This re-created $\rho_{eq}$ shows around a 45\% correlation with the actual $\rho_{eq}$, suggesting a strong influence, while doing the same procedure with $D_{st}$ shows only a 20-25\% correlation. 
@@ -167,8 +169,8 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \includegraphics[scale=0.40]{paperfigures/stormavs-dst-50-tak.eps}
 \rule[1ex]{5cm}{1pt}
 \includegraphics[scale=0.40]{paperfigures/stormavs-dst-day.eps}
-\caption{$D_{st}$ events from GOES 6. Top: Events in the interval 1989-1991; compare to \cite{Takahashi2010} Fig.~11. Bottom: Events in the interval 1983-1991.}
-\label{DailyAverages}
+\caption{$D_{st}$ events from GOES 6 using daily medians. Top: Events in the interval 1989-1991; compare to \cite{Takahashi2010} Fig.~11. Bottom: Events in the interval 1983-1991.}
+\label{DailyAveragedDstEvents}
 \end{figure}
 
 \begin{figure}[tp!]
@@ -176,8 +178,8 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \includegraphics[scale=0.40]{paperfigures/stormavs-dst.eps}
 \rule[1ex]{5cm}{1pt}
 \includegraphics[scale=0.40]{paperfigures/stormavs-dd12.eps}
-\caption{(a) Average of solar wind and near-Earth measurements around the time $D_{st}$ crossed below $-50$~nT onset. (b) Same as (a) except for constraint that $D_{st}$ stayed below $-50$~nT for at least 12~hours.}
-\label{Storms}
+\caption{$D_{st}$ events from GOES 6 using hourly medians. Top: Events in the interval 1983-1991; compare to bottom panel {DailyAveragedDstEvents}. Bottom: Same as Top except for constraint that $D_{st}$ stayed below $-50$~nT for at least 12~hours.}
+\label{HourlyAveragedDstEvents}
 \end{figure}
 
 \clearpage
@@ -185,10 +187,9 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \begin{figure}[htp!]
 	\centering
 	\includegraphics[scale=0.40]{paperfigures/stormavs-mass-gt20-GOES6.eps}
-\caption{$\req\ > 20~ amu/cm^3$ events from GOES6.}
-\label{MassStormsGT20Figure}
+\caption{$\req\ > 20$~ amu/cm^3 events from GOES 6 using hourly medians. As described in the text, there is no statistically significant dependence of the $\req\ $ plot on $B_z$ in the time interval of $\pm 2$~hours around the event.}
+\label{HourlyAveragedRhoEvents}
 \end{figure}
-
 
 \begin{figure}[tp!]
 \centering
@@ -208,7 +209,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \centering
 \includegraphics[scale=0.40]{paperfigures/stormavs-d80.eps}
 \rule[1ex]{5cm}{1pt}
-\caption{(a) Same as Figure \ref{Storms}(a) except with constraint that $D_{st}$ crossed below $-80$~nT }
+\caption{(a) Same as Figure \ref{HourlyAveragedDstEvents}(a) except with constraint that $D_{st}$ crossed below $-80$~nT }
 \label{Dspec}
 \end{figure}
 
