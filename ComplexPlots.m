@@ -1,7 +1,7 @@
 
 
 if(MakePaperPlots && stormcase==1)
-    stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 DSTCut])
+    stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 DSTCut],yranges(yr,:,:))
     
     if(satnum==6 && sy<=1989 && ey>=1989) %Make March 1989 Geomagnetic storm plot (if necessary time range still exists)
         stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[],[],[datenum('Mar-10-1989') datenum('Mar-18-1989')])
@@ -20,7 +20,7 @@ if(MakePaperPlots && stormcase==1)
     
 end
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
-    tw=20:25;
+    tw=25:30;
     topcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
     bottomcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
     h=figure('Visible',visible);   
@@ -38,11 +38,11 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         bottombar(i)=nanstd(AVMDMat(AVMat(:,i,5)<0,i));
     end
     %}
-    plot(xa,nanmedian(AVMDMat),'r','LineWidth',2)
+    plot(xa,nanmedian(AVMDMat),'r','LineWidth',3)
     hold on;
     
-    plot(xa,top,'b')    
-    plot(xa,bottom,'k')%'Color',[0.3 0.8 0.3])
+    plot(xa,top,'b','LineWidth',2)    
+    plot(xa,bottom,'k','LineWidth',2)%'Color',[0.3 0.8 0.3])
     plot(xa,[top+topbar; top-topbar],'b-.')
     plot(xa,[bottom+bottombar; bottom-bottombar],'k-.')%,'Color',[0.3 0.8 0.3])
     ylims=get(gca,'YLim');
@@ -53,7 +53,7 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
     grid on;
     set(gca,'xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     xlim([-timewidth timewidth*2]./LongTimeScale)
-    lh=legend('All \rho_{eq} events ',sprintf('B_z \\geq %2.2f; %d events ',topcut,sum(nanmedian(AVMat(:,tw,5),2)>=topcut)),sprintf('B_z < %2.2f; %d events ',bottomcut,sum(nanmedian(AVMat(:,tw,5),2)<bottomcut)));
+    lh=legend('All \rho_{eq} events ',sprintf('B_z  \\geq %2.2f nT; %d events ',topcut,sum(nanmedian(AVMat(:,tw,5),2)>=topcut)),sprintf('B_z^{ } < %2.2f nT; %d events ',bottomcut,sum(nanmedian(AVMat(:,tw,5),2)<bottomcut)));
     set(lh,'box','off');
     title(sprintf('\\rho_{eq} events; GOES %d; %d-%d',satnum,sy,ey));
     ylabel('\rho_{eq} (amu/cm^3)')
@@ -252,10 +252,11 @@ if(MakePaperPlots)
     hold on; plot(xa,AVMatBars(:,:,30),'r-.'); ylim(yranges(yr,4,:))
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
-    subplot('position',subplotstack(5,5)); [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
+    subplot('position',subplotstack(5,5)); 
+    [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
     hold on; plot(xa,AVMDMatBars(:,:),'r-.'); %ylim(AX(1),yranges(yr,5,:))
     if(MDCut>0), plot([xa(1) xa(end)],[MDCut MDCut],'k-.','LineWidth',2); end
-    set(AX(1),'Xlim',xv); set(AX(1),'YColor','r'); set(AX(1),'Color','none'); set(AX(1),'Ylim',yranges(yr,5,:),'YTick',linspace(yranges(yr,5,1),yranges(yr,5,2),6)); 
+    set(AX(1),'Xlim',xv); set(AX(1),'YColor','r'); set(AX(1),'Color','none'); set(AX(1),'Ylim',yranges(yr,5,:),'YTick',round(linspace(yranges(yr,5,1),yranges(yr,5,2),length(get(AX(2),'YTick'))))); 
     set(AX(2),'Xlim',xv); set(AX(2),'YColor',[0 0.5 0.5]); set(AX(2),'Color','w');
     set(H5,'LineWidth',2);   set(H5,'marker','+','color','red'); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1));  
     text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 

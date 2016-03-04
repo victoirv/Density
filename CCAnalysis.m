@@ -1,4 +1,4 @@
-function CCAnalysis(AVMat,AVMDMat)
+function CCAnalysis(AVMat,AVMDMat,satnum)
 loops=100;
 trainpercent=0.50;
 
@@ -6,7 +6,7 @@ table=fopen(sprintf('tables/CCtable-GOES%d.txt',satnum),'w');
 fprintf(table,'<pre>\n');
 fprintf(table,'Vars \t \t  CCtr  CCt\n');
 
-PermNames={'doy','Bz','Vsw','Dst','MLT','F107','Rhosw'};
+PermNames={'DoY','B_z','V_{sw}','D_{st}','MLT','F_{10.7}','\rho_{sw}'};
 PermCols=[2 5 6 15 29 30 31];
 
 Perms=combnk(1:7,1);

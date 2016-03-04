@@ -1,17 +1,21 @@
 #!/usr/bin/perl
 #Parses tables to combine into one table for the paper
+use warnings;
+use strict;
+
+my @Types=('CC','NN');
 
 if($#ARGV+1 > 0) {
- $Type=$ARGV[0];
- if($Type!~m/(NN|CC)/){
+ @Types=($ARGV[0]);
+ if($ARGV[0]!~m/(NN|CC)/){
   print "Type must be NN or CC\n";
   exit
   }
-} else {
- $Type="CC";
 }
 
-$TypeString="linear";
+foreach my $Type(@Types){
+
+my $TypeString="linear";
 if($Type=~m/NN/)
 {$TypeString="nonlinear";}
 
@@ -33,45 +37,50 @@ my %H2=();
 my %H3=();
 my %H4=();
 
-for $line(@FH1s){
+my $regex = '^(\S+)\s+- .*(.\d\.\d\d)[^\d]*'; #To catch CC test column
+if($Type=~m/NN/) {
+$regex = '^(\S+)\s+.*(.\d\.\d\d)[^\d]*$'; #To catch NN validation column
+}
+
+for my $line(@FH1s){
  if($line=~m/\d+/){
- $line=~m/([\w\+]+)\s.*([\+-]\d\.\d\d)[^\d]*/;
+ $line=~/$regex/;
  $H1{"$1"}=$2;
  }
 }
 
-for $line(@FH2s){
+for my $line(@FH2s){
  if($line=~m/\d+/){
- $line=~m/([\w\+]+)\s.*([\+-]\d\.\d\d)[^\d]*/;
+ $line=~/$regex/;
  $H2{"$1"}=$2;
  }
 }
-for $line(@FH3s){
+for my $line(@FH3s){
  if($line=~m/\d+/){
- $line=~m/([\w\+]+)\s.*([\+-]\d\.\d\d)[^\d]*/;
+ $line=~/$regex/;
  $H3{"$1"}=$2;
  }
 }
-for $line(@FH4s){
+for my $line(@FH4s){
  if($line=~m/\d+/){
- $line=~m/([\w\+]+)\s.*([\+-]\d\.\d\d)[^\d]*/;
+ $line=~/$regex/;
  $H4{"$1"}=$2;
  }
 }
 
 
-my @Want=('doy','MLT','Bz','Vsw','Dst','Rhosw','F107','Bz+Vsw','Dst+F107','All');
+my @Want=('DoY','MLT','B_z','V_{sw}','D_{st}','\rho_{sw}','F_{10.7}','B_z+V_{sw}','D_{st}+F_{10.7}','All');
 
 #Print
 open(FH,">${Type}perltable.tex");
 print FH <<EOF;
 \\begin{table}[h]
 \\small
-\\begin{tabular}{|l|llll|}
+\\begin{tabular}{|L|LLLL|}
 \\hline
 EOF
-print FH " & GOES 2 & GOES 5 & GOES 6 & GOES 7\\\\ \\hline\n";
-for $wanted(@Want){
+print FH ' & \text{GOES 2} & \text{GOES 5} & \text{GOES 6} & \text{GOES 7}\\\\ \hline'."\n";
+for my $wanted(@Want){
 print FH "$wanted & $H1{$wanted} & $H2{$wanted} & $H3{$wanted} & $H4{$wanted} \\\\\n";
 }
 print FH <<EOF;
@@ -84,3 +93,4 @@ EOF
 
 close(FH);
 
+}

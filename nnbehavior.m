@@ -1,4 +1,4 @@
-function [testmean, testsd] = nnbehavior(x,target,xtest,delays,loops,plotvars,satnum)
+function [testmean, testsd] = nnbehavior(x,target,xtest,delays,loops,plotvars,AXmap,satnum)
 if(nargin<4)
     delays=1;
     loops=10;
@@ -62,7 +62,11 @@ if(plotv)
     hold on; plot(xtest(2:end),[testmean+testsd; testmean-testsd],'r.')
     xlabel(plotvars{1})
     ylabel(plotvars{2})
-    title(sprintf('Mean predicted %s over %d loops for GOES %d',plotvars{2},loops,satnum))
-    print('-dpng',sprintf('figures/NN%s-GOES%d.png',strjoin(plotvars,'-'),satnum))
+   % axis([AXmap(plotvars{1}) AXmap(plotvars{2})])
+    title(sprintf('Mean nonlinear predicted %s over %d loops for GOES %d',plotvars{2},loops,satnum))
+        filename=sprintf('figures/NN%s-GOES%d.',strjoin(plotvars,'-'),satnum);
+    filename=regexprep(filename,'[^a-zA-Z0-9/]','');
+    print('-depsc2',strcat(filename,'eps'))
+    print('-dpng',strcat(filename,'png'))
 end
 

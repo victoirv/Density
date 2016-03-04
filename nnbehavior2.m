@@ -1,4 +1,4 @@
-function [testmean, testsd] = nnbehavior2(x,target,delays,loops,plotvars,satnum)
+function [testmean, testsd] = nnbehavior2(x,target,delays,loops,plotvars,AXmap,satnum)
 if(nargin<4)
     delays=1;
     loops=10;
@@ -61,21 +61,35 @@ end
 
 if(plotv)
     figure; surf(xtest(2:end),ytest,testmean,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
-    view(0,90)
+    
     ylabel(plotvars{2})
     xlabel(plotvars{1})
-    title(sprintf('Mean predicted %s over %d loops with GOES %d',plotvars{3},loops,satnum))
+    axis([AXmap(plotvars{1}) AXmap(plotvars{2}) AXmap(plotvars{3})])
+    caxis(AXmap('\rho_{eq}'))
+    view(0,90)
+    title(sprintf('Mean nonlinear predicted %s over %d loops with GOES %d',plotvars{3},loops,satnum))
     colorbar
     hold on; scatter3(x(:,1),x(:,2),repmat(100000,1,length(x(:,1))),target,'k')
-    print('-dpng',sprintf('figures/NN%s-GOES%d.png',strjoin(plotvars,'-'),satnum))
+    yr=AXmap(plotvars{2});
+    %set(gca,'YTick',linspace(yr(1),yr(2),10))
+    filename=sprintf('figures/NN%s-GOES%d.',strjoin(plotvars,'-'),satnum);
+    filename=regexprep(filename,'[^a-zA-Z0-9/]','');
+    print('-depsc2',strcat(filename,'eps'))
+    print('-dpng',strcat(filename,'png'))
     
     figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
-    view(0,90)
+    
     ylabel(plotvars{2})
     xlabel(plotvars{1})
+    axis([AXmap(plotvars{1}) AXmap(plotvars{2})])
     title(sprintf('Standard deviation of %d loops predicting %s with GOES %d',loops,plotvars{3},satnum))
     colorbar
-    print('-dpng',sprintf('figures/NN%s-sd-GOES%d.png',strjoin(plotvars,'-'),satnum))
+    view(0,90)
+    
+        filename=sprintf('figures/NN%s-sd-GOES%d.',strjoin(plotvars,'-'),satnum);
+    filename=regexprep(filename,'[^a-zA-Z0-9/]','');
+    print('-depsc2',strcat(filename,'eps'))
+    print('-dpng',strcat(filename,'png'))
     
     coef=[x ones(length(x),1)]\target;
     coef=nanmedian(coefs,2);
@@ -84,23 +98,25 @@ if(plotv)
     cc=corrcoef([x ones(length(x),1)]*coef,target);
     figure;
     surf(xtest,ytest,Z,'EdgeColor','none','LineStyle','none','FaceLighting','phong')
-    view(0,90)
+    
     ylabel(plotvars{2})
     xlabel(plotvars{1})
-    if(strcmp(plotvars{1},'Bz'))
-    xlim([-10,10])
-    elseif(strcmp(plotvars{1},'Vsw'))
-       xlim([200 800]) 
-    end
-    if(strcmp(plotvars{2},'F10.7'))
-        ylim([50 350])
-    end
-    zlim([0,500])
-    caxis([0 50])
-    title(sprintf('Linear predicted %s over %d loops with GOES %d - CC%2.2f',plotvars{3},loops,satnum,cc(1,2)))
+    axis([AXmap(plotvars{1}) AXmap(plotvars{2}) AXmap(plotvars{3})])
+    caxis(AXmap('\rho_{eq}'))
+    view(0,90)
+    grid on
+    yr=AXmap(plotvars{2});
+    %set(gca,'YTick',linspace(yr(1),yr(2),10))
+        xr=AXmap(plotvars{1});
+    %set(gca,'XTick',linspace(xr(1),xr(2),10))
+    title(sprintf('Mean linear predicted %s over %d loops with GOES %d - CC%2.2f',plotvars{3},loops,satnum,cc(1,2)))
     colorbar
     hold on; scatter3(x(:,1),x(:,2),repmat(500,1,length(x(:,1))),target,'k')
-    print('-dpng',sprintf('figures/Linear%s-GOES%d.png',strjoin(plotvars,'-'),satnum))
+    
+    filename=sprintf('figures/Linear%s-GOES%d.',strjoin(plotvars,'-'),satnum);
+    filename=regexprep(filename,'[^a-zA-Z0-9/]','');
+    print('-depsc2',strcat(filename,'eps'))
+    print('-dpng',strcat(filename,'png'))
     
 end
 
