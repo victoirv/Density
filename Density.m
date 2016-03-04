@@ -41,8 +41,8 @@ DentonData
 %-----------
 
 yranges=zeros(5,5,2);
-yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230; 12 22];
-yranges(2,:,:)=[-8 3; 350 600; -90 0; 160 210; 12 22];
+yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230; 8 16];
+yranges(2,:,:)=[-8 3; 350 600; -90 0; 160 210; 8 16];
 yranges(3,:,:)=[-8 3; 350 580; -90 0; 170 200; 12 22];
 yranges(4,:,:)=[-3 2; 400 550; -30 -10; 80 120; 12 22];
 yranges(5,:,:)=[-10 10; 0 1000; -100 0; 00 200; 12 22]; %Made for overwriting with specific cases
@@ -64,89 +64,92 @@ switch stormcase
     case 1
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
         DSTCut=-50;
-        figurename=strcat(figurename,'dst.eps');
+        figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
         yr=2;
         MakeBinPlots=1;
     case 2
         storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
         MDCut=40;
-        figurename=strcat(figurename,'mass.eps');
+        figurename=strcat(figurename,'mass',sprintf('-GOES%d.eps',satnum));
         yr=2;
         MakeBinPlots=1;
     case 3
         storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
-        figurename=strcat(figurename,'diffden-10amu.eps');
+        figurename=strcat(figurename,'diffden-10amu',sprintf('-GOES%d.eps',satnum));
         yr=3;
     case 4
         storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
-        figurename=strcat(figurename,'diffden-30percent.eps');
+        figurename=strcat(figurename,'diffden-30percent',sprintf('-GOES%d.eps',satnum));
         yr=3;
     case 5
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         cutoffduration=12; %12 hour DST storm
-        figurename=strcat(figurename,'dd12.eps');
-        yr=2;
+        figurename=strcat(figurename,'dd12',sprintf('-GOES%d.eps',satnum));
+        yr=5;
+        yranges(5,:,:)=[-10 10; 0 1000; -100 0; 00 200; 0 70];
     case 6
         storms=diff([0 (MassDensityNanSpline>40)' 0]);
         MDCut=40;
         cutoffduration=12;
-        figurename=strcat(figurename,'md12.eps');
+        figurename=strcat(figurename,'md12',sprintf('-GOES%d.eps',satnum));
         yr=2;
     case 7
          storms=diff([0 (FILLED(:,15)<-80)' 0]);
          DSTCut=-80;
-         figurename=strcat(figurename,'d80.eps');
+         figurename=strcat(figurename,'d80',sprintf('-GOES%d.eps',satnum));
          yr=3;
     case 8
         storms=diff([0 (MassDensityNanSpline>70)' 0]);  
         MDCut=70;
-        figurename=strcat(figurename,'m70.eps');
+        figurename=strcat(figurename,'m70.',sprintf('-GOES%d.eps',satnum));
         yr=3;
     case 9
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         removef107=1;
-        figurename=strcat(figurename,'dst-nof107.eps');
+        figurename=strcat(figurename,'dst-nof107',sprintf('-GOES%d.eps',satnum));
         yr=3; %Dont know
     case 10 %Takahashi Fig 11
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         cutconditions=1;
         LongTimeScale=24;
-        figurename=strcat(figurename,'dst-50-tak.eps');
-        yr=1;
+        figurename=strcat(figurename,'dst-50-tak',sprintf('-GOES%d.eps',satnum));
+        yr=5;
+        yranges(5,:,:)=[-2 2; 350 550; -60 0; 150 230; 12 22];
+        
     case 11 %Takahashi but Mass Storm
         storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
         MDCut=40;
         cutconditions=1;
         LongTimeScale=24;
-        figurename=strcat(figurename,'mass-tak.eps');
+        figurename=strcat(figurename,'mass-tak',sprintf('-GOES%d.eps',satnum));
         yr=1;
     case 12 %Takahashi hourly dst
         storms=diff([0 (FILLED(:,15)<=-50)' 0]);
         DSTCut=-50;
         cutconditions=1;
         %cutoffduration=12;
-        figurename=strcat(figurename,'dst-50-tak-hour.eps');
+        figurename=strcat(figurename,'dst-50-tak-hour',sprintf('-GOES%d.eps',satnum));
         yr=1;%Don't know
         %MakeBinPlots=1;
     case 13 %Full time range, daily medians
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         LongTimeScale=24;
-        figurename=strcat(figurename,'dst-day.eps');
+        figurename=strcat(figurename,'dst-day',sprintf('-GOES%d.eps',satnum));
         yr=1;
     case 14
         storms=diff([0 (MassDensityNanSpline>40)' 0]); 
         MDCut=40;
         LongTimeScale=24;
-        figurename=strcat(figurename,'mass-day.eps');
+        figurename=strcat(figurename,'mass-day',sprintf('-GOES%d.eps',satnum));
         yr=1;
     case 15
         storms=diff([0 (FILLED(:,15)<-30)' 0]); %DST Storm
         DSTCut=-30; 
-        figurename=strcat(figurename,'dst-30.eps');
+        figurename=strcat(figurename,'dst-30',sprintf('-GOES%d.eps',satnum));
         yr=2;
         MakeBinPlots=1;
     case 16 %AE Events
@@ -157,7 +160,7 @@ switch stormcase
         AEFit=AEFit-avrhos(Hrs+1)';
         AECut=300;
         storms=diff([0 (AEFit>AECut)' 0]);
-        figurename=strcat(figurename,'AE.eps');
+        figurename=strcat(figurename,'AE',sprintf('-GOES%d.eps',satnum));
         yr=4;
         MakeBinPlots=1;
     case 17 %Random events
@@ -169,7 +172,7 @@ switch stormcase
             storms=zeros(1,length(MassDensitySpline));
             storms(starti)=1; storms(starti+1)=-1;
         end
-        figurename=strcat(figurename,'random.eps');
+        figurename=strcat(figurename,'random',sprintf('-GOES%d.eps',satnum));
         yr=4;
         MakeBinPlots=1;
     case 18    
@@ -179,44 +182,45 @@ switch stormcase
     MassDensitySpline=MassDensitySpline-avrhos(FILLED(:,3)+1);
     storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
         DSTCut=-50;
-        figurename=strcat(figurename,'dst-detrended.eps');
+        figurename=strcat(figurename,'dst-detrended',sprintf('-GOES%d.eps',satnum));
         yr=2;
         MakeBinPlots=1;
     case 19
         DSTCut=-80;
         storms=diff([0 (FILLED(:,15)<DSTCut)' 0]); %DST Storm
-        figurename=strcat(figurename,'dst80.eps');
+        figurename=strcat(figurename,'dst80',sprintf('-GOES%d.eps',satnum));
         yr=2;
         MakeBinPlots=1;
     case 20 %Specifically for a case later that loops over DST threshholds 
         DSTCut=-30; %This doesn't really matter
         storms=diff([0 (FILLED(:,15)<DSTCut)' 0]); %DST Storm
-        figurename=strcat(figurename,'dst30.eps');
+        figurename=strcat(figurename,'dst30',sprintf('-GOES%d.eps',satnum));
         yr=2;
         MakeDstThreshPlot=1;
     case 21 %Specifically for a case later that loops over DST threshholds 
         DSTCut=-30; %This doesn't really matter
         storms=diff([0 (FILLED(:,15)<DSTCut)' 0]); %DST Storm
-        figurename=strcat(figurename,'dst30.eps');
+        figurename=strcat(figurename,'dst30',sprintf('-GOES%d.eps',satnum));
         yr=2;
         MakeRandThreshPlot=1;
     case 22
         nnanalysis=1;
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
         DSTCut=-50;
-        figurename=strcat(figurename,'dst.eps');
+        figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
         yr=2;
     case 23
         ccanalysis=1;
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
         DSTCut=-50;
-        figurename=strcat(figurename,'dst.eps');
+        figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
         yr=2;
     case 24
                 storms=diff([0 (MassDensityNanSpline>20)' 0]); %Mass Density Storm, started at 40
         MDCut=20;
-        figurename=strcat(figurename,'mass-gt20-GOES',sprintf('%d',satnum),'.eps');
-        yr=1;
+        figurename=strcat(figurename,'mass-gt20',sprintf('-GOES%d.eps',satnum));
+        yr=5;
+        yranges(5,:,:)=[-2 2; 350 550; -60 0; 150 230; 10 30];
         MakeBinPlots=1;
 end
 
@@ -287,11 +291,11 @@ end
 
 %Shifting these to external functions for cleanliness and proof of independence/modularity
 if(ccanalysis)
-    CCAnalysis(AVMat,AVMDMat);
+    CCAnalysis(AVMat,AVMDMat,satnum);
 end
 
 if(nnanalysis) 
-    NNAnalysis(AVMat,AVMDMat);
+    NNAnalysis(AVMat,AVMDMat,satnum);
 end
 
 

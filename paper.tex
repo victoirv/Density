@@ -12,10 +12,12 @@
 \usepackage[position=t,singlelinecheck=off,justification=raggedleft]{subcaption}
 \usepackage[authoryear,square]{natbib}
 \usepackage{aas_macros}
+\usepackage{array}
 \pagestyle{fancy}
 \fancyhead[R]{Veibell \thepage}
 \fancyhead[L]{}
 
+\newcolumntype{L}{>{$}l<{$}} %To enable math mode in tables (for saying things like B_z)
 \newcommand{\vinote}[1]{\textcolor{red}{\textbf{#1}}} %If you want \inote{#} instead of just \note #, for inline notes
 \def\vnote#1\par{\textcolor{red}{\textbf{#1}}\\} %Make note bold and red, re-add newline
 \newcommand{\req}{\ensuremath{\rho_{eq}}}
@@ -191,6 +193,16 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 
 
 \begin{figure}[tp!]
+	\centering
+	\includegraphics[scale=0.40]{paperfigures/RhoBinnedBz-case24-t020-tf25-GOES6.eps}
+	\includegraphics[scale=0.40]{paperfigures/RhoBinnedBz-case24-t025-tf30-GOES6.eps}
+	\caption{Binning \req\ events by $B_z$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
+	\label{fig:RhoBinned}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[tp!]
 \centering
 \includegraphics[scale=0.40]{paperfigures/HighLowF107rhoeq.eps}
 \includegraphics[scale=0.40]{paperfigures/HighLowF107Bz.eps}
@@ -198,6 +210,7 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \caption{Binning events by $F_{10.7}$ value at onset for $\rho_{eq}$ and, in the middle panel, $B_z$. Lower panel shows number of valid points in each bin}
 \label{f107bin}
 \end{figure}
+
 
 \clearpage
 
