@@ -5,8 +5,8 @@ end
 
 tnew=tnew(:); %Force orientation
 t=t(:);
-
 %{
+
 dt2=floor(dt/(t(2)-t(1)));
 t2=tnew(1)-dt:(t(2)-t(1)):tnew(end)+dt;
 x2=nan(length(t2),min(size(x)));
@@ -29,8 +29,7 @@ end
 datanew=reshape(x2,dt2*2,length(x2)/(dt2*2)); %Reshape and median to smaller uniform time grid
 datanew=nanmedian(datanew)';
 datasave=datanew;
-%}
-%{
+
 if(tnew(1)<t(1))
     prebuffer=tnew(1):(tnew(2)-tnew(1)):t(1);
     prebuffer=prebuffer(1:end-1);
@@ -47,6 +46,7 @@ toc
 
 tic
 %}
+
 
 datanew=zeros(length(tnew),min(size(x)));
 for i=1:length(tnew)

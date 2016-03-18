@@ -312,9 +312,64 @@ if(MakePaperPlots && stormcase==1)
     print('-dpng','-r200',sprintf('paperfigures/PNGs/ccplot-GOES%d.png',satnum)); 
     if(strcmp(visible,'off')),close(h);end;
     
- 
+    
+end
+
+
+
+if(MakePaperPlots && stormcase==25)
+    fprintf('Starting 27 day plot of all satellites\n')
+    
+    load('data/OMNIdata.mat')
+
+    F107(OMNITime>datenum('01-Jan-1992'))=[];
+    OMNITime(OMNITime>datenum('01-Jan-1992'))=[];
+    NewTime=OMNITime(1):24*27*(OMNITime(2)-OMNITime(1)):OMNITime(end);
+    
+    F10727Day=interptest(OMNITime,F107,NewTime);
     
     
+    M2=load('data/DentonDensityAndTime_2.mat');
+    M5=load('data/DentonDensityAndTime_5.mat');
+    M6=load('data/DentonDensityAndTime_6.mat');
+    M7=load('data/DentonDensityAndTime_7.mat');
+    
+    NewMTime2=M2.DentonTime(1):24*27*(M2.DentonTime(2)-M2.DentonTime(1)):M2.DentonTime(end);
+        NewMTime5=M5.DentonTime(1):24*27*(M5.DentonTime(2)-M5.DentonTime(1)):M5.DentonTime(end); 
+        NewMTime6=M6.DentonTime(1):24*27*(M6.DentonTime(2)-M6.DentonTime(1)):M6.DentonTime(end);
+        NewMTime7=M7.DentonTime(1):24*27*(M7.DentonTime(2)-M7.DentonTime(1)):M7.DentonTime(end);
+    
+    MD2=interptest(M2.DentonTime,M2.MassDensity,NewMTime2);
+    MD5=interptest(M5.DentonTime,M5.MassDensity,NewMTime5);
+    MD6=interptest(M6.DentonTime,M6.MassDensity,NewMTime6);
+    MD7=interptest(M7.DentonTime,M7.MassDensity,NewMTime7);
+    
+    
+    h=figure('Visible',visible);
+    x=F10727Day;
+    y=log10(MD6);
+    [AX,H1,H2]=plotyy(NewTime,x,NewMTime6,y,'plot','plot');
+
+    set(H1,'marker','.','color','blue'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    set(H2,'marker','.','color','red'); set(AX(2),'YColor','b');
+        hold(AX(2));
+    plot(AX(2),NewMTime2,log10(MD2),'g+');
+    plot(AX(2),NewMTime5,log10(MD5),'m+');
+    plot(AX(2),NewMTime7,log10(MD7),'c+');
+    ylim(AX(1),[0,300])
+    ylim(AX(2),[0.5,1.5])
+    ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'GOES log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
+    set(AX(1),'YTick',0:50:300);
+    %set(AX(2),'YTick',.5:0.25:1.5);
+    xlabel('Year','FontSize',BigFont);
+    title('27-day medians','FontSize',BigFont)
+    linkaxes(AX,'x')
+    datetick('keeplimits');
+    grid on
+    print('-depsc2', '-r200', 'paperfigures/F107MD27d-all.eps')
+    print('-dpdf', 'paperfigures/F107MD27d-all.pdf')
+    print('-dpng', '-r200', 'paperfigures/PNGs/F107MD27d-all.png')
+    if(strcmp(visible,'off')),close(h);end;
     
     
 end

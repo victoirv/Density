@@ -9,7 +9,7 @@ if(MakePaperPlots && stormcase==1)
     plot(0:23,avrhos,'+-')
     ylabel('Median \rho_{eq} (amu/cm^3)')
     xlabel('MLT (hour)')
-    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:2:24])
     print -depsc2 -r200 paperfigures/rhoMLT.eps
     print -dpng -r200 paperfigures/PNGs/rhoMLT.png
     if(strcmp(visible,'off')),close(h);end;
@@ -56,6 +56,7 @@ if(MakePaperPlots && stormcase==1)
     h=figure('Visible',visible);
     hist(FILLED(isnan(MassDensitySpline),3),0:23)
     axis([-1 24 0 3000])
+    set(gca,'XTick',0:2:24)
     xlabel('UT Hour of event start')
     ylabel('Frequency')
     print -depsc2 -r200 paperfigures/nansbyhour.eps
@@ -71,6 +72,7 @@ if(MakePaperPlots && stormcase==1)
     subplot(2,1,2)
     plot(xa,AVnnans,'r')
     axis tight;
+    set(gca,'XTick',0:2:24)
     ylabel('Data available')
     xlabel('Time from event start (hr)')
     grid on
