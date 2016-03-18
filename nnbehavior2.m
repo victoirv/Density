@@ -69,12 +69,12 @@ if(plotv)
     view(0,90)
     title(sprintf('Mean nonlinear predicted %s over %d loops with GOES %d',plotvars{3},loops,satnum))
     colorbar
-    hold on; scatter3(x(:,1),x(:,2),repmat(100000,1,length(x(:,1))),target,'k')
+    hold on; scatter3(x(:,1),x(:,2),repmat(500,1,length(x(:,1))),target,'k')
     yr=AXmap(plotvars{2});
     %set(gca,'YTick',linspace(yr(1),yr(2),10))
     filename=sprintf('figures/NN%s-GOES%d.',strjoin(plotvars,'-'),satnum);
     filename=regexprep(filename,'[^a-zA-Z0-9/]','');
-    print('-depsc2',strcat(filename,'eps'))
+    print('-depsc2','-zbuffer','-r300',strcat(filename,'eps'))
     print('-dpng',strcat(filename,'png'))
     
     figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
@@ -88,8 +88,9 @@ if(plotv)
     
         filename=sprintf('figures/NN%s-sd-GOES%d.',strjoin(plotvars,'-'),satnum);
     filename=regexprep(filename,'[^a-zA-Z0-9/]','');
-    print('-depsc2',strcat(filename,'eps'))
+    print('-depsc2','-zbuffer','-r300',strcat(filename,'eps'))
     print('-dpng',strcat(filename,'png'))
+    
     
     coef=[x ones(length(x),1)]\target;
     coef=nanmedian(coefs,2);
@@ -115,7 +116,7 @@ if(plotv)
     
     filename=sprintf('figures/Linear%s-GOES%d.',strjoin(plotvars,'-'),satnum);
     filename=regexprep(filename,'[^a-zA-Z0-9/]','');
-    print('-depsc2',strcat(filename,'eps'))
+    print('-depsc2','-zbuffer','-r300',strcat(filename,'eps'))
     print('-dpng',strcat(filename,'png'))
     
 end
