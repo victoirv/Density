@@ -47,8 +47,11 @@ toc
 tic
 %}
 
-
+if(length(x)~=329)
 datanew=zeros(length(tnew),min(size(x)));
+else
+    datanew=zeros(length(tnew),length(x));
+end
 for i=1:length(tnew)
     datanew(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); %Center
     %datanew(i,:)=nanmedian(x(t>=(tnew(i)) & t<(tnew(i)+2*dt),:)); %Forwards time

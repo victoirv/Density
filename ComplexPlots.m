@@ -1,7 +1,7 @@
 
 
 if(MakePaperPlots && stormcase==1)
-    stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 DSTCut],yranges(yr,:,:))
+    stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 DSTCut; 5 20],yranges(yr,:,:))
     
     if(satnum==6 && sy<=1989 && ey>=1989) %Make March 1989 Geomagnetic storm plot (if necessary time range still exists)
         stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[],[],[datenum('Mar-10-1989') datenum('Mar-18-1989')])
@@ -17,10 +17,15 @@ if(MakePaperPlots && stormcase==1)
     print -dpng -r200 paperfigures/PNGs/allstorms.png    
     if(strcmp(visible,'off')),close(h);end;
     
-    
 end
+
+if(MakePaperPlots && stormcase==26) %KP Stack plot
+    stackplot(FILLEDTime, [FILLED(:,[5,6,13,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','Kp','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 6],yranges(yr,:,:))
+end
+
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
-    tw=25:30;
+    tw=20:25;
+    
     topcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
     bottomcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
     h=figure('Visible',visible);   
@@ -51,6 +56,11 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
     set(rect,'FaceColor',[0.9 0.9 0.9])
     uistack(rect,'bottom')
     grid on;
+    if(tw(1)==25)
+        text(0.01,0.97,'(b)','Units','normalized','FontSize',14)
+    else
+        text(0.01,0.97,'(a)','Units','normalized','FontSize',14)
+    end
     set(gca,'xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     xlim([-timewidth timewidth*2]./LongTimeScale)
     lh=legend('All \rho_{eq} events ',sprintf('B_z  \\geq %2.2f nT; %d events ',topcut,sum(nanmedian(AVMat(:,tw,5),2)>=topcut)),sprintf('B_z^{ } < %2.2f nT; %d events ',bottomcut,sum(nanmedian(AVMat(:,tw,5),2)<bottomcut)));
@@ -312,6 +322,63 @@ if(MakePaperPlots && stormcase==1)
     print('-dpng','-r200',sprintf('paperfigures/PNGs/ccplot-GOES%d.png',satnum)); 
     if(strcmp(visible,'off')),close(h);end;
     
+end
+
+if(MakePaperPlots && stormcase==10) %1-day takahashi 
+    %Bootstrap test for same daily means
+    xa1d=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
+    AV1d=interptest(-timewidth:1:timewidth*2,AVMDMat',-timewidth:LongTimeScale:timewidth*2)';
+    AVm1=AV1d(:,4);
+    AV0=AV1d(:,5);
+    AV1=AV1d(:,6);
+    
+    dloops=1000;
+    delta=zeros(4,dloops);
+    for i=1:dloops
+        rs1=randsample(AVm1,sum(~isnan(AVm1)),'true');
+        rs2=randsample(AV0,sum(~isnan(AV0)),'true');
+        
+        delta(1,i)=(nanmedian(rs1)-nanmedian(rs2));
+       
+        rs1=randsample(AVm1,sum(~isnan(AVm1)),'true');
+        rs2=randsample(AV1,sum(~isnan(AV1)),'true');
+        delta(2,i)=(nanmedian(rs1)-nanmedian(rs2));
+        
+        rs1=randsample(AV1,sum(~isnan(AV1)),'true');
+        rs2=randsample(AV0,sum(~isnan(AV0)),'true');
+        delta(3,i)=(nanmedian(rs1)-nanmedian(rs2));
+        
+        rs1=randsample(AV0,sum(~isnan(AV0)),'true');
+        rs2=randsample(AV0,sum(~isnan(AV0)),'true');
+        delta(4,i)=(nanmedian(rs1)-nanmedian(rs2));
+    end
+    figure;
+    hist(delta(1,:))
+    hold on;
+    plot(nanmedian(AVm1)-nanmedian(AV0),0,'.','MarkerSize',20)
+    
+        figure;
+    hist(delta(2,:))
+    hold on;
+    plot(nanmedian(AVm1)-nanmedian(AV1),0,'.','MarkerSize',20)
+    
+        figure;
+    hist(delta(3,:))
+    hold on;
+    plot(nanmedian(AV1)-nanmedian(AV0),0,'.','MarkerSize',20)
+    
+    table=fopen('tables/DeltaBootstraps.txt','w');
+    Dm10=sum(delta(1,:)>=0)/length(delta(1,:));
+    Dm11=sum(delta(2,:)<=0)/length(delta(2,:));
+    D10=sum(delta(3,:)>=0)/length(delta(3,:));
+    fprintf(table,'Delta\t Actual\t %%\t \n');
+    
+    fprintf(table,'-1 0\t%2.2f\t%2.2f%%>=0\n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100);
+    fprintf(table,'-1 1\t%2.2f\t%2.2f%%<=0\n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100);
+    fprintf(table,' 1 0\t%2.2f\t%2.2f%%>=0\n',nanmedian(AV1)-nanmedian(AV0),D10*100);
+    
+    close(table);
+    delta
     
 end
 
@@ -334,10 +401,12 @@ if(MakePaperPlots && stormcase==25)
     M6=load('data/DentonDensityAndTime_6.mat');
     M7=load('data/DentonDensityAndTime_7.mat');
     
-    NewMTime2=M2.DentonTime(1):24*27*(M2.DentonTime(2)-M2.DentonTime(1)):M2.DentonTime(end);
-        NewMTime5=M5.DentonTime(1):24*27*(M5.DentonTime(2)-M5.DentonTime(1)):M5.DentonTime(end); 
-        NewMTime6=M6.DentonTime(1):24*27*(M6.DentonTime(2)-M6.DentonTime(1)):M6.DentonTime(end);
-        NewMTime7=M7.DentonTime(1):24*27*(M7.DentonTime(2)-M7.DentonTime(1)):M7.DentonTime(end);
+    %Times 6 since they're 10 minute differences, times 24 and 27 to go to
+    %hours and then 27-days
+    NewMTime2=M2.DentonTime(1):24*27*6*(M2.DentonTime(2)-M2.DentonTime(1)):M2.DentonTime(end);
+        NewMTime5=M5.DentonTime(1):24*27*6*(M5.DentonTime(2)-M5.DentonTime(1)):M5.DentonTime(end); 
+        NewMTime6=M6.DentonTime(1):24*27*6*(M6.DentonTime(2)-M6.DentonTime(1)):M6.DentonTime(end);
+        NewMTime7=M7.DentonTime(1):24*27*6*(M7.DentonTime(2)-M7.DentonTime(1)):M7.DentonTime(end);
     
     MD2=interptest(M2.DentonTime,M2.MassDensity,NewMTime2);
     MD5=interptest(M5.DentonTime,M5.MassDensity,NewMTime5);

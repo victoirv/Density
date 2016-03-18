@@ -28,7 +28,7 @@ if(MakePaperPlots && stormcase==1)
        ysd(i)=nanstd(y(x==bins(i)));
    end
    hold on; plot(bins, ymid,'r-.','MarkerSize',10); plot(bins, ymid-ysd,'k-.','MarkerSize',10); plot(bins, ymid+ysd,'k-.','MarkerSize',10);
-   title(sprintf('%d events from GOES-%d, %d-%d',length(~isnan(y)),satnum,sy,ey))
+   title(sprintf('%d events from GOES %d, %d-%d',length(~isnan(y)),satnum,sy,ey))
    legend('3 hour means')
    
    subplot(312) %Go from 1 hour to 1 day
@@ -78,11 +78,11 @@ if(MakePaperPlots && stormcase==1)
     set(H2,'marker','.','color','red'); set(AX(2),'YColor','b');
     ylim(AX(1),[0,300])
     ylim(AX(2),[0.5,1.5])
-    ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'GOES-6 log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
+    ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
     set(AX(1),'YTick',0:50:300);
     %set(AX(2),'YTick',.5:0.25:1.5);
     xlabel('Year','FontSize',BigFont);
-    title('27-day medians','FontSize',BigFont)
+    title(sprintf('GOES %d 27-day medians',satnum),'FontSize',BigFont)
     linkaxes(AX,'x')
     datetick('keeplimits');
     grid on
