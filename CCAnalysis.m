@@ -4,7 +4,7 @@ trainpercent=0.50;
 
 table=fopen(sprintf('tables/CCtable-GOES%d.txt',satnum),'w');
 fprintf(table,'<pre>\n');
-fprintf(table,'Vars \t \t  CCtr  CCt\n');
+fprintf(table,'Vars \t \t  CCtr  CCt +-CCtr +-CCt\n');
 
 PermNames={'DoY','B_z','V_{sw}','D_{st}','MLT','F_{10.7}','\rho_{sw}'};
 PermCols=[2 5 6 15 29 30 31];
@@ -33,7 +33,8 @@ for i=1:length(Perms)
         cct(j,2)=cctm(1,2);
     end
     CCMs=nanmedian(cct);
-    fprintf(table,'%s      \t- %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
+    CCMsds=nanstd(cct);
+    fprintf(table,'%s      \t- %+2.2f %+2.2f %2.2f %2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:),CCMsds(:));
 end
 
 Perms=combnk(1:7,2);
@@ -61,7 +62,8 @@ for i=1:length(Perms)
         cct(j,2)=cctm(1,2);
     end
     CCMs=nanmedian(cct);
-    fprintf(table,'%s   \t- %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
+    CCMsds=nanstd(cct);
+    fprintf(table,'%s   \t- %+2.2f %+2.2f %2.2f %2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:),CCMsds(:));
 end
 
 Perms=combnk(1:7,7);
@@ -88,6 +90,7 @@ for j=1:loops
     cct(j,2)=cctm(1,2);
 end
 CCMs=nanmedian(cct);
-fprintf(table,'All\t- %+2.2f %+2.2f \n',CCMs(:));
+CCMsds=nanstd(cct);
+fprintf(table,'All\t- %+2.2f %+2.2f %2.2f %2.2f \n',CCMs(:),CCMsds(:));
 
 fclose(table);

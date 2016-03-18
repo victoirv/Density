@@ -37,7 +37,7 @@ my %H2=();
 my %H3=();
 my %H4=();
 
-my $regex = '^(\S+)\s+- .*(.\d\.\d\d)[^\d]*'; #To catch CC test column
+my $regex = '^(\S+)\s+- .\d\.\d\d (.\d\.\d\d) \d.\d\d (\d.\d\d).*'; #To catch CC test column and test_sd
 if($Type=~m/NN/) {
 $regex = '^(\S+)\s+.*(.\d\.\d\d)[^\d]*$'; #To catch NN validation column
 }
@@ -46,6 +46,7 @@ for my $line(@FH1s){
  if($line=~m/\d+/){
  $line=~/$regex/;
  $H1{"$1"}=$2;
+ $H1{"$1-sd"}=$3;
  }
 }
 
@@ -53,18 +54,21 @@ for my $line(@FH2s){
  if($line=~m/\d+/){
  $line=~/$regex/;
  $H2{"$1"}=$2;
+ $H2{"$1-sd"}=$3;
  }
 }
 for my $line(@FH3s){
  if($line=~m/\d+/){
  $line=~/$regex/;
  $H3{"$1"}=$2;
+ $H3{"$1-sd"}=$3;
  }
 }
 for my $line(@FH4s){
  if($line=~m/\d+/){
  $line=~/$regex/;
  $H4{"$1"}=$2;
+ $H4{"$1-sd"}=$3;
  }
 }
 
@@ -79,14 +83,14 @@ print FH <<EOF;
 \\begin{tabular}{|L|LLLL|}
 \\hline
 EOF
-print FH ' & \text{GOES 2} & \text{GOES 5} & \text{GOES 6} & \text{GOES 7}\\\\ \hline'."\n";
+print FH 'Test & \text{GOES 2} & \text{GOES 5} & \text{GOES 6} & \text{GOES 7}\\\\ \hline'."\n";
 for my $wanted(@Want){
-print FH "$wanted & $H1{$wanted} & $H2{$wanted} & $H3{$wanted} & $H4{$wanted} \\\\\n";
+print FH "$wanted & $H1{$wanted}\\pm$H1{${wanted}.'-sd'} & $H2{$wanted}\\pm$H2{${wanted}.'-sd'} & $H3{$wanted}\\pm$H3{${wanted}.'-sd'} & $H4{$wanted}\\pm$H4{${wanted}.'-sd'} \\\\\n";
 }
 print FH <<EOF;
 \\hline
 \\end{tabular}
-\\caption{Table of $TypeString model correlations showing the median of 100 random samples. Each sample trained on half of the data (via randomly selected rows of the least squares matrix) and tested on the other half} 
+\\caption{Table of $TypeString model test correlations showing the median of 100 random samples. Each sample trained on half of the data (via randomly selected rows of the least squares matrix) and tested on the other half} 
 \\label{${Type}perltable}
 \\end{table}
 EOF

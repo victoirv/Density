@@ -65,8 +65,8 @@ if(plotv)
    % axis([AXmap(plotvars{1}) AXmap(plotvars{2})])
     title(sprintf('Mean nonlinear predicted %s over %d loops for GOES %d',plotvars{2},loops,satnum))
         filename=sprintf('figures/NN%s-GOES%d.',strjoin(plotvars,'-'),satnum);
-    filename=regexprep(filename,'[^a-zA-Z0-9/]','');
-    print('-depsc2',strcat(filename,'eps'))
-    print('-dpng',strcat(filename,'png'))
+    filename=regexprep(filename,'[^a-zA-Z0-9/\-]','');
+    print('-depsc2',strcat(filename,'.eps'))
+    print('-dpng',strcat(filename,'.png'))
 end
 

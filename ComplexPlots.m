@@ -350,15 +350,16 @@ if(MakePaperPlots && stormcase==25)
     y=log10(MD6);
     [AX,H1,H2]=plotyy(NewTime,x,NewMTime6,y,'plot','plot');
 
-    set(H1,'marker','.','color','blue'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
-    set(H2,'marker','.','color','red'); set(AX(2),'YColor','b');
+    set(H1,'marker','.','MarkerSize',20,'color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    set(H2,'marker','.','MarkerSize',10,'color','blue','LineStyle','none'); set(AX(2),'YColor','b');
         hold(AX(2));
-    plot(AX(2),NewMTime2,log10(MD2),'g+');
-    plot(AX(2),NewMTime5,log10(MD5),'m+');
-    plot(AX(2),NewMTime7,log10(MD7),'c+');
+    H3=plot(AX(2),NewMTime2,log10(MD2),'o','Color',[0 0.5 0.5],'LineWidth',1.25);
+    H4=plot(AX(2),NewMTime5,log10(MD5),'o','Color',[0.5 0 0.5]);
+    H5=plot(AX(2),NewMTime7,log10(MD7),'o','Color',[0.7 0.3 0]);
     ylim(AX(1),[0,300])
     ylim(AX(2),[0.5,1.5])
     ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'GOES log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
+    legend([H1;H2;H3;H4;H5],'F_{10.7}','GOES 6','GOES 2','GOES 5','GOES 7','Location','SouthEast')
     set(AX(1),'YTick',0:50:300);
     %set(AX(2),'YTick',.5:0.25:1.5);
     xlabel('Year','FontSize',BigFont);
