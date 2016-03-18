@@ -229,8 +229,7 @@ switch stormcase
         yr=2;
     case 26
         storms=diff([0 (FILLED(:,13)>6)' 0]); %KP Storm
-        DSTCut=-50;
-        figurename=strcat(figurename,'KP',sprintf('-GOES%d.eps',satnum));
+        figurename=strcat(figurename,'Kp',sprintf('-GOES%d.eps',satnum));
         yr=5;
         yranges(5,:,:)=[-2 2; 350 550; 1 10; 150 230; 10 30];
 end

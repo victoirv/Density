@@ -39,7 +39,7 @@ for i=1:numvars
     end
     text(0.01,0.85,labels{i},'Units','normalized','FontSize',14);
     if(ylims~=0)
-        ylim(ylims(i,:));
+        ylim(ylims(1,i,:));
     end
 end
 

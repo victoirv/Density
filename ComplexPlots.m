@@ -324,7 +324,7 @@ if(MakePaperPlots && stormcase==1)
     
 end
 
-if(MakePaperPlots && stormcase==10) %1-day takahashi 
+if(MakePaperPlots && stormcase==10) %1-day takahashi. Do for any day plot
     %Bootstrap test for same daily means
     xa1d=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
     AV1d=interptest(-timewidth:1:timewidth*2,AVMDMat',-timewidth:LongTimeScale:timewidth*2)';
