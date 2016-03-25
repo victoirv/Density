@@ -8,11 +8,11 @@ if nargin == 3
     dt=(tnew(2)-tnew(1))/2; %halfway to the points on either side
 end
 
+%{
 if(tnew(1)<t(1) || tnew(end)>t(end))
     error('New time must be within existing time')
 end
-
-tic
+%}
 
 tnew=tnew(:); %Force orientation
 t=t(:);
@@ -23,16 +23,21 @@ end
 
 if(min(size(x))~=1) %If x has two dimensions, recursively interpolate over the non-time dimensions
     xdim=setdiff(size(x),size(t));
-    datanew=zeros(length(tnew),xdim);  
+    datanew=NaN(length(tnew),xdim);  
     for i=1:xdim
         datanew(:,i)=interptest(t,x(:,i),tnew,dt);
     end
 else
+    
+    while(t(end)>(tnew(end)+dt))
+        t(end)=[];
+        x(end)=[];
+    end
 
     dt2=floor(dt/(t(2)-t(1)));
     t2=tnew(1)-dt:(t(2)-t(1)):tnew(end)+dt;
     t2(end)=[];  %last point would be first of next bin
-    x2=nan(length(t2),min(size(x)));
+    x2=nan(length(t2),1);
 
     indices=floor((t-t(1))/(t(2)-t(1))+1); %Indices on expanded uniform grid of t (not tnew yet)
 
@@ -51,19 +56,23 @@ else
     end
     datanew=reshape(x2,dt2*2,length(x2)/(dt2*2)); %Reshape and median to smaller uniform time grid
     datanew=nanmedian(datanew)';
+    if(length(datanew)==(length(tnew)+1) && isnan(datanew(end)))
+        datanew(end)=[]; %Because sometimes dt2 has a rounding/precision problem and the algorithm buffers up an additional, empty value
+    end
     datasave=datanew;
 
+    %{
     if(tnew(1)<t(1))
         prebuffer=tnew(1):(tnew(2)-tnew(1)):t(1);
         prebuffer=prebuffer(1:end-1);
-        datanew=[nan(1,length(prebuffer)) datanew];
+        datanew=[nan(length(prebuffer),1); datanew];
     end
     if(tnew(end)>t(end))
         postbuffer=t(end):(tnew(2)-tnew(1)):tnew(end);
         postbuffer=postbuffer(2:end);
-        datanew=[datanew nan(1,length(postbuffer))];
+        datanew=[datanew; nan(length(postbuffer,1))];
     end
-
+%}
 return
 
 end

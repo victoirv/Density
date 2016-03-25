@@ -353,25 +353,6 @@ if(MakePaperPlots && stormcase==10) %1-day takahashi. Do for any day plot
         delta(4,i)=(nanmedian(rs1)-nanmedian(rs2));
     end
     
-    figure;
-    subplot(3,1,1)
-    hist(delta(1,:))
-    hold on;
-    plot(nanmedian(AVm1)-nanmedian(AV0),0,'.','MarkerSize',20)
-    title('Bootstrap differences of 1 hour pre-onset and onset')
-    
-    subplot(3,1,2)
-    hist(delta(2,:))
-    hold on;
-    plot(nanmedian(AVm1)-nanmedian(AV1),0,'.','MarkerSize',20)
-    title('Bootstrap differences of 1 hour pre-onset and 1 hour post-onset')
-    
-    subplot(3,1,3)
-    hist(delta(3,:))
-    hold on;
-    plot(nanmedian(AV1)-nanmedian(AV0),0,'.','MarkerSize',20)
-    title('Bootstrap differences of 1-hour post-onset and onset')
-    
     
     table=fopen('tables/DeltaBootstraps.txt','w');
     Dm10=sum(delta(1,:)>=0)/length(delta(1,:));
@@ -384,6 +365,53 @@ if(MakePaperPlots && stormcase==10) %1-day takahashi. Do for any day plot
     fprintf(table,' 1 0\t%2.2f\t%2.2f%%>=0\n',nanmedian(AV1)-nanmedian(AV0),D10*100);
     
     fclose(table);
+    
+    
+    g=figure('Visible',visible);
+    h(1)=subplot('position',subplotstack(3,1));
+    hist(delta(1,:),[-7.5:0.5:5.5])
+    hold on;
+    plot(nanmedian(AVm1)-nanmedian(AV0),0,'.','MarkerSize',20)
+    plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
+    text(0.01,0.9,'1 day pre-onset and onset','Units','normalized','FontSize',14)
+    text(1,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%%>=0',Dm10*100))
+    ylabel('Count')
+    title('Bootstrapped differences of daily \rho_{eq} medians around event onset')
+    
+    h(2)=subplot('position',subplotstack(3,2));
+    hist(delta(2,:),[-7.5:0.5:5.5])
+    hold on;
+    plot(nanmedian(AVm1)-nanmedian(AV1),0,'.','MarkerSize',20)
+    plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
+    text(0.01,0.9,'1 day pre-onset and 1 day post-onset','Units','normalized','FontSize',14)
+    text(-2.5,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%%<=0',Dm11*100))
+    ylabel('Count')
+    
+   h(3)=subplot('position',subplotstack(3,3));
+    hist(delta(3,:),[-7:0.5:5])
+    hold on;
+    plot(nanmedian(AV1)-nanmedian(AV0),0,'.','MarkerSize',20)
+    plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
+    text(0.01,0.9,'1 day post-onset and onset','Units','normalized','FontSize',14)
+    text(1,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%%>=0',D10*100))
+    ylabel('Count')
+    
+    set(findobj('type','axes'),'xticklabel',{[]});
+set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
+axis tight;
+%set(findobj('type','axes'),'xtick',get(h(end),'xtick'))
+set(findobj('type','axes'),'xtick',[-7:1:5])
+linkaxes(h,'x')
+axis tight;
+set(h(end),'xticklabel',[-7:1:5])
+xlabel('Difference (amu/cm^3)','FontSize',14)
+    
+    print('-depsc2', '-r200', 'paperfigures/DailyBootstrapDifferences.eps')
+    print('-dpng', '-r200', 'paperfigures/PNGs/DailyBootstrapDifferences.png')
+    if(strcmp(visible,'off')),close(g);end;
+    
+    
+
     
 end
 
@@ -423,17 +451,22 @@ if(MakePaperPlots && stormcase==25)
     x=F10727Day;
     y=log10(MD6);
     [AX,H1,H2]=plotyy(NewTime,x,NewMTime6,y,'plot','plot');
-
-    set(H1,'marker','.','MarkerSize',20,'color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
-    set(H2,'marker','.','MarkerSize',10,'color','blue','LineStyle','none'); set(AX(2),'YColor','b');
+     
+    set(H1,'marker','.','MarkerSize',15,'color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    set(H2,'LineStyle','-','color','blue'); set(AX(2),'YColor','k');
         hold(AX(2));
-    H3=plot(AX(2),NewMTime2,log10(MD2),'o','Color',[0 0.5 0.5],'LineWidth',1.25);
-    H4=plot(AX(2),NewMTime5,log10(MD5),'o','Color',[0.5 0 0.5]);
-    H5=plot(AX(2),NewMTime7,log10(MD7),'o','Color',[0.7 0.3 0]);
+    H3=plot(AX(2),NewMTime2,log10(MD2),'-','Color',[0 0.5 0.5],'LineWidth',1.25);
+    H4=plot(AX(2),NewMTime5,log10(MD5),'-','Color',[0.5 0 0.5]);
+    H5=plot(AX(2),NewMTime7,log10(MD7),'-','Color',[0.5 0.5 0.2]);
     ylim(AX(1),[0,300])
     ylim(AX(2),[0.5,1.5])
-    ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'GOES log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
-    legend([H1;H2;H3;H4;H5],'F_{10.7}','GOES 6','GOES 2','GOES 5','GOES 7','Location','SouthEast')
+    ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
+    legend([H1;H2;H3;H4;H5],'F_{10.7}',...
+        sprintf('GOES 6 - %2.2f',min(min(corrcoef(interptest(M6.DentonTime,M6.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
+        sprintf('GOES 2 - %2.2f',min(min(corrcoef(interptest(M2.DentonTime,M2.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
+        sprintf('GOES 5 - %2.2f',min(min(corrcoef(interptest(M5.DentonTime,M5.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
+        sprintf('GOES 7 - %2.2f',min(min(corrcoef(interptest(M7.DentonTime,M7.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
+        'Location','SouthEast');
     set(AX(1),'YTick',0:50:300);
     %set(AX(2),'YTick',.5:0.25:1.5);
     xlabel('Year','FontSize',BigFont);
@@ -447,4 +480,38 @@ if(MakePaperPlots && stormcase==25)
     if(strcmp(visible,'off')),close(h);end;
     
     
+    
+    g=figure('Visible',visible);
+    h(1)=subplot('position',subplotstack(4,1));
+    [AX,H1,H2]=plotyy(NewTime,x,NewMTime2,log10(MD2),'plot','plot');
+    ylim(AX(1),[0,300])
+    ylim(AX(2),[0.5,1.5])
+    
+    h(2)=subplot('position',subplotstack(4,2));
+    [AX,H1,H2]=plotyy(NewTime,x,NewMTime5,log10(MD5),'plot','plot');
+    ylim(AX(1),[0,300])
+    ylim(AX(2),[0.5,1.5])
+    
+    h(3)=subplot('position',subplotstack(4,3));
+    [AX,H1,H2]=plotyy(NewTime,x,NewMTime6,log10(MD6),'plot','plot');
+    ylim(AX(1),[0,300])
+    ylim(AX(2),[0.5,1.5])
+    
+    h(4)=subplot('position',subplotstack(4,4));
+    [AX,H1,H2]=plotyy(NewTime,x,NewMTime7,log10(MD7),'plot','plot');
+    ylim(AX(1),[0,300])
+    ylim(AX(2),[0.5,1.5])
+    
+    ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
+    legend([H1;H2],'F_{10.7}',sprintf('GOES 2 - %2.2f',min(min(corrcoef(interptest(M6.DentonTime,M6.MassDensity,NewTime),F10727Day,'rows','pairwise')))),'Location','SouthEast');
+    set(AX(1),'YTick',0:50:300);
+    %set(AX(2),'YTick',.5:0.25:1.5);
+    xlabel('Year','FontSize',BigFont);
+    title('27-day medians','FontSize',BigFont)
+    linkaxes(AX,'x')
+    datetick('keeplimits');
+    grid on
+    print('-depsc2', '-r200', 'paperfigures/F107MD27d-all2.eps')
+    print('-dpng', '-r200', 'paperfigures/PNGs/F107MD27d-all2.png')
+    if(strcmp(visible,'off')),close(h);end;
 end
