@@ -352,20 +352,26 @@ if(MakePaperPlots && stormcase==10) %1-day takahashi. Do for any day plot
         rs2=randsample(AV0,sum(~isnan(AV0)),'true');
         delta(4,i)=(nanmedian(rs1)-nanmedian(rs2));
     end
+    
     figure;
+    subplot(3,1,1)
     hist(delta(1,:))
     hold on;
     plot(nanmedian(AVm1)-nanmedian(AV0),0,'.','MarkerSize',20)
+    title('Bootstrap differences of 1 hour pre-onset and onset')
     
-        figure;
+    subplot(3,1,2)
     hist(delta(2,:))
     hold on;
     plot(nanmedian(AVm1)-nanmedian(AV1),0,'.','MarkerSize',20)
+    title('Bootstrap differences of 1 hour pre-onset and 1 hour post-onset')
     
-        figure;
+    subplot(3,1,3)
     hist(delta(3,:))
     hold on;
     plot(nanmedian(AV1)-nanmedian(AV0),0,'.','MarkerSize',20)
+    title('Bootstrap differences of 1-hour post-onset and onset')
+    
     
     table=fopen('tables/DeltaBootstraps.txt','w');
     Dm10=sum(delta(1,:)>=0)/length(delta(1,:));
@@ -377,8 +383,7 @@ if(MakePaperPlots && stormcase==10) %1-day takahashi. Do for any day plot
     fprintf(table,'-1 1\t%2.2f\t%2.2f%%<=0\n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100);
     fprintf(table,' 1 0\t%2.2f\t%2.2f%%>=0\n',nanmedian(AV1)-nanmedian(AV0),D10*100);
     
-    close(table);
-    delta
+    fclose(table);
     
 end
 

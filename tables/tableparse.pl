@@ -39,7 +39,7 @@ my %H4=();
 
 my $regex = '^(\S+)\s+- .\d\.\d\d (.\d\.\d\d) \d.\d\d (\d.\d\d).*'; #To catch CC test column and test_sd
 if($Type=~m/NN/) {
-$regex = '^(\S+)\s+.*(.\d\.\d\d)[^\d]*$'; #To catch NN validation column
+$regex = '^(\S+)\s+.*(?:\s*.\d\.\d\d){5} (.\d.\d\d) (?:\s*\d.\d\d){5} (\d.\d\d)[^\d]*$'; #To catch NN validation column
 }
 
 for my $line(@FH1s){
