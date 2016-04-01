@@ -4,6 +4,13 @@ loops=40;
 AXmap=containers.Map({'B_z','V_{sw}','F_{10.7}','\rho_{eq}','DoY','\rho_{sw}','D_{st}','MLT'},{[-10 10],[200 800],[50 350],[0 40],[0 356],[0 30],[-100 30],[0 24]});
 
 
+disp('NN - B_z and DoY on D_st')
+x=nanmedian(AVMat(:,20:24,2),2);
+z=nanmedian(AVMat(:,20:24,15),2);
+xtest=linspace(min(x),max(x));
+nnbehavior(x,z,xtest,1,loops,{'DoY','D_{st}'},AXmap,satnum);
+nnbehavior2(nanmedian(AVMat(:,20:24,[2 5]),2),z,1,loops,{'DoY','B_z','D_{st}'},AXmap,satnum);
+
 disp('NN - B_z')
 x=nanmedian(AVMat(:,20:24,30),2);
 z=nanmedian(AVMDMat(:,25:29),2);

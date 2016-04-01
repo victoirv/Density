@@ -94,3 +94,17 @@ if(MakePaperPlots && stormcase==16)
     print -dpng -r200 paperfigures/PNGs/AEbyhour.png
     if(strcmp(visible,'off')),close(h);end;
 end
+
+if(MakePaperPlots && stormcase==1)
+    h=figure('Visible',visible);
+    hold on; 
+    plot(FILLED(:,2),FILLED(:,15),'b.');
+    plot(FILLED(starti,2),FILLED(starti,15),'r.','MarkerSize',10);
+    legend({'All Data','Event Onset'})
+    grid on
+    xlabel('Day of Year')
+    ylabel('D_{st} (nT)')
+    print -depsc2 -r200 paperfigures/DoYDst.eps
+    print -dpng -r200 paperfigures/PNGs/DoYDst.png
+    if(strcmp(visible,'off')),close(h);end;
+end

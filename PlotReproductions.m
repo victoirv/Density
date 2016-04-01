@@ -68,7 +68,8 @@ if(MakePaperPlots && stormcase==1)
 %%%%%%%%%%%
 %Tak 2010 Fig 13
 
-   h=figure('Visible',visible);
+    h=figure('Visible',visible,'Position',[0 0 1000 500]);
+    set(gcf,'PaperPositionMode','auto')
     NewTime=FILLEDTime(1):24*27*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end);
     x=interptest(FILLEDTime,FILLED(:,30),NewTime);
     y=log10(interptest(FILLEDTime,MassDensitySpline',NewTime));
@@ -91,7 +92,8 @@ if(MakePaperPlots && stormcase==1)
     print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107MD27d-GOES%d.png',satnum))
     if(strcmp(visible,'off')),close(h);end;
     
-    h=figure('Visible',visible);
+    h=figure('Visible',visible,'Position',[0 0 1000 500]);
+    set(gcf,'PaperPositionMode','auto')
     NewTime=FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end);
     x=interptest(FILLEDTime,FILLED(:,30),NewTime);
     y=log10(interptest(FILLEDTime,MassDensitySpline',NewTime));
