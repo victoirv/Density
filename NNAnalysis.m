@@ -1,7 +1,7 @@
 function NNAnalysis(AVMat,AVMDMat,satnum)
 
 loops=40;
-AXmap=containers.Map({'B_z','V_{sw}','F_{10.7}','\rho_{eq}','DoY','\rho_{sw}','D_{st}','MLT'},{[-10 10],[200 800],[50 350],[0 70],[0 356],[0 30],[-100 30],[0 24]});
+AXmap=containers.Map({'B_z','V_{sw}','F_{10.7}','\rho_{eq}','DoY','\rho_{sw}','D_{st}','MLT'},{[-10 10],[200 800],[50 350],[0 40],[0 356],[0 30],[-100 30],[0 24]});
 
 
 disp('NN - B_z')

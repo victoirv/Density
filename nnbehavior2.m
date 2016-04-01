@@ -64,28 +64,30 @@ if(plotv)
     
     ylabel(plotvars{2})
     xlabel(plotvars{1})
-    axis([AXmap(plotvars{1}) AXmap(plotvars{2}) AXmap(plotvars{3})])
-    caxis(AXmap('\rho_{eq}'))
+    %axis([AXmap(plotvars{1}) AXmap(plotvars{2}) AXmap(plotvars{3})])
+    %caxis(AXmap('\rho_{eq}'))    
     view(0,90)
     title(sprintf('Mean nonlinear predicted %s over %d loops with GOES %d',plotvars{3},loops,satnum))
     colorbar
     hold on; scatter3(x(:,1),x(:,2),repmat(500,1,length(x(:,1))),target,'k')
-    yr=AXmap(plotvars{2});
     %set(gca,'YTick',linspace(yr(1),yr(2),10))
+    
+    ax=[xlim; ylim; zlim; caxis];
     filename=sprintf('figures/NN%s-GOES%d.',strjoin(plotvars,'-'),satnum);
     filename=regexprep(filename,'[^a-zA-Z0-9/\-]','');
     print('-depsc2','-zbuffer','-r300',strcat(filename,'.eps'))
     print('-dpng',strcat(filename,'.png'))
     
-    figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
     
+    
+    figure; surf(xtest(2:end),ytest,testsd,'EdgeColor','none','LineStyle','none','FaceLighting','phong') %Even though phong is deprecated, it's the only one that plots without corruption
     ylabel(plotvars{2})
     xlabel(plotvars{1})
-    axis([AXmap(plotvars{1}) AXmap(plotvars{2})])
+    %axis([AXmap(plotvars{1}) AXmap(plotvars{2})])
     title(sprintf('Standard deviation of %d loops predicting %s with GOES %d',loops,plotvars{3},satnum))
     colorbar
     view(0,90)
-    
+    axis(reshape(ax',1,[]))
         filename=sprintf('figures/NN%s-sd-GOES%d.',strjoin(plotvars,'-'),satnum);
     filename=regexprep(filename,'[^a-zA-Z0-9/\-]','');
     print('-depsc2','-zbuffer','-r300',strcat(filename,'.eps'))
@@ -97,23 +99,25 @@ if(plotv)
     [Zx, Zy]=meshgrid(xtest,ytest);
     Z=Zx.*coef(1)+Zy.*coef(2)+1.*coef(3);
     cc=corrcoef([x ones(length(x),1)]*coef,target);
+    
+    
+    
     figure;
     surf(xtest,ytest,Z,'EdgeColor','none','LineStyle','none','FaceLighting','phong')
     
     ylabel(plotvars{2})
     xlabel(plotvars{1})
-    axis([AXmap(plotvars{1}) AXmap(plotvars{2}) AXmap(plotvars{3})])
-    caxis(AXmap('\rho_{eq}'))
+    %axis([AXmap(plotvars{1}) AXmap(plotvars{2}) AXmap(plotvars{3})])
+   
+    %caxis(AXmap('\rho_{eq}'))
     view(0,90)
     grid on
-    yr=AXmap(plotvars{2});
     %set(gca,'YTick',linspace(yr(1),yr(2),10))
-        xr=AXmap(plotvars{1});
     %set(gca,'XTick',linspace(xr(1),xr(2),10))
     title(sprintf('Mean linear predicted %s over %d loops with GOES %d - CC%2.2f',plotvars{3},loops,satnum,cc(1,2)))
     colorbar
     hold on; scatter3(x(:,1),x(:,2),repmat(500,1,length(x(:,1))),target,'k')
-    
+     axis(reshape(ax',1,[]))
     filename=sprintf('figures/Linear%s-GOES%d.',strjoin(plotvars,'-'),satnum);
     filename=regexprep(filename,'[^a-zA-Z0-9/\-]','');
     print('-depsc2','-zbuffer','-r300',strcat(filename,'.eps'))

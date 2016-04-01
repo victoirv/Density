@@ -144,11 +144,11 @@ EOF
     
     if(@$wanth[0]=~/\+/)
     {
-    my $DiffVal=sprintf("%2.2f",sqrt($H1{"$sat-$wanted-@$wanth[0]"}**2+$H1{"$sat-$wanted-@$wanth[1]"}**2));
+    my $DiffVal=sprintf("%+2.2f",sqrt($H1{"$sat-$wanted-@$wanth[0]"}**2+$H1{"$sat-$wanted-@$wanth[1]"}**2));
      print FH "\\pm$DiffVal "
     }
     else{
-    my $DiffVal=sprintf("%2.2f",$H1{"$sat-$wanted-@$wanth[0]"}-$H1{"$sat-$wanted-@$wanth[1]"});
+    my $DiffVal=sprintf("%+2.2f",$H1{"$sat-$wanted-@$wanth[0]"}-$H1{"$sat-$wanted-@$wanth[1]"});
      print FH "$DiffVal"
     }
    }

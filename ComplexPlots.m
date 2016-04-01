@@ -451,22 +451,30 @@ if(MakePaperPlots && stormcase==25)
     x=F10727Day;
     y=log10(MD6);
     [AX,H1,H2]=plotyy(NewTime,x,NewMTime6,y,'plot','plot');
+    
+    Colors=[[0 0.8 0.8]; [0.8 0 0.8]; [0 0 1]; [0.5 0.9 0.2]];
      
     set(H1,'marker','.','MarkerSize',15,'color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
-    set(H2,'LineStyle','-','color','blue'); set(AX(2),'YColor','k');
-        hold(AX(2));
-    H3=plot(AX(2),NewMTime2,log10(MD2),'-','Color',[0 0.5 0.5],'LineWidth',1.25);
-    H4=plot(AX(2),NewMTime5,log10(MD5),'-','Color',[0.5 0 0.5]);
-    H5=plot(AX(2),NewMTime7,log10(MD7),'-','Color',[0.5 0.5 0.2]);
-    ylim(AX(1),[0,300])
-    ylim(AX(2),[0.5,1.5])
+    set(H2,'LineStyle','-','color',Colors(3,:)); set(AX(2),'YColor','k');
+    hold(AX(2));
+    H3=plot(AX(2),NewMTime2,log10(MD2),'-','Color',Colors(1,:),'LineWidth',1.25);
+    H4=plot(AX(2),NewMTime5,log10(MD5),'-','Color',Colors(2,:));
+    H5=plot(AX(2),NewMTime7,log10(MD7),'-','Color',Colors(4,:));
+    plot(AX(2),[NewMTime2(1) NewMTime2(end)],[1.5 1.5],'Color',Colors(1,:),'LineWidth',3)
+    plot(AX(2),[NewMTime5(1) NewMTime5(end)],[1.52 1.52],'Color',Colors(2,:),'LineWidth',3)
+    plot(AX(2),[NewMTime6(1) NewMTime6(end)],[1.54 1.54],'Color',Colors(3,:),'LineWidth',3)
+    plot(AX(2),[NewMTime7(1) NewMTime7(end)],[1.56 1.56],'Color',Colors(4,:),'LineWidth',3)
+    
+    ylim(AX(1),[0,320])
+    ylim(AX(2),[0.5,1.6])
     ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
-    legend([H1;H2;H3;H4;H5],'F_{10.7}',...
+    [legh,objh]=legend([H1;H2;H3;H4;H5],'F_{10.7}',...
         sprintf('GOES 6 - %2.2f',min(min(corrcoef(interptest(M6.DentonTime,M6.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
         sprintf('GOES 2 - %2.2f',min(min(corrcoef(interptest(M2.DentonTime,M2.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
         sprintf('GOES 5 - %2.2f',min(min(corrcoef(interptest(M5.DentonTime,M5.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
         sprintf('GOES 7 - %2.2f',min(min(corrcoef(interptest(M7.DentonTime,M7.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
         'Location','SouthEast');
+    set(objh,'LineWidth',2)
     set(AX(1),'YTick',0:50:300);
     %set(AX(2),'YTick',.5:0.25:1.5);
     xlabel('Year','FontSize',BigFont);
@@ -513,5 +521,5 @@ if(MakePaperPlots && stormcase==25)
     grid on
     print('-depsc2', '-r200', 'paperfigures/F107MD27d-all2.eps')
     print('-dpng', '-r200', 'paperfigures/PNGs/F107MD27d-all2.png')
-    if(strcmp(visible,'off')),close(h);end;
+    if(strcmp(visible,'off')),close(g);end;
 end
