@@ -131,7 +131,7 @@ EOF
  print FH <<EOF;
  \\begin{table}[h]
  \\small
- \\begin{tabular}{|L|LLLL|}
+ \\begin{tabular}{|C|CCCC|}
  \\hline
 EOF
 
