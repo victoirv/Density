@@ -84,7 +84,7 @@ foreach my $Type(@Types){
  print FH <<EOF;
  \\begin{table}[h]
  \\small
- \\begin{tabular}{|L|LLLL|}
+ \\begin{tabular}{|C|CCCC|}
  \\hline
 EOF
 
@@ -120,11 +120,11 @@ EOF
 
  #Print difference table
  if($Type=~/NN/){
-  @WantHs=(['NNt','NNtr'],['+-NNt','+-NNtr']);
+  @WantHs=(['NNtr','NNt'],['+-NNtr','+-NNt']);
  }
  else
  {
-  @WantHs=(['CCt','CCtr'],['+-CCt','+-CCtr']);
+  @WantHs=(['CCtr','CCt'],['+-CCtr','+-CCt']);
  }
 
  open(FH,">${Type}difftable.tex");
@@ -135,7 +135,7 @@ EOF
  \\hline
 EOF
 
- print FH 'T-Tr & \text{GOES 2} & \text{GOES 5} & \text{GOES 6} & \text{GOES 7}\\\\ \hline'."\n";
+ print FH 'Tr-T & \text{GOES 2} & \text{GOES 5} & \text{GOES 6} & \text{GOES 7}\\\\ \hline'."\n";
  for my $wanted(@Want){
   print FH "$wanted ";
   for my $sat(@Sats){
@@ -144,7 +144,7 @@ EOF
     
     if(@$wanth[0]=~/\+/)
     {
-    my $DiffVal=sprintf("%+2.2f",sqrt($H1{"$sat-$wanted-@$wanth[0]"}**2+$H1{"$sat-$wanted-@$wanth[1]"}**2));
+    my $DiffVal=sprintf("%2.2f",sqrt($H1{"$sat-$wanted-@$wanth[0]"}**2+$H1{"$sat-$wanted-@$wanth[1]"}**2));
      print FH "\\pm$DiffVal "
     }
     else{
@@ -159,7 +159,7 @@ EOF
  print FH <<EOF;
  \\hline
  \\end{tabular}
- \\caption{Table of differences in $TypeString testing-training models, where each correlation is the median correlation of 100 random samples. Each sample trained on half of the data (via randomly selected rows of the least squares matrix) and tested on the other half} 
+ \\caption{Table of differences in $TypeString training-testing models, where each correlation is the median correlation of 100 random samples. Each sample trained on half of the data (via randomly selected rows of the least squares matrix) and tested on the other half} 
  \\label{${Type}difftable}
  \\end{table}
 EOF
