@@ -108,3 +108,43 @@ if(MakePaperPlots && stormcase==1)
     print -dpng -r200 paperfigures/PNGs/DoYDst.png
     if(strcmp(visible,'off')),close(h);end;
 end
+
+
+if(MakePaperPlots && stormcase==1)
+    
+    F107d=interptest(1:length(MassDensitySpline),FILLED(:,30),1:24:length(MassDensitySpline));
+    MDd=interptest(1:length(MassDensitySpline),MassDensitySpline,1:24:length(MassDensitySpline));
+    
+    %General (non-storm) trend
+    [cx, cf, ~,xnew,corr] = IR(MDd,F107d,0,12,0,0);
+    
+    h=figure('Visible',visible);
+    hold on; 
+    plot(0:11,cf,'b');
+    grid on
+    xlabel('Time Lags (day)')
+    ylabel('Impulse Response Coefficient')
+    title('Predicting \rho_{eq} with F_{10.7}')
+    print('-depsc2', '-r200', sprintf('paperfigures/F107IR-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107IR-GOES%d.png',satnum));
+    if(strcmp(visible,'off')),close(h);end;
+    
+    
+    
+    XOnsets=MDd;
+    XOnsets(setdiff(1:end,floor(starti/24)))=NaN;
+    [cx, cf, ~,xnew,corr] = IR(XOnsets,F107d,0,12,0,0);
+    
+        h=figure('Visible',visible);
+    hold on; 
+    plot(0:11,cf,'b');
+    grid on
+    xlabel('Time Lags (day)')
+    ylabel('Impulse Response Coefficient')
+    title('Predicting \rho_{eq} at onset of D_{st} event using F_{10.7} ')
+    print('-depsc2', '-r200', sprintf('paperfigures/F107IR-onset-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107IR-onset-GOES%d.png',satnum));
+    if(strcmp(visible,'off')),close(h);end;
+    
+    
+end
