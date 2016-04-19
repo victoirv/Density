@@ -112,15 +112,27 @@ end
 
 if(MakePaperPlots && stormcase==1)
     
-    F107d=interptest(1:length(MassDensitySpline),FILLED(:,30),1:24:length(MassDensitySpline));
-    MDd=interptest(1:length(MassDensitySpline),MassDensitySpline,1:24:length(MassDensitySpline));
+    F107d=interptest(1:length(MassDensitySpline),FILLED(:,30),1:24*3:length(MassDensitySpline));
+    MDd=interptest(1:length(MassDensitySpline),MassDensitySpline,1:24*3:length(MassDensitySpline));
+    
+    %Sliding window smoothing (instead of block averaging)
+    %MDd2=ndnanfilter((1/73*ones(1,73)),1,MassDensitySpline);
+    MDd2=ndnanfilter(MassDensitySpline,1,(1/73*ones(1,73)));
+    F107d2=filter((1/73*ones(1,73)),1,FILLED(:,30));
+    %figure; plot((0:(length(F107d)-1))*24*3,F107d)
+    %hold on; plot(F107d2,'r')
+    
+    MDd27=ndnanfilter(MassDensitySpline,1,(1/649*ones(1,649)));
+    F107d27=filter((1/649*ones(1,649)),1,FILLED(:,30));
+    [cx, cf, ~,xnew,corr] = IR(MDd27,F107d27,0,12,0,0);
+    
     
     %General (non-storm) trend
-    [cx, cf, ~,xnew,corr] = IR(MDd,F107d,0,12,0,0);
+    [cx, cf, ~,xnew,corr] = IR(MDd2,F107d2,0,12,0,0);
     
     h=figure('Visible',visible);
     hold on; 
-    plot(0:11,cf,'b');
+    plot(0:3:33,cf,'b');
     grid on
     xlabel('Time Lags (day)')
     ylabel('Impulse Response Coefficient')
@@ -137,7 +149,7 @@ if(MakePaperPlots && stormcase==1)
     
         h=figure('Visible',visible);
     hold on; 
-    plot(0:11,cf,'b');
+    plot(0:3:33,cf,'b');
     grid on
     xlabel('Time Lags (day)')
     ylabel('Impulse Response Coefficient')
