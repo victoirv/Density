@@ -232,6 +232,13 @@ switch stormcase
         figurename=strcat(figurename,'Kp',sprintf('-GOES%d.eps',satnum));
         yr=5;
         yranges(5,:,:)=[-2 2; 350 550; 1 10; 150 230; 10 30];
+    case 27 %For doing 3day/27day F107 plots
+        storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+        DSTCut=-50;
+        figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
+        yr=2;
+        MakeBinPlots=1;
+        
 end
 
 
