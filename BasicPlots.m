@@ -129,17 +129,20 @@ if(MakePaperPlots && stormcase==27)
     
     F1073d=interptest(FILLEDTime,FILLED(:,30),New3dTime);
     MD3d=interptest(FILLEDTime,MassDensitySpline,New3dTime);
-    [cx, cf, cc,xnew,corr] = IR(log(MD3d),F1073d,0,12,0,0);
+    [cx, cf, cc,xnew,corr, ~, cxsd, cfsd, ccsd] = IR(log(MD3d),F1073d,0,12,0,0,100);
     
     
     
     figure; subplot(2,1,1); plot(New3dTime,log(MD3d)); hold on; plot(New3dTime,xnew,'r'); legend('Data','Model')
     datetick('keeplimits'); xlabel('Date'); ylabel('\rho_{eq} (amu/cm^3)');
     
-    subplot(2,1,2);  plot(0:11,flipud(cf)); hold on; plot([0 11],[0 0],'k-.');
+    subplot(2,1,2);  plot(0:11,flipud(cf)); hold on; 
+    plot(0:11,[flipud(cf)+flipud(cfsd) flipud(cf)-flipud(cfsd)],'r-.')
+    plot([0 11],[0 0],'k-.');
+    xlim([0 11])
         ylabel('Impulse Response coefficient')
     xlabel('Lags (3 day)')
-    title(sprintf('Coefficients for predicting \rho_{eq} with 12 3-day lags of F_{10.7} - CC: %2.2f',corr))
+    title(sprintf('Average 100-bootstrap-sample coefficients for predicting \\rho_{eq} with 12 3-day lags of F_{10.7} - CC: %2.2f',corr))
         print('-depsc2', '-r200', sprintf('figures/F1073dCoef-GOES%d.eps',satnum));
     print('-dpng', '-r200', sprintf('figures/F1073dCoef-GOES%d.png',satnum));
     
@@ -147,14 +150,16 @@ if(MakePaperPlots && stormcase==27)
     
     F10727d=interptest(FILLEDTime,FILLED(:,30),New27dTime);
     MD27d1=interptest(FILLEDTime,MassDensitySpline,New27dTime);
-    [cx, cf, ~,xnew,corr1] = IR(log(MD27d1),F10727d,0,12,0,0);
+    [cx, cf, ~,xnew,corr1, ~, cxsd, cfsd, ccsd] = IR(log(MD27d1),F10727d,0,12,0,0,100);
     
     figure; subplot(2,1,1); plot(New27dTime,log(MD27d1)); hold on; plot(New27dTime,xnew,'r'); legend('Data','Model')
     datetick('keeplimits'); xlabel('Date'); ylabel('\rho_{eq} (amu/cm^3)');
         subplot(2,1,2);  plot(0:11,flipud(cf)); hold on; plot([0 11],[0 0],'k-.');
+        plot(0:11,[flipud(cf)+flipud(cfsd) flipud(cf)-flipud(cfsd)],'r-.')
+        xlim([0 11])
         ylabel('Impulse Response coefficient')
     xlabel('Lags (27 day)')
-    title(sprintf('Coefficients for predicting \rho_{eq} with 12 3-day lags of F_{10.7} - CC: %2.2f',corr1))
+    title(sprintf('Average 100-bootstrap-sample coefficients for predicting \\rho_{eq} with 12 27-day lags of F_{10.7} - CC: %2.2f',corr1))
         print('-depsc2', '-r200', sprintf('figures/F10727dCoef-GOES%d.eps',satnum));
     print('-dpng', '-r200', sprintf('figures/F10727dCoef-GOES%d.png',satnum));
     
@@ -169,7 +174,7 @@ if(MakePaperPlots && stormcase==27)
         subplot(2,1,2);  plot(0:11,flipud(cf)); hold on; plot([0 11],[0 0],'k-.');
         ylabel('Impulse Response coefficient')
     xlabel('Lags (27 day)')
-    title(sprintf('Coefficients for predicting \rho_{eq} with 12 3-day lags of F_{10.7} - CC: %2.2f',corrv))
+    title(sprintf('Coefficients for verifying IR prediction - CC: %2.2f',corrv))
         print('-depsc2', '-r200', sprintf('figures/F10727dVerif-GOES%d.eps',satnum));
     print('-dpng', '-r200', sprintf('figures/F10727dVerif-GOES%d.png',satnum));
     
