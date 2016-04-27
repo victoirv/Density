@@ -117,7 +117,24 @@ if(MakePaperPlots && stormcase==27)
     New27dTime=FILLEDTime(1):24*27*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end);
     
     F107d=interptest(FILLEDTime,FILLED(:,30),New1dTime);
-    MDd=interptest(FILLEDTime,MassDensitySpline,New1dTime);
+    Dstd=interptest(FILLEDTime,FILLED(:,15),New1dTime);
+    [MDd, NUsed]=interptest(FILLEDTime,MassDensitySpline,New1dTime);
+    
+    
+    
+    save('data/1dData','New1dTime','F107d','Dstd','MDd','NUsed')
+    
+    
+    figure; plot(NUsed,MDd,'+')
+    coef=[NUsed(~isnan(MDd)) ones(length(NUsed(~isnan(MDd))),1)]\MDd(~isnan(MDd));
+    cc=corrcoef(MDd,NUsed,'rows','pairwise');
+    hold on; plot([0 24],[coef(2) coef(2)+coef(1)*24],'r-.','LineWidth',3)
+    ylabel('\rho_{eq}')
+    xlabel('Valid hourly points in daily median')
+    title(sprintf('Linear correlation: %2.2f',cc(1,2)));
+    print('-depsc2', '-r200', sprintf('figures/MDvsValid-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('figures/MDvsValid-GOES%d.png',satnum));
+    
     
     %Sliding window smoothing (instead of block averaging)
     %MDd2=ndnanfilter((1/73*ones(1,73)),1,MassDensitySpline);

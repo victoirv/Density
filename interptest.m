@@ -1,4 +1,4 @@
-function datanew=interptest(t,x,tnew,dt)
+function [datanew NUsed]=interptest(t,x,tnew,dt)
 
 if nargin<3
     error('datanew=interptest(t,x,tnew,dt)')
@@ -55,7 +55,9 @@ else
         snip=snip+1;
     end
     datanew=reshape(x2,dt2*2,length(x2)/(dt2*2)); %Reshape and median to smaller uniform time grid
+    NUsed=sum(~isnan(datanew))';
     datanew=nanmedian(datanew)';
+    
     if(length(datanew)==(length(tnew)+1) && isnan(datanew(end)))
         datanew(end)=[]; %Because sometimes dt2 has a rounding/precision problem and the algorithm buffers up an additional, empty value
     end
