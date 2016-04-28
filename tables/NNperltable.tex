@@ -1,20 +1,20 @@
-\begin{table}[h]
-\small
-\begin{tabular}{|L|LLLL|}
-\hline
+ \begin{table}[h]
+ \small
+ \begin{tabular}{|C|CCCC|}
+ \hline
  & \text{GOES 2} & \text{GOES 5} & \text{GOES 6} & \text{GOES 7}\\ \hline
-DoY & +0.07 & +0.36 & +0.36 & +0.10 \\
-MLT & +0.33 & +0.20 & +0.27 & +0.18 \\
-B_z & +0.19 & +0.15 & +0.20 & -0.00 \\
-V_{sw} & +0.28 & +0.39 & +0.13 & +0.10 \\
-D_{st} & +0.03 & +0.08 & +0.05 & +0.19 \\
-\rho_{sw} & +0.02 & +0.04 & +0.21 & +0.05 \\
-F_{10.7} & +0.26 & +0.46 & +0.52 & +0.36 \\
-B_z+V_{sw} & +0.09 & +0.24 & +0.20 & +0.04 \\
-D_{st}+F_{10.7} & +0.28 & +0.33 & +0.54 & +0.33 \\
-All & +0.17 & +0.56 & +0.57 & +0.19 \\
-\hline
-\end{tabular}
-\caption{Table of nonlinear model correlations showing the median of 100 random samples. Each sample trained on half of the data (via randomly selected rows of the least squares matrix) and tested on the other half} 
-\label{NNperltable}
-\end{table}
+DoY & +0.05\pm0.31 & +0.34\pm0.27 & +0.32\pm0.21 & +0.12\pm0.17 \\
+MLT & +0.29\pm0.41 & +0.16\pm0.36 & +0.16\pm0.36 & +0.17\pm0.21 \\
+B_z & +0.24\pm0.23 & +0.18\pm0.27 & +0.17\pm0.18 & -0.00\pm0.20 \\
+V_{sw} & +0.20\pm0.25 & +0.22\pm0.25 & +0.14\pm0.22 & +0.06\pm0.18 \\
+D_{st} & +0.08\pm0.27 & +0.12\pm0.26 & +0.06\pm0.21 & +0.18\pm0.24 \\
+\rho_{sw} & +0.02\pm0.29 & +0.05\pm0.41 & +0.19\pm0.27 & +0.12\pm0.29 \\
+F_{10.7} & +0.26\pm0.27 & +0.31\pm0.23 & +0.51\pm0.14 & +0.36\pm0.15 \\
+B_z+V_{sw} & +0.11\pm0.25 & +0.28\pm0.28 & +0.18\pm0.20 & +0.02\pm0.17 \\
+D_{st}+F_{10.7} & +0.17\pm0.25 & +0.26\pm0.32 & +0.51\pm0.16 & +0.35\pm0.17 \\
+All & +0.21\pm0.41 & +0.49\pm0.52 & +0.60\pm0.22 & +0.17\pm0.33 \\
+ \hline
+ \end{tabular}
+ \caption{Table of nonlinear model test correlations showing the median of 100 random samples. Each sample trained on half of the data (via randomly selected rows of the least squares matrix) and tested on the other half} 
+ \label{NNperltable}
+ \end{table}

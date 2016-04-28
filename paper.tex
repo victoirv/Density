@@ -172,7 +172,7 @@ Figure \ref{f107bin} takes the events and bins them by the value of $F_{10.7}$ a
 Looking at GOES 2,5,6, and 7 shows that this post-onset $D_{st}$ spike happens in almost every case for periods of high $F_{10.7}$. Creating a linear model directly relating variables (and combinations of variables) to $\rho_{eq}$ also shows that $F_{10.7}$ most often has the highest correlation with $\rho_{eq}$. A sample of these correlations is shown in Table \ref{perltable}. The correlations were made by training a one-input linear model of 5-hour post-onset medians of each variable (or variables) against the median of $\rho_{eq}$ at, and four hours after, event onset. This was done by randomly sampling half of the data, generating the model, and testing against the other half, doing this process 100 times and then taking the median correlations.
 
 
-\input{"tables/CCperltable.tex"}
+
 
 \section{Appendix}
 \subsection{Bias}
@@ -355,7 +355,8 @@ While the GOES Satellites tend to keep an average geostationary distance of arou
 \end{figure}
 \clearpage
 
-
+\newpage
+\input{"tables/CCperltable.tex"}
 
 
 

@@ -87,7 +87,7 @@ switch stormcase
         cutoffduration=12; %12 hour DST storm
         figurename=strcat(figurename,'dd12',sprintf('-GOES%d.eps',satnum));
         yr=5;
-        yranges(5,:,:)=[-10 10; 0 1000; -100 0; 00 200; 0 70];
+        yranges(5,:,:)=[-10 5; 400 700; -100 0; 150 200; 0 70];
     case 6
         storms=diff([0 (MassDensityNanSpline>40)' 0]);
         MDCut=40;
@@ -227,6 +227,18 @@ switch stormcase
         DSTCut=-50;
         figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
         yr=2;
+    case 26
+        storms=diff([0 (FILLED(:,13)>6)' 0]); %KP Storm
+        figurename=strcat(figurename,'Kp',sprintf('-GOES%d.eps',satnum));
+        yr=5;
+        yranges(5,:,:)=[-2 2; 350 550; 1 10; 150 230; 10 30];
+    case 27 %For doing 3day/27day F107 plots
+        storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+        DSTCut=-50;
+        figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
+        yr=2;
+        MakeBinPlots=1;
+        
 end
 
 

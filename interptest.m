@@ -1,61 +1,99 @@
-function datanew=interptest(t,x,tnew,dt)
+function [datanew NUsed]=interptest(t,x,tnew,dt)
+
+if nargin<3
+    error('datanew=interptest(t,x,tnew,dt)')
+end
+
 if nargin == 3
     dt=(tnew(2)-tnew(1))/2; %halfway to the points on either side
 end
 
-tnew=tnew(:); %Force orientation
-t=t(:);
 %{
-
-dt2=floor(dt/(t(2)-t(1)));
-t2=tnew(1)-dt:(t(2)-t(1)):tnew(end)+dt;
-x2=nan(length(t2),min(size(x)));
-
-indices=floor((t-t(1))/(t(2)-t(1))+1); %Indices on expanded uniform grid of t (not tnew yet)
-
-if(tnew(1)>t(1)) %If new time starts later than data provided, cut down x
-    offset=find(diff([0 t'>=(tnew(1)-dt) 0])>0)-1;
-    x2(indices(offset:end)-indices(offset)+1)=x(offset:end);
-else %New time wants data from before data exists
-    offset=find(diff([0 (t(1)-dt)<=tnew' 0])>0)-1; %Find first valid point
-    x2(indices+offset)=x; %Go from nonuniform time grid to uniform time grid with NaNs
+if(tnew(1)<t(1) || tnew(end)>t(end))
+    error('New time must be within existing time')
 end
-
-snip=0;
-while(mod(length(x2),(dt2*2))~=0)
-    x2(end+1)=NaN; %Adding nans shouldn't affect final median, just buffer for size
-    snip=snip+1;
-end
-datanew=reshape(x2,dt2*2,length(x2)/(dt2*2)); %Reshape and median to smaller uniform time grid
-datanew=nanmedian(datanew)';
-datasave=datanew;
-
-if(tnew(1)<t(1))
-    prebuffer=tnew(1):(tnew(2)-tnew(1)):t(1);
-    prebuffer=prebuffer(1:end-1);
-    datanew=[nan(1,length(prebuffer)) datanew];
-end
-if(tnew(end)>t(end))
-    postbuffer=t(end):(tnew(2)-tnew(1)):tnew(end);
-    postbuffer=postbuffer(2:end);
-    datanew=[datanew nan(1,length(postbuffer))];
-end
-
-
-toc
-
-tic
 %}
 
+tnew=tnew(:); %Force orientation
+t=t(:);
+if(size(x,1)~=size(t,1)) %If x has two dimensions and the time dimension isn't aligned with t, flip it (and t should now be a column vector)
+    x=x';
+end
 
-datanew=zeros(length(tnew),min(size(x)));
+
+if(min(size(x))~=1) %If x has two dimensions, recursively interpolate over the non-time dimensions
+    xdim=setdiff(size(x),size(t));
+    datanew=NaN(length(tnew),xdim);  
+    for i=1:xdim
+        datanew(:,i)=interptest(t,x(:,i),tnew,dt);
+    end
+else
+    
+    while(t(end)>(tnew(end)+dt))
+        t(end)=[];
+        x(end)=[];
+    end
+
+    dt2=floor(dt/(t(2)-t(1)));
+    t2=tnew(1)-dt:(t(2)-t(1)):tnew(end)+dt;
+    t2(end)=[];  %last point would be first of next bin
+    x2=nan(length(t2),1);
+
+    indices=floor((t-t(1))/(t(2)-t(1))+1); %Indices on expanded uniform grid of t (not tnew yet)
+
+    if(tnew(1)>t(1)) %If new time starts later than data provided, cut down x. NEEDS TESTING SINCE RE-WRITE
+        offset=find(diff([0 t'>=(tnew(1)-dt) 0])>0)-1;
+        x2(indices(offset:end)-indices(offset)+1)=x(offset:end);
+    else %New time wants data from before data exists (or tnew(1)==t(1))
+        offset=find(diff([0 t(1)<=t2 0])>0)-1; %Find first center point
+        x2(indices+offset)=x; %Go from nonuniform time grid to uniform time grid with NaNs
+    end
+
+    snip=0;
+    while(mod(length(x2),(dt2*2))~=0)
+        x2(end+1)=NaN; %Adding nans shouldn't affect final median, just buffer for size
+        snip=snip+1;
+    end
+    datanew=reshape(x2,dt2*2,length(x2)/(dt2*2)); %Reshape and median to smaller uniform time grid
+    NUsed=sum(~isnan(datanew))';
+    datanew=nanmedian(datanew)';
+    
+    if(length(datanew)==(length(tnew)+1) && isnan(datanew(end)))
+        datanew(end)=[]; %Because sometimes dt2 has a rounding/precision problem and the algorithm buffers up an additional, empty value
+    end
+    datasave=datanew;
+
+    %{
+    if(tnew(1)<t(1))
+        prebuffer=tnew(1):(tnew(2)-tnew(1)):t(1);
+        prebuffer=prebuffer(1:end-1);
+        datanew=[nan(length(prebuffer),1); datanew];
+    end
+    if(tnew(end)>t(end))
+        postbuffer=t(end):(tnew(2)-tnew(1)):tnew(end);
+        postbuffer=postbuffer(2:end);
+        datanew=[datanew; nan(length(postbuffer,1))];
+    end
+%}
+return
+
+end
+
+
+
+%{
+xdim=setdiff(size(x),size(t)); %setdiff(size(x),size(t)) finds length of non-time dimension of x
+if(isempty(xdim))
+    xdim=1;
+end
+datanew2=zeros(length(tnew),xdim); 
+
 for i=1:length(tnew)
-    datanew(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); %Center
+    datanew2(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); %Center
     %datanew(i,:)=nanmedian(x(t>=(tnew(i)) & t<(tnew(i)+2*dt),:)); %Forwards time
 end
 test=0;
-%toc
-
+%}
 
 
 

@@ -1,7 +1,7 @@
 
 
 if(MakePaperPlots && stormcase==1)
-    stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 DSTCut],yranges(yr,:,:))
+    stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 DSTCut; 5 20],yranges(yr,:,:))
     
     if(satnum==6 && sy<=1989 && ey>=1989) %Make March 1989 Geomagnetic storm plot (if necessary time range still exists)
         stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[],[],[datenum('Mar-10-1989') datenum('Mar-18-1989')])
@@ -17,10 +17,15 @@ if(MakePaperPlots && stormcase==1)
     print -dpng -r200 paperfigures/PNGs/allstorms.png    
     if(strcmp(visible,'off')),close(h);end;
     
-    
 end
+
+if(MakePaperPlots && stormcase==26) %KP Stack plot
+    stackplot(FILLEDTime, [FILLED(:,[5,6,13,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','Kp','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 6],yranges(yr,:,:))
+end
+
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
-    tw=25:30;
+    tw=20:25;
+    
     topcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
     bottomcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
     h=figure('Visible',visible);   
@@ -51,6 +56,11 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
     set(rect,'FaceColor',[0.9 0.9 0.9])
     uistack(rect,'bottom')
     grid on;
+    if(tw(1)==25)
+        text(0.01,0.97,'(b)','Units','normalized','FontSize',14)
+    else
+        text(0.01,0.97,'(a)','Units','normalized','FontSize',14)
+    end
     set(gca,'xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     xlim([-timewidth timewidth*2]./LongTimeScale)
     lh=legend('All \rho_{eq} events ',sprintf('B_z  \\geq %2.2f nT; %d events ',topcut,sum(nanmedian(AVMat(:,tw,5),2)>=topcut)),sprintf('B_z^{ } < %2.2f nT; %d events ',bottomcut,sum(nanmedian(AVMat(:,tw,5),2)<bottomcut)));
@@ -312,6 +322,96 @@ if(MakePaperPlots && stormcase==1)
     print('-dpng','-r200',sprintf('paperfigures/PNGs/ccplot-GOES%d.png',satnum)); 
     if(strcmp(visible,'off')),close(h);end;
     
+end
+
+if(MakePaperPlots && stormcase==10) %1-day takahashi. Do for any day plot
+    %Bootstrap test for same daily means
+    xa1d=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
+    AV1d=interptest(-timewidth:1:timewidth*2,AVMDMat',-timewidth:LongTimeScale:timewidth*2)';
+    AVm1=AV1d(:,4);
+    AV0=AV1d(:,5);
+    AV1=AV1d(:,6);
+    
+    dloops=1000;
+    delta=zeros(4,dloops);
+    for i=1:dloops
+        rs1=randsample(AVm1,sum(~isnan(AVm1)),'true');
+        rs2=randsample(AV0,sum(~isnan(AV0)),'true');
+        
+        delta(1,i)=(nanmedian(rs1)-nanmedian(rs2));
+       
+        rs1=randsample(AVm1,sum(~isnan(AVm1)),'true');
+        rs2=randsample(AV1,sum(~isnan(AV1)),'true');
+        delta(2,i)=(nanmedian(rs1)-nanmedian(rs2));
+        
+        rs1=randsample(AV1,sum(~isnan(AV1)),'true');
+        rs2=randsample(AV0,sum(~isnan(AV0)),'true');
+        delta(3,i)=(nanmedian(rs1)-nanmedian(rs2));
+        
+        rs1=randsample(AV0,sum(~isnan(AV0)),'true');
+        rs2=randsample(AV0,sum(~isnan(AV0)),'true');
+        delta(4,i)=(nanmedian(rs1)-nanmedian(rs2));
+    end
+    
+    
+    table=fopen('tables/DeltaBootstraps.txt','w');
+    Dm10=sum(delta(1,:)>=0)/length(delta(1,:));
+    Dm11=sum(delta(2,:)<=0)/length(delta(2,:));
+    D10=sum(delta(3,:)>=0)/length(delta(3,:));
+    fprintf(table,'Delta\t Actual\t %%\t \n');
+    
+    fprintf(table,'-1 0\t%2.2f\t%2.2f%%>=0\n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100);
+    fprintf(table,'-1 1\t%2.2f\t%2.2f%%<=0\n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100);
+    fprintf(table,' 1 0\t%2.2f\t%2.2f%%>=0\n',nanmedian(AV1)-nanmedian(AV0),D10*100);
+    
+    fclose(table);
+    
+    
+    g=figure('Visible',visible);
+    h(1)=subplot('position',subplotstack(3,1));
+    hist(delta(1,:),[-7.5:0.5:5.5])
+    hold on;
+    plot(nanmedian(AVm1)-nanmedian(AV0),0,'.','MarkerSize',20)
+    plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
+    text(0.01,0.9,'1 day pre-onset and onset','Units','normalized','FontSize',14)
+    text(1,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',Dm10*100))
+    ylabel('Count')
+    title('Bootstrapped differences of daily \rho_{eq} medians around event onset')
+    
+    h(2)=subplot('position',subplotstack(3,2));
+    hist(delta(2,:),[-7.5:0.5:5.5])
+    hold on;
+    plot(nanmedian(AVm1)-nanmedian(AV1),0,'.','MarkerSize',20)
+    plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
+    text(0.01,0.9,'1 day pre-onset and 1 day post-onset','Units','normalized','FontSize',14)
+    text(-2.5,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\leq 0',Dm11*100))
+    ylabel('Count')
+    
+   h(3)=subplot('position',subplotstack(3,3));
+    hist(delta(3,:),[-7:0.5:5])
+    hold on;
+    plot(nanmedian(AV1)-nanmedian(AV0),0,'.','MarkerSize',20)
+    plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
+    text(0.01,0.9,'1 day post-onset and onset','Units','normalized','FontSize',14)
+    text(1,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',D10*100))
+    ylabel('Count')
+    
+    set(findobj('type','axes'),'xticklabel',{[]});
+set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
+axis tight;
+%set(findobj('type','axes'),'xtick',get(h(end),'xtick'))
+set(findobj('type','axes'),'xtick',[-7:1:5])
+linkaxes(h,'x')
+axis tight;
+set(h(end),'xticklabel',[-7:1:5])
+xlabel('Difference (amu/cm^3)','FontSize',14)
+    
+    print('-depsc2', '-r200', 'paperfigures/DailyBootstrapDifferences.eps')
+    print('-dpng', '-r200', 'paperfigures/PNGs/DailyBootstrapDifferences.png')
+    if(strcmp(visible,'off')),close(g);end;
+    
+    
+
     
 end
 
@@ -334,10 +434,12 @@ if(MakePaperPlots && stormcase==25)
     M6=load('data/DentonDensityAndTime_6.mat');
     M7=load('data/DentonDensityAndTime_7.mat');
     
-    NewMTime2=M2.DentonTime(1):24*27*(M2.DentonTime(2)-M2.DentonTime(1)):M2.DentonTime(end);
-        NewMTime5=M5.DentonTime(1):24*27*(M5.DentonTime(2)-M5.DentonTime(1)):M5.DentonTime(end); 
-        NewMTime6=M6.DentonTime(1):24*27*(M6.DentonTime(2)-M6.DentonTime(1)):M6.DentonTime(end);
-        NewMTime7=M7.DentonTime(1):24*27*(M7.DentonTime(2)-M7.DentonTime(1)):M7.DentonTime(end);
+    %Times 6 since they're 10 minute differences, times 24 and 27 to go to
+    %hours and then 27-days
+    NewMTime2=M2.DentonTime(1):24*27*6*(M2.DentonTime(2)-M2.DentonTime(1)):M2.DentonTime(end);
+        NewMTime5=M5.DentonTime(1):24*27*6*(M5.DentonTime(2)-M5.DentonTime(1)):M5.DentonTime(end); 
+        NewMTime6=M6.DentonTime(1):24*27*6*(M6.DentonTime(2)-M6.DentonTime(1)):M6.DentonTime(end);
+        NewMTime7=M7.DentonTime(1):24*27*6*(M7.DentonTime(2)-M7.DentonTime(1)):M7.DentonTime(end);
     
     MD2=interptest(M2.DentonTime,M2.MassDensity,NewMTime2);
     MD5=interptest(M5.DentonTime,M5.MassDensity,NewMTime5);
@@ -345,21 +447,35 @@ if(MakePaperPlots && stormcase==25)
     MD7=interptest(M7.DentonTime,M7.MassDensity,NewMTime7);
     
     
-    h=figure('Visible',visible);
+    h=figure('Visible',visible,'Position',[0 0 1000 500]);
+    set(gcf,'PaperPositionMode','auto')
     x=F10727Day;
     y=log10(MD6);
     [AX,H1,H2]=plotyy(NewTime,x,NewMTime6,y,'plot','plot');
-
-    set(H1,'marker','.','MarkerSize',20,'color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
-    set(H2,'marker','.','MarkerSize',10,'color','blue','LineStyle','none'); set(AX(2),'YColor','b');
-        hold(AX(2));
-    H3=plot(AX(2),NewMTime2,log10(MD2),'o','Color',[0 0.5 0.5],'LineWidth',1.25);
-    H4=plot(AX(2),NewMTime5,log10(MD5),'o','Color',[0.5 0 0.5]);
-    H5=plot(AX(2),NewMTime7,log10(MD7),'o','Color',[0.7 0.3 0]);
-    ylim(AX(1),[0,300])
-    ylim(AX(2),[0.5,1.5])
-    ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'GOES log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
-    legend([H1;H2;H3;H4;H5],'F_{10.7}','GOES 6','GOES 2','GOES 5','GOES 7','Location','SouthEast')
+    
+    Colors=[[0 0.8 0.8]; [0.8 0 0.8]; [0 0 0]; [0.5 0.9 0.2]];
+     
+    set(H1,'marker','.','MarkerSize',15,'color','red'); set(AX(1),'YColor','r'); set(AX(2),'XTick',[]);
+    set(H2,'LineStyle','-','color',Colors(3,:)); set(AX(2),'YColor','k');
+    hold(AX(2));
+    H3=plot(AX(2),NewMTime2,log10(MD2),'-','Color',Colors(1,:),'LineWidth',1.25);
+    H4=plot(AX(2),NewMTime5,log10(MD5),'-','Color',Colors(2,:));
+    H5=plot(AX(2),NewMTime7,log10(MD7),'-','Color',Colors(4,:));
+    plot(AX(2),[NewMTime2(1) NewMTime2(end)],[1.5 1.5],'Color',Colors(1,:),'LineWidth',3)
+    plot(AX(2),[NewMTime5(1) NewMTime5(end)],[1.52 1.52],'Color',Colors(2,:),'LineWidth',3)
+    plot(AX(2),[NewMTime6(1) NewMTime6(end)],[1.54 1.54],'Color',Colors(3,:),'LineWidth',3)
+    plot(AX(2),[NewMTime7(1) NewMTime7(end)],[1.56 1.56],'Color',Colors(4,:),'LineWidth',3)
+    
+    ylim(AX(1),[0,320])
+    ylim(AX(2),[0.5,1.6])
+    ylabel(AX(1),'F_{10.7} (s.f.u.)','FontSize',BigFont); ylabel(AX(2),'log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
+    [legh,objh]=legend([H1;H2;H3;H4;H5],'F_{10.7}',...
+        sprintf('GOES 6 - %2.2f',min(min(corrcoef(interptest(M6.DentonTime,M6.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
+        sprintf('GOES 2 - %2.2f',min(min(corrcoef(interptest(M2.DentonTime,M2.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
+        sprintf('GOES 5 - %2.2f',min(min(corrcoef(interptest(M5.DentonTime,M5.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
+        sprintf('GOES 7 - %2.2f',min(min(corrcoef(interptest(M7.DentonTime,M7.MassDensity,NewTime),F10727Day,'rows','pairwise')))), ...
+        'Location','SouthEast');
+    set(objh,'LineWidth',2)
     set(AX(1),'YTick',0:50:300);
     %set(AX(2),'YTick',.5:0.25:1.5);
     xlabel('Year','FontSize',BigFont);
@@ -373,4 +489,53 @@ if(MakePaperPlots && stormcase==25)
     if(strcmp(visible,'off')),close(h);end;
     
     
+    
+    g=figure('Visible',visible);
+    
+    scale=@(sc) (300*(sc-0.5))/(1.6-0.5);
+    
+    h(1)=subplot('position',subplotstack(4,1));
+    %[AX,H1,H2]=plotyy(NewTime,x,NewMTime2,log10(MD2),'plot','plot');
+    plot(NewTime,x,'r');
+    hold on; plot(NewMTime2,scale(log10(MD2)),'b');
+    legend('F_{10.7}',sprintf('GOES 2 - %2.2f',min(min(corrcoef(interptest(M2.DentonTime,M2.MassDensity,NewTime),F10727Day,'rows','pairwise')))),'Location','SouthEast');
+    ylim([0,300])
+    
+    
+    h(2)=subplot('position',subplotstack(4,2));
+    %[AX,H1,H2]=plotyy(NewTime,x,NewMTime5,log10(MD5),'plot','plot');
+    plot(NewTime,x,'r');
+    hold on; plot(NewMTime5,scale(log10(MD5)),'b');
+    legend('F_{10.7}',sprintf('GOES 5 - %2.2f',min(min(corrcoef(interptest(M5.DentonTime,M5.MassDensity,NewTime),F10727Day,'rows','pairwise')))),'Location','SouthEast');
+    ylim([0,300])
+    
+    h(3)=subplot('position',subplotstack(4,3));
+    %[AX,H1,H2]=plotyy(NewTime,x,NewMTime6,log10(MD6),'plot','plot');
+    plot(NewTime,x,'r');
+    hold on; plot(NewMTime6,scale(log10(MD6)),'b');
+    legend('F_{10.7}',sprintf('GOES 6 - %2.2f',min(min(corrcoef(interptest(M6.DentonTime,M6.MassDensity,NewTime),F10727Day,'rows','pairwise')))),'Location','SouthEast');
+    ylim([0,300])
+    
+    set(findobj('type','axes'),'xticklabel',{[]})
+    
+    h(4)=subplot('position',subplotstack(4,4));
+    %[AX,H1,H2]=plotyy(NewTime,x,NewMTime7,log10(MD7),'plot','plot');
+    plot(NewTime,x,'r');
+    hold on; plot(NewMTime7,scale(log10(MD7)),'b');
+    legend('F_{10.7}',sprintf('GOES 7 - %2.2f',min(min(corrcoef(interptest(M7.DentonTime,M7.MassDensity,NewTime),F10727Day,'rows','pairwise')))),'Location','SouthEast');
+    ylim([0,300])
+    
+    ylabel('F_{10.7} (s.f.u.)','FontSize',BigFont); %ylabel(AX(2),'log_{10}[\rho_{eq} (amu/cm^2)]','FontSize',BigFont);
+    
+    set(gca,'YTick',0:50:300);
+    xlabel('Year','FontSize',BigFont);
+    
+    
+    
+    linkaxes(h,'x')
+    datetick('keeplimits');
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',get(h(4),'xtick'))
+    print('-depsc2', '-r200', 'paperfigures/F107MD27d-all2.eps')
+    print('-dpng', '-r200', 'paperfigures/PNGs/F107MD27d-all2.png')
+    if(strcmp(visible,'off')),close(g);end;
 end
