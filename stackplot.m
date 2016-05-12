@@ -58,5 +58,5 @@ xlabel('Time','FontSize',14)
 sy=year(Time(1));
 ey=year(Time(end));
 %print('-depsc2',sprintf('paperfigures/alldata-GOES%d-%d-%d.eps',satnum,sy,ey));
-print('-depsc2','-r300',sprintf('paperfigures/alldata-GOES%d-%d-%d.eps',satnum,sy,ey));
-print('-dpng','-r200',sprintf('paperfigures/PNGs/alldata-GOES%d-%d-%d.png',satnum,sy,ey));
+print('-depsc2','-r300',sprintf('paper/figures/alldata-GOES%d-%d-%d.eps',satnum,sy,ey));
+print('-dpng','-r200',sprintf('paper/figures/PNGs/alldata-GOES%d-%d-%d.png',satnum,sy,ey));

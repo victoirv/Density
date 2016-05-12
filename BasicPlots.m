@@ -10,8 +10,8 @@ if(MakePaperPlots && stormcase==1)
     ylabel('Median \rho_{eq} (amu/cm^3)')
     xlabel('MLT (hour)')
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:2:24])
-    print -depsc2 -r200 paperfigures/rhoMLT.eps
-    print -dpng -r200 paperfigures/PNGs/rhoMLT.png
+    print -depsc2 -r200 figures/rhoMLT.eps
+    print -dpng -r200 figures/PNGs/rhoMLT.png
     if(strcmp(visible,'off')),close(h);end;
     
     [~,~,~,DHr]=datevec(DentonTime);
@@ -23,8 +23,8 @@ if(MakePaperPlots && stormcase==1)
     ylabel('Median \rho_{eq} (amu/cm^3)')
     xlabel('Local Time (hour)')
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
-    print -depsc2 -r200 paperfigures/rhoLT.eps
-    print -dpng -r200 paperfigures/PNGs/rhoLT.png
+    print -depsc2 -r200 figures/rhoLT.eps
+    print -dpng -r200 figures/PNGs/rhoLT.png
     if(strcmp(visible,'off')),close(h);end;
     
     for i=1:24
@@ -35,8 +35,8 @@ if(MakePaperPlots && stormcase==1)
     ylabel('Median AE (nT)')
     xlabel('Local Time (hour)')
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
-    print -depsc2 -r200 paperfigures/AELT.eps
-    print -dpng -r200 paperfigures/PNGs/AELT.png
+    print -depsc2 -r200 figures/AELT.eps
+    print -dpng -r200 figures/PNGs/AELT.png
     if(strcmp(visible,'off')),close(h);end;
     
     for i=1:24
@@ -47,8 +47,8 @@ if(MakePaperPlots && stormcase==1)
     ylabel('Median D_{st} (nT)')
     xlabel('Local Time (hour)')
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:4:23])
-    print -depsc2 -r200 paperfigures/DstLT.eps
-    print -dpng -r200 paperfigures/PNGs/DstLT.png
+    print -depsc2 -r200 figures/DstLT.eps
+    print -dpng -r200 figures/PNGs/DstLT.png
     if(strcmp(visible,'off')),close(h);end;
     
     
@@ -59,8 +59,8 @@ if(MakePaperPlots && stormcase==1)
     set(gca,'XTick',0:2:24)
     xlabel('UT Hour of event start')
     ylabel('Frequency')
-    print -depsc2 -r200 paperfigures/nansbyhour.eps
-    print -dpng -r200 paperfigures/PNGs/nansbyhour.png
+    print -depsc2 -r200 figures/nansbyhour.eps
+    print -dpng -r200 figures/PNGs/nansbyhour.png
     if(strcmp(visible,'off')),close(h);end;
     
     h=figure('Visible',visible);
@@ -76,8 +76,8 @@ if(MakePaperPlots && stormcase==1)
     ylabel('Data available')
     xlabel('Time from event start (hr)')
     grid on
-    print -depsc2 -r200 paperfigures/nansbyhour_storm.eps
-    print -dpng -r200 paperfigures/PNGs/nansbyhour_storm.png
+    print -depsc2 -r200 figures/nansbyhour_storm.eps
+    print -dpng -r200 figures/PNGs/nansbyhour_storm.png
     if(strcmp(visible,'off')),close(h);end;
 end
 
@@ -90,8 +90,8 @@ if(MakePaperPlots && stormcase==16)
     xlabel('UT Hour')
     ylabel('Frequency')
     title(sprintf('%d events of AE > %d for %d-%d',length(starti),AECut,sy,ey));
-    print -depsc2 -r200 paperfigures/AEbyhour.eps
-    print -dpng -r200 paperfigures/PNGs/AEbyhour.png
+    print -depsc2 -r200 figures/AEbyhour.eps
+    print -dpng -r200 figures/PNGs/AEbyhour.png
     if(strcmp(visible,'off')),close(h);end;
 end
 
@@ -104,8 +104,8 @@ if(MakePaperPlots && stormcase==1)
     grid on
     xlabel('Day of Year')
     ylabel('D_{st} (nT)')
-    print -depsc2 -r200 paperfigures/DoYDst.eps
-    print -dpng -r200 paperfigures/PNGs/DoYDst.png
+    print -depsc2 -r200 figures/DoYDst.eps
+    print -dpng -r200 figures/PNGs/DoYDst.png
     if(strcmp(visible,'off')),close(h);end;
 end
 
@@ -271,8 +271,8 @@ if(MakePaperPlots && stormcase==27)
     xlabel('Time Lags (day)')
     ylabel('Impulse Response Coefficient')
     title('Predicting \rho_{eq} with F_{10.7}')
-    print('-depsc2', '-r200', sprintf('paperfigures/F107IR-GOES%d.eps',satnum));
-    print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107IR-GOES%d.png',satnum));
+    print('-depsc2', '-r200', sprintf('figures/F107IR-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('figures/PNGs/F107IR-GOES%d.png',satnum));
     if(strcmp(visible,'off')),close(h);end;
     
     
@@ -288,8 +288,8 @@ if(MakePaperPlots && stormcase==27)
     xlabel('Time Lags (day)')
     ylabel('Impulse Response Coefficient')
     title('Predicting \rho_{eq} at onset of D_{st} event using F_{10.7} ')
-    print('-depsc2', '-r200', sprintf('paperfigures/F107IR-onset-GOES%d.eps',satnum));
-    print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107IR-onset-GOES%d.png',satnum));
+    print('-depsc2', '-r200', sprintf('figures/F107IR-onset-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('figures/PNGs/F107IR-onset-GOES%d.png',satnum));
     if(strcmp(visible,'off')),close(h);end;
     
     

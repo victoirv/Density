@@ -56,7 +56,7 @@ MDCut=0;
 AECut=0;
 nnanalysis=0; %Also set 0 here, changed on per-case basis.
 ccanalysis=0;
-figurename='paperfigures/stormavs-';
+figurename='paper/figures/stormavs-';
 BigFont=16; %Set size for larger, readable fonts
 
 %Select kind of storm to look for
@@ -221,7 +221,6 @@ switch stormcase
         figurename=strcat(figurename,'mass-gt20',sprintf('-GOES%d.eps',satnum));
         yr=5;
         yranges(5,:,:)=[-2 2; 350 550; -60 0; 150 230; 10 30];
-        MakeBinPlots=1;
     case 25 %Specifically for 27 day F10.7 vs mass density plot
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
         DSTCut=-50;

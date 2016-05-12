@@ -13,8 +13,8 @@ if(MakePaperPlots && stormcase==1)
     xa=(-timewidth:LongTimeScale:timewidth*2);
     plot(xa,AVMDs(1,:),'r','LineWidth',3);
     hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
-    print -depsc2 -r200 paperfigures/allstorms.eps
-    print -dpng -r200 paperfigures/PNGs/allstorms.png    
+    print -depsc2 -r200 figures/allstorms.eps
+    print -dpng -r200 figures/PNGs/allstorms.png    
     if(strcmp(visible,'off')),close(h);end;
     
 end
@@ -24,53 +24,55 @@ if(MakePaperPlots && stormcase==26) %KP Stack plot
 end
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
-    tw=20:25;
-    
-    topcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
-    bottomcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
-    h=figure('Visible',visible);   
-    top=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:));
-    bottom=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:));
-    topbar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:))));
-    bottombar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:))));
-    tvals=ttest2(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:),AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:));
-    tvals(tvals==0)=NaN;
-    %{
-    for i=1:length(AVMDMat(1,:))
-        top(i)=nanmean(AVMDMat(AVMat(:,i,5)>0,i));
-        topbar(i)=nanstd(AVMDMat(AVMat(:,i,5)>0,i));
-        bottom(i)=nanmean(AVMDMat(AVMat(:,i,5)<0,i));
-        bottombar(i)=nanstd(AVMDMat(AVMat(:,i,5)<0,i));
+    tws=[20:25; 25:30];
+    for i=1:2
+        tw=tws(i,:);
+
+        topcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
+        bottomcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
+        h=figure('Visible',visible);   
+        top=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:));
+        bottom=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:));
+        topbar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:))));
+        bottombar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:))));
+        tvals=ttest2(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:),AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:));
+        tvals(tvals==0)=NaN;
+        %{
+        for i=1:length(AVMDMat(1,:))
+            top(i)=nanmean(AVMDMat(AVMat(:,i,5)>0,i));
+            topbar(i)=nanstd(AVMDMat(AVMat(:,i,5)>0,i));
+            bottom(i)=nanmean(AVMDMat(AVMat(:,i,5)<0,i));
+            bottombar(i)=nanstd(AVMDMat(AVMat(:,i,5)<0,i));
+        end
+        %}
+        plot(xa,nanmedian(AVMDMat),'r','LineWidth',3)
+        hold on;
+
+        plot(xa,top,'b','LineWidth',2)    
+        plot(xa,bottom,'k','LineWidth',2)%'Color',[0.3 0.8 0.3])
+        plot(xa,[top+topbar; top-topbar],'b-.')
+        plot(xa,[bottom+bottombar; bottom-bottombar],'k-.')%,'Color',[0.3 0.8 0.3])
+        ylims=get(gca,'YLim');
+        plot(xa,tvals+ylims(1)-1,'.','MarkerSize',15,'Color',[0.3 0.8 0.3])
+        rect=rectangle('Position',[tw(1)-timewidth-1 ylims(1) tw(end)-tw(1) ylims(2)-ylims(1)]) ;
+        set(rect,'FaceColor',[0.9 0.9 0.9])
+        uistack(rect,'bottom')
+        grid on;
+        if(tw(1)==25)
+            text(0.01,0.97,'(b)','Units','normalized','FontSize',14)
+        else
+            text(0.01,0.97,'(a)','Units','normalized','FontSize',14)
+        end
+        set(gca,'xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
+        xlim([-timewidth timewidth*2]./LongTimeScale)
+        lh=legend('All \rho_{eq} events ',sprintf('B_z  \\geq %2.2f nT; %d events ',topcut,sum(nanmedian(AVMat(:,tw,5),2)>=topcut)),sprintf('B_z^{ } < %2.2f nT; %d events ',bottomcut,sum(nanmedian(AVMat(:,tw,5),2)<bottomcut)));
+        set(lh,'box','off');
+        title(sprintf('\\rho_{eq} events; GOES %d; %d-%d',satnum,sy,ey));
+        ylabel('\rho_{eq} (amu/cm^3)')
+        xlabel('Time since onset (hours)')
+        print('-depsc2',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d.eps',stormcase,tw(1),tw(end),satnum));
+        print('-dpng','-r200',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d.png',stormcase,tw(1),tw(end),satnum));
     end
-    %}
-    plot(xa,nanmedian(AVMDMat),'r','LineWidth',3)
-    hold on;
-    
-    plot(xa,top,'b','LineWidth',2)    
-    plot(xa,bottom,'k','LineWidth',2)%'Color',[0.3 0.8 0.3])
-    plot(xa,[top+topbar; top-topbar],'b-.')
-    plot(xa,[bottom+bottombar; bottom-bottombar],'k-.')%,'Color',[0.3 0.8 0.3])
-    ylims=get(gca,'YLim');
-    plot(xa,tvals+ylims(1)-1,'.','MarkerSize',15,'Color',[0.3 0.8 0.3])
-    rect=rectangle('Position',[tw(1)-timewidth-1 ylims(1) tw(end)-tw(1) ylims(2)-ylims(1)]) ;
-    set(rect,'FaceColor',[0.9 0.9 0.9])
-    uistack(rect,'bottom')
-    grid on;
-    if(tw(1)==25)
-        text(0.01,0.97,'(b)','Units','normalized','FontSize',14)
-    else
-        text(0.01,0.97,'(a)','Units','normalized','FontSize',14)
-    end
-    set(gca,'xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
-    xlim([-timewidth timewidth*2]./LongTimeScale)
-    lh=legend('All \rho_{eq} events ',sprintf('B_z  \\geq %2.2f nT; %d events ',topcut,sum(nanmedian(AVMat(:,tw,5),2)>=topcut)),sprintf('B_z^{ } < %2.2f nT; %d events ',bottomcut,sum(nanmedian(AVMat(:,tw,5),2)<bottomcut)));
-    set(lh,'box','off');
-    title(sprintf('\\rho_{eq} events; GOES %d; %d-%d',satnum,sy,ey));
-    ylabel('\rho_{eq} (amu/cm^3)')
-    xlabel('Time since onset (hours)')
-    print('-depsc2',sprintf('paperfigures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d.eps',stormcase,tw(1),tw(end),satnum));
-    print('-dpng','-r200',sprintf('paperfigures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d.png',stormcase,tw(1),tw(end),satnum));
-    
     
     
     h=figure('Visible',visible);
@@ -87,8 +89,8 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
     ylabel('Count')
     title('Average \rho_{eq} Four Hours Before and After Storm Onset')
     %Printing segfaults for some reason...
-    print('-depsc2',sprintf('paperfigures/rhobeforeafter-GOES%d.eps',satnum));
-    print('-dpng', '-r200', sprintf('paperfigures/PNGs/rhobeforeafter-GOES%d.png',satnum));    
+    print('-depsc2',sprintf('figures/rhobeforeafter-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('figures/PNGs/rhobeforeafter-GOES%d.png',satnum));    
     if(strcmp(visible,'off')),close(h);end;
     
     
@@ -112,8 +114,8 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
     ylabel('Count')
     title('Average \rho_{eq} Four Hours Before and After Storm Onset')
     %Printing segfaults for some reason...
-    print('-depsc2',sprintf('paperfigures/rhobeforeafter-boot-GOES%d.eps',satnum));
-    print('-dpng', '-r200', sprintf('paperfigures/PNGs/rhobeforeafter-boot-GOES%d.png',satnum));    
+    print('-depsc2',sprintf('figures/rhobeforeafter-boot-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('figures/PNGs/rhobeforeafter-boot-GOES%d.png',satnum));    
     if(strcmp(visible,'off')),close(h);end;
     
     
@@ -188,8 +190,8 @@ if(MakePaperPlots && MakeDstThreshPlot)
     ylabel('\rho_{eq} (amu/cm^3)')
     title(sprintf('High F_{10.7} events - Low F_{10.7} events, both with baselines removed, %d-%d',sy,ey))
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
-    print('-depsc2','-r200', sprintf('paperfigures/DstRhoThresh-%d-%d.eps',sy,ey));
-    print('-dpng','-r200', sprintf('paperfigures/PNGs/DstRhoThresh-%d-%d.png',sy,ey));
+    print('-depsc2','-r200', sprintf('figures/DstRhoThresh-%d-%d.eps',sy,ey));
+    print('-dpng','-r200', sprintf('figures/PNGs/DstRhoThresh-%d-%d.png',sy,ey));
     if(strcmp(visible,'off')),close(h);end;
 end
 
@@ -240,8 +242,8 @@ if(MakePaperPlots && MakeRandThreshPlot)
     ylabel('\rho_{eq} (amu/cm^3)')
     title(sprintf('High F_{10.7} events - Low F_{10.7} events, both with baselines removed, %d-%d',sy,ey))
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
-    print('-depsc2','-r200', sprintf('paperfigures/RandRhoThresh-%d-%d.eps',sy,ey));
-    print('-dpng','-r200', sprintf('paperfigures/PNGs/RandRhoThresh-%d-%d.png',sy,ey));
+    print('-depsc2','-r200', sprintf('figures/RandRhoThresh-%d-%d.eps',sy,ey));
+    print('-dpng','-r200', sprintf('figures/PNGs/RandRhoThresh-%d-%d.png',sy,ey));
     if(strcmp(visible,'off')),close(h);end;
 end
 
@@ -318,8 +320,8 @@ if(MakePaperPlots && stormcase==1)
 
     legend boxoff;
     axis tight;
-    print('-depsc2',sprintf('paperfigures/ccplot-GOES%d.eps',satnum)); 
-    print('-dpng','-r200',sprintf('paperfigures/PNGs/ccplot-GOES%d.png',satnum)); 
+    print('-depsc2',sprintf('paper/figures/ccplot-GOES%d.eps',satnum)); 
+    print('-dpng','-r200',sprintf('paper/figures/PNGs/ccplot-GOES%d.png',satnum)); 
     if(strcmp(visible,'off')),close(h);end;
     
 end
@@ -406,8 +408,8 @@ axis tight;
 set(h(end),'xticklabel',[-7:1:5])
 xlabel('Difference (amu/cm^3)','FontSize',14)
     
-    print('-depsc2', '-r200', 'paperfigures/DailyBootstrapDifferences.eps')
-    print('-dpng', '-r200', 'paperfigures/PNGs/DailyBootstrapDifferences.png')
+    print('-depsc2', '-r200', 'figures/DailyBootstrapDifferences.eps')
+    print('-dpng', '-r200', 'figures/PNGs/DailyBootstrapDifferences.png')
     if(strcmp(visible,'off')),close(g);end;
     
     
@@ -483,9 +485,8 @@ if(MakePaperPlots && stormcase==25)
     linkaxes(AX,'x')
     datetick('keeplimits');
     grid on
-    print('-depsc2', '-r200', 'paperfigures/F107MD27d-all.eps')
-    print('-dpdf', 'paperfigures/F107MD27d-all.pdf')
-    print('-dpng', '-r200', 'paperfigures/PNGs/F107MD27d-all.png')
+    print('-depsc2', '-r200', 'figures/F107MD27d-all.eps')
+    print('-dpng', '-r200', 'figures/PNGs/F107MD27d-all.png')
     if(strcmp(visible,'off')),close(h);end;
     
     
@@ -535,7 +536,7 @@ if(MakePaperPlots && stormcase==25)
     linkaxes(h,'x')
     datetick('keeplimits');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',get(h(4),'xtick'))
-    print('-depsc2', '-r200', 'paperfigures/F107MD27d-all2.eps')
-    print('-dpng', '-r200', 'paperfigures/PNGs/F107MD27d-all2.png')
+    print('-depsc2', '-r200', 'figures/F107MD27d-all2.eps')
+    print('-dpng', '-r200', 'figures/PNGs/F107MD27d-all2.png')
     if(strcmp(visible,'off')),close(g);end;
 end
