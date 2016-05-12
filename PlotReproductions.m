@@ -8,7 +8,7 @@ if(MakePaperPlots && stormcase==10)
     xlabel('Time from minimum of event (day)')
     ylabel('\rho_{eq} (amu/cm^3)')
     legend('Block median','MoM storm, day','MoM day, storm')
-    print -depsc2 -r200 paperfigures/blockmedian.eps
+    print -depsc2 -r200 figures/blockmedian.eps
     if(strcmp(visible,'off')),close(h);end;
 end
 
@@ -61,7 +61,7 @@ if(MakePaperPlots && stormcase==1)
    ylabel('M (amu)')
    legend('3 day means')
    
-   print -depsc2 -r200 paperfigures/KpvsM.eps
+   print -depsc2 -r200 figures/KpvsM.eps
    if(strcmp(visible,'off')),close(h);end;
 
 
@@ -87,9 +87,8 @@ if(MakePaperPlots && stormcase==1)
     linkaxes(AX,'x')
     datetick('keeplimits');
     grid on
-    print('-depsc2', '-r200', sprintf('paperfigures/F107MD27d-GOES%d.eps',satnum))
-    print('-dpdf', sprintf('paperfigures/F107MD27d-GOES%d.pdf',satnum))
-    print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107MD27d-GOES%d.png',satnum))
+    print('-depsc2', '-r200', sprintf('paper/figures/F107MD27d-GOES%d.eps',satnum))
+    print('-dpng', '-r200', sprintf('paper/figures/PNGs/F107MD27d-GOES%d.png',satnum))
     if(strcmp(visible,'off')),close(h);end;
     
     h=figure('Visible',visible,'Position',[0 0 1000 500]);
@@ -107,7 +106,7 @@ if(MakePaperPlots && stormcase==1)
     linkaxes(AX,'x')
     datetick('keeplimits');
     grid on
-    print('-depsc2', '-r200', sprintf('paperfigures/F107MD1d-GOES%d.eps',satnum))
-    print('-dpng', '-r200', sprintf('paperfigures/PNGs/F107MD1d-GOES%d.png',satnum))
+    print('-depsc2', '-r200', sprintf('paper/figures/F107MD1d-GOES%d.eps',satnum))
+    print('-dpng', '-r200', sprintf('paper/figures/PNGs/F107MD1d-GOES%d.png',satnum))
     if(strcmp(visible,'off')),close(h);end;
 end

@@ -10,8 +10,8 @@ if(MakePaperPlots && stormcase==1)
     ylabel('\rho_{eq} (amu/cm^3)')
     xlabel('Hours from onset')
     title(sprintf('First 5 (red) and last 5 (blue) events from %d-%d',sy,ey));
-    print -depsc2 -r200 paperfigures/TenEvents.eps
-    print -dpng -r200 paperfigures/PNGs/TenEvents.png
+    print -depsc2 -r200 figures/TenEvents.eps
+    print -dpng -r200 figures/PNGs/TenEvents.png
     if(strcmp(visible,'off')),close(h);end;
 end
 
@@ -38,6 +38,6 @@ if(MakePaperPlots && removef107)
     ylabel('\rho_{eq} (amu/cm^3)')
     xlabel('Year')
     datetick
-    print -depsc2 -r200 paperfigures/f107removed.eps
+    print -depsc2 -r200 figures/f107removed.eps
     if(strcmp(visible,'off')),close(h);end;
 end
