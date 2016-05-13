@@ -26,7 +26,7 @@
 \def\note#1\par{\textcolor{blue}{\textbf{#1}}\\} 
 
 \begin{document}
-\title{Relationship between solar wind, $D_{st}$, and plasmasphere trough mass density on one-hour time scales}
+\title{Solar wind and geomagnetic activity influence on the equatorial plasma mass density at geosynchronous orbit}
 \author{
 Victoir Veibell\footnote{vveibell@gmu.edu}
 \and
@@ -45,10 +45,10 @@ R.S. Weigel\footnote{rweigel@gmu.edu}}
 \maketitle
 \hrule
 \begin{abstract}
-This paper compares various magnetosphere conditions around the onset of geomagnetic events, defined as decreases in $D_{st}$ below a threshold value or $\rho_{eq}$ above a threshold value. 
-
+In this work we consider two types of events, determined by decreases in $D_{st}$ below a threshold value or increases in the $\rho_{eq}$ above a threshold value on 1-hour and 1-day time scales using the \cite{Denton2007} dataset.  From the $D_{st}$ events, we find that there is no statistically significant relationship between either solar wind or geomagnetic activity under conditions of strong geomagnetic activity when hourly or daily averages of $\rho_{eq}$ are considered.  Although very large geomagnetic storms have been observed to correspond to large increases in the plasma trough mass density, in general $\rho_{eq}$ following the onset of a geomagnetic storm does not depend on the storm intensity or the solar wind parameters $B_{z}$ and $P_{dyn}$. From the $\rho_{eq}$ events, we find a weak dependence on $B_{z}$ after the onset of an event, with higher average $B_{z}$ six hours after the event onset corresponding to larger $\rho_{eq}$ events.
 \vspace{2em}
 \end{abstract}
+\hrule
  \end{@twocolumnfalse}
   ]
 
@@ -60,9 +60,7 @@ The plasma trough is a transition region between the higher density and lower te
 
 The dependence of the plasmapause location on geomagnetic activity was observed as early as \cite{Carpenter1966}.  There are well--validated models of the plasmapause boundary, as a function of $L$, $MLT$, and geomagnetic activity (\cite{LemaireEarthsPlasmasphere}, \cite{Moldwin2002ModelPlasmapause}, \cite{OBrien2003EmpiricalPlasmapause}).  Models also exist for the plasmasphere density (\cite{Gallagher1988EmpiricalModelPlasmasphere}; \cite{LemaireEarthsPlasmasphere}).
 
-The dependence of the plasma trough density on geomagnetic and solar wind conditions has not been extensively studied until the past decade (\cite{Takahashi2006}; \cite{Takahashi2010}; \cite{Denton2016}). Earlier works that considered profiles of electron number density found a significant dependence on the plasmasphere boundary on geomagnetic activity, but there the relationship between geomagnetic activty and density in the plasma trough (\cite{Chappell1970}; \cite{Anderson1993}) was not explicitly considered.
-
-\cite{Lotoaniu1999PlasmaMassDensity} used measurements from the Plasma Wave Experiment instrument on the CRRES satellite and compared in-situ measured plasma mass density to that inferred by ground-based ULF wave measurements from the CANOPUS array. By extending the ground footprints to the plasmatrough, they found agreement between the two methods for certain plasmapause conditions.  \vinote{More details}
+The dependence of the plasma trough density on geomagnetic and solar wind conditions has not been extensively studied until the past decade (\cite{Takahashi2006}; \cite{Takahashi2010}; \cite{Denton2016}). Earlier works that considered profiles of electron number density found a significant dependence on the plasmasphere boundary on geomagnetic activity (\cite{Chappell1970}; \cite{Anderson1993}), but there the relationship between geomagnetic activity and density in the plasma trough was not explicitly considered.
 
 \cite{Takahashi2006} estimated magnetospheric mass density using measurements from the CRRES satellite during a 73-day period in 1991 (observations were made when CRRESS was in an elliptical, near equatorial orbit and primarily in the plasma trough region). They found that the average ion mass, $M=\rho/n_e$, had some correlation with geomagnetic activity, with more negative hourly $D_{st}$ values corresponding to higher $M$ and 1.5- and 3-day averages of $K_p$ corresponding to higher $M$ (3-hour averages of $K_p$ had little visual correlation with $M$). The mass density estimates were obtained from CRRES observations in the MLT range of 12:00 and 18:00 with most observations having L between 5 and 7 $R_E$.
 
@@ -72,7 +70,7 @@ The dependence of the plasma trough density on geomagnetic and solar wind condit
 
 \cite{Takahashi2010} noted that downward spikes in the $D_{st}$ index coincided with with significant changes in $\rho_{eq}$ for $L$ near 6.8~$R_E$. For five storms, two had $\rho_{eq}$ spikes after the $D_{st}$ drop, two had $\rho_{eq}$ spikes before the drop, and one showed little change in $\rho_{eq}$.  A key result was that when daily-averaged measurements were considered, an enhancement in $\rho_{eq}$ appeared on the same day as minimum $D_{st}$.
 
-\cite{Yao2008} studied the relationship between $D_{st}$ and the number density of low-energy $O^+$ in different regions (ring current and plasma sheet) using the TEAMS and ESA instruments on the low-altitude and high-inclination orbiting FAST satellite and found that the average $N_{O^+}$ across the sampled L-shells (2-14) had a strong correlation (0.88) \inote{With what?}.  Although the correlation in the plasma trough was not calculated, the data presented \inote{for X events} show that the variations in $N_{O^+}$ tended to appear near $D_{st}$ minimum ($\pm$ 2~hours).
+\cite{Yao2008} studied the relationship between $D_{st}$ and the number density of low-energy $O^+$ in different regions (ring current and plasma sheet) using the TEAMS and ESA instruments on the low-altitude and high-inclination orbiting FAST satellite and found that the average $N_{O^+}$ across the sampled L-shells (2-14) had a strong correlation (0.88) with the minimum $D_{st}$ of the storm.  Although the correlation in the plasma trough was not calculated, the data presented for four events show that the variations in $N_{O^+}$ tended to appear near $D_{st}$ minimum ($\pm$ 2~hours).
 
 \cite{Denton2016} ...
 
@@ -80,10 +78,9 @@ The results in the papers discussed indicate that (1) the mass density in the pl
 
 There are several issues that are addressed in detail: (1) the plasma density measurements are sparse, (2) The plasma trough density has a high correlation with F10.7, and geomagnetic and solar wind parameters also correlate with F10.7, (3) the dependence of mass density on the north/south component of the solar wind magnetic field is expected to be nonlinear. For northward IMF, corresponding to low solar wind driving of the magnetosphere, the plasmasphere can expand past geosynchronous orbit where trough estimates of mass density are made resulting in an increase in observed density that are not due to solar wind driving; for southward IMF, events studies have shown an increase in mass density associated with strong southward IMF and enhanced magnetospheric activity (\cite{Takahashi2010}; \cite{Yao2008}).
 
-Issue (1) is addressed by considering in detail the number of observations that are used in epoch averages around the time of two types of events, decreases in $D_{st}$ below a threshold, and increases in $\rho_{eq}$ above a threshold.  Issue (2) is addressed using various methods to remove or isolate the F10.7 dependences.  Issue (3) is addressed by considering epochs and linear correlations independent of the direction of the IMF along with separation of the epoch averages based on the northward and southward IMF.
+Issue (1) is addressed by considering in detail the number of observations that are used in epoch averages around the time of two types of events, decreases in $D_{st}$ below a threshold, and increases in $\rho_{eq}$ above a threshold.  Issue (2) is addressed using various methods to remove or isolate the F10.7 dependence.  Issue (3) is addressed by considering epochs and linear correlations independent of the direction of the IMF along with separation of the epoch averages based on the northward and southward IMF.
 
 In addition, we consider the influence of time averaging by comparing results using daily means and medians and hourly means and medians of solar wind and magnetospheric parameters.
-
 
 \section{Data Preparation and Overview}
 
@@ -107,7 +104,9 @@ The stack plot in the upper panel of Figure \ref{DailyAveragedDstEvents} shows t
 
 In the lower panel of Figure \ref{DailyAveragedDstEvents} it is shown that the trends seen in the analysis of 1989-1991 also hold for the entire span of measurements from GOES 6, which spans 1983-1991 - a small elevation on the day of the event relative to the day before and day after, with median averages after the day of the event being slightly lower than that before.  
 
-To determine if the magnitude of the density medians on a given day were statistically different than another day, we used a two-population t-test.  For the interval of 1989-1991, corresponding to the top panel of \ref{DailyAveragedDstEvents}, the null hypothesis that any of the medians from days -1, 0, and 1 are different from each other is rejected with a maximimum p value of \vnote{??}.
+To determine if the magnitude of the density medians on a given day were statistically different than another day, we used a two-population t-test.  For the interval of 1989-1991, corresponding to the top panel of \ref{DailyAveragedDstEvents}, the null hypothesis that any of the medians from days -1, 0, and 1 are different from each other is rejected with a maximum p value of. The results are shown in Table~\ref{Table1}.
+
+These tests indicate that there is not a statistically significant change in medians of $\rho_{eq}$ on the day before and day after a threshold crossing in $D_{st}$.  
 
    Days     p
 -1 and 0
@@ -123,35 +122,21 @@ Caption: Results of test on different between means of $\rho_{eq}$ shown in the 
 
 Caption: Results of test on different between means of $\rho_{eq}$ shown in the bottom panel of \ref{DailyAverage} on days near or on the day of a $D_{st}$ event.  
 
-Both of the results in \ref{DailyAveragedDstEvents} indicate that there is not a statictically significant change in medians of $\rho_{eq}$ on the day before and day after a threshold crossing in $D_{st}$.  
+Because the dynamics of the magnetopshere take place on a time scale of less than one day, we have also considered hourly averages as shown in the top panel of Fig.~\ref{HourlyAveragedDstEvents}.  A total of 668 events were found in the interval of May 1983 through August 1991 with an average duration of 9 hours and a median duration of 3 hours.  The error bars were computed in the same way as Fig.~\ref{DailyAveragedDstEvents}.  In this plot, the overall trend is similar to that found in the bottom panel of Fig.~\ref{HourlyAveragedDstEvents} - $\rho_{eq}$ is slightly elevated at the time of the threshold crossing of $D_{st}$ with respect to the values one day before and after, but the elevation is small and in general not statistically significant.  At this timescale no obvious change in mass density at hourly timescale is visible. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation because there is no obvious connection on a short timescale.  One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long-term correlation of density and $D_{st}$.
 
-Because the dynamics of the magnetopshere take place on a time scale of less than one day, we have also considered hourly averages as shown in the top panel of \ref{HourlyAveragedDstEvents}.  A total of 668 events were found in the interval of May 1983 through August 1991 with an average duration of 9 hours and a median duration of 3 hours.  The error bars were computed in the same way as \ref{DailyAveragedDstEvents}.  In this plot, the overall trend is similar to that found in the bottom panel of \ref{HourlyAveragedDstEvents} - $\rho_{eq}$ is slighly elevated at the time of the threhshold crossing of $D_{st}$ with respect to the values one day before and after, but the elevation is small and in general not statistically significant.  At this timescale no obvious change in mass density at hourly timescale is visible. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation because there is no obvious connection on a short timescale.  One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long-term correlation of density and $D_{st}$.
-
-Results of test on different between means of $\rho_{eq}$ shown in the bottom panel of \ref{DailyAverage} on days near or on the day of a $D_{st}$ event.  
-
-It was found that $\rho_{eq}$ enhancements do not clearly correspond to a signature in $D_{st}$, but that there is a trend for such enhancements to occur when $B_{z}$ in the IMF is positive.  This is consistent with \cite{Takahashi2010} who note that very large increases in $\rho_{eq}$ often corresponded to movement of the plasmasphere to beyond geosynchronous distances. 
-
-This method finds 669 periods of $D_{st}$ crossing beneath the selected threshold between May 1983 and August 1991 with an average duration of 9 hours and a median duration of 3 hours \vinote{Make sure I defined "duration"}. Figure \ref{HourlyAveragedDstEvents} shows the average values of all events over a window of 24 hours before onset and 48 hours after. Figure \ref{HourlyAveragedDstEvents}a shows events selected by looking for event onsets where $D_{st}$ crossed a threshold of $-40$~nT. The dashed red lines indicate plus and minus one standard deviation of values from all events that were used to compute the median. The final plot in the stack shows both $\rho_{eq}$ and a bar plot of how many valid data points went into the $\rho_{eq}$ average. Since $\rho_{eq}$ comes from a sparser dataset, it has less valid points contributing to the averages than the other parameters in the stack. 
-
-Figure \ref{HourlyAveragedDstEvents} shows a definite spike in the $Z$ component of the magnetic field, as well as the defined drop in $D_{st}$, but no obvious change in mass density at an hourly timescale. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation since there's no obvious connection on a short timescale. One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long term correlation of density and $D_{st}$.
-
-The bottom panel of \ref{HourlyAveragedDstEvents} contains the events shown in the top panel under the constraint that $D_{st}$ remained below -50~nT for at least twelve hours after the event onset time.
+The bottom panel of Fig.~\ref{HourlyAveragedDstEvents} contains the events shown in the top panel under the constraint that $D_{st}$ remained below -50~nT for at least twelve hours after the event onset time.  In the time period of elevated mass density within 12 hours of the start of the event, there were an average of \inote{X} samples per hourly interval.  This result is consistent with previous observations of large mass density spikes in the plasma trough region during large geomagnetic storms (\cite{Yao2008}; \cite{Takahashi2010} and the observation that solar wind parameters have very little correlation independent of $F_{10.7}$ (\cite{Denton2016}).  To determine of this relationship can be observed in the events of the top panel of Fig.~\ref{HourlyAveragedDstEvents}, we sorted the events by the average $D_{st}$ values in the time interval of 0-12 hours, split the events in two and recomputed the epoch averages of $\rho_{eq}$.  The result is that there is no statistically significant difference in the mass density epoch averages for large versus small storms.  This indicates that to confirm the $\rho_{eq}$ dependence on large geomagnetic storms would require a dataset with a much larger number of strong geomagnetic storms.
 
 \subsection{$\rho_{eq}$ Events}
 
-An alterntive type of event can be defined that corresponds to large increases in $\rho\ $.  In finding $\rho_{eq}$ events, all fill values were replaced with linearly interpolated values. \vinote{Not including \req\ events?}
+An alternative type of event can be defined that corresponds to large increases in $\rho\ $.  Figure~\ref{HourlyAveragedRhoEvents} shows the epoch time series for events in which an increase of $\req\ $ above $20$~amu/cm$^2$ defines the start of the event. In finding $\rho_{eq}$ events, all fill values were replaced with linearly interpolated values. \vinote{Not including \req\ events?}
 
-Figure~\ref{HourlyAveragedRhoEvents} shows the epoch time series for events in which an increase of $\req\ $ above $20$~amu/cm$^2$ defines the start of the event.  Here we see the expected result that such events tend to be associated with positive $B_z^{IMF}$.  To determine if the sign of $B_z^{IMF}$ influences the $\rho\ $ epoch time series, we separated the events by the average of $B_z^{IMF}$ in a time window of $4$~hours.  
+Here we see that such events tend to be associated with positive $B_z^{IMF}$ and low geomagnetic activity (\cite{Denton2016}). 
 
-Figure~\label{fig:RhoBinned}(a) shows the 
-The epoch curves for $B_z^{IMF}\geq=0$ (257) events and $B_z^{IMF}\ge=0$ (139) have no statistically signifiant difference.
+To determine if the sign of $B_z^{IMF}$ influences the $\rho\ $ epoch time series, we separated the events by the average of $B_z^{IMF}$ in a time window of $4$~hours.  
 
-\section{F10.7 dependence}
-In an effort to analyze the dependence of $\rho_{eq}$ on $F_{10.7}$, a few tests were performed. \cite{Takahashi2010} mention a strong correlation between the two. The long term correlation could be a bias for $D_{st}$'s effects, so a linear model was created, recreating mass density purely from $F_{10.7}$ in the form of $\rho_{eq}(t)=a\cdot F_{10.7}(t)$. This re-created $\rho_{eq}$ shows around a 45\% correlation with the actual $\rho_{eq}$, suggesting a strong influence, while doing the same procedure with $D_{st}$ shows only a 20-25\% correlation. 
+Figure~\label{fig:RhoBinned}(a) shows the epoch curves for $B_z^{IMF}\geq=0$ (257) events and $B_z^{IMF}\ge=0$ (139) have no statistically significant difference.
 
-Figure \ref{f107bin} takes the events and bins them by the value of $F_{10.7}$ at event onset, then looks at both $\rho_{eq}$ and $B_z$. Error bars calculated in the same manner as before are added to the highest and lowest bins. A significant difference is seen in $\rho_{eq}$ between events taking place during periods of high $F_{10.7}$ and low $F_{10.7}$, while a much less significant, but still noticeable, difference is seen in $B_z$. Also of interest is how $\rho_{eq}$ only sharply reacts to $D_{st}$ events during periods of high $F_{10.7}$. The positive relationship seen in \cite{Takahashi2010} could be due to the short time period looked at, and that it coincides with periods of higher $F_{10.7}$.
-
-Looking at GOES 2,5,6, and 7 shows that this post-onset $D_{st}$ spike happens in almost every case for periods of high $F_{10.7}$. Creating a linear model directly relating variables (and combinations of variables) to $\rho_{eq}$ also shows that $F_{10.7}$ most often has the highest correlation with $\rho_{eq}$. A sample of these correlations is shown in Table \ref{perltable}. The correlations were made by training a one-input linear model of 5-hour post-onset medians of each variable (or variables) against the median of $\rho_{eq}$ at, and four hours after, event onset. This was done by randomly sampling half of the data, generating the model, and testing against the other half, doing this process 100 times and then taking the median correlations.
+\subsection{Conclusions}
 
 \newpage
 \footnotesize
@@ -191,7 +176,7 @@ Looking at GOES 2,5,6, and 7 shows that this post-onset $D_{st}$ spike happens i
 \includegraphics[scale=0.40]{figures/stormavs-dst.eps}
 \rule[1ex]{5cm}{1pt}
 \includegraphics[scale=0.40]{figures/stormavs-dd12-GOES6.eps}
-\caption{$D_{st}$ events from GOES 6 using hourly medians. Top: Events in the interval 1983-1991; compare to bottom panel {DailyAveragedDstEvents}. Bottom: Same as Top except for constraint that $D_{st}$ stayed below $-50$~nT for at least 12~hours after crossing below $-50$~nT.}
+\caption{$D_{st}$ events from GOES 6 using hourly medians. Top: Events in the interval 1983-1991; compare to bottom panel Fig.~\ref{DailyAveragedDstEvents}. Bottom: Same as Top except for constraint that $D_{st}$ stayed below $-50$~nT for at least 12~hours after crossing below $-50$~nT.}
 \label{HourlyAveragedDstEvents}
 \end{figure}
 
