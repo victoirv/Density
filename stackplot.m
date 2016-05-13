@@ -57,6 +57,15 @@ xlabel('Time','FontSize',14)
 
 sy=year(Time(1));
 ey=year(Time(end));
+
+if(sy ~= ey)
 %print('-depsc2',sprintf('paperfigures/alldata-GOES%d-%d-%d.eps',satnum,sy,ey));
 print('-depsc2','-r300',sprintf('paper/figures/alldata-GOES%d-%d-%d.eps',satnum,sy,ey));
 print('-dpng','-r200',sprintf('paper/figures/PNGs/alldata-GOES%d-%d-%d.png',satnum,sy,ey));
+else
+    sy=datestr(Time(1),'ddmmmyyyy');
+    ey=datestr(Time(end),'ddmmmyyyy');
+    print('-depsc2','-r300',sprintf('paper/figures/alldata-GOES%d-%s-%s.eps',satnum,sy,ey));
+    print('-dpng','-r200',sprintf('paper/figures/PNGs/alldata-GOES%d-%s-%s.png',satnum,sy,ey));
+end
+
