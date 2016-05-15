@@ -1,4 +1,13 @@
-Delta	 Actual	 %	 
--1 0	-0.64	30.70%>=0
--1 1	0.99	24.10%<=0
- 1 0	-1.63	13.80%>=0
+\begin{table}
+\small
+\begin{tabular}{|c|cCcc|}
+ \hline 
+Days & Diff(medians) & \%  & p-val & valid\\ \hline
+-1 0 & -0.64 & 28.00\%\geq 0 & 0.23 & 142 \\ 
+-1 1 & 0.99 & 22.40\%\leq 0 & 0.86 & 164 \\ 
+ 1 0 & -1.63 & 12.40\%\geq 0 & 0.16 & 147 \\ 
+\hline
+\end{tabular}
+\caption{Differences between daily averages for 1000 bootstrap sampled events}
+\label{BootstrapDifferenceTable}
+\end{table}

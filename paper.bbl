@@ -1,0 +1,126 @@
+\begin{thebibliography}{15}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Denton}(2007)]{Denton}
+R.~{Denton}.
+\newblock {Database of Input Parameters for Tsyganenko Magnetic Field Models},
+  2007.
+\newblock URL \url{http://www.dartmouth.edu/~rdenton/magpar/index.html}.
+
+\bibitem[{Denton} et~al.(2006){Denton}, {Takahashi}, {Galkin}, {Nsumei},
+  {Huang}, {Reinisch}, {Anderson}, {Sleeper}, and {Hughes}]{Denton2006}
+R.~E. {Denton}, K.~{Takahashi}, I.~A. {Galkin}, P.~A. {Nsumei}, X.~{Huang},
+  B.~W. {Reinisch}, R.~R. {Anderson}, M.~K. {Sleeper}, and W.~J. {Hughes}.
+\newblock {Distribution of density along magnetospheric field lines}.
+\newblock \emph{Journal of Geophysical Research (Space Physics)}, 111:\penalty0
+  A04213, April 2006.
+\newblock \doi{10.1029/2005JA011414}.
+
+\bibitem[{Gallagher} et~al.(1988){Gallagher}, {Craven}, and
+  {Comfort}]{Gallagher1988EmpiricalModelPlasmasphere}
+D.~L. {Gallagher}, P.~D. {Craven}, and R.~H. {Comfort}.
+\newblock {An empirical model of the earth's plasmasphere}.
+\newblock \emph{Advances in Space Research}, 8:\penalty0 15--21, 1988.
+\newblock \doi{10.1016/0273-1177(88)90258-X}.
+
+\bibitem[{Gallagher} et~al.(2000){Gallagher}, {Craven}, and
+  {Comfort}]{Gallagher2000}
+D.~L. {Gallagher}, P.~D. {Craven}, and R.~H. {Comfort}.
+\newblock {Global core plasma model}.
+\newblock \emph{Journal of Geophysical Research}, 105:\penalty0 18819, August
+  2000.
+\newblock \doi{10.1029/1999JA000241}.
+
+\bibitem[{Hamilton} et~al.(1988){Hamilton}, {Gloeckler}, {Ipavich}, {Wilken},
+  and {Stuedemann}]{Hamilton1988RingCurrentDevelopment}
+D.~C. {Hamilton}, G.~{Gloeckler}, F.~M. {Ipavich}, B.~{Wilken}, and
+  W.~{Stuedemann}.
+\newblock {Ring current development during the great geomagnetic storm of
+  February 1986}.
+\newblock \emph{\jgr}, 93:\penalty0 14343--14355, December 1988.
+\newblock \doi{10.1029/JA093iA12p14343}.
+
+\bibitem[{Kondrashov} et~al.(2014){Kondrashov}, {Denton}, {Shprits}, and
+  {Singer}]{Kondrashov2014ReconstructionOfGaps}
+D.~{Kondrashov}, R.~{Denton}, Y.~Y. {Shprits}, and H.~J. {Singer}.
+\newblock {Reconstruction of gaps in the past history of solar wind
+  parameters}.
+\newblock \emph{Geophysical Research Letters}, 41:\penalty0 2702--2707, April
+  2014.
+\newblock \doi{10.1002/2014GL059741}.
+
+\bibitem[Lemaire(1998)]{LemaireEarthsPlasmasphere}
+J~Lemaire.
+\newblock \emph{The Earth's Plasmasphere}.
+\newblock Cambridge University Press, Cambridge, U.K. New York, 1998.
+\newblock ISBN 9780521430913.
+
+\bibitem[{Loto'aniu} et~al.(1999){Loto'aniu}, {Waters}, {Fraser}, and
+  {Samson}]{Lotoaniu1999PlasmaMassDensity}
+T.~M. {Loto'aniu}, C.~L. {Waters}, B.~J. {Fraser}, and J.~C. {Samson}.
+\newblock {Plasma mass density in the plasmatrough: Comparison using ULF waves
+  and CRRES}.
+\newblock \emph{\grl}, 26:\penalty0 3277--3280, 1999.
+\newblock \doi{10.1029/1999GL003641}.
+
+\bibitem[{Mayr} and {Volland}(1968)]{Mayr1968ModelMagnetosphereTemperature}
+H.~G. {Mayr} and H.~{Volland}.
+\newblock {Model of magnetospheric temperature distribution}.
+\newblock \emph{\jgr}, 73:\penalty0 4851--4858, August 1968.
+\newblock \doi{10.1029/JA073i015p04851}.
+
+\bibitem[{Moldwin} et~al.(2002){Moldwin}, {Downward}, {Rassoul}, {Amin}, and
+  {Anderson}]{Moldwin2002ModelPlasmapause}
+M.~B. {Moldwin}, L.~{Downward}, H.~K. {Rassoul}, R.~{Amin}, and R.~R.
+  {Anderson}.
+\newblock {A new model of the location of the plasmapause: CRRES results}.
+\newblock \emph{Journal of Geophysical Research (Space Physics)}, 107:\penalty0
+  1339, November 2002.
+\newblock \doi{10.1029/2001JA009211}.
+
+\bibitem[{O'Brien} and {Moldwin}(2003{\natexlab{a}})]{OBrien2003}
+T.~P. {O'Brien} and M.~B. {Moldwin}.
+\newblock {Empirical plasmapause models from magnetic indices}.
+\newblock \emph{Geophysical Research Letters}, 30:\penalty0 1152, February
+  2003{\natexlab{a}}.
+\newblock \doi{10.1029/2002GL016007}.
+
+\bibitem[{O'Brien} and
+  {Moldwin}(2003{\natexlab{b}})]{OBrien2003EmpiricalPlasmapause}
+T.~P. {O'Brien} and M.~B. {Moldwin}.
+\newblock {Empirical plasmapause models from magnetic indices}.
+\newblock \emph{\grl}, 30:\penalty0 1152, February 2003{\natexlab{b}}.
+\newblock \doi{10.1029/2002GL016007}.
+
+\bibitem[{Takahashi} et~al.(2006){Takahashi}, {Denton}, {Anderson}, and
+  {Hughes}]{Takahashi2006}
+K.~{Takahashi}, R.~E. {Denton}, R.~R. {Anderson}, and W.~J. {Hughes}.
+\newblock {Mass density inferred from toroidal wave frequencies and its
+  comparison to electron density}.
+\newblock \emph{Journal of Geophysical Research (Space Physics)}, 111:\penalty0
+  A01201, January 2006.
+\newblock \doi{10.1029/2005JA011286}.
+
+\bibitem[{Takahashi} et~al.(2010){Takahashi}, {Denton}, and
+  {Singer}]{Takahashi2010}
+K.~{Takahashi}, R.~E. {Denton}, and H.~J. {Singer}.
+\newblock {Solar cycle variation of geosynchronous plasma mass density derived
+  from the frequency of standing Alfv{\'e}n waves}.
+\newblock \emph{Journal of Geophysical Research (Space Physics)}, 115:\penalty0
+  A07207, July 2010.
+\newblock \doi{10.1029/2009JA015243}.
+
+\bibitem[{Yao} et~al.(2008){Yao}, {Seki}, {Miyoshi}, {McFadden}, {Lund}, and
+  {Carlson}]{Yao2008}
+Y.~{Yao}, K.~{Seki}, Y.~{Miyoshi}, J.~P. {McFadden}, E.~J. {Lund}, and C.~W.
+  {Carlson}.
+\newblock {Effect of solar wind variation on low-energy O+ populations in the
+  magnetosphere during geomagnetic storms: FAST observations}.
+\newblock \emph{Journal of Geophysical Research (Space Physics)}, 113, 2008.
+\newblock \doi{10.1029/2007JA012681}.
+
+\end{thebibliography}

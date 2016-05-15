@@ -30,7 +30,7 @@ Time(Time>datelimits(2))=[];
 for i=1:numvars
     h(i)=subplot('position',subplotstack(numvars,i));
     if(i<numvars)
-        plot(Time,Data(:,i),'.','MarkerSize',10);
+        plot(Time,Data(:,i),'-','MarkerSize',10);
     else
         plot(Time,Data(:,i),'r.','MarkerSize',10); %Plot last subplot in red
     end
@@ -53,7 +53,7 @@ datetick('x','keeplimits')
 set(findobj('type','axes'),'xtick',get(h(end),'xtick'))
 linkaxes(h,'x')
 axis tight;
-xlabel('Time','FontSize',14)
+xlabel(sprintf('Date from %s through %s',datestr(Time(1),1),datestr(Time(end),1)),'FontSize',14);
 
 sy=year(Time(1));
 ey=year(Time(end));

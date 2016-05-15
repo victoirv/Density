@@ -42,7 +42,7 @@ DentonData
 
 yranges=zeros(5,5,2);
 yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230; 8 16];
-yranges(2,:,:)=[-8 3; 350 600; -90 0; 160 210; 8 16];
+yranges(2,:,:)=[-8 3; 350 600; -90 0; 160 210; 10 30];
 yranges(3,:,:)=[-8 3; 350 580; -90 0; 170 200; 12 22];
 yranges(4,:,:)=[-3 2; 400 550; -30 -10; 80 120; 12 22];
 yranges(5,:,:)=[-10 10; 0 1000; -100 0; 00 200; 12 22]; %Made for overwriting with specific cases
@@ -71,8 +71,9 @@ switch stormcase
         storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
         MDCut=40;
         figurename=strcat(figurename,'mass',sprintf('-GOES%d.eps',satnum));
-        yr=2;
+        yr=5;
         MakeBinPlots=1;
+        yranges(5,:,:)=[-1 3; 350 450; -20 0; 180 210; 10 60];
     case 3
         storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
         figurename=strcat(figurename,'diffden-10amu',sprintf('-GOES%d.eps',satnum));
@@ -216,7 +217,7 @@ switch stormcase
         figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
         yr=2;
     case 24
-                storms=diff([0 (MassDensityNanSpline>20)' 0]); %Mass Density Storm, started at 40
+                storms=diff([0 (MassDensityNanSpline>20)' 0]); %Mass Density Storm, started at 20
         MDCut=20;
         figurename=strcat(figurename,'mass-gt20',sprintf('-GOES%d.eps',satnum));
         yr=5;
@@ -355,14 +356,14 @@ ComplexPlots
 %Statistical comparisons
 if(stormcase==1)
     %Show DST is significantly different during missing data times
-    [p,h]=ranksum(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
-    [h,p]=ttest2(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01)
+    [p,h]=ranksum(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01);
+    [h,p]=ttest2(FILLED(~isnan(MassDensitySpline),15),FILLED(isnan(MassDensitySpline),15),'Alpha',0.01);
     %Or when mass density gets above/below 40
-    [p,h]=ranksum(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01)
-    [h,p]=ttest2(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01)
+    [p,h]=ranksum(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01);
+    [h,p]=ttest2(FILLED((MassDensitySpline<40),15),FILLED((MassDensitySpline>40),15),'Alpha',0.01);
     %Or pre-noon vs post-noon
-    [p,h]=ranksum(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
-    [h,p]=ttest2(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01)
+    [p,h]=ranksum(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01);
+    [h,p]=ttest2(FILLED(FILLED(:,3)>12,15),FILLED(FILLED(:,3)<12,15),'Alpha',0.01);
 end
 
 

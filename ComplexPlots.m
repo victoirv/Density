@@ -42,6 +42,8 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         bottombar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:))));
         tvals=ttest2(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:),AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:));
         tvals(tvals==0)=NaN;
+        tvalid=sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:)));
+        tvalid2=sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:)));
         %{
         for i=1:length(AVMDMat(1,:))
             top(i)=nanmean(AVMDMat(AVMat(:,i,5)>0,i));
@@ -50,6 +52,36 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
             bottombar(i)=nanstd(AVMDMat(AVMat(:,i,5)<0,i));
         end
         %}
+        
+        if(nansum(tvals)==1) %That one plot with only 1 significant value
+           h=figure('Visible',visible); [hhist, nhist]=hist(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,tvals==1),1:2.5:120); hhist=bar(nhist,hhist); set(hhist,'FaceColor','none','EdgeColor','r'); 
+           hold on;[hhist, nhist]=hist(AVMDMat(nanmedian(AVMat(:,tw,5),2)<topcut,tvals==1),1:2.5:120); hhist=bar(nhist,hhist); set(hhist,'FaceColor','none','EdgeColor','b'); 
+           legend('Events with higher median B_z','Events with lower median B_z')
+           xlabel('\rho_{eq} (amu/cm^3)')
+           ylabel('Number of events');
+           print('-depsc2',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-histogram.eps',stormcase,tw(1),tw(end),satnum));
+        end
+        
+        
+        h=figure('Visible',visible);
+        hold on;
+        plot(xa,tvalid);
+        plot(xa,tvalid2,'r');
+        ylims=get(gca,'YLim');
+        ylabel('Valid events')
+        xlabel('Time since onset (hours)')
+        plot(xa,tvals+ylims(1)-1,'.','MarkerSize',15,'Color',[0.3 0.8 0.3])
+        print('-depsc2',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-valid.eps',stormcase,tw(1),tw(end),satnum));
+        print('-dpng','-r200',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-valid.png',stormcase,tw(1),tw(end),satnum));
+        
+        
+        t1=normrnd(ones(20,100),0.1);
+        t1(1:10,:)=normrnd(ones(10,100)+4,0.1);
+        fprintf('T-test verification, should be insignificant, percent sig: %2.2f %% \n',sum(ttest2(t1(1:5,:),t1(6:10,:))));
+        fprintf('T-test verification, should be significant, percent sig: %2.2f %% \n',sum(ttest2(t1(1:5,:),t1(11:15,:))));
+        
+        
+        h=figure('Visible',visible);
         plot(xa,nanmedian(AVMDMat),'r','LineWidth',3)
         hold on;
 
@@ -154,6 +186,10 @@ if(MakePaperPlots && MakeBinPlots)
     binplot(AVMDMat(:,:),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'D_{st}';stormtype},{'amu/cm^3';'nT';stormunits},[sy; ey],satnum,visible);
     %plot Bz, sort dst
     binplot(AVMat(:,:,5),FILLED(:,15),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'D_{st}';stormtype},{'nT';'nT';stormunits},[sy; ey],satnum,visible);
+    %plot Bz, sort Pdyn
+    binplot(AVMat(:,:,5),FILLED(:,8),starti,timewidth,LongTimeScale,plotthresh,{'B_z';'P_{dyn}';stormtype},{'nT';'nPa';stormunits},[sy; ey],satnum,visible);
+    %plot rhoeq, sort Pdyn
+    binplot(AVMDMat(:,:),FILLED(:,8),starti,timewidth,LongTimeScale,plotthresh,{'\rho_{eq}';'P_{dyn}';stormtype},{'amu/cm^3';'nPa';stormunits},[sy; ey],satnum,visible);
 end
 
 if(MakePaperPlots && MakeDstThreshPlot)
@@ -290,6 +326,42 @@ if(MakePaperPlots)
     if(strcmp(visible,'off')),close(h);end;
 end
 
+if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
+    xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
+    h=figure('Visible',visible);
+    orient tall;
+    
+    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
+    hold on; plot(xa,AVMatBars(:,:,5),'r-.'); ylim(yranges(yr,1,:))
+    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
+    hold on; plot(xa,AVMatBars(:,:,6),'r-.'); ylim(yranges(yr,2,:))
+    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
+    hold on; plot(xa,AVMatBars(:,:,15),'r-.'); ylim(yranges(yr,3,:))
+    if(DSTCut<0), plot([xa(1) xa(end)],[DSTCut DSTCut],'k-.','LineWidth',2); hold off; end
+    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,8),'+-','LineWidth',2); text(0.01,0.9,'P_{dyn} (nPa)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
+    hold on; plot(xa,AVMatBars(:,:,8),'r-.'); %ylim(yranges(yr,4,:))
+    set(findobj('type','axes'),'xticklabel',{[]})
+    xv=[xa(1) xa(end)];
+    subplot('position',subplotstack(5,5)); 
+    [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
+    hold on; plot(xa,AVMDMatBars(:,:),'r-.'); %ylim(AX(1),yranges(yr,5,:))
+    if(MDCut>0), plot([xa(1) xa(end)],[MDCut MDCut],'k-.','LineWidth',2); end
+    set(AX(1),'Xlim',xv); set(AX(1),'YColor','r'); set(AX(1),'Color','none'); set(AX(1),'Ylim',yranges(yr,5,:),'YTick',round(linspace(yranges(yr,5,1),yranges(yr,5,2),length(get(AX(2),'YTick'))))); 
+    set(AX(2),'Xlim',xv); set(AX(2),'YColor',[0 0.5 0.5]); set(AX(2),'Color','w');
+    set(H5,'LineWidth',2);   set(H5,'marker','+','color','red'); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1));  
+    text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
+    ylabel(AX(2),'# valid hourly values');
+    set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
+    linkaxes([AX h1 h2 h3 h4],'x')
+    if(MDCut>0), title(h1,sprintf('%d \\rho_{eq} > %d amu/cm^3 events; %d-%d',length(starti),MDCut,sy,ey)); end
+    if(LongTimeScale>1),xlabel('Time from start of event (day)');
+    else xlabel('Time from start of event (hour)'); end
+    fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);
+    print('-depsc2','-r200',strrep(figurename,'.eps','-withPressure.eps'));
+    if(strcmp(visible,'off')),close(h);end;
+    
+    
+end
 
 
 %DST vs rho_eq for 1 hour and 1 day
@@ -365,11 +437,18 @@ if(MakePaperPlots && stormcase==10) %1-day takahashi. Do for any day plot
     Dm10=sum(delta(1,:)>=0)/length(delta(1,:));
     Dm11=sum(delta(2,:)<=0)/length(delta(2,:));
     D10=sum(delta(3,:)>=0)/length(delta(3,:));
-    fprintf(table,'Delta\t Actual\t %%\t \n');
+    [~,p1]=ttest2(AVm1,AV0);
+    [~,p2]=ttest2(AVm1,AV1);
+    [~,p3]=ttest2(AV1,AV0);
     
-    fprintf(table,'-1 0\t%2.2f\t%2.2f%%>=0\n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100);
-    fprintf(table,'-1 1\t%2.2f\t%2.2f%%<=0\n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100);
-    fprintf(table,' 1 0\t%2.2f\t%2.2f%%>=0\n',nanmedian(AV1)-nanmedian(AV0),D10*100);
+    fprintf(table,'\\begin{table}\n\\small\n\\begin{tabular}{|c|cCcc|}\n \\hline \n');
+    fprintf(table,'Days & Diff(medians) & \\%%  & p-val & valid\\\\ \\hline\n');
+    
+    fprintf(table,'-1 0 & %2.2f & %2.2f\\%%\\geq 0 & %2.2f & %d \\\\ \n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100,p1,sum(~isnan(AVm1.*AV0)));
+    fprintf(table,'-1 1 & %2.2f & %2.2f\\%%\\leq 0 & %2.2f & %d \\\\ \n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100,p2,sum(~isnan(AVm1.*AV1)));
+    fprintf(table,' 1 0 & %2.2f & %2.2f\\%%\\geq 0 & %2.2f & %d \\\\ \n',nanmedian(AV1)-nanmedian(AV0),D10*100,p3,sum(~isnan(AV1.*AV0)));
+    
+    fprintf(table,'\\hline\n\\end{tabular}\n\\caption{Differences between daily averages for %d bootstrap sampled events}\n\\label{BootstrapDifferenceTable}\n\\end{table}',dloops);
     
     fclose(table);
     
