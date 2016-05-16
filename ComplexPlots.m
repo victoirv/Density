@@ -30,38 +30,41 @@ end
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
     tws=[20:25; 25:30];
+    varnum=13; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp
+    varname=headers{varnum};
+    varunit='nT';
     for i=1:2
         tw=tws(i,:);
 
-        topcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
-        bottomcut=nanmedian(nanmedian(AVMat(:,tw,5),2));
+        topcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
+        bottomcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
         h=figure('Visible',visible);   
-        top=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:));
-        bottom=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:));
-        topbar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:))));
-        bottombar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:))));
-        tvals=ttest2(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:),AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:));
+        top=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:));
+        bottom=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
+        topbar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:))));
+        bottombar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))));
+        tvals=ttest2(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:),AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
         tvals(tvals==0)=NaN;
-        tvalid=sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,:)));
-        tvalid2=sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,5),2)<bottomcut,:)));
+        tvalid=sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:)));
+        tvalid2=sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:)));
         %{
         for i=1:length(AVMDMat(1,:))
-            top(i)=nanmean(AVMDMat(AVMat(:,i,5)>0,i));
-            topbar(i)=nanstd(AVMDMat(AVMat(:,i,5)>0,i));
-            bottom(i)=nanmean(AVMDMat(AVMat(:,i,5)<0,i));
-            bottombar(i)=nanstd(AVMDMat(AVMat(:,i,5)<0,i));
+            top(i)=nanmean(AVMDMat(AVMat(:,i,varnum)>0,i));
+            topbar(i)=nanstd(AVMDMat(AVMat(:,i,varnum)>0,i));
+            bottom(i)=nanmean(AVMDMat(AVMat(:,i,varnum)<0,i));
+            bottombar(i)=nanstd(AVMDMat(AVMat(:,i,varnum)<0,i));
         end
         %}
         
         if(nansum(tvals)==1) %That one plot with only 1 significant value
-           h=figure('Visible',visible); [hhist, nhist]=hist(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,tvals==1),1:2.5:120); hhhist=bar(nhist,hhist); set(hhhist,'FaceColor','none','EdgeColor','r'); 
-           hold on;[hhist2, nhist2]=hist(AVMDMat(nanmedian(AVMat(:,tw,5),2)<topcut,tvals==1),1:2.5:120); hhhist2=bar(nhist2,hhist2); set(hhhist2,'FaceColor','none','EdgeColor','b'); 
+           h=figure('Visible',visible); [hhist, nhist]=hist(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,tvals==1),1:2.5:120); hhhist=bar(nhist,hhist); set(hhhist,'FaceColor','none','EdgeColor','r'); 
+           hold on;[hhist2, nhist2]=hist(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<topcut,tvals==1),1:2.5:120); hhhist2=bar(nhist2,hhist2); set(hhhist2,'FaceColor','none','EdgeColor','b'); 
            plot(nhist,hhist,'r','LineWidth',2); plot(nhist2,hhist2,'b','LineWidth',2); 
-           legend('Events with higher median B_z','Events with lower median B_z')
+           legend(sprintf('Events with higher median %s',varname),sprintf('Events with lower median %s',varname))
            xlabel('\rho_{eq} (amu/cm^3)')
            ylabel('Number of events');
-           print('-depsc2',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-histogram.eps',stormcase,tw(1),tw(end),satnum));
-           print('-dpng',sprintf('paper/figures/PNGs/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-histogram.png',stormcase,tw(1),tw(end),satnum));
+           print('-depsc2',sprintf('paper/figures/RhoBinned/RhoBinned%s-case%d-t0%d-tf%d-GOES%d-histogram.eps',varname,stormcase,tw(1),tw(end),satnum));
+           print('-dpng',sprintf('paper/figures/RhoBinned/PNGs/RhoBinned%s-case%d-t0%d-tf%d-GOES%d-histogram.png',varname,stormcase,tw(1),tw(end),satnum));
         end
         
         
@@ -73,8 +76,8 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         ylabel('Valid events')
         xlabel('Time since onset (hours)')
         plot(xa,tvals+ylims(1)-1,'.','MarkerSize',15,'Color',[0.3 0.8 0.3])
-        print('-depsc2',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-valid.eps',stormcase,tw(1),tw(end),satnum));
-        print('-dpng','-r200',sprintf('paper/figures/PNGs/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-valid.png',stormcase,tw(1),tw(end),satnum));
+        print('-depsc2',sprintf('paper/figures/RhoBinned/RhoBinned%s-case%d-t0%d-tf%d-GOES%d-valid.eps',varname,stormcase,tw(1),tw(end),satnum));
+        print('-dpng','-r200',sprintf('paper/figures/RhoBinned/PNGs/RhoBinned%s-case%d-t0%d-tf%d-GOES%d-valid.png',varname,stormcase,tw(1),tw(end),satnum));
         
         
         t1=normrnd(ones(20,100),0.1);
@@ -104,13 +107,13 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         end
         set(gca,'xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
         xlim([-timewidth timewidth*2]./LongTimeScale)
-        lh=legend('All \rho_{eq} events ',sprintf('B_z  \\geq %2.2f nT; %d events ',topcut,sum(nanmedian(AVMat(:,tw,5),2)>=topcut)),sprintf('B_z^{ } < %2.2f nT; %d events ',bottomcut,sum(nanmedian(AVMat(:,tw,5),2)<bottomcut)));
+        lh=legend('All \rho_{eq} events ',sprintf('%s  \\geq %2.2f %s; %d events ',varname,topcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)>=topcut)),sprintf('%s < %2.2f %s; %d events ',varname,bottomcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)<bottomcut)));
         set(lh,'box','off');
         title(sprintf('\\rho_{eq} events; GOES %d; %d-%d',satnum,sy,ey));
         ylabel('\rho_{eq} (amu/cm^3)')
         xlabel('Time since onset (hours)')
-        print('-depsc2',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d.eps',stormcase,tw(1),tw(end),satnum));
-        print('-dpng','-r200',sprintf('paper/figures/PNGs/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d.png',stormcase,tw(1),tw(end),satnum));
+        print('-depsc2',sprintf('paper/figures/RhoBinned/RhoBinned%s-case%d-t0%d-tf%d-GOES%d.eps',varname,stormcase,tw(1),tw(end),satnum));
+        print('-dpng','-r200',sprintf('paper/figures/RhoBinned/PNGs/RhoBinned%s-case%d-t0%d-tf%d-GOES%d.png',varname,stormcase,tw(1),tw(end),satnum));
     end
     
     
