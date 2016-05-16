@@ -1,4 +1,8 @@
-### May 16, 2016
+## History
+[May 16: significance tests and pressure behavior](#05162016)
+
+
+### May 16, 2016 [05162016] ###
 The significance tests are now in the paper, and I've verified the t-tests as well as I can think to. I made two test datasets, each with 10 "events" of 100 time lags each and different means. Doing a t-test of 5 events of one mean vs 5 of the other returns 100% significant results, and doing 5 of one vs 5 more of the same mean returns 2-7% significant results, as expected.  The next thing I think I'd have to test is whether the variances are significantly different since the t-test assumes equal variances. 
 
 The figure in question is this:
@@ -16,7 +20,7 @@ As for how Bz, Dst, and pressure behave during mass density events:
 
 And again but with a lower mass density threshhold for events:
 
-![storm with pressure smaller thresh](paper/figures/PNGs/stormavs-mass-gt20-GOES6-with-Pressure.png)
+![storm with pressure smaller thresh](paper/figures/PNGs/stormavs-mass-gt20-GOES6-withPressure.png)
 
 Can also look at the binned figures, but only a couple show any significant features:
 
