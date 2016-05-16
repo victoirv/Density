@@ -60,6 +60,7 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
            xlabel('\rho_{eq} (amu/cm^3)')
            ylabel('Number of events');
            print('-depsc2',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-histogram.eps',stormcase,tw(1),tw(end),satnum));
+           print('-dpng',sprintf('paper/figures/PNGs/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-histogram.png',stormcase,tw(1),tw(end),satnum));
         end
         
         
@@ -72,7 +73,7 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         xlabel('Time since onset (hours)')
         plot(xa,tvals+ylims(1)-1,'.','MarkerSize',15,'Color',[0.3 0.8 0.3])
         print('-depsc2',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-valid.eps',stormcase,tw(1),tw(end),satnum));
-        print('-dpng','-r200',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-valid.png',stormcase,tw(1),tw(end),satnum));
+        print('-dpng','-r200',sprintf('paper/figures/PNGs/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d-valid.png',stormcase,tw(1),tw(end),satnum));
         
         
         t1=normrnd(ones(20,100),0.1);
@@ -108,7 +109,7 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         ylabel('\rho_{eq} (amu/cm^3)')
         xlabel('Time since onset (hours)')
         print('-depsc2',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d.eps',stormcase,tw(1),tw(end),satnum));
-        print('-dpng','-r200',sprintf('paper/figures/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d.png',stormcase,tw(1),tw(end),satnum));
+        print('-dpng','-r200',sprintf('paper/figures/PNGs/RhoBinnedBz-case%d-t0%d-tf%d-GOES%d.png',stormcase,tw(1),tw(end),satnum));
     end
     
     
@@ -323,6 +324,7 @@ if(MakePaperPlots)
     else xlabel('Time from start of event (hour)'); end
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);
     print('-depsc2','-r200',figurename);
+    print('-dpng','-r200',strrep(strrep(figurename,'eps','png'),'figures','figures/PNGs'));
     if(strcmp(visible,'off')),close(h);end;
 end
 
@@ -358,6 +360,7 @@ if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
     else xlabel('Time from start of event (hour)'); end
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);
     print('-depsc2','-r200',strrep(figurename,'.eps','-withPressure.eps'));
+    print('-dpng','-r200',strrep(strrep(figurename,'.eps','-withPressure.png'),'figures','figures/PNGs'));
     if(strcmp(visible,'off')),close(h);end;
     
     
