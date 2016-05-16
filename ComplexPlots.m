@@ -54,8 +54,9 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         %}
         
         if(nansum(tvals)==1) %That one plot with only 1 significant value
-           h=figure('Visible',visible); [hhist, nhist]=hist(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,tvals==1),1:2.5:120); hhist=bar(nhist,hhist); set(hhist,'FaceColor','none','EdgeColor','r'); 
-           hold on;[hhist, nhist]=hist(AVMDMat(nanmedian(AVMat(:,tw,5),2)<topcut,tvals==1),1:2.5:120); hhist=bar(nhist,hhist); set(hhist,'FaceColor','none','EdgeColor','b'); 
+           h=figure('Visible',visible); [hhist, nhist]=hist(AVMDMat(nanmedian(AVMat(:,tw,5),2)>=topcut,tvals==1),1:2.5:120); hhhist=bar(nhist,hhist); set(hhhist,'FaceColor','none','EdgeColor','r'); 
+           hold on;[hhist2, nhist2]=hist(AVMDMat(nanmedian(AVMat(:,tw,5),2)<topcut,tvals==1),1:2.5:120); hhhist2=bar(nhist2,hhist2); set(hhhist2,'FaceColor','none','EdgeColor','b'); 
+           plot(nhist,hhist,'r','LineWidth',2); plot(nhist2,hhist2,'b','LineWidth',2); 
            legend('Events with higher median B_z','Events with lower median B_z')
            xlabel('\rho_{eq} (amu/cm^3)')
            ylabel('Number of events');
