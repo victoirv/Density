@@ -12,6 +12,12 @@ Where that green dot indicates significance, and seems like it shouldn't be ther
 
 ![Example](paper/figures/PNGs/RhoBinnedBz-case24-t020-tf25-GOES6-histogram.png)
 
+It was determined that the oddities were caused by significant differences in means and medians of the data: 
+
+![Mean vs Median](paper/figures/RhoBinned/PNGs/MeanvsMedian.png)
+
+This indicates that we can't use t-tests for differences in means, but must pursue bootstrapping (or some other median-based significance test such as Mann-Whitney (via ranksum function)) to determine actual levels of significance, since switching everything to means at this point would be arduous. Though these notes now probably look silly because the figures they link to now show the correct significance...
+
 * * *
 
 As for how Bz, Dst, and pressure behave during mass density events:
@@ -37,4 +43,5 @@ Can also look at the binned figures, but only a couple show any significant feat
 ![Binned plots](figures/PNGs/HighLowF107rhoeq-rhoeq20-GOES6-1983-1991.png)
 
 Pressure doesn't seem to have much effect, though I also haven't looked at all possible binning combinations yet.
+
 

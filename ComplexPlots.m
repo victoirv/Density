@@ -30,7 +30,7 @@ end
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
     tws=[20:25; 25:30];
-    varnum=13; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp
+    varnum=5; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp
     varname=headers{varnum};
     varunit='nT';
     for i=1:2
@@ -39,11 +39,15 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         topcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
         bottomcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
         h=figure('Visible',visible);   
-        top=nanmean(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:));
-        bottom=nanmean(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
+        top=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:));
+        bottom=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
         topbar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:))));
         bottombar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))));
-        tvals=ttest2(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:),AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
+        tvals=ones(1,length(top));
+        for j=1:length(top)
+            [p,tvals(j)]=ranksum(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,j),AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<topcut,j));
+        end
+        %tvals=ttest2(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:),AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
         tvals(tvals==0)=NaN;
         tvalid=sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:)));
         tvalid2=sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:)));
