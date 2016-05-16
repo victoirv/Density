@@ -39,8 +39,8 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         topcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
         bottomcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
         h=figure('Visible',visible);   
-        top=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:));
-        bottom=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
+        top=nanmean(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:));
+        bottom=nanmean(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
         topbar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:))));
         bottombar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))));
         tvals=ttest2(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:),AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
