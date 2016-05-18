@@ -25,7 +25,7 @@ Created [bootstrap significance table for the daily binned Dst events](tables/De
 ![Significant daily difference](figures/PNGs/DailyBootstrapDifferences-GOES6-case13.png)
 
 Generated a very significant F10.7 bin plot showing mass density is highly dependent on F10.7 both leading up to and 24 hours after event onset for mass density > 20 amu/cm^3 events:
-![F10.7 significance](paper/figures/PNGs/RhoBinnedF107-case24-t025-tf30-GOES6.png)
+![F10.7 significance](paper/figures/RhoBinned/PNGs/RhoBinnedF107-case24-t025-tf30-GOES6.png)
 
 
 ### May 16, 2016 ###
