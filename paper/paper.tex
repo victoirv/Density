@@ -46,9 +46,10 @@ R.S. Weigel\footnote{rweigel@gmu.edu}}
 \hrule
 \begin{abstract}
 In this work we consider two types of events, determined by decreases in $D_{st}$ below a threshold value or increases in the $\rho_{eq}$ above a threshold value on 1-hour and 1-day time scales using the \cite{Denton2007} dataset.  From the $D_{st}$ events, we find that there is no statistically significant relationship between either solar wind or geomagnetic activity under conditions of strong geomagnetic activity when hourly or daily averages of $\rho_{eq}$ are considered.  Although very large geomagnetic storms have been observed to correspond to large increases in the plasma trough mass density, in general $\rho_{eq}$ following the onset of a geomagnetic storm does not depend on the storm intensity or the solar wind parameters $B_{z}$ and $P_{dyn}$. From the $\rho_{eq}$ events, we find a weak dependence on $B_{z}$ after the onset of an event, with higher average $B_{z}$ six hours after the event onset corresponding to larger $\rho_{eq}$ events.
-\vspace{2em}
 \end{abstract}
+\vspace{2em}
 \hrule
+\vspace{2em}
  \end{@twocolumnfalse}
   ]
 
@@ -103,21 +104,27 @@ Our first analysis uses data only from the time interval 1989-1991, which corres
 The stack plot in the upper panel of Figure \ref{DailyAveragedDstEvents} shows the epoch averages for these events.  The minimum $D_{st}$ median is $-48$~nT.  Consistent with \cite{Takahashi2010}, $D_{st}$ events correspond to elevated $\rho_{eq}$, although the magnitude of increase observed here is $1.5$ amu/cm$^3$ (from 18 to 19.5~amu/cm$^3$) instead of the increase of $\sim 10$ amu/cm$^3$ found in Figure 11 of \cite{Takahashi2010}.  The vertical green bars in the $\rho_{eq}$ plot show the number of $\rho_{eq}$ values that were used to compute the medians and error bars.  For the non-\req\ medians, the number of measurements used in computing the medians is typically equal to the number of events, which is much larger than the number of \req\ values as we used all available measurements instead of restricting to only values where a non--fill $\rho_{eq}$ value existed.
 
 In the lower panel of Figure \ref{DailyAveragedDstEvents} it is shown that the trends seen in the analysis of 1989-1991 also hold for the entire span of measurements from GOES 6, which spans 1983-1991 - a small elevation on the day of the event relative to the day before and day after, with median averages after the day of the event being slightly lower than that before.  
+To determine if the magnitude of the density medians in the top panel of \ref{DailyAveragedDstEvents} on days -1, 0, and 1 are statistically different from each other, we used a two-population bootstrap test.  A bootstrap median was created by sampling the values used to compute the median on each day with replacement.  The observed difference between the medians is shown in the table along with the fraction of observations in 1000 bootstrap differences with a different sign than that observed.  The results are shown in the fourth column of Table~\ref{BootstrapDifferenceTable}. The fourth column shows the results of a 2-population t-test and the fifth column indicates ???.
 
-To determine if the magnitude of the density medians on a given day were statistically different than another day, we used a two-population t-test.  For the interval of 1989-1991, corresponding to the top panel of \ref{DailyAveragedDstEvents}, the null hypothesis that any of the medians from days -1, 0, and 1 are different from each other is rejected with a maximum p value of. The results are shown in Table~\ref{Table1}.
+If a statistically significant difference in the medians between two days existed, the fraction is expected to be much smaller ($<$ 5\%).  In terms of a hypothesis test, we cannot reject the null hypothesis that the medians are the same with a confidence higher than 100 minus the \% value shown in the table; the highest confidence level of 87.6\% is in the difference between day 0 and day 1.
 
-These tests indicate that there is not a statistically significant change in medians of $\rho_{eq}$ on the day before and day after a threshold crossing in $D_{st}$.  
+These tests indicate that there is not a statistically significant change in medians of $\rho_{eq}$ on the day before and day after a threshold crossing in $D_{st}$.  In addition, the observed differences are on the order of only 10\% of the $\rho_{eq}$, which is small compared to the variance in the observations.  
 
-\input{../tables/DeltaBootstraps.txt}
+%\input{../tables/DeltaBootstraps.txt}
 
-Caption: Results of test on different between means of $\rho_{eq}$ shown in the top panel of \ref{DailyAverage} on days near or on the day of a $D_{st}$ event.  A difference in the means can be rejected with a probability of false rejection of $p$.
-
-   Days     p
--1 and 0
--1 and 1
- 0 and 1
-
-Caption: Results of test on different between means of $\rho_{eq}$ shown in the bottom panel of \ref{DailyAverage} on days near or on the day of a $D_{st}$ event.  
+\begin{table}
+\small
+\begin{tabular}{|c|cCc|}
+ \hline 
+Days & Observed diff & \%  & p-val \\ \hline
+-1 0 & -0.64 & 28.00\%\geq 0 & 0.23 \\ 
+-1 1 & 0.99 & 22.40\%\leq 0 & 0.86 \\ 
+ 1 0 & -1.63 & 12.40\%\geq 0 & 0.16 \\ 
+\hline
+\end{tabular}
+\caption{Results of test on of means of $\rho_{eq}$ shown in the top panel of Figure~\ref{DailyAveragedDstEvents} between days of threshold crossing  near (day = 1 or -1) or on the day of a $D_{st}$ event (day = 0).}
+\label{BootstrapDifferenceTable}
+\end{table}
 
 Because the dynamics of the magnetopshere take place on a time scale of less than one day, we have also considered hourly averages as shown in the top panel of Fig.~\ref{HourlyAveragedDstEvents}.  A total of 668 events were found in the interval of May 1983 through August 1991 with an average duration of 9 hours and a median duration of 3 hours.  The error bars were computed in the same way as Fig.~\ref{DailyAveragedDstEvents}.  In this plot, the overall trend is similar to that found in the bottom panel of Fig.~\ref{HourlyAveragedDstEvents} - $\rho_{eq}$ is slightly elevated at the time of the threshold crossing of $D_{st}$ with respect to the values one day before and after, but the elevation is small and in general not statistically significant.  At this timescale no obvious change in mass density at hourly timescale is visible. This points to an issue with only looking at long-timescale trends between density and $D_{st}$, and allows for the possibility that other factors are influencing the long term correlation because there is no obvious connection on a short timescale.  One possibility is that, as suggested in \cite{Takahashi2010}, $F_{10.7}$ plays a significant role in driving long term density values which biases the long-term correlation of density and $D_{st}$.
 
