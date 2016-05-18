@@ -26,7 +26,7 @@ Where that green dot indicates significance, and seems like it shouldn't be ther
 
 It was determined that the oddities were caused by significant differences in means and medians of the data: 
 
-![Mean vs Median](paper/figures/RhoBinned/PNGs/MeanvsMedianx.png)
+![Mean vs Median](paper/figures/RhoBinned/PNGs/MeanvsMedian.png)
 
 This indicates that we can't use t-tests for differences in means, but must pursue bootstrapping (or some other median-based significance test such as Mann-Whitney (via ranksum function)) to determine actual levels of significance, since switching everything to means at this point would be arduous. Though these notes now probably look silly because the figures they link to now show the correct significance...
 
