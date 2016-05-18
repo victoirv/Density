@@ -18,7 +18,7 @@ Created [bootstrap significance table for the daily binned Dst events](tables/De
 The significance tests are now in the paper, and I've verified the t-tests as well as I can think to. I made two test datasets, each with 10 "events" of 100 time lags each and different means. Doing a t-test of 5 events of one mean vs 5 of the other returns 100% significant results, and doing 5 of one vs 5 more of the same mean returns 2-7% significant results, as expected.  The next thing I think I'd have to test is whether the variances are significantly different since the t-test assumes equal variances. 
 
 The figure in question is this:
-![Figure in question](paper/figures/PNGs/RhoBinnedBz-case24-t020-tf25-GOES6x.png)
+![Figure in question](paper/figures/PNGs/RhoBinnedBz-case24-t020-tf25-GOES6.png)
 
 Where that green dot indicates significance, and seems like it shouldn't be there. I made a histogram of the two distributions (events with larger Bz vs events with smaller Bz) at that one significant point, and they do look somewhat different (though hard to tell since I can't print figures with transparency):
 
@@ -26,7 +26,7 @@ Where that green dot indicates significance, and seems like it shouldn't be ther
 
 It was determined that the oddities were caused by significant differences in means and medians of the data: 
 
-![Mean vs Median](paper/figures/RhoBinned/PNGs/MeanvsMedian.png)
+![Mean vs Median](paper/figures/RhoBinned/PNGs/MeanvsMedianx.png)
 
 This indicates that we can't use t-tests for differences in means, but must pursue bootstrapping (or some other median-based significance test such as Mann-Whitney (via ranksum function)) to determine actual levels of significance, since switching everything to means at this point would be arduous. Though these notes now probably look silly because the figures they link to now show the correct significance...
 
