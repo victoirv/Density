@@ -1,7 +1,18 @@
-## History
-[May 18: Differences](#may-18-2016)
-[May 16: significance tests and pressure behavior](#may-16-2016)
+## To-Do ##
+* Change matlab bootstrap table output to just be inner part of table (data only)
+* Add KP to NN analysis
+* Clean up figures directory
+* Classify binary onset with NN model based on 3 prior days of daily averaged KP, Vsw, and F10.7 (see Denton 2016)
+* Parse Differences output data to select one point at front of magnetosphere to create timeseries for model. Bin onto 5-minute cadence. [Link to CCMC results](http://ccmc.gsfc.nasa.gov/results/viewrun.php?domain=GM&runnumber=Brian_Curtis_042213_2).
+* [~~Add F10.7 to binned plots~~](#may-18-2016)
 
+
+
+## History ##
+* [May 18: Differences](#may-18-2016)
+* [May 16: Significance tests and pressure behavior](#may-16-2016)
+
+* * *
 
 ### May 18, 2016 ###
 Trying to run the "differences" code. Compiles, but segfaults when running "make pcdiffvtk". Opens the data, interpolates, then crashes on writing output. Added mkdir -p output/Precondition/$(B)_minus_$(A) to the makefile which fixed it. That said, it still doesn't make vtk files (not sure if it's supposed to?)
@@ -12,6 +23,9 @@ Also paraview file has disappeared from mag, so I'm replacing it (just kidding, 
 
 Created [bootstrap significance table for the daily binned Dst events](tables/DeltaBootstraps-case13.txt), showing a significant difference between median value on onset day vs the day after. See figure:
 ![Significant daily difference](figures/PNGs/DailyBootstrapDifferences-GOES6-case13.png)
+
+Generated a very significant F10.7 bin plot showing mass density is highly dependent on F10.7 both leading up to and 24 hours after event onset for mass density > 20 amu/cm^3 events:
+![F10.7 significance](paper/figures/PNGs/RhoBinnedF107-case24-t025-tf30-GOES6.png)
 
 
 ### May 16, 2016 ###

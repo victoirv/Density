@@ -31,9 +31,9 @@ end
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
     tws=[20:25; 25:30];
-    varnum=5; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp
+    varnum=30; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp, 30 is f10.7
     varname=headers{varnum};
-    varunit='nT';
+    varunit='s.f.u.';
     for i=1:2
         tw=tws(i,:);
 
