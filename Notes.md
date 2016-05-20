@@ -1,7 +1,10 @@
 ## To-Do ##
+* Classify binary onset with NN model based on 3 prior days of daily averaged KP, Vsw, and F10.7 (see Denton 2016)
+* Look at -6.6R_E 
+* Request CDF of my run
+* Makefile example and commit permissions
 * Add KP to NN analysis
 * Clean up figures directory
-* Classify binary onset with NN model based on 3 prior days of daily averaged KP, Vsw, and F10.7 (see Denton 2016)
 * [~~Change matlab bootstrap table output to just be inner part of table (data only)~~](#may-20-2016)
 * [~~Parse Differences output data to select one point at front of magnetosphere to create timeseries for model. Bin onto 5-minute cadence.~~](#may-20-2016) [Link to CCMC results](http://ccmc.gsfc.nasa.gov/results/viewrun.php?domain=GM&runnumber=Brian_Curtis_042213_2).
 * [~~Add F10.7 to binned plots~~](#may-18-2016)
