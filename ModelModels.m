@@ -25,9 +25,11 @@ end
 
 for ctest=8:15
    [~,~,~,~,corr]=IR(data(:,9),bininputs(:,ctest),0,3);
-   fprintf('%s: %2.2f\n',inputvars{ctest},corr);
+   fprintf('%s: %2.3f\n',inputvars{ctest},corr);
 end
 
+[~,~,~,~,corr]=IR(data(:,9),bininputs(:,8:15),0,3);
+fprintf('All: %2.3f\n',corr);
 
 plot(data(:,9)); %check for Bz flip
 

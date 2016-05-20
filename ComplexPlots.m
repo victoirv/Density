@@ -31,9 +31,10 @@ end
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
     tws=[20:25; 25:30];
-    varnum=30; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp, 30 is f10.7
+    for varnum=[5 6 8 13 15 30]
+    %varnum=30; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp, 30 is f10.7
     varname=headers{varnum};
-    varunit='s.f.u.';
+    varunit=units{varnum};
     for i=1:2
         tw=tws(i,:);
 
@@ -120,6 +121,8 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         print('-depsc2',sprintf('paper/figures/RhoBinned/RhoBinned%s-case%d-t0%d-tf%d-GOES%d.eps',varname,stormcase,tw(1),tw(end),satnum));
         print('-dpng','-r200',sprintf('paper/figures/RhoBinned/PNGs/RhoBinned%s-case%d-t0%d-tf%d-GOES%d.png',varname,stormcase,tw(1),tw(end),satnum));
     end
+    end
+    
     
     
     h=figure('Visible',visible);
@@ -453,14 +456,14 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     [~,p2]=ttest2(AVm1,AV1);
     [~,p3]=ttest2(AV1,AV0);
     
-    fprintf(table,'\\begin{table}\n\\small\n\\begin{tabular}{|c|cCc|}\n \\hline \n');
+    fprintf(table,'\\begin{tabular}{|c|cCc|}\n \\hline \n');
     fprintf(table,'Days & Diff(medians) & \\%%  & p-val\\\\ \\hline\n');
     
     fprintf(table,'-1 0 & %2.2f & %2.2f\\%%\\geq 0 & %2.2f \\\\ \n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100,p1);
     fprintf(table,'-1 1 & %2.2f & %2.2f\\%%\\leq 0 & %2.2f \\\\ \n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100,p2);
     fprintf(table,' 1 0 & %2.2f & %2.2f\\%%\\geq 0 & %2.2f \\\\ \n',nanmedian(AV1)-nanmedian(AV0),D10*100,p3);
     
-    fprintf(table,'\\hline\n\\end{tabular}\n\\caption{Differences between daily averages for %d bootstrap sampled events}\n\\label{BootstrapDifferenceTable}\n\\end{table}',dloops);
+    fprintf(table,'\\hline\n\\end{tabular}\n');
     
     fclose(table);
     
