@@ -375,6 +375,34 @@ if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
     
 end
 
+if(stormcase==29) %NNBinaryOnset
+    %{
+   F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   KPDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   VSWDay=interptest(FILLEDTime,FILLED(:,6),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   DstDay=interptest(FILLEDTime,FILLED(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   MDDay=interptest(FILLEDTime,MassDensitySpline',FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end));
+    %}
+    
+    
+    %Do it with hourly data first since that's already well defined for
+    %events
+    
+    stormstarts=storms(1:end-1);
+    stormstarts(stormstarts==-1)=0;
+    predict=NNBinaryOnset(FILLED(:,[6 13 15 30]),stormstarts');
+    
+    
+       F107Day=interptest(FILLEDTime,AVs(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   KPDay=interptest(FILLEDTime,AVs(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   VSWDay=interptest(FILLEDTime,AVs(:,6),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   DstDay=interptest(FILLEDTime,AVs(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   
+   
+   
+    
+end
+
 
 %DST vs rho_eq for 1 hour and 1 day
 if(MakePaperPlots && stormcase==1) 

@@ -235,15 +235,19 @@ switch stormcase
     case 27 %For doing 3day/27day F107 plots
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
         DSTCut=-50;
-        figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
+        figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
         yr=2;
         MakeBinPlots=1;
     case 28 %For making specific stack plots of events (i.e. alldata-* plots with specific cuttimes)
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
         DSTCut=-50;
-        figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
+        figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
         yr=2;
-        
+    case 29
+        storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+        DSTCut=-50;
+        figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
+        yr=2;
 end
 
 
