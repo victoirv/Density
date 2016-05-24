@@ -1,18 +1,29 @@
 ## To-Do ##
-* Change matlab bootstrap table output to just be inner part of table (data only)
+* Classify binary onset with NN model based on 3 prior days of daily averaged KP, Vsw, and F10.7 (see Denton 2016)
+* Look at -6.6R_E 
+* Request CDF of my run
+* Makefile example and commit permissions
 * Add KP to NN analysis
 * Clean up figures directory
-* Classify binary onset with NN model based on 3 prior days of daily averaged KP, Vsw, and F10.7 (see Denton 2016)
-* Parse Differences output data to select one point at front of magnetosphere to create timeseries for model. Bin onto 5-minute cadence. [Link to CCMC results](http://ccmc.gsfc.nasa.gov/results/viewrun.php?domain=GM&runnumber=Brian_Curtis_042213_2).
+* [~~Change matlab bootstrap table output to just be inner part of table (data only)~~](#may-20-2016)
+* [~~Parse Differences output data to select one point at front of magnetosphere to create timeseries for model. Bin onto 5-minute cadence.~~](#may-20-2016) [Link to CCMC results](http://ccmc.gsfc.nasa.gov/results/viewrun.php?domain=GM&runnumber=Brian_Curtis_042213_2).
 * [~~Add F10.7 to binned plots~~](#may-18-2016)
 
 
 
 ## History ##
+* [May 20: Modeling models](#may-20-2016)
 * [May 18: Differences](#may-18-2016)
 * [May 16: Significance tests and pressure behavior](#may-16-2016)
 
 * * *
+
+### May 20, 2016 ###
+I've created a basic program to read in Brian's output at a specific point from each time step, and make a time series out of it (just using grep on the specific x,y,and z for each file. In this case the point [10, 0, 0]R_E). Using my IR code with that and the time series inputs, I can try to correlate input variables to output variables.
+
+In the case of Bz, nothing has any model correlation other than input Bz, and even that only has a value of 0.68 with a 3-time-lag model. Using all of the variables at once doesn't increase the correlation over just using Bz. Persistence as usual increases all correlations into the 0.95 range. Next step seems to be either a nonlinear model, or finding data for runs with more detailed input conditions (e.g. models including dst, f10.7, etc. Really just anything with an input more complex than a Bz with a sign flip).
+
+Also fixed table to only print tabular part in matlab, so caption could be controlled by the tex file.
 
 ### May 18, 2016 ###
 Trying to run the "differences" code. Compiles, but segfaults when running "make pcdiffvtk". Opens the data, interpolates, then crashes on writing output. Added mkdir -p output/Precondition/$(B)_minus_$(A) to the makefile which fixed it. That said, it still doesn't make vtk files (not sure if it's supposed to?)
