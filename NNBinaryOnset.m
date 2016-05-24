@@ -1,4 +1,8 @@
-function outputs=NNBinaryOnset(x,target)
+function output=NNBinaryOnset(x,target,figname)
+if(nargin<3)
+    figname='';
+end
+
 
 delays=1;
 
@@ -21,9 +25,18 @@ inputDelays = 1:delays;
     hiddenLayerSize = 10;
     
     net=patternnet(hiddenLayerSize);
-    net=train(net,x',target); %Look at confusion matrix. Not great.
+    net=train(net,x',y'); %Look at confusion matrix. Not great.
+    
+    output=net(x');
     
     
+    plotconfusion(y',output)
+    if(~isempty(figname))
+    print('-depsc2',sprintf('figures/NNBinaryOnset-%s.eps',figname)); 
+    print('-dpng','-r200',sprintf('figures/PNGs/NNBinaryOnset-%s.png',figname)); 
+    end
+    
+    %{
     net = narxnet(inputDelays,feedbackDelays,hiddenLayerSize);
     net = removedelay(net);
     [inputs,inputStates,layerStates,targets] = preparets(net,tonndata(x,false,false),{},tonndata(y,false,false));
@@ -38,3 +51,4 @@ inputDelays = 1:delays;
     [net,tr,Ys Es Xf Af] = train(net,inputs,targets,inputStates,layerStates);
     
     outputs = net(inputs,inputStates,layerStates);
+    %}

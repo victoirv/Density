@@ -12,11 +12,23 @@
 
 
 ## History ##
+* [May 24: Binary analysis](#may-24-2016)
 * [May 20: Modeling models](#may-20-2016)
 * [May 18: Differences](#may-18-2016)
 * [May 16: Significance tests and pressure behavior](#may-16-2016)
 
 * * *
+
+### May 24, 2016 ###
+The CDF data for my run with real solar wind input data has been requested. For future reference, [here's the form](http://ccmc.gsfc.nasa.gov/ComQues/request_CDF.php).
+
+I've created a few models for predicting storm onset given KP, F10.7, and Vsw, but a variety of conditions need to be tested. First was using the last 4 hours of data to predict hourly onset for the entirety of the dataset. 
+![Hourly Binary Onset](figures/PNGs/NNBinaryOnset-hourly.png)
+
+Then was the same thing, but daily averages, where any days with multiple events was just classified as a single event (since the type of network used expects binary 0/1 targets)
+
+![Daily Binary Onset](figures/PNGs/NNBinaryOnset-daily.png)
+
 
 ### May 20, 2016 ###
 I've created a basic program to read in Brian's output at a specific point from each time step, and make a time series out of it (just using grep on the specific x,y,and z for each file. In this case the point [10, 0, 0]R_E). Using my IR code with that and the time series inputs, I can try to correlate input variables to output variables.

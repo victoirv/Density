@@ -393,15 +393,23 @@ if(stormcase==29) %NNBinaryOnset
     
     stormstarts=storms(1:end-1);
     stormstarts(stormstarts==-1)=0;
-    predict=NNBinaryOnset(FILLED(:,[6 13 15 30]),stormstarts');
+    %predict=NNBinaryOnset(FILLED(:,[6 13 15 30]),stormstarts');
+    NNBinaryOnset([FILLED(:,[6 13 15 30]) circshift(FILLED(:,[6 13 15 30]),1) circshift(FILLED(:,[6 13 15 30]),2) circshift(FILLED(:,[6 13 15 30]),3)],stormstarts','hourly');
+    
+    stormstartsDay=stormstarts;
+    while(mod(length(stormstartsDay),24)~=0)
+        stormstartsDay(end+1)=0;
+    end
+    stormstartsDay=sum(reshape(stormstartsDay,24,[]));
+    stormstartsDay(stormstartsDay>1)=1; %Any day with multiple storms is just marked as one event. Might be worth leaving off?
     
     
-       F107Day=interptest(FILLEDTime,AVs(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
-   KPDay=interptest(FILLEDTime,AVs(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
-   VSWDay=interptest(FILLEDTime,AVs(:,6),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
-   DstDay=interptest(FILLEDTime,AVs(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+       F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   KPDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   VSWDay=interptest(FILLEDTime,FILLED(:,6),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   DstDay=interptest(FILLEDTime,FILLED(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    
-   
+   NNBinaryOnset([[F107Day KPDay VSWDay] circshift([F107Day KPDay VSWDay],1) circshift([F107Day KPDay VSWDay],2) circshift([F107Day KPDay VSWDay],3)],stormstartsDay','daily');
    
     
 end
