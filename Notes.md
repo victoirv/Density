@@ -4,11 +4,11 @@
   * Shuffle target to test effect
   * Try only 4 points before and onset, not entire dataset
   * 2D histograms of events that lead to correct "1" vs missed "1". 
-* Look at -6.6R_E 
 * Wilmot Hess Radiation Belt
 * Makefile example and commit permissions
 * Add KP to NN analysis
 * Clean up figures directory
+* [~~Look at -6.6R_E~~](#may-24-2016) 
 * [~~Request CDF of my run~~](#may-24-2016)
 * [~~Change matlab bootstrap table output to just be inner part of table (data only)~~](#may-20-2016)
 * [~~Parse Differences output data to select one point at front of magnetosphere to create timeseries for model. Bin onto 5-minute cadence.~~](#may-20-2016) [Link to CCMC results](http://ccmc.gsfc.nasa.gov/results/viewrun.php?domain=GM&runnumber=Brian_Curtis_042213_2).
@@ -26,6 +26,52 @@
 
 ### May 24, 2016 ###
 The CDF data for my run with real solar wind input data has been requested. For future reference, [here's the form](http://ccmc.gsfc.nasa.gov/ComQues/request_CDF.php).
+
+Running [my CCMC run](http://ccmc.gsfc.nasa.gov/results/viewrun.php?domain=GM&runnumber=Victoir_Veibell_041316_1) with real solar wind data through Brian's code returns interesting results. Still using a 3-coefficient IR model at the point [10 0 0], the correlations between model Bz and predicted Bz based on impulse variables are as follows:
+
+| Var | CC |
+| Bx | 0.00 |
+| By | 0.21 |
+| Bz | 0.55 |
+| Vx | 0.50 |
+| Vy | 0.00 |
+| Vz | 0.00 | 
+| N | 0.13 | 
+| T | 0.50 |
+| All | 0.83 |
+
+Interesting that temperature has such a high correlation, and that combining all variables contributes enough independent information to raise the correlation from around 0.5 to 0.8. Running it again at the point [-6.5 0 0], on the night side of earth, changes correlations like so:
+
+| Var | CC |
+| Bx | 0.00 |
+| By | 0.44 |
+| Bz | 0.11 |
+| Vx | 0.36 |
+| Vy | 0.00 |
+| Vz | 0.00 | 
+| N | 0.25 | 
+| T | 0.19 |
+| All | 0.67 |
+
+
+On a hunch that correlation got better the closer to the boundaries you got (since that's where, I assume, the input conditions are applied), I tested the point [30 0 0] and got:
+
+| Var | CC |
+| Bx | 0.00 |
+| By | 0.43 |
+| Bz | 0.63 |
+| Vx | 0.10 |
+| Vy | 0.00 |
+| Vz | 0.00 | 
+| N | 0.19 | 
+| T | 0.32 |
+| All | 0.75 |
+
+so the magnetic field correlates well there, but everything else gets worse. The magnetic field is also less variable there since there's no bowshock that far forward, possibly making the model simpler, but this doesn't explain why the overall correlation is better right inside the magnetopause.
+
+Just outside the magnetopause [14.5 0 0] the "All" correlation drops to 0.575, and seems to mostly come from Bz. Next step, plot correlations against x position.
+
+
 
 I've created a few models for predicting storm onset given KP, F10.7, and Vsw, but a variety of conditions need to be tested. First was using the last 4 hours of data to predict hourly onset for the entirety of the dataset. 
 ![Hourly Binary Onset](figures/PNGs/NNBinaryOnset-hourly.png)

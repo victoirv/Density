@@ -1,26 +1,27 @@
 function ModelModels
 
-refpoint=[10 0 0];
-run=2;
+refpoint=[14.5 0 0];
+runname='Victoir_Veibell_041316_1'; 
 dataheaders={'x','y','z','bx','by','bz','jx','jy','jz','ux','uy','uz','p','rho'};
+filename=sprintf('data/DifferencesData_%s_%2.2f_%2.2f_%2.2f.mat',runname,refpoint(1), refpoint(2), refpoint(3));
 
-if(exist('data/DifferencesData.mat','file'))
-    load('data/DifferencesData.mat')
+if(exist(filename,'file'))
+    load(filename)
 else
 
-    [status, filedata]=system(sprintf('grep -h -e "^%3.6f %3.6f %3.6f" ../Differences/output/Brian_Curtis_042213_%d/data/cuts/*',refpoint(1), refpoint(2), refpoint(3), run)); 
+    [status, filedata]=system(sprintf('grep -h -e "^%3.6f %3.6f %3.6f" ../Differences/output/%s/data/cuts/*',refpoint(1), refpoint(2), refpoint(3), runname)); 
     data=cell2mat(textscan(filedata,'%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f'));
 
     inputvars={'Year','Month','Day','Hour','Min','Sec','Msec','Bx[nT]','By[nT]','Bz[nT]','Vx[km/s]','Vy[km/s]','Vz[km/s]','N[cm^(-3)]','T[Kelvin]'};
 
-    inputs=dlmread(sprintf('../Differences/data/Brian_Curtis_042213_%d_IMF.txt',run));
+    inputs=dlmread(sprintf('../Differences/data/%s_IMF.txt',runname));
 
-    for i=1:72
+    for i=1:(length(data)-1)
         bininputs(i,:)=median(inputs((i-1)*5+1:i*5,:));
     end
-    bininputs(73,:)=median(inputs(72*5+1:end,:));
+    bininputs(length(data),:)=median(inputs((length(data)-1)*5+1:end,:));
     
-    save('data/DifferencesData','data','inputs','bininputs','inputvars');
+    save(filename,'data','inputs','bininputs','inputvars');
 end
 
 for ctest=8:15
@@ -36,7 +37,7 @@ plot(data(:,9)); %check for Bz flip
 %grep -h -e "-200.000000 0.000000 -47.000000" ../Differences/output/Brian_Curtis_042213_2/data/cuts/*
 
 
-    test=dlmread('../Differences/output/Brian_Curtis_042213_2/data/cuts/Step_70_Y_eq_0.txt');
+    test=dlmread(sprintf('../Differences/output/%s/data/cuts/Step_70_Y_eq_0.txt',runname));
     x=unique(test(:,1));
     z=unique(test(:,3));
     d=reshape(test(:,8),length(x),[]);
