@@ -30,6 +30,7 @@ The CDF data for my run with real solar wind input data has been requested. For 
 Running [my CCMC run](http://ccmc.gsfc.nasa.gov/results/viewrun.php?domain=GM&runnumber=Victoir_Veibell_041316_1) with real solar wind data through Brian's code returns interesting results. Still using a 3-coefficient IR model at the point [10 0 0], the correlations between model Bz and predicted Bz based on impulse variables are as follows:
 
 | Var | CC |
+| --- | --- |
 | Bx | 0.00 |
 | By | 0.21 |
 | Bz | 0.55 |
@@ -43,6 +44,7 @@ Running [my CCMC run](http://ccmc.gsfc.nasa.gov/results/viewrun.php?domain=GM&ru
 Interesting that temperature has such a high correlation, and that combining all variables contributes enough independent information to raise the correlation from around 0.5 to 0.8. Running it again at the point [-6.5 0 0], on the night side of earth, changes correlations like so:
 
 | Var | CC |
+| --- | --- |
 | Bx | 0.00 |
 | By | 0.44 |
 | Bz | 0.11 |
@@ -57,6 +59,7 @@ Interesting that temperature has such a high correlation, and that combining all
 On a hunch that correlation got better the closer to the boundaries you got (since that's where, I assume, the input conditions are applied), I tested the point [30 0 0] and got:
 
 | Var | CC |
+| --- | --- |
 | Bx | 0.00 |
 | By | 0.43 |
 | Bz | 0.63 |
