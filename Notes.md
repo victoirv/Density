@@ -1,10 +1,15 @@
 ## To-Do ##
+* Find last-late-add date and last-defend date
+* Write up confusion matrix section after finishing chapter 3
+* Make new run without dipole tilt, using only real B field, at high resolution
+* Histograms for models of entire time series, include rho and possibly Bz
+* Correlation plots of pv^2, vBz
 * Classify binary onset with NN model based on 3 prior days of daily averaged KP, Vsw, and F10.7 (see Denton 2016)
-  * Use rho events instead of Dst events
-  * Shuffle target to test effect
-  * Try only 4 points before and onset, not entire dataset
+  * ~~Use rho events instead of Dst events~~
+  * ~~Shuffle target to test effect~~
+  * ~~Try only 4 points before and onset, not entire dataset~~
   * 2D histograms of events that lead to correct "1" vs missed "1". 
-* Wilmot Hess Radiation Belt
+* ~~Wilmot Hess Radiation Belt~~
 * Makefile example and commit permissions
 * Add KP to NN analysis
 * Clean up figures directory

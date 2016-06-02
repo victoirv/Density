@@ -294,3 +294,67 @@ if(MakePaperPlots && stormcase==27)
     
     
 end
+
+
+if(MakePaperPlots && stormcase==28 && sy==1989 && ey==1989) %For a short time period plot, make quick IR model plot
+    
+    VBS=FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5))./2;
+    [~,~, ~,xnew,corr] = IR(FILLED(:,15),VBS,0,12,0,0);
+    
+    h=figure('Visible',visible);
+    orient tall;
+    hold on;
+    h(1)=subplot('position',subplotstack(2,1)); 
+    
+    plot(FILLEDTime,FILLED(:,15),'k','LineWidth',1.5); 
+    hold on;
+    plot(FILLEDTime,xnew,'b','LineWidth',1.5);
+    
+    [~,~, ~,xnew,corr2] = IR(FILLED(:,15),VBS,1,0,0,0); %persistence 
+    
+    plot(FILLEDTime,xnew,'r','LineWidth',1.5);
+    text(0.01,0.1,'D_{st} (nT)','Units','normalized','FontSize',14);
+    legend('Actual',sprintf('IR Model - CC %2.2f',corr),sprintf('Persistence Model - %2.2f',corr2),'Location','SouthEast')
+    
+    h(2)=subplot('position',subplotstack(2,2)); 
+    
+    plot(FILLEDTime,VBS,'k','LineWidth',1.5);
+    text(0.01,0.92,'V_{B_S}','Units','normalized','FontSize',14);
+    set(findobj('type','axes'),'xticklabel',{[]});
+set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
+axis tight;
+datetick('x','keeplimits')
+set(findobj('type','axes'),'xtick',get(h(end),'xtick'))
+linkaxes(h,'x')
+axis tight;
+    xlabel('Date')
+    
+    print('-depsc2', '-r200', sprintf('figures/BasicModelExample-GOES%d.eps',satnum));
+    print('-dpng', '-r200', sprintf('figures/PNGs/BasicModelExample-GOES%d.png',satnum));
+    %if(strcmp(visible,'off')),close(h);end;
+    
+    
+    
+    
+   
+    
+    
+end
+
+if(MakePaperPlots && stormcase==28 && sy~=ey)
+     %Persistence correlation plot
+    lags=200;
+    for i=0:lags
+         [~,~, ~,~,corr(i+1)] = IR(FILLED(:,15),FILLED(:,9),1,0,i,0); %persistence
+    end
+    
+    h=figure('Visible',visible);
+    %figure
+    plot(0:lags,corr,'LineWidth',2)
+    ylabel('Correlation')
+    xlabel('Lags in hours')
+    print('-depsc2', '-r200', 'figures/PersistentCorrelation.eps');
+    print('-dpng', '-r200', 'figures/PNGs/PersistentCorrelation.png');
+    if(strcmp(visible,'off')),close(h);end;
+    
+end
