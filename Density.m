@@ -248,6 +248,11 @@ switch stormcase
         DSTCut=-50;
         figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
         yr=2;
+    case 30
+        storms=diff([0 (MassDensityNanSpline>20)' 0]); %Density Storm
+        MDCut=20;
+        figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
+        yr=2;
 end
 
 

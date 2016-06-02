@@ -378,7 +378,7 @@ if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
     
 end
 
-if(stormcase==29) %NNBinaryOnset
+if(stormcase==29) %NNBinaryOnset for DST
     %{
    F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    KPDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
@@ -394,7 +394,37 @@ if(stormcase==29) %NNBinaryOnset
     stormstarts=storms(1:end-1);
     stormstarts(stormstarts==-1)=0;
     %predict=NNBinaryOnset(FILLED(:,[6 13 15 30]),stormstarts');
-    NNBinaryOnset([FILLED(:,[6 13 15 30]) circshift(FILLED(:,[6 13 15 30]),1) circshift(FILLED(:,[6 13 15 30]),2) circshift(FILLED(:,[6 13 15 30]),3)],stormstarts','hourly');
+    NNBinaryOnset([FILLED(:,[6 13 15 30]) circshift(FILLED(:,[6 13 15 30]),1) circshift(FILLED(:,[6 13 15 30]),2) circshift(FILLED(:,[6 13 15 30]),3)],stormstarts','dst-hourly');
+    
+   
+    %Do daily medians
+    stormstartsDay=stormstarts;
+    while(mod(length(stormstartsDay),24)~=0)
+        stormstartsDay(end+1)=0;
+    end
+    stormstartsDay=sum(reshape(stormstartsDay,24,[]));
+    stormstartsDay(stormstartsDay>1)=1; %Any day with multiple storms is just marked as one event. Might be worth leaving off?
+   
+   F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   KPDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   VSWDay=interptest(FILLEDTime,FILLED(:,6),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   DstDay=interptest(FILLEDTime,FILLED(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   
+   NNBinaryOnset([[F107Day KPDay VSWDay] circshift([F107Day KPDay VSWDay],1) circshift([F107Day KPDay VSWDay],2) circshift([F107Day KPDay VSWDay],3)],stormstartsDay','dst-daily');
+   
+    
+   %Test random sort
+   NNBinaryOnset([[F107Day KPDay VSWDay] circshift([F107Day KPDay VSWDay],1) circshift([F107Day KPDay VSWDay],2) circshift([F107Day KPDay VSWDay],3)],randsample(stormstartsDay,length(stormstartsDay))','dst-randomdaily');
+
+end
+
+if(stormcase==30) %NNBinary Onset for rhoeq, and only storm time
+    stormstarts=storms(1:end-1);
+    stormstarts(stormstarts==-1)=0;
+    
+    xi=find(stormstarts);
+    NNBinaryOnset(FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) ,stormstarts([xi xi-1 xi-2 xi-3])','hourly',{'F_{10.7}','KP','D_{st}','V_{sw}'});
+    
     
     stormstartsDay=stormstarts;
     while(mod(length(stormstartsDay),24)~=0)
@@ -403,16 +433,21 @@ if(stormcase==29) %NNBinaryOnset
     stormstartsDay=sum(reshape(stormstartsDay,24,[]));
     stormstartsDay(stormstartsDay>1)=1; %Any day with multiple storms is just marked as one event. Might be worth leaving off?
     
-    
-       F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+    xi=find(stormstartsDay);
+   
+   F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    KPDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    VSWDay=interptest(FILLEDTime,FILLED(:,6),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    DstDay=interptest(FILLEDTime,FILLED(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    
-   NNBinaryOnset([[F107Day KPDay VSWDay] circshift([F107Day KPDay VSWDay],1) circshift([F107Day KPDay VSWDay],2) circshift([F107Day KPDay VSWDay],3)],stormstartsDay','daily');
+   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KPDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily',{'F_{10.7}','KP','V_{sw}'});
    
-    
+   %Shuffled target
+   shufflexi=randsample(xi,length(xi));
+   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KPDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([shufflexi shufflexi-1 shufflexi-2 shufflexi-3])','randomdaily',{'F_{10.7}','KP','V_{sw}'});
+   
 end
+
 
 
 %DST vs rho_eq for 1 hour and 1 day

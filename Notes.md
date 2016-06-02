@@ -17,12 +17,54 @@
 
 
 ## History ##
+* [June 1: Correlation Plots](#june-1-2016)
 * [May 24: Binary analysis](#may-24-2016)
 * [May 20: Modeling models](#may-20-2016)
 * [May 18: Differences](#may-18-2016)
 * [May 16: Significance tests and pressure behavior](#may-16-2016)
 
 * * *
+
+### June 1, 2016 ###
+Made 2D correlation plots of MHD model vs IR model of model (need better term). This is using the prior 3 data points (equal to an hour and a half), and all available input variables. Unsurprisingly, correlation is great at the edges far from earth. More surprisingly, there are sections of very high correlation along the shock boundaries. Example plot for Bz:
+
+![Bz model correlation](figures/PNGs/ModelModelCorrelation_B_z.png)
+
+This process works similarly well for By:
+
+![By model correlation](figures/PNGs/ModelModelCorrelation_B_y.png)
+
+But loses some effectiveness for Bx:
+
+![Bx model correlation](figures/PNGs/ModelModelCorrelation_B_x.png)
+
+To investigate further, a scatter plot of correlation vs the average value of that variable across all cuts was made (e.g. the correlation for the Bz model at [x=10 R_E, z=0 R_E] vs the mean of Bz at that point for each time step would make one plot point). This was done to see if there were any trends that would account for higher or lower correlations. It doesn't appear that there's much of significance, though this plot could use a lot of work since the scale is so hard to get to show anything useful (tried logs, sqrts, quantiles, all have one issue or another. Currently showing quantiles to avoid the large discontinuity values messing up the axis)
+
+![Bx model correlation](figures/PNGs/ModelModelCorrelation_Scatter_B_x.png) ![By model correlation](figures/PNGs/ModelModelCorrelation_Scatter_B_y.png) ![Bz model correlation](figures/PNGs/ModelModelCorrelation_Scatter_B_z.png)
+
+This was also done for the pressure and density terms to similar effect:
+
+![p model correlation](figures/PNGs/ModelModelCorrelation_p.png) ![rho model correlation](figures/PNGs/ModelModelCorrelation_rho.png)
+
+
+##### NN #####
+Also looked at was another form of the neural net models. This time, instead of using all time data to attempt to predict, the model just uses onset (with a target value of 1) and the three hours before onset (with target values of 0). It also looks at mass density events rather than dst events. This method entirely fails for hourly values by not predicting any events at all:
+
+![Confusion hourly](figures/PNGs/NNBinaryOnset-hourly.png)
+
+But still correctly picks up about 1/3 of the events on a daily average:
+
+![Confusion daily](figures/PNGs/NNBinaryOnset-daily.png)
+
+And fails to predict any onsets when the onsets are shuffled (but still keeping the 4-day blocks together):
+
+![Confusion daily](figures/PNGs/NNBinaryOnset-randomdaily.png)
+
+In an attempt to discern what values led to correctly predicting events vs failing to predict events, histograms were made of the conditions associated with true positives and false negatives:
+
+![Histogram](figures/PNGs/NNBinaryOnset-daily-hist.png)
+
+Where it can be seen that true positives only show up for higher values of F10.7, lower values of Kp, and about average values of Vsw. 
 
 ### May 24, 2016 ###
 The CDF data for my run with real solar wind input data has been requested. For future reference, [here's the form](http://ccmc.gsfc.nasa.gov/ComQues/request_CDF.php).
@@ -77,11 +119,11 @@ Just outside the magnetopause [14.5 0 0] the "All" correlation drops to 0.575, a
 
 
 I've created a few models for predicting storm onset given KP, F10.7, and Vsw, but a variety of conditions need to be tested. First was using the last 4 hours of data to predict hourly onset for the entirety of the dataset. 
-![Hourly Binary Onset](figures/PNGs/NNBinaryOnset-hourly.png)
+![Hourly Binary Onset](figures/PNGs/NNBinaryOnset-dst-hourly.png)
 
 Then was the same thing, but daily averages, where any days with multiple events was just classified as a single event (since the type of network used expects binary 0/1 targets)
 
-![Daily Binary Onset](figures/PNGs/NNBinaryOnset-daily.png)
+![Daily Binary Onset](figures/PNGs/NNBinaryOnset-dst-daily.png)
 
 
 ### May 20, 2016 ###
