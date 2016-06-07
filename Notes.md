@@ -1,5 +1,9 @@
 ## To-Do ##
-* Find last-late-add date and last-defend date
+* 4.4 Epoch analysis
+* cite MATLAB libraries
+* show MLT dependence not significant
+* Remake figure 3.3 for GOES 6, show alongside
+* Find last-late-add date and thesis submission date (Jul 29)
 * Write up confusion matrix section after finishing chapter 3
 * Make new run without dipole tilt, using only real B field, at high resolution
 * Histograms for models of entire time series, include rho and possibly Bz

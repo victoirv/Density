@@ -425,6 +425,7 @@ if(stormcase==30) %NNBinary Onset for rhoeq, and only storm time
     xi=find(stormstarts);
     NNBinaryOnset(FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) ,stormstarts([xi xi-1 xi-2 xi-3])','hourly',{'F_{10.7}','KP','D_{st}','V_{sw}'});
     
+    NNBinaryOnset([FILLED(:,[6 13 15 30]) circshift(FILLED(:,[6 13 15 30]),1) circshift(FILLED(:,[6 13 15 30]),2) circshift(FILLED(:,[6 13 15 30]),3)],stormstarts','full-hourly');
     
     stormstartsDay=stormstarts;
     while(mod(length(stormstartsDay),24)~=0)
@@ -441,6 +442,8 @@ if(stormcase==30) %NNBinary Onset for rhoeq, and only storm time
    DstDay=interptest(FILLEDTime,FILLED(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    
    NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KPDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily',{'F_{10.7}','KP','V_{sw}'});
+   
+   NNBinaryOnset([[F107Day KPDay VSWDay] circshift([F107Day KPDay VSWDay],1) circshift([F107Day KPDay VSWDay],2) circshift([F107Day KPDay VSWDay],3)],stormstartsDay','full-daily');
    
    %Shuffled target
    shufflexi=randsample(xi,length(xi));
