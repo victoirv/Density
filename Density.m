@@ -165,7 +165,7 @@ switch stormcase
         yr=4;
         MakeBinPlots=1;
     case 17 %Random events
-        starti = randsample(1:length(MassDensitySpline),700,false);
+        starti = randsample(1:floor(length(MassDensitySpline)/3),700,false).*3; %So each storm is at least 4 hours long
         storms=zeros(1,length(MassDensitySpline));
         storms(starti)=1; storms(starti+1)=-1;
         while(sum(storms)~=0)
@@ -174,7 +174,8 @@ switch stormcase
             storms(starti)=1; storms(starti+1)=-1;
         end
         figurename=strcat(figurename,'random',sprintf('-GOES%d.eps',satnum));
-        yr=4;
+        yr=5;
+        yranges(5,:,:)=[-1 2; 400 500; -20 0; 100 120; 5 30];
         MakeBinPlots=1;
     case 18    
     for i=1:24
@@ -253,6 +254,19 @@ switch stormcase
         MDCut=20;
         figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
         yr=2;
+    case 31 %Random daily events
+        starti = randsample(1:floor(length(MassDensitySpline)/3),700,false).*3; %So each storm is at least 4 hours long
+        storms=zeros(1,length(MassDensitySpline));
+        storms(starti)=1; storms(starti+1)=-1;
+        while(sum(storms)~=0)
+            starti = randsample(1:length(MassDensitySpline),700,false);
+            storms=zeros(1,length(MassDensitySpline));
+            storms(starti)=1; storms(starti+1)=-1;
+        end
+        LongTimeScale=24;
+        figurename=strcat(figurename,'randomdaily',sprintf('-GOES%d.eps',satnum));
+        yr=5;
+        yranges(5,:,:)=[-1 2; 400 500; -20 0; 100 120; 5 30];
 end
 
 

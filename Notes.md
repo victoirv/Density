@@ -1,10 +1,7 @@
 ## To-Do ##
-* 4.4 Epoch analysis
-* cite MATLAB libraries
+* Connect Denton 2016 to Ch5
+* Add plasmasphere knee details (pass location, etc)
 * show MLT dependence not significant
-* Remake figure 3.3 for GOES 6, show alongside
-* Find last-late-add date and thesis submission date (Jul 29)
-* Write up confusion matrix section after finishing chapter 3
 * Make new run without dipole tilt, using only real B field, at high resolution
 * Histograms for models of entire time series, include rho and possibly Bz
 * Correlation plots of pv^2, vBz
@@ -17,6 +14,14 @@
 * Makefile example and commit permissions
 * Add KP to NN analysis
 * Clean up figures directory
+* ~~Epoch analysis for 668 random events, daily and hourly~~
+* ~~Remake figure 3.2 for GOES 6, show alongside~~
+* ~~cite MATLAB libraries~~
+* ~~Include Tak plot in 4.4~~
+* ~~Make stack plots take entire page~~
+* ~~4.4 Epoch analysis~~
+* ~~Find last-late-add date and thesis submission date (Jul 29)~~
+* ~~Write up confusion matrix section after finishing chapter 3~~
 * [~~Look at -6.6R_E~~](#may-24-2016) 
 * [~~Request CDF of my run~~](#may-24-2016)
 * [~~Change matlab bootstrap table output to just be inner part of table (data only)~~](#may-20-2016)

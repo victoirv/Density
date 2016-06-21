@@ -7,6 +7,7 @@ if(MakePaperPlots && stormcase==1)
     end
     figure('Visible',visible);
     plot(0:23,avrhos,'+-')
+    axis([-1 24 5 35])
     ylabel('Median \rho_{eq} (amu/cm^3)')
     xlabel('MLT (hour)')
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[0:2:24])
@@ -57,10 +58,24 @@ if(MakePaperPlots && stormcase==1)
     hist(FILLED(isnan(MassDensitySpline),3),0:23)
     axis([-1 24 0 3000])
     set(gca,'XTick',0:2:24)
-    xlabel('UT Hour of event start')
+    xlabel('UT Hour')
     ylabel('Frequency')
     print -depsc2 -r200 figures/nansbyhour.eps
     print -dpng -r200 figures/PNGs/nansbyhour.png
+    if(strcmp(visible,'off')),close(h);end;
+    
+    %data per MLT
+    h=figure('Visible',visible);
+    %MLTinterp=FILLED(:,29);
+    %MLTinterp(isnan(MLTinterp)) = interp1(find(~isnan(MLTinterp)), MLTinterp(~isnan(MLTinterp)), find(isnan(MLTinterp)), 'linear'); 
+    %hist(MLTinterp,0:23)
+    hist(MLT,0:23)
+    axis([-1 24 0 8000])
+    set(gca,'XTick',0:2:24)
+    xlabel('MLT')
+    ylabel('Frequency')
+    print -depsc2 -r200 figures/databyMLT.eps
+    print -dpng -r200 figures/PNGs/databyMLT.png
     if(strcmp(visible,'off')),close(h);end;
     
     h=figure('Visible',visible);
