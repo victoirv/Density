@@ -24,7 +24,7 @@ if(MakePaperPlots && stormcase==1)
     
 end
 
-if(MakePaperPlots && stormcase==26) %KP Stack plot
+if(MakePaperPlots && stormcase==26) %Kp Stack plot
     stackplot(FILLEDTime, [FILLED(:,[5,6,13,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','Kp','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 6],yranges(yr,:,:))
 end
 
@@ -381,7 +381,7 @@ end
 if(stormcase==29) %NNBinaryOnset for DST
     %{
    F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
-   KPDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   KpDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    VSWDay=interptest(FILLEDTime,FILLED(:,6),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    DstDay=interptest(FILLEDTime,FILLED(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    MDDay=interptest(FILLEDTime,MassDensitySpline',FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end));
@@ -406,15 +406,15 @@ if(stormcase==29) %NNBinaryOnset for DST
     stormstartsDay(stormstartsDay>1)=1; %Any day with multiple storms is just marked as one event. Might be worth leaving off?
    
    F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
-   KPDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   KpDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    VSWDay=interptest(FILLEDTime,FILLED(:,6),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    DstDay=interptest(FILLEDTime,FILLED(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    
-   NNBinaryOnset([[F107Day KPDay VSWDay] circshift([F107Day KPDay VSWDay],1) circshift([F107Day KPDay VSWDay],2) circshift([F107Day KPDay VSWDay],3)],stormstartsDay','dst-daily');
+   NNBinaryOnset([[F107Day KpDay VSWDay] circshift([F107Day KpDay VSWDay],1) circshift([F107Day KpDay VSWDay],2) circshift([F107Day KpDay VSWDay],3)],stormstartsDay','dst-daily');
    
     
    %Test random sort
-   NNBinaryOnset([[F107Day KPDay VSWDay] circshift([F107Day KPDay VSWDay],1) circshift([F107Day KPDay VSWDay],2) circshift([F107Day KPDay VSWDay],3)],randsample(stormstartsDay,length(stormstartsDay))','dst-randomdaily');
+   NNBinaryOnset([[F107Day KpDay VSWDay] circshift([F107Day KpDay VSWDay],1) circshift([F107Day KpDay VSWDay],2) circshift([F107Day KpDay VSWDay],3)],randsample(stormstartsDay,length(stormstartsDay))','dst-randomdaily');
 
 end
 
@@ -423,8 +423,8 @@ if(stormcase==30) %NNBinary Onset for rhoeq, and only storm time
     stormstarts(stormstarts==-1)=0;
     
     xi=find(stormstarts);
-    NNBinaryOnset([FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) MassDensitySpline([xi xi-1 xi-2 xi-3])'] ,stormstarts([xi xi-1 xi-2 xi-3])','hourly-withreq',{'F_{10.7}','KP','D_{st}','V_{sw}','\rho_{eq}'});
-    NNBinaryOnset(FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) ,stormstarts([xi xi-1 xi-2 xi-3])','hourly',{'F_{10.7}','KP','D_{st}','V_{sw}'});
+    NNBinaryOnset([FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) MassDensitySpline([xi xi-1 xi-2 xi-3])'] ,stormstarts([xi xi-1 xi-2 xi-3])','hourly-withreq',{'F_{10.7}','Kp','D_{st}','V_{sw}','\rho_{eq}'});
+    NNBinaryOnset(FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) ,stormstarts([xi xi-1 xi-2 xi-3])','hourly',{'F_{10.7}','Kp','D_{st}','V_{sw}'});
   
     NNBinaryOnset([FILLED(:,[6 13 15 30]) MassDensitySpline' circshift([FILLED(:,[6 13 15 30]) MassDensitySpline'],1) circshift([FILLED(:,[6 13 15 30]) MassDensitySpline'],2) circshift([FILLED(:,[6 13 15 30]) MassDensitySpline'],3)],stormstarts','full-hourly-withreq');
     NNBinaryOnset([FILLED(:,[6 13 15 30]) circshift(FILLED(:,[6 13 15 30]),1) circshift(FILLED(:,[6 13 15 30]),2) circshift(FILLED(:,[6 13 15 30]),3)],stormstarts','full-hourly');
@@ -439,21 +439,21 @@ if(stormcase==30) %NNBinary Onset for rhoeq, and only storm time
     xi=find(stormstartsDay);
    
    F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
-   KPDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
+   KpDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    VSWDay=interptest(FILLEDTime,FILLED(:,6),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    DstDay=interptest(FILLEDTime,FILLED(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    MDDay=interptest(FILLEDTime,MassDensitySpline,FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    
-   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KPDay([xi xi-1 xi-2 xi-3]) DstDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily',{'F_{10.7}','KP','D_{st}','V_{sw}'});
-   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KPDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3]) MDDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily-withreq',{'F_{10.7}','KP','V_{sw}','\rho_{eq}'});
+   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KpDay([xi xi-1 xi-2 xi-3]) DstDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily',{'F_{10.7}','Kp','D_{st}','V_{sw}'});
+   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KpDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3]) MDDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily-withreq',{'F_{10.7}','Kp','V_{sw}','\rho_{eq}'});
    
-   NNBinaryOnset([[F107Day KPDay VSWDay MDDay] circshift([F107Day KPDay VSWDay MDDay],1) circshift([F107Day KPDay VSWDay MDDay],2) circshift([F107Day KPDay VSWDay MDDay],3)],stormstartsDay','full-daily-withreq');
-   NNBinaryOnset([[F107Day KPDay VSWDay] circshift([F107Day KPDay VSWDay],1) circshift([F107Day KPDay VSWDay],2) circshift([F107Day KPDay VSWDay],3)],stormstartsDay','full-daily');
+   NNBinaryOnset([[F107Day KpDay VSWDay MDDay] circshift([F107Day KpDay VSWDay MDDay],1) circshift([F107Day KpDay VSWDay MDDay],2) circshift([F107Day KpDay VSWDay MDDay],3)],stormstartsDay','full-daily-withreq');
+   NNBinaryOnset([[F107Day KpDay VSWDay] circshift([F107Day KpDay VSWDay],1) circshift([F107Day KpDay VSWDay],2) circshift([F107Day KpDay VSWDay],3)],stormstartsDay','full-daily');
    
    
    %Shuffled target
    shufflexi=randsample(xi,length(xi));
-   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KPDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([shufflexi shufflexi-1 shufflexi-2 shufflexi-3])','randomdaily',{'F_{10.7}','KP','V_{sw}'});
+   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KpDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([shufflexi shufflexi-1 shufflexi-2 shufflexi-3])','randomdaily',{'F_{10.7}','Kp','V_{sw}'});
    
 end
 

@@ -52,13 +52,13 @@ if(~isempty(labels))
         figure; stairs(binax,bina,'k','LineWidth',1.2);
         hold on; stairs(binx,bin); stairs(binx2,bin2,'r')
         legend('Actual','True Positive','False Negative')
-        ylabel(labels)
+        xlabel(labels)
     else
         figure; subplot(min(size(x)),1,1)
         stairs(binax,bina,'k','LineWidth',1.2);
         hold on; stairs(binx,bin); stairs(binx2,bin2,'r')
         legend('Actual','True Positive','False Negative')
-        ylabel(labels{1})
+        xlabel(labels{1})
         
         for i=2:min(size(x))
             [bina,binax]=hist(x(y & 1,i));
@@ -68,12 +68,13 @@ if(~isempty(labels))
             stairs(binax,bina,'k','LineWidth',1.2);
             hold on; stairs(binx,bin); stairs(binx2,bin2,'r')
             legend('Actual','True Positive','False Negative')
-            ylabel(labels{i})
+            xlabel(labels{i})
         end
         
     end
     
     if(~isempty(figname))
+        orient tall;
         print('-depsc2',sprintf('figures/NNBinaryOnset-%s-hist.eps',figname));
         print('-dpng','-r200',sprintf('figures/PNGs/NNBinaryOnset-%s-hist.png',figname));
     end
