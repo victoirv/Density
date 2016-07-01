@@ -1,0 +1,2028 @@
+
+%%  AGUGUIDE.TEX  -- August 6, 1996 version
+%
+%%  User Guide for AGU's LaTeX Style Files.
+%
+%%  This document should be LaTeXed and 
+%   printed, not viewed on screen.
+
+\documentstyle[agupp]{article}
+\setcounter{secnumdepth}{4}
+\hyphenation{com-pu-scripts manu-script 
+manu-scripts Springer-Ver-lag}
+
+\begin{document}
+\twocolumn
+
+\title{\Large AGU's \LaTeX\ STYLE FILES Version 4.0}
+\vspace{-2pc}
+
+\begin{article}
+\section{Introduction --- New Style Files}
+
+\LaTeX\ style files have been created in order to 
+ease the task of preparing AGU manuscripts for publication.
+This guide contains instructions for using AGU's \LaTeX\ 
+package, which consists of substyles to the standard \LaTeX\ 
+{\tt article} style.
+
+These instructions accompany version 4.0 of AGU's \LaTeX\ 
+style files.  Version 4.0 contains many features and 
+additions, such as automatic generation of the second 
+set of figure captions and the potential to generate JGR 
+supplemental abstracts.  Earlier formatting problems have 
+been corrected as well.
+
+Files created in previous versions of AGU's style files 
+will run with this version, though you will need to include 
+a \verb"\begin{article}" command in front of the body text 
+and \verb"\end{article}" after the references (these 
+control the single-column format).
+
+Authors are expected to have at least a basic knowledge of 
+\LaTeX.  Those who are unfamiliar with \LaTeX\ will need 
+additional sources of information.  A number of publications 
+are listed in the reference section of this guide.
+
+AGU does not yet accept electronic submission of 
+manuscripts.
+
+
+\section{For Assistance}
+
+For questions about AGU's \LaTeX\ style files, e-mail 
+instruct@kosmos.agu.org (include your AGU paper number, 
+if available) or call 202/462-6900, ext. 216.
+
+To ask about the status of a manuscript, contact 
+AGU's Author Information Line at 202/939-3200 
+or e-mail cust\_ser@kosmos.agu.org (include your 
+AGU paper number, if available).
+
+
+\section{Creating Camera-Ready Manuscripts in \LaTeX}
+
+Commands needed to create a camera-ready manuscript will 
+be described in the same order they should appear in the 
+input file.
+
+The sample.tex file that accompanies this guide can be 
+used as a sample document (simply \LaTeX\ and print it) 
+or it can be used as a template (replace the sample text 
+with the text of your manuscript and delete any extraneous
+commands).
+
+
+\subsection{Selecting a Document Style}
+
+The first command in a \LaTeX\ manuscript must declare 
+the overall style of the document.  AGU's \LaTeX\ 
+style files provide several different formats.  There are 
+five ``galley'' styles, a ``manuscript'' style, and a 
+``preprint'' style.
+
+The galley styles create camera-ready galley pages that 
+authors may submit to AGU for publication.  Note that 
+only one column is printed on a page; the single columns 
+are placed into two-column format by AGU staff.
+\vspace{10pt}
+
+$\bullet$ The {\tt jgrga} substyle creates camera-ready 
+          manuscripts for three journals:  {\it Journal of 
+       Geophysical Research}, {\it Global Biogeochemical 
+      Cycles}, and {\it Paleoceanography}.
+\vspace{10pt}
+
+$\bullet$ The {\tt grlga} substyle creates camera-ready 
+       manuscripts for {\it Geophysical Research Letters}.
+\vspace{10pt}
+
+$\bullet$ The {\tt tecga} substyle creates camera-ready 
+        manuscripts for {\it Tectonics}.
+\vspace{10pt}
+
+$\bullet$ The {\tt radga} substyle creates camera-ready 
+   manuscripts for {\it Radio Science}.
+\vspace{10pt}
+
+$\bullet$ The {\tt rtjga} substyle creates camera-ready 
+       manuscripts for the Russian translation journals.
+\vspace{10pt}
+
+$\bullet$ The {\tt agupp} substyle (preprint substyle) 
+   creates a two-column format suitable for 
+       distribution among colleagues.  This style can 
+         be used as is, or \LaTeX\ style writers at your 
+        institution may use this as a starting point for 
+       creating their own preprint styles.  Do not submit 
+     output from this style to AGU as camera-ready copy!
+     Please note that the two-column format begins 
+          at the point a \verb"\twocolumn" command appears 
+       in the text.  If \verb"\twocolumn" is not 
+      specified, the introductory material of the paper 
+      will be set in one-column mode and the two-column 
+      mode will engage with the first \verb"\section" 
+        command.
+\vspace{10pt}
+
+$\bullet$ The {\tt agums} substyle (manuscript substyle)
+   creates pages with large, double-spaced type with 
+      wide margins for first-time submission to AGU 
+          editors (i.e., for peer review and copyediting).
+        This style uses a 12-point font.  If a font size 
+       smaller than 12 is chosen, the {\tt agums} substyle 
+    issues a warning message and will automatically 
+        reset the size to 12 points; the file will still 
+       be processed.
+\vspace{10pt}
+
+These style files are all substyles to the standard 
+\LaTeX\ {\tt article} style and should be selected 
+as substyle options, as shown:
+
+\begin{center}
+\begin{quote}
+\verb"\documentstyle[jgrga]{article}" \\
+\verb"\documentstyle[grlga]{article}" \\
+\verb"\documentstyle[tecga]{article}" \\
+\verb"\documentstyle[radga]{article}" \\
+\verb"\documentstyle[rtjga]{article}" \\
+\verb"\documentstyle[agupp]{article}" \\
+\verb"\documentstyle[12pt,agums]{article}"
+\end{quote}
+\end{center}
+
+\noindent The \verb"\documentstyle" command must appear 
+first in any \LaTeX\ file.  Only one \verb"\documentstyle" 
+may be chosen; other \verb"\documentstyle" commands must 
+either be deleted or preceded by a comment symbol~({\tt \%}).
+
+
+\subsection{Running Heads}
+
+Authors must supply running head information.
+There are two running head commands: \verb"\lefthead{}" 
+and \verb"\righthead{}".
+
+In the \verb"\lefthead{}" command, type only the last 
+name(s) of the author(s) in all capital letters between 
+the curly braces.  If your manuscript has three or 
+more authors, type only the last name of the first author 
+followed by ``ET AL.''
+
+In the \verb"\righthead{}" command, type a short version of 
+the article title (or include the entire title, if it fits) 
+in all capital letters between the curly braces.
+
+You may type a total of 60 characters (including letters, 
+punctuation, and spaces) between the curly braces in 
+either the \verb"\lefthead" or \verb"\righthead" commands 
+(i.e., 10 characters in one command and 50 in the other 
+is acceptable).  Please avoid nonstandard abbreviations.
+
+
+\subsection{Received, Revised, and Accepted Dates}
+
+\begin{quote}
+\verb"\received{January 13, 1996}"\\
+\verb"\revised{April 3, 1996}"\\
+\verb"\accepted{August 6, 1996}"
+\end{quote}
+
+Received, revised, and accepted dates are supplied by 
+your AGU editor.  The information typed in these commands 
+will print at the end of the manuscript (after the 
+references and author addresses).  Please type dates 
+in the format shown above and in the sample.tex document.
+
+The {\tt agums} style prints a blank line for the 
+{\tt received} date if no text is included.
+
+
+\subsection{Manuscript Information}
+
+{\it Geophysical Research Letters} (GRL) manuscripts often 
+have such quick turnaround times that authors do not 
+receive manuscript information for their documents.
+If you are submitting a camera-ready manuscript to GRL,
+you may leave the \verb"\paperid", \verb"\cpright",
+and \verb"\ccc" commands empty.
+
+
+\subsubsection{Paper number}
+
+Type your manuscript's AGU paper number between 
+curly braces in the \verb"\paperid{}" command.  All 
+manuscripts accepted by AGU are assigned a paper number, 
+which is used to track and identify manuscripts.  AGU 
+paper numbers contain two digits indicating the year a
+manuscript was received at AGU, two letters indicating 
+the journal, and five digits indicating in what order 
+the manuscript was received at AGU headquarters.
+
+
+\subsubsection{Copyright}
+
+Type your copyright information between the first
+set of curly braces in the \verb"\cpright{}{YEAR}" 
+command (where {\tt YEAR} is the year the manuscript
+is published).  There are three copyright options 
+available.
+\vspace{11pt}
+
+1.~~If your paper is AGU copyright, choose 
+the  ``AGU'' \verb"\cpright" command.
+\vspace{11pt}
+
+2.~~If your paper is in the public domain, 
+choose the ``PD'' \verb"\cpright" command.
+\vspace{11pt}
+
+3.~~If your paper is Crown copyright, 
+choose the ``Crown'' \verb"\cpright" command.
+\vspace{11pt}
+
+Copyright type is case-sensitive, so you must
+type the command exactly as shown above.
+
+If you are not sure which copyright to choose, 
+please contact your production coordinator.
+You must choose one of these copyright options 
+(except for GRL manuscripts).
+
+
+\subsubsection{Copyright Clearance Center Code}
+
+Type your Copyright Clearance Center code between
+curly braces in the \verb"\ccc" command.  (This
+code is provided by your journal editor.)  Crown 
+copyrights have no \verb"\ccc" information.  Do not 
+forget to place a backslash in front of the dollar
+sign or it will be interpreted as a math command.
+
+
+\subsection{Author Addresses}
+
+For author postal addresses, group authors by affiliation 
+and list them in alphabetical order between curly braces 
+in \verb"\authoraddress" commands.
+
+Names include first initial only, optional middle initial, 
+and last name.  If available, include e-mail addresses as 
+shown in the sample.tex document.  E-mail addresses may be 
+broken after a period or after the @ sign.  If your e-mail 
+address includes an underscore, don't forget to place a 
+backslash in front of it or it will be interpreted as a 
+command.
+
+Note that author addresses are different from author
+affiliations.  Author addresses should include complete
+postal address information, while author affiliations
+include only department, institution, town, and state
+(if state is not included in the name of the institution)
+or country (if not the United States).
+
+When {\LaTeX}ed, author addresses appear after the
+references section.
+
+
+\subsection{Slug Comments}
+
+Authors may include short remarks on the title page 
+of {\tt agums} and {\tt agupp} substyles (e.g.\ the 
+name and date of the journal in which an article 
+is scheduled to appear).
+
+Type slug comments between the curly braces of a
+\verb"\slugcomment{}" command.
+
+In the {\tt agums} style, slug comments appear after 
+the manuscript dates; in the {\tt agupp} style, they 
+appear in the upper left corner of the title page.
+Slug comments do not appear in the camera-ready styles.
+
+
+\subsection{Numbering Your Sections}\label{numbring}
+
+If you want \LaTeX\ to automatically number your sections, 
+type \verb"\setcounter{secnumdepth}{4}" in the preamble 
+of your input file (i.e., in front of your 
+\verb"\begin{document}" command, as shown in the 
+sample.tex document).  If you do not want section numbers,
+type \verb"\setcounter{secnumdepth}{0}" in the \linebreak
+preamble of your input file.
+
+
+\subsection{``Begin Document'' and Front Matter \protect\\
+Commands}
+  
+The main portion of the manuscript starts with a
+\verb"\begin{document}" command, which is followed
+by the front matter (title, author(s), affiliation(s),
+and abstract).
+
+
+\subsection{Title}
+
+Type the title of your manuscript between the curly 
+braces in the \verb"\title{}" command.  Capitalize 
+only acronyms, first letter of the first word, first 
+letter of proper nouns, first letter of the first word
+after colons, and first letter of the first word of a 
+subtitle.
+
+If the title exceeds one line, break it so that the 
+first line is longer than the second line; break the 
+title before articles, prepositions, and conjunctions.
+To break the title, type a double backslash where you 
+want the break to occur, as shown in the sample.tex 
+document.
+
+
+\subsection{Authors and Affiliations}
+
+\subsubsection{Authors}
+
+Type author names between the curly braces in 
+\verb"\author{}" command(s).  Author names consist 
+of first name or initial, optional middle name or
+initial, and last name.
+
+If it is necessary to break author lines, make sure 
+you break them between two author's names (using 
+double backslash \verb"\\" commands).
+
+
+\subsubsection{Affiliations}
+
+Type affiliation information between the curly braces 
+in an \verb"\affil{}" command immediately after each 
+\verb"\author" command.  \linebreak Each \verb"\author" 
+command must be followed by a corresponding \verb"\affil"
+command.
+
+
+\subsubsection{Alternate affiliations}
+
+Authors often have affiliations in addition to their 
+principal employer.  If your authors have such 
+alternate affiliations, type an \verb"\altaffilmark{}" 
+command after the author name, type a footnote number 
+between the curly braces, then type the corresponding 
+alternate affiliation information between curly braces 
+in an \verb"\altaffiltext{}{}" command below the primary
+author affiliation commands, as shown in the sample.tex 
+document.  There must be a separate \verb"\altaffiltext"
+command for each alternate affiliation.
+
+This information will print as footnotes after the 
+reference section in your {\LaTeX}ed manuscript and 
+will appear on the bottom left-hand corner of the 
+first page of your published manuscript.
+
+
+\subsubsection{Footnoted affiliations}
+
+If your manuscript contains more than three author 
+and affiliation groupings, then all author names must 
+be typed together in a single \verb"\author" command.
+Then, type an \verb"\altaffilmark{}" command after each 
+author name, and type each author affiliation between 
+curly braces in \verb"\altaffiltext{}{}" commands.
+
+Each affiliation should appear in a separate \linebreak
+\verb"\altaffiltext{}{}" command, and the number 
+in the \verb"\altaffilmark{#}" command should match 
+the number in the appropriate \verb"altaffiltext{#}{}" 
+command.  There is an example of this format in the 
+sample.tex document.
+
+
+\subsection{Abstract}
+
+Type your abstract between \verb"\begin{abstract}"
+and \verb"\end{abstract}" commands.
+
+An abstract consists of a one-paragraph summary
+of your paper, in 250 words or fewer.  Do not cite
+references unless absolutely necessary.  If you
+must cite, place the citation in square braces
+using italic type (this abstract citation format
+is new).  Do not include displayed material.
+
+
+\subsection{Sections}
+
+AGU's \LaTeX\ style files support four section~levels.
+
+$\bullet$~Level 1 heads use \verb"\section{}" commands.
+
+$\bullet$~Level 2 heads use \verb"\subsection{}" commands.
+
+$\bullet$~Level 3 heads use \verb"\subsubsection{}" commands.
+
+$\bullet$~Level 4 heads use \verb"\subsubsubsection{}" commands.
+
+For level 1 and level 2 heads, capitalize the first 
+letter of each word (except for prepositions, conjunctions, 
+and articles that are 3 letters or shorter).  Do not 
+hyphenate level 1 or level 2 heads.  To break lines, 
+type \verb"\protect\\" where you want a break to occur.
+
+For level 3 and level 4 heads, capitalize only acronyms, 
+the first letter of the first word, first letter of proper 
+nouns, and first letter of the first word after colons.
+Hyphenation is permitted in level 3 and level 4 heads, 
+if needed.  You must include at least two level 3 heads 
+per level 2 head.  A level 4 head cannot directly follow 
+a level 3 head; there must be a least one sentence between
+the two heads.
+
+Note that these commands delimit sections by marking the 
+beginning of each section; there are no separate commands 
+to identify the ends.
+
+If you want to number your sections, see the information 
+in section \ref{numbring}, above.
+
+\subsection{Manuscript Text}
+
+Type a \verb"\begin{article}" command, then begin 
+the text of your manuscript.  Include section heads
+wherever appropriate.  You may begin your text with 
+an introductory section head, but this is not required.
+
+The body of the manuscript text must start with the 
+\verb"\begin{article}" command, and you must include 
+an \verb"\end{article}" command after the references 
+section (otherwise, your text will not print at the 
+proper column width).
+
+Do not underline text.  Italics should only be used 
+for math variables and text citations.
+
+See section \ref{formtext} for information on formatting
+text in \LaTeX.
+
+
+\subsection{Appendices}
+
+If your manuscript contains appendices, type an
+\verb"\appendix" command, then type your appendix
+section headers within \verb"\section{}" commands,
+with the appropriate appendix introduction, for example,
+\verb"\section{Appendix A: Your Title}."
+
+If you have several appendix sections, lettering in
+appendix headers should match the above example.
+If there is only one appendix, lettering does not
+appear in the header: \verb"\section{Appendix: Your Title}."
+
+The \verb"\appendix" command causes all following equations 
+to use a lettered number (for instance, A1).  This is to 
+distinguish appendix equations from equations that appear 
+in the main body of the manuscript.
+
+Appendix tables must be manually labeled.  If your manuscript 
+contains tables that accompany an appendix section, you must 
+use \verb"\tablenum{}" commands and label the table(s) accordingly.
+(If there is one appendix section and one table, the table 
+number will be \verb"\tablenum{A1}"; if there are two appendix 
+sections, tables appearing in the second section will begin 
+with \verb"\tablenum{B1}", etc.)  See the sample.tex document for
+examples.
+
+
+\subsection{Acknowledgments and Editor \protect\\
+Acknowledgments}
+
+Authors may include an acknowledgments section, if 
+desired.  Acknowledgments appear after the last paragraph 
+of manuscript text or after the appendices (if any).
+Acknowledgments may be only one paragraph in length.
+
+Type an \verb"\acknowledgments" command, then begin your 
+acknowledgments text.  Be sure to spell ``acknowledgments'' 
+exactly as it appears; otherwise, \LaTeX\ will not recognize 
+the command.  There is no ``end acknowledgments'' command.
+
+If your manuscript contains only one acknowledgment, use 
+an \verb"\acknowledgment" command to produce a singular 
+``Acknowledgment'' subhead.
+
+If your manuscript contains Editor's acknowledgments (for
+{\it JGR--Space Physics} only) set them in a new paragraph 
+one empty line below the regular acknowledgments, as shown 
+in the sample.tex document.
+
+\subsection{References and Citations}
+
+There are two methods for managing citations and 
+references.  One method uses \verb"\begin{references}"
+and \verb"\end{references}" commands.  The second \linebreak
+method uses \verb"\begin{thebibliography}{}" and linebreak
+\verb"\end{thebibliography}{}" commands.  See the 
+sample.tex document for examples of each style.
+
+
+\subsubsection{Method 1}
+Authors may enter properly formatted citations directly 
+in the manuscript text and enclose those citations in 
+\verb"\markcite{}" commands.  This method uses a 
+\verb"\begin{references}" and \verb"\end{references}" 
+environment for your reference section.  Method 1 
+marks all citations in your manuscript, but there 
+is no interaction between the \verb"\markcite" 
+commands and the reference section.
+
+Type a \verb"\begin{references}" command
+to start your reference section.  This command
+automatically produces a correctly formatted 
+``Reference'' head.  Next, type a \verb"\reference" 
+command.  This command must appear in front of 
+every reference in your reference section, or 
+your references will not format properly.
+Type reference information after the 
+\verb"\reference" command.  It is the author's
+responsibility to place bibliographic reference
+information in the proper order with correct 
+punctuation.  After the last reference in your
+reference section, type an \verb"\end{references}"
+command, then type an \verb"\end{article}" command.
+
+To create in-text citations, enclose each citation
+within a \verb"\markcite" command.  In-text
+citation format italicizes all author names
+and uses nonitalic type for publication years.
+There are two ways to include in-text citations,
+depending on the way you phrase your sentence.
+You may either include an entire reference within
+square braces \markcite{[{\it Merritt et al.,} 
+1996]} or you may mention the author as part of 
+your sentence and include only the year in braces, 
+as in \markcite{{\it Ono} [1996]}.  Method 2 cannot 
+create the second citation format, so if your 
+manuscript ever contains this format, you should 
+probably use method 1.
+
+\subsubsection{Method Two}
+Authors may create automated in-text citations 
+with \verb"\cite" commands that correspond to tags 
+in \LaTeX's \verb"\thebibliography{}" environment.
+This method requires authors to create proper 
+journal format within \verb"\bibitem" commands.
+
+Type a \verb"\begin{thebibliography}{}" command to start
+your reference section.  This command automatically 
+produces a correctly formatted ``Reference'' head.
+
+Next, type \verb"\bibitem[LABEL]{TAG} \reference"
+where {\tt LABEL} is the correct AGU in-text
+citation format (i.e.,
+\verb"\bibitem[{\it Johnson,} 1996]{j96}" \linebreak
+\verb"\reference").  {\tt TAG} text is chosen by the 
+author and may follow any preferred format.  Type 
+the full text of your reference after the 
+\verb"\bibitem" command.  A \verb"\bibitem" 
+command must appear in front of every reference 
+in your reference section, or your references will 
+not format properly.  It is the author's responsibility
+to place bibliographic reference information in the 
+proper order with correct punctuation.  After 
+the last reference in your reference section, 
+type an \verb"\end{thebibliography}" command, 
+then type an \verb"\end{article}" command.
+
+To create in-text citations, type \verb"\cite{TAG}", 
+where the {\tt TAG} is identical to the {\tt TAG} 
+used in the corresponding reference's 
+\verb"\bibitem[]{TAG}" command.  (For example,
+\verb"\cite{j96}".)
+
+If you cite two references from two different years,
+you must type only one \verb"\cite" in the input file 
+and include the second year in square braces, as shown
+in the sample.tex document, in order to output correct 
+AGU reference style.
+
+If you cite two references in the same year at
+the same time, you must use an ``a, b'' format
+after the publication year and code the 
+\verb"\cite" command in the text as shown 
+in the sample.tex document.
+
+
+\subsubsection{AGU reference style}
+Examples of a variety of publications referenced
+in AGU bibliographic style are included in the
+sample.tex document.  Contact AGU's Editorial
+Services Department if you have a question about 
+AGU reference style.
+
+
+\subsubsubsection{In press}
+AGU gives a full reference for works accepted for 
+publication but not yet released by using the words 
+``in press'' in place of the journal volume and 
+page numbers and by using the year of acceptance as 
+the date.  Manuscripts submitted for publication 
+but not yet accepted are considered to be unpublished.
+
+
+\subsubsubsection{Unpublished work}
+AGU does not include personal communications, unpublished 
+data, and manuscripts in preparation or submitted for 
+publication in the reference list because AGU does not 
+consider them to be part of public literature.  Refer to 
+these works in text in parentheses by first initials and 
+last name of source, type of material, and date.  For 
+submitted papers include title and journal submitted to, 
+if available.  If you wish, you may include the affiliation 
+of the source, for example (J. Wilson, personal communication, 
+1971) or (B. L. Smith, University of Massachusetts, unpublished 
+data, 1979).
+
+
+\subsubsubsection{Short journal commands}
+Short commands have been created for some of the 
+journals referenced most often.  Authors may use 
+these commands in reference sections as shorthand 
+rather than typing out the journal name.  Note 
+that a comma is automatically included after each 
+journal listing.
+
+To avoid confusion, the following list shows full 
+journal names, but the short commands will produce 
+abbreviations appropriate for AGU bibliography 
+style (thus ``\verb"\apj"'' produces ``\apj''):
+\vspace{-10pt}
+\begin{center}\begin{tabular}{ll}
+\verb"\apj"    & {\it Astrophysical Journal}\\
+\verb"\bams"   & {\it Bulletin of the American Meteorological}\\
+               & \hspace{2em}{\it Society}\\
+\verb"\bssa"   & {\it Bulletin of the Seismological Society of}\\
+               & \hspace{2em}{\it America}\\
+\verb"\dsr1"   & {\it Deep Sea Research Part I}\\
+\verb"\dsr2"   & {\it Deep Sea Research Part II}\\
+\verb"\eos"    & {\it Eos (Transactions of the American}\\
+               & \hspace{2em}{\it Geophysical Union)}\\
+\verb"\epsl"   & {\it Earth and Planetary Sciences Letters}\\
+\verb"\gca"    & {\it Geochimica and Cosmochimica Acta}\\
+\verb"\gji"    & {\it Geophysical Journal International}\\
+\verb"\gjras"  & {\it Geophysical Journal of the Royal}\\
+               & \hspace{2em}{\it Astronomical Society}\\
+\verb"\grl"    & {\it Geophysical Research Letters}\\
+\verb"\gsab"   & {\it Bulletin of the Geological Society of}\\
+               & \hspace{2em}{\it America}\\
+\verb"\jatp"   & {\it Journal of Atmospheric and Terrestrial}\\
+               & \hspace{2em}{\it Physics}\\
+\verb"\jgr"    & {\it Journal of Geophysical Research}\\
+\verb"\jpo"    & {\it Journal of Physical Oceanography}\\
+\verb"\mnras"  & {\it Monthly Notices of the Royal}\\
+               & \hspace{2em}{\it Astronomical Society}\\
+\verb"\mwr"    & {\it Monthly Weather Review}\\
+\verb"\pag"    & {\it Pure and Applied Geophysics}\\
+\verb"\pepi"   & {\it Physics of the Earth and Planetary}\\
+               & \hspace{2em}{\it Interiors}\\
+\verb"\pra"    & {\it Physical Review A: General Physics}\\
+\verb"\prb"    & {\it Physical Review B: Solid State}\\
+\verb"\prc"    & {\it Physical Review C: Nuclear Physics}\\
+\verb"\prd"    & {\it Physical Review D: Particles and}\\
+               & \hspace{2em}{\it Fields}\\
+\verb"\prl"    & {\it Physical Review Letters}\\
+\verb"\qjrms"  & {\it Quarterly Journal of the Royal}\\
+               & \hspace{2em}{\it Meteorological Society}\\
+\verb"\rg"     & {\it Reviews of Geophysics}\\
+\verb"\rs"     & {\it Radio Science}\\
+\verb"\usgsof" & {\it U.S. Geological Survey Open File}\\
+               & \hspace{2em}{\it Report }\\
+\verb"\usgspp" & {\it U.S. Geological Survey Professional}\\
+               & \hspace{2em}{\it Papers}\\
+\end{tabular}
+\end{center}
+
+
+\subsubsection{No reference section}
+Both the \linebreak
+\verb"\end{references}" and 
+\verb"\end{thebibliography}{}" \linebreak
+commands cause manuscript information to print.
+If your manuscript contains no reference section, 
+you must place a \verb"\forcesluginfo" command in the 
+manuscript after the last paragraph of text (or 
+after the acknowledgments, if any).
+
+
+\subsection{Equations}
+
+AGU journal style allows two types of equations: 
+in-text equations and displayed equations.
+
+In-text equations occur within a normal paragraph of
+text.  These equations must not interfere with line
+spacing.  If an in-text equation does affect line
+spacing, it must be coded as a displayed equation.
+
+Displayed equations are single-line or multiline
+equations with extra space between the equation
+and the preceding and following paragraphs of text.
+
+
+\subsubsection{In-text equations}
+
+To create math in normal text, type the 
+equation within single dollar signs (\$), 
+thus \verb"$\pi r^2$" yields $\pi r^2$.
+
+
+\subsubsection{Displayed equations}
+
+\LaTeX's dis-\linebreak played math environments 
+allow displayed equations to be typeset in many 
+ways.  The following three are probably used most.
+
+
+\subsubsubsection{Unnumbered displayed equations}
+
+To create unnumbered displayed equations, type your
+equation between \verb"\begin{displaymath}" and  \linebreak
+\verb"\end{displaymath}" commands (or use the 
+shorter equivalent commands, \verb"\[" and \verb"\]").
+
+
+\subsubsubsection{Numbered displayed equations}
+
+To create numbered displayed equations, type your
+equation between \verb"\begin{equation}" and \linebreak
+\verb"\end{equation}" commands.
+
+
+\subsubsubsection{Aligned and multiline displayed equations}
+
+To create multiline equations or to vertically align
+an equation (for example, a derivation where alignment 
+is wanted on the equal sign), type \linebreak 
+your equation between \verb"\begin{eqnarray}" and \linebreak
+\verb"\end{eqnarray}" commands.
+
+
+\subsubsection{Numbering equations}
+
+By default, \LaTeX\ will number equations sequentially 
+from the beginning to the end of a manuscript.  If you 
+must specify equation numbers, use \verb"\eqnum{#}", 
+where \# is the appropriate equation number, inside 
+an {\tt equation} or {\tt eqnarray} environment.
+\LaTeX's equation counter is not incremented when 
+\verb"\eqnum" is used.
+
+When unnumbered equations are desired, use either the 
+{\tt displaymath} environment (for single-line displayed
+equations) or use a \verb"\nonumber" command with an 
+{\tt eqnarray} environment, (for multiline equations).
+The \verb"\nonumber" command must be placed before the 
+double backslash (\verb"\\").  \LaTeX's equation counter
+is not incremented when \verb"\nonumber" is used.
+
+If the use of \verb"\eqnum" or \verb"\nonumber" causes 
+\LaTeX's equation counter to number equations in the wrong 
+sequence, the counter may be reset with a \linebreak
+\verb"\setcounter{equation}{#}" command, where \#
+is the next desired equation number minus one (if
+the next number is 7, \# should be 6).  This 
+command must be used outside the equation environments.
+
+
+\subsubsection{Lettering equations}
+
+It may be necessary to group related equations together 
+and identify them with letters appended to the same 
+equation number (as opposed to each equation having a 
+separate numeral).  Set such related equations in 
+{\tt equation} or {\tt eqnarray} environments 
+(whichever is appropriate may be used), and place 
+this grouping within a {\tt mathletters} environment.
+See the sample.tex document for examples.
+
+
+\subsubsubsection{Keyboard math symbols}
+
+You may create some math symbols simply by typing the 
+appropriate keyboard command, but most of these commands 
+must appear within a math or equation environment or they 
+will not print correctly.\\
+\verb" +  -  =  <  >  /  :  !  '  |  [  ]  (  )"
+
+%\begin{displaymath}~~ + ~~ - ~~ = ~~ < ~~ > ~~ / ~~ : ~~ ! ~~ ' ~~ | ~~ [ ~~ ] ~~ ( ~~ ) ~~ \end{displaymath}
+
+
+\subsubsubsection{Fractions in displayed equations}
+
+AGU's \LaTeX\ style files contain an alternate command 
+for fractions.  It may be unnecessary to use any command 
+other than the standard \LaTeX\ \verb"\frac" command.
+\LaTeX\ will set fractions in displayed math as built-up 
+fractions.  However, it is sometimes desirable to use 
+case fractions in displayed equations.  In such instances, 
+authors may a \verb"\case" command rather than the 
+\verb"\frac" command.  A shilled fraction is produced 
+without any special markup, as shown:
+\vspace{-4pt}
+\begin{displaymath}
+\renewcommand{\arraystretch}{1.4}
+\begin{array}{llc}
+\mbox{Built-up}    & 
+\verb"\frac{1}{2}" & 
+\displaystyle\frac{1}{2}\\[.5ex]
+\mbox{Case}        & 
+\verb"\case{1}{2}" & 
+\case{1}{2} \\
+\mbox{Shilled}     & 
+\verb"1/2"         & 
+1/2 \\
+\end{array}
+\end{displaymath}
+\vspace{-10pt}
+
+\subsection{Tables}
+
+AGU's \LaTeX\ style files support two table mechanisms:
+(1) A {\tt planotable} environment that facilitates the 
+formatting of lengthy tables, and (2) \LaTeX's 
+standard {\tt table} and {\tt tabular} environments.
+Short tables (smaller than one manuscript page) may 
+be created using either mechanism; tables longer than 
+one page will require the use of {\tt planotable}.
+
+It is possible to create fairly complex tables with 
+arbitrary spacing, straddle heads, rules, etc. in \LaTeX.
+Authors who need to create complicated tables should 
+consult the \LaTeX\ manual [{\it Lamport}, 1985] for 
+details.  Most of \LaTeX's {\tt tabular} capabilities 
+are applicable to {\tt planotables} as well.
+
+
+\subsubsection{Planotables}\label{tbl-sec}
+
+Planotables automatically produce the table lines and
+vertical table spacing required for correct AGU table style.
+In addition, planotables have several capabilities that 
+facilitate the formatting of tables.  For instance, 
+it is possible to break long planotables across pages, 
+and, where tabular tables print at an automatic width,
+authors may choose a specific planotable width.
+
+Type \verb"\begin{planotable}{COLS}", 
+where {\tt COLS} \linebreak 
+sets the justification for each column.
+Choose one letter (``l,'' ``c,'' or ``r'') for each 
+column, indicating left, center, or right justification.
+
+To set a planotable to a specific width, type \linebreak
+\verb"\tablewidth{}", with the desired table width between 
+the curly braces, after the \verb"\begin{planotable}" 
+command.  For instance, to create a single-column table 
+for the {\it Journal of Geophysical Research,} type 
+\verb"\tablewidth{20pc}", where ``20pc'' is 20 picas.
+AGU journals permit a variety of table widths.  See the 
+``Table Data'' information in your General Instruction 
+booklet for the table widths needed for your journal.
+
+Type planotable titles within the curly braces of
+\verb"\tablecaption{}" commands.  Capitalize the first
+letter of each word (except for prepositions, conjunctions,
+and articles that are three letters or shorter).  Do not
+allow table caption lines to hyphenate; use a
+\verb"\protect\\" command to break lines where necessary.
+The \verb"\tablecaption" command automatically generates
+the ``{\bf Table \#.}'' information.  To change table
+numbers, see ``numbering tables'' in section \ref{numtabl}.
+
+Type a \verb"\startdata" command, and then type your table
+data.  The startdata command formats column headings, 
+engages the tabular formatting, and produces the table 
+caption.  Data within a table row are separated by {\tt \&} 
+(ampersand) characters.  The end of each row is indicated 
+with a \verb"\nl" command.  Extra vertical space can be 
+inserted between rows with a \verb"\vspace{}" command 
+(type the desired amount of space between the curly
+braces).
+
+If a planotable is longer than one page, \LaTeX\ will 
+automatically break it across pages.  To force a page 
+break in a particular place, type a \verb"\tablebreak" 
+command.  This command affects the following line of 
+table data (not the line it appears with) as shown 
+in the sample.tex document.
+
+If a cell contains no data, type a \verb"\nodata" 
+command to create a ``no data'' symbol.
+
+
+\subsubsection{Tabular tables}
+
+Tabular tables must begin with a \verb"\begin{table}" 
+command and end with an \verb"\end{table}" command.
+This {\tt table} environment must enclose the table 
+caption, all tabular material, and any footnote or 
+table note information associated with a particular table.
+
+Type tabular table titles within the curly 
+braces of \verb"\caption{}" commands.  Capitalize 
+the first letter of each word (except for prepositions, 
+conjunctions, and articles that are three letters or 
+shorter).  Do not allow table caption lines to 
+hyphenate; use a \verb"\protect\\" command to break 
+lines where necessary.  The \verb"\caption" command 
+will automatically generate the ``{\bf Table \#.}'' 
+information.  To change table numbers, see 
+``numbering tables'' in section \ref{numtabl}.
+
+To begin table data, type \verb"\begin{tabular}{COLS}" 
+where {\tt COLS} sets the justification for each column.
+Choose one letter (``l'', ``c'', or ``r'') for each column,
+indicating left, center, or right justification.  Consult the 
+\LaTeX\ manual [{\it Lamport}, 1985] for details about using 
+a {\tt tabular} environment to prepare tables.  Include only 
+one {\tt tabular} environment within each {\tt table} environment.
+Type \verb"\end{tabular}" after the table data (but before the 
+\verb"\end{table}" command.
+
+Authors must use \verb"\tableline" and spacing commands 
+within tabular tables in order to create correct AGU 
+table style.  The \verb"\tableline" command produces
+a horizontal rule and must be included after the caption,
+after the column headings, and after the table data (but
+before any table footnotes or table comments).  Set at 
+least 6 points of space between each rule and each line 
+of text, including any table notes or footnotes.  AGU style
+does not permit vertical rules.  Use either \verb"\vspace{}" 
+or brace commands (such as \verb"\\[4ex]") to insert 
+space.  Examples of both appear in the last table of the 
+sample.tex document.
+
+
+\subsubsubsection{Notation tables}
+
+If your manuscript contains notation tables, use a level 
+1 head for the word ``Notation'' and use a tabular 
+environment without any rules for the notation information,
+as shown in the sample.tex document.  If you numbered your 
+sections, place a \verb"\setcounter{secnumdepth}{0}" in 
+front of the Notation section head, so it will appear 
+flush left and without numbers.  Set both notation
+columns flush left.
+
+
+\subsubsection{Table column headings}
+
+Table column headings must be enclosed in a \verb"\tablehead" 
+command.  The individual headings then appear within either 
+\verb"\colhead" or \verb"\multicolumn" commands.  Each column 
+of data must have a heading.  The double backslash command 
+(\verb"\\") may be used to end table headings, and extra 
+vertical spacing can be inserted with brace commands 
+(\verb"\\[.5ex]").
+
+It is possible for a complicated table heading to overflow
+the vertical space allotted for the table heading.  The
+fraction of the page allocated for the table heading may be
+changed with \verb"\tableheadfrac".  The {\tt NUM} argument
+to \verb"\tableheadfrac" should be the decimal fraction of
+the page used for heading information.  The default value
+is 0.1, meaning that 10\% of the page height is reserved
+for the table heading.  It should rarely be necessary to
+change this value.
+
+
+\subsubsection{Table footnotes and table comments}
+
+If your table contains material requiring footnotes, use a
+\verb"\tablemark{TAG}" command to indicate the footnote,
+then type the associated information (with a corresponding
+{\tt TAG}) within a \verb"\tablenotetext{TAG}{}" command.
+
+Short table comments can be created using a \linebreak 
+\verb"\tablenotetext{\null}{TEXT}" command, with a \linebreak
+\verb"\null" argument as the tag.  Longer comments may
+be placed within a \verb"\tablecomment{TEXT}" command.
+Lists of table references should use the following
+format: \verb"\tablecomment{References:  Names of your
+references.}"  Only one paragraph of material is permitted 
+at the end of a table, (excluding superscripted footnotes),
+so if both references and notes exist, they should
+be run in together.  See the sample.tex document for 
+examples of table footnotes and comments.
+
+Both \verb"\tablenotetext" and \verb"\tablecomment" 
+commands must appear after the column heading information
+and before the table data; otherwise, they will affect
+indentation of the last table cell.  These commands 
+work with planotables and tabular tables.
+
+\subsubsection{Numbering tables}\label{numtabl}
+
+To choose a specific table number or to add a
+letter before or after a table number, type a 
+\verb"\tablenum{}" command on the line after a 
+\verb"\begin{table}" or \verb"\begin{planotable}" 
+command.  Type the desired table number between 
+the curly braces in the \verb"\tablenum{}" command.
+\linebreak \LaTeX's equation counter is affected 
+when \verb"\tablenum" commands are used.
+
+\subsubsection{Centered table heads}
+AGU's \LaTeX\ style files allow centered, italic 
+headings within planotables.  Type center head 
+text within a \verb"\cutinhead{}" command.  At 
+least two center heads per table are required 
+if any are used.
+
+
+\subsection{Figures and Plates}
+
+Do not incorporate figure or plate captions
+into the main text of your manuscript.  All captions 
+should appear at the end of your submitted manuscript 
+package.  Captions will be placed with the appropriate 
+artwork when AGU staff prepares camera-ready pages.
+
+Use a figure environment to create captions for 
+gray scale or black-and-white line art; use a plate 
+environment to create captions for any color artwork.
+
+See the General Instruction booklet for information on
+submitting artwork.
+
+
+\subsubsection{Figures}
+
+Type \verb"\begin{figure}", type your figure caption 
+text between the curly braces in a \verb"\caption{}" 
+command, then type \verb"\end{figure}".  Each separate 
+figure caption must have at least three commands: a
+\verb"\begin{figure}" command, a \verb"\caption" command, 
+and an \verb"\end{figure}" command, as shown in the 
+sample.tex document.
+
+Several captions may be printed per page, as long 
+as there is sufficient room to cut between the captions.
+
+It may be necessary to use \verb"\clearpage" commands 
+between a long series of captions, since too many 
+captions can cause \LaTeX's memory buffer to overload 
+and crash.  The \verb"\clearpage" command clears out 
+the memory buffer and begins a new page.
+
+AGU asks authors to submit two sets of captions; one 
+set for single-column and one set for double-column 
+figures.  You must type in the first set of captions, 
+but AGU's \LaTeX\ style files automatically generate 
+a second set of captions.  Captions print at the 
+correct single- and double-column widths for your 
+journal (these widths change depending on the 
+document style you choose).
+
+If you need to change the width of a figure caption
+(for instance, to create broadside captions), type a 
+\verb"\figurewidth{}" command, with the desired
+figure width in the curly braces.  When used inside 
+a figure environment, the \verb"\figurewidth" command sets 
+the width of the first set of captions to the specified 
+width.  When used in front of a series of figure captions,
+the \verb"\figurewidth" command affects all following
+caption widths.  Note that \verb"\figurewidth" commands 
+do not affect the automated second set of captions.
+
+Authors may type a \verb"\figurenum{}" command after
+a \verb"\begin{figure}" command to explicitly number a
+figure caption.  Letters or symbols may also be included.
+This command does affect \LaTeX's figure counter.  Figure 
+numbers of the second set of captions will always mirror 
+the numbers of the first set of captions.  To reset 
+\LaTeX's figure counter, type a \verb"\setcounter{figure}{#}" 
+command in front of a \linebreak
+\verb"\begin{figure}" command.  Set the \# to zero if 
+the next desired figure number is one, or to three if the
+next desired figure number is four, etc.  This command 
+affects figure numbers of any following figures.
+
+Figure caption lines may be broken by using a 
+\verb"\protect\linebreak" command.
+
+Be aware that figure width numbering commands may affect 
+following plate captions and vice versa.
+
+
+\subsubsection{Plates}
+
+The plate environment and plate commands are 
+similar to the figure environment and figure 
+commands, with the word ``plate'' substituted for 
+the word ``figure.''  Thus type plate captions in 
+a \verb"\caption{}" command, which must appear within 
+\verb"\begin{plate}" and %\linebreak 
+\verb"\end{plate}" commands.  Use a \verb"\platenum{}" 
+command to choose a specific plate number, and use a 
+\verb"\platewidth{}" command if you need to choose a 
+plate width.  Place a \verb"\setcounter{plate}{#}" 
+command, where \# is the next desired equation number 
+minus one, outside of a plate environment to reset 
+the plate counter (this will affect plate numbers 
+of all following plates).
+
+The \verb"\plate" environment automatically generates
+a second set of double-column width plate captions.
+
+Be aware that plate width numbering commands may affect 
+following figure captions and vice versa.
+
+
+\subsection{Concluding the File}
+
+The last thing in your input file is the \linebreak
+\verb"\end{document}" command.  \LaTeX\ 
+cannot process a file without this command.
+
+
+\section{Callouts}
+
+AGU asks authors to include callouts to indicate the first 
+significant time a figure or table is mentioned (these show 
+AGU where to place the graphics).  Callouts appear in the 
+right margin of the original and any photocopies of your 
+camera-ready manuscript.
+
+Authors may either code callouts into the input file, 
+or write them on the camera-ready pages using black ink 
+(callouts will not be published).  Make sure all callouts 
+appear in numerical sequence.
+
+To create a callout, type \verb"\callout{}" around 
+the text of a called-out item.  Any type within the 
+curly braces will print both in the text of your 
+manuscript and in a margin box to the right of your 
+text.  You do not need to type called-out text twice.
+See the sample.tex document for examples.
+
+
+\section{Formatting Text in \LaTeX}\label{formtext}
+
+Some text characters require special attention 
+so that \LaTeX\ can properly format a file.
+
+The following characters must be preceded by a 
+backslash or \LaTeX\ will interpret them as commands:
+\begin{quote}
+~~~~~~~~~\$~~~\&~~~\%~~~\#~~~\_~~~\{~~~and~~~\}
+\end{quote}
+must be typed
+\begin{center}
+\begin{quote}
+~~~~~~\verb"\$"~~~\verb"\&"~~~\verb"\%"~~~\verb"\#"
+~~~\verb"\_"~~~\verb"\{"~~~and~~~\verb"\}".
+\end{quote}
+\end{center}
+
+\LaTeX\ interprets all double quotes as closing quotes.
+Therefore quotation marks must be typed as pairs of 
+opening and closing single quotes, for example, 
+{\tt ``quoted text.''}
+
+Note that \LaTeX\ will not recognize greater than or
+less than symbols unless they are typed within math
+commands (\verb"$>$" or \verb"$<$").
+
+
+\subsection{Line and Paragraph Spacing}
+
+The ends of words and sentences are marked by white 
+space.  It does not matter how many spaces are typed; 
+one is as good as 100.  \LaTeX\ treats the end of a 
+line in the input file as a space, not as a new line
+or a new paragraph.
+
+To create a new paragraph, leave one or more empty 
+line(s) between the old paragraph and the new paragraph.
+
+
+\subsubsection{Double spacing and single spacing}
+
+Authors may wish to adjust vertical spacing within a 
+preprint; for instance, double spacing text while 
+single spacing tables.  To alternate between single 
+and double spacing, use \verb"\singlespace" and 
+\verb"\doublespace" commands.
+
+
+\subsection{Line Breaks and Hyphenation}
+
+If you need to break a line and maintain full justification,
+use a \verb"\linebreak" command.  To break a line without
+justification, use a double backslash command 
+(\verb"\\").  Fragile arguments, such as section heads,
+figure captions, or table captions, will not allow 
+line breaks unless they are preceded by a {\tt \protect} 
+command.  Thus, \verb"\protect\\" is appropriate for 
+breaking level 1 and level 2 heads (since they are 
+justified left, ragged right) and \verb"\protect\linebreak"
+is appropriate for breaking level 3 and level 4 heads 
+(since they have full justification).
+
+\LaTeX\ takes care of most hyphenation automatically,
+but some words are not included in the hyphenation table.
+These words and other bad breaks caused by too much or
+too little text on a line must be corrected by the author.
+Use optional hyphens (\verb"\-") whenever possible.  When
+\LaTeX\ requires a hyphen, the optional hyphen will appear
+in the printout; otherwise, the word will appear unhyphenated.
+(This is particularly useful when text is changed late in the
+typesetting process.)
+
+If a word requiring hyphenation occurs often in your 
+manuscript, place a \hyphenation{} command in the 
+preamble of your *.tex file; this will add the hyphenated 
+words to {\LaTeX}'s hyphenation table.  For example, 
+\verb"\hyphenation{geo-magnetism earth-quakes}".
+
+Words that normally appear hyphenated, such as 
+``author-prepared,'' may be hyphenated as usual 
+(i.e., no special codes are required) but do 
+not allow hyphenated words to break across lines in 
+your input file, or \LaTeX\ will leave an extra space 
+between the hyphen and the second half of the word.
+Note that \LaTeX\ will not hyphenate a word that already 
+contains a hyphen, so if ``author-prepared'' occurs 
+near the end of a line you may have to provide an optional 
+hyphen (\verb"author-pre\-pared") or the word ``prepared'' 
+will print outside the margins.
+
+\subsection{Bold and Italic Type}
+
+To create boldface text, type an open curly brace,
+a \verb"\bf" command, the text you want boldfaced, and
+a close curly brace:  \verb"{\bf" {\bf This text is 
+boldface} \verb"}".
+
+To create italic text, type an open curly brace,
+an \verb"\it" command, the text you want italicized, and
+a close curly brace:  \verb"{\it" {\it This text is 
+italicized} \verb"}".
+
+\LaTeX\ automatically italicizes text within math or equation 
+modes.  If you need normal (nonitalic) type within a math or
+equation environment, use a \verb"\rm" command.  (For example, 
+\verb"$J_{\rm Hf}t$" produces $J_{\rm Hf}(t)$).
+
+To create boldface and italic type, use \LaTeX's 
+\verb"\protect" and \verb"\boldmath" commands and place
+the text inside math mode within curly braces: \linebreak 
+\verb"{$\protect \boldmath" 
+{$\protect \boldmath Bold\ Italic\ Text $} \verb"$}"
+
+
+\section{Fonts}
+AGU accepts manuscripts published in ``Computer Modern,'' 
+\LaTeX's default typeface.  If authors have the ability
+to select a different typeface, a ``Times Roman,'' ``Times
+New Roman,'' or ``Times'' typeface is also acceptable.
+
+Authors with Postscript printers may use AGU's \LaTeX\ 
+style files to produce a Times Roman typeface.  Authors 
+(or their system managers) must locate and install a dvips 
+program.  Dvips is a freely redistributable PostScript 
+driver for device independent files.  The program can 
+be found on several different anonymous ftp sites
+(including Comprehensive \TeX\ Archive Networks such as 
+pip.shsu.edu or ftp.tex.ac.uk).  Once the program is 
+correctly installed, authors should include the word 
+``times'' in the optional argument to the document
+style.
+\begin{center}
+\begin{quote}
+\verb"\documentstyle[times,jgrga]{article}"
+\end{quote}
+\end{center}
+Note that the {\tt times} option uses a great deal of 
+memory, and that dvips is rather difficult to install.
+
+
+\section{Cross-referencing}
+
+Cross-referencing equations, tables, and figures in 
+text uses ``tags,'' which are defined by the author.
+Use a \verb"\label{TAG}" command to define an item 
+and \verb"\ref{TAG}" command to refer to the labeled 
+item.  Tags may be chosen by the author, but each 
+\verb"\label" tag must match the corresponding 
+\verb"\ref" tag.
+
+Place \verb"\label" commands immediately after 
+the item being labeled.  References to page numbers 
+should not be made, since published page numbers 
+are different from author's pages.
+
+Table numbers are generated by the \verb"\caption" 
+command, not by the \verb"\begin{}" command, so if 
+you wish to \verb"\label" tables and figures, the 
+\verb"\label" command should appear after the 
+\verb"\caption". 
+
+See examples of \verb"label" and \verb"ref" commands in 
+the sample.tex document.
+
+\LaTeX\ keeps track of labeling commands, cross-reference
+information, and counters (such as equation, table, or 
+figure counters) by maintaining an auxiliary file in the 
+same working directory as the source file.  The auxiliary
+file will have an extension of {\tt .aux}.  This file 
+should not be deleted, since subsequent \LaTeX\ processing 
+uses the auxiliary file to number items and to create 
+references.  This auxiliary file mechanism makes it 
+necessary to run \LaTeX\ on your input file more than 
+once.  This will resolve cross-reference information 
+properly.  If changes are made that affect the number 
+or the placement of equations, tables, or figure captions,
+\LaTeX\ will issue a warning message that advises users 
+to ``rerun to get cross-references right.'' If this occurs,
+you should \LaTeX\ your file again.  If the error message
+appears after two successive \LaTeX\ runs, it is likely
+that a reference has been made to an undefined label.
+
+Some older versions of \LaTeX\ do not have enough
+memory to run AGU's \LaTeX\ style files without pausing
+at undefined references the first time a file is
+{\LaTeX}ed.  Either press [Enter] each time this occurs
+in the first \LaTeX\ run, or type \verb"\input{update.tex}"
+in front of the \verb"\begin{document}" command.  The
+``update.tex'' file is part of AGU's \LaTeX\ style file
+package and is available on the kosmos.agu.org ftp site.
+
+
+\section{Abstract Supplement (for \protect\\
+\protect\boldmath $JGR$--\protect\boldmath 
+$Space~Physics$ only)}
+
+{\it JGR--Space Physics} requires authors to submit 
+an abstract supplement with each camera-ready manuscript.
+Abstract supplements appear in the {\it JGR--Space Physics}
+subsets.  Text of abstract supplements must be 
+identical to the text of the abstract published 
+with your camera-ready {\it JGR--Space Physics} article. 
+
+To generate an abstract supplement, type \linebreak
+\verb"\printabstract" in front of the 
+\verb"\end{document}" command.  \LaTeX\ will then 
+automatically copy any text within the 
+\verb"\begin{abstract}" and \verb"\end{abstract}" 
+environment, format it in Abstract Supplement style, 
+and print it at the end of your \LaTeX\ document.
+
+The \verb"\printabstract" command works only with 
+{\tt jgrga.sty}; it will cause all other substyles 
+to crash.
+
+
+\section{Additional Documentation}
+
+The \verb"sample.tex" document is a comprehensive 
+example requiring nearly all the capabilities of AGU's
+\LaTeX\ style file package (in terms of commands as well
+as formatting).  It also contains comments that describe
+the purpose of the markup.
+
+This user guide ({\tt\jobname.tex}) was also created 
+using commands from AGU's \LaTeX\ style files, although 
+it is not the best example of a scientific paper.
+
+A number of commands described in the preceding sections
+are standard \LaTeX\ commands, and the reader who is 
+unfamiliar with them may refer to the \LaTeX\ manual
+[{\it Lamport}, 1985] for details.  A cribsheet listing
+all the \LaTeX\ commands (and some pertinent plain \TeX\
+commands) with short descriptions of each is published
+by the \TeX\ Users Group [{\it Botway and Biemesderfer},
+1989].
+
+Authors interested in \TeX\ (rather than \LaTeX) should 
+read the {\it\TeX book} [{\it Knuth}, 1984], probably more 
+than once.  There is a good deal of general information 
+about typography in this source.  Also, many details of 
+mathematical typography are discussed in a book by 
+{\it Swanson} [1971].
+
+
+\clearpage
+\appendix
+\section{\hspace{9pt} Appendix: Special Symbols}
+
+AGU's \LaTeX\ style files contain an assortment
+of commands for creating special symbols.  Some
+are native to \LaTeX\ and others are a function
+of AGU's \LaTeX\ style files.
+
+\subsection{\LaTeX\ Symbols}
+\LaTeX\ has a wide variety of special symbols for 
+which markup commands have already been defined.
+These range from diacritics to exotic mathematical 
+operators.  Tables A1--A12 list these commands
+by grouping symbols together more or less according 
+to function.  Some of these symbols are primarily 
+for use in text; most of them are mathematical 
+symbols and can only be used in \LaTeX's 
+math mode.  These tables are excerpted from the 
+{\it \LaTeX\ Command Summary} [{\it Botway and 
+Biemesderfer,} 1989].
+
+
+\subsection{Additional Symbols}
+
+Some of the additional symbol definitions come from the
+{\it Astronomy and Astrophysics\/} package \linebreak
+{[{\it Springer-Verlag}, 1989]}; some are contributions 
+from individuals.  We have tried to select a tractable 
+number that were useful and also somewhat difficult to 
+get right:
+
+\begin{center}
+\begin{tabular}{ll@{\hspace*{3em}}ll}
+\verb"\deg"    & \deg    & \verb"\sq"        & \sq \\
+\verb"\sun"    & \sun    & \verb"\earth"     & \earth \\
+\verb"\arcmin" & \arcmin & \verb"\arcsec"    & \arcsec \\
+\verb"\fd"     & \fd     & \verb"\fh"        & \fh \\
+\verb"\fm"     & \fm     & \verb"\fs"        & \fs \\
+\verb"\fdg"    & \fdg    & \verb"\farcm"     & \farcm \\
+\verb"\farcs"  & \farcs  & \verb"\fp"        & \fp \\
+\verb"\micron" & \micron & \verb"$\lesssim$" & $\lesssim$ \\
+\end{tabular}
+\end{center}
+
+Most of these commands can be used in running text as 
+well as when setting mathematical expressions.  The 
+\verb"\lesssim" and \verb"\gtrsim" commands can only 
+be used in math mode, which is logical since they are 
+relations.
+
+When discussing atomic species, ionization levels 
+can be indicated with the following command:
+\begin{quote}
+\verb"\ion{ELEMENT}{LEVEL}"
+\end{quote}
+The ionization state is specified as the second 
+argument, and should be given as a numeral.
+For example, \ion{Ca}{3} is specified by typing 
+\verb"\ion{Ca}{3}".
+
+\begin{references}
+\reference 
+   Botway, L., and C. Biemesderfer, 
+   {\it \LaTeX\ Command Summary},
+   \TeX\ Users Group, Providence, R. I., 1989.
+ 
+\reference 
+   Knuth, D., {\it The \TeX book}, 
+   Addison-Wesley, Reading, Mass., 1984.
+
+\reference 
+   Lamport, L., 
+   {\it \LaTeX: A Document Preparation System\/},
+   Addison-Wesley, Reading, Mass., 1985.
+
+\reference 
+   Springer-Verlag, 
+   {\it Springer-Verlag \TeX\ AA Macro Package}, 
+   Springer-Verlag, New York, 1989.
+
+\reference 
+   Springer-Verlag, 
+   {\it Springer-Verlag \LaTeX\ AA Macro Package}, 
+   Springer-Verlag, New York, 1990.
+
+\reference 
+   Swanson, E., \, 
+   {\it Mathematics \, Into \, Type}, \,
+   Am. Math. Soc., Providence, R. I., 1979.
+\end{references}
+\end{article}
+
+\clearpage
+\setcounter{table}{0}
+
+\begin{table}
+\tablenum{A1}
+\caption{Text-Mode Accents}
+\tablenotetext{\null}{Note that repeated 
+  column heads do not follow AGU style.} 
+\begin{tabular}{cccccc}
+& & & & & \\[-15pt]
+\tableline
+& & & & & \\[-5pt]
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{c}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{c}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{c}{Command} \\[4pt]
+\tableline
+& & & & & \\[-6pt]
+\`{o}         & \verb"\`{o}"        & \={o}         & 
+\verb"\={o}"  & \t{oo}              & \verb"\t{oo}" \\
+\'{o}         & \verb"\'{o}"        & \.{o}         & 
+\verb"\.{o}"  & \c{o}               & \verb"\c{o}"  \\
+\^{o}         & \verb"\^{o}"        & \u{o}         &
+\verb"\u{o}"  & \d{o}               & \verb"\d{o}"  \\
+\"{o}         & \verb"\""\verb"{o}" & \v{o}         & 
+\verb"\v{o}"  & \b{o}               & \verb"\b{o}"  \\
+\~{o}         & \verb"\~{o}"        & \H{o}         &
+\verb"\H{o}"  &                     &               \\[4pt]
+\tableline
+& & & \\[-3pt]
+\end{tabular}
+\end{table}
+
+\vspace{3pc}
+
+\begin{table}
+\caption{National Symbols}
+\begin{tabular}{ccclcl}
+& & & & & \\[-15pt]
+\tableline
+& & & & & \\[-5pt]
+\multicolumn{1}{c}{Symbol}  & 
+\multicolumn{1}{c}{Command} & 
+\multicolumn{1}{c}{Symbol}  & 
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{c}{Symbol}  & 
+\multicolumn{1}{l}{Command} \\[4pt]
+\tableline
+& & & & & \\[-6pt]
+\oe            & \verb"\oe" & \aa           & 
+\verb"   \aa"  & \l         & \verb"   \l"  \\
+\OE            & \verb"\OE" & \AA           & 
+\verb"   \AA"  & \L         & \verb"   \L"  \\
+\ae            & \verb"\ae" & \o            & 
+\verb"   \o"   & \ss        & \verb"   \ss" \\
+\AE            & \verb"\AE" & \O            & 
+\verb"   \O"   &            &               \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\vspace{3pc}
+
+\begin{table}
+\caption{Miscellaneous Symbols}
+\begin{tabular}{clcccl}
+& & & & & \\[-15pt]
+\tableline
+& & & & & \\[-5pt]
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{c}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} \\[4pt]
+\tableline
+& & & & & \\[-6pt]
+\dag        & \verb"\dag"  & \S                & 
+\verb"\S"   & \copyright   & \verb"\copyright" \\
+\ddag       & \verb"\ddag" & \P                & 
+\verb"\P"   & \pounds      & \verb"\pounds"    \\
+\#          & \verb"\#"    & \$                & 
+\verb"\$"   & \%           & \verb"\%"         \\
+\&          & \verb"\&"    & \_                & 
+\verb"\_"   &              &                   \\
+\{          & \verb"\{"    & \}                & 
+\verb"\}"   &              &                   \\[4pt]
+\tableline
+& & & & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\vspace{3pc}
+
+\begin{table}
+\caption{Math-Mode Accents}
+\begin{tabular}{cl@{\hspace{4em}}cl}
+& & & \\[-15pt]
+\tableline
+& & & \\[-5pt]
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} \\[4pt]
+\tableline
+& & & \\[-6pt]
+$\hat{a}$   & \verb"\hat{a}"   & 
+$\dot{a}$   & \verb"\dot{a}"   \\
+$\check{a}$ & \verb"\check{a}" & 
+$\ddot{a}$  & \verb"\ddot{a}"  \\
+$\tilde{a}$ & \verb"\tilde{a}" & 
+$\breve{a}$ & \verb"\breve{a}" \\
+$\acute{a}$ & \verb"\acute{a}" & 
+$\bar{a}$   & \verb"\bar{a}"   \\
+$\grave{a}$ & \verb"\grave{a}" & 
+$\vec{a}$   & \verb"\vec{a}"   \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\clearpage
+
+\begin{table}
+\caption{Greek Letters (Math Mode)}
+\begin{tabular}{cl@{\hspace{3em}}cl}
+& & & \\[-15pt]
+\tableline
+& & & \\[-5pt]
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} \\[4pt]
+\tableline
+& & & \\[-6pt]
+$\alpha$      & \verb"\alpha"      & 
+$\nu$         & \verb"\nu"         \\
+$\beta$       & \verb"\beta"       & 
+$\xi$         & \verb"\xi"         \\
+$\gamma$      & \verb"\gamma"      & 
+$o$           & \verb"o"           \\
+$\delta$      & \verb"\delta"      & 
+$\pi$         & \verb"\pi"         \\
+$\epsilon$    & \verb"\epsilon"    & 
+$\rho$        & \verb"\rho"        \\
+$\zeta$       & \verb"\zeta"       & 
+$\sigma$      & \verb"\sigma"      \\
+$\eta$        & \verb"\eta"        & 
+$\tau$        & \verb"\tau"        \\
+$\theta$      & \verb"\theta"      & 
+$\upsilon$    & \verb"\upsilon"    \\
+$\iota$       & \verb"\iota"       & 
+$\phi$        & \verb"\phi"        \\
+$\kappa$      & \verb"\kappa"      & 
+$\chi$        & \verb"\chi"        \\
+$\lambda$     & \verb"\lambda"     & 
+$\psi$        & \verb"\psi"        \\
+$\mu$         & \verb"\mu"         & 
+$\omega$      & \verb"\omega"      \vspace{1em}\\
+$\varepsilon$ & \verb"\varepsilon" & 
+$\varsigma$   & \verb"\varsigma"   \\
+$\vartheta$   & \verb"\vartheta"   & 
+$\varphi$     & \verb"\varphi"     \\
+$\varrho$     & \verb"\varrho"     & 
+              & \vspace{1em}       \\
+$\Gamma$      & \verb"\Gamma"      & 
+$\Sigma$      & \verb"\Sigma"      \\
+$\Delta$      & \verb"\Delta"      & 
+$\Upsilon$    & \verb"\Upsilon"    \\
+$\Theta$      & \verb"\Theta"      & 
+$\Phi$        & \verb"\Phi"        \\
+$\Lambda$     & \verb"\Lambda"     &
+$\Psi$        & \verb"\Psi"        \\
+$\Xi$         & \verb"\Xi"         & 
+$\Omega$      & \verb"\Omega"      \\
+$\Pi$         & \verb"\Pi"         & 
+              &                    \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\vspace{3pc}
+
+\begin{table}
+\caption{Binary Operations (Math Mode)}
+\begin{tabular}{cl@{\hspace{3em}}cl}
+& & & \\[-15pt]
+\tableline
+& & & \\[-5pt]
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} \\[4pt]
+\tableline
+& & & \\[-6pt]
+$\pm$              & \verb"\pm"              & 
+$\cap$             & \verb"\cap"             \\
+$\mp$              & \verb"\mp"              & 
+$\cup$             & \verb"\cup"             \\
+$\setminus$        & \verb"\setminus"        & 
+$\uplus$           & \verb"\uplus"           \\
+$\cdot$            & \verb"\cdot"            & 
+$\sqcap$           & \verb"\sqcap"           \\
+$\times$           & \verb"\times"           & 
+$\sqcup$           & \verb"\sqcup"           \\
+$\ast$             & \verb"\ast"             & 
+$\triangleleft$    & \verb"\triangleleft"    \\
+$\star$            & \verb"\star"            & 
+$\triangleright$   & \verb"\triangleright"   \\
+$\diamond$         & \verb"\diamond"         & 
+$\wr$              & \verb"\wr"              \\
+$\circ$            & \verb"\circ"            & 
+$\bigcirc$         & \verb"\bigcirc"         \\
+$\bullet$          & \verb"\bullet"          & 
+$\bigtriangleup$   & \verb"\bigtriangleup"   \\
+$\div$             & \verb"\div"             & 
+$\bigtriangledown$ & \verb"\bigtriangledown" \\
+$\lhd$             & \verb"\lhd"             & 
+$\rhd$             & \verb"\rhd"             \\
+$\vee$             & \verb"\vee"             & 
+$\odot$            & \verb"\odot"            \\
+$\wedge$           & \verb"\wedge"           & 
+$\dagger$          & \verb"\dagger"          \\
+$\oplus$           & \verb"\oplus"           & 
+$\ddagger$         & \verb"\ddagger"         \\
+$\ominus$          & \verb"\ominus"          & 
+$\amalg$           & \verb"\amalg"           \\
+$\otimes$          & \verb"\otimes"          & 
+$\unlhd$           & \verb"\unlhd"           \\
+$\oslash$          & \verb"\oslash"          & 
+$\unrhd$           & \verb"\unrhd"           \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\vspace{3pc}
+
+\begin{table}
+\caption{Relations (Math Mode)}
+\begin{tabular}{cl@{\hspace{4em}}cl}
+& & & \\[-15pt]
+\tableline
+& & & \\[-5pt]
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} \\[4pt]
+\tableline
+& & & \\[-6pt]
+$\leq$        & \verb"\leq"        & 
+$\geq$        & \verb"\geq"        \\
+$\prec$       & \verb"\prec"       & 
+$\succ$       & \verb"\succ"       \\
+$\preceq$     & \verb"\preceq"     & 
+$\succeq$     & \verb"\succeq"     \\
+$\ll$         & \verb"\ll"         & 
+$\gg$         & \verb"\gg"         \\
+$\subset$     & \verb"\subset"     & 
+$\supset$     & \verb"\supset"     \\
+$\subseteq$   & \verb"\subseteq"   & 
+$\supseteq$   & \verb"\supseteq"   \\
+$\sqsubset$   & \verb"\sqsubset"   & 
+$\sqsupset$   & \verb"\sqsupset"   \\
+$\sqsubseteq$ & \verb"\sqsubseteq" & 
+$\sqsupseteq$ & \verb"\sqsupseteq" \\
+$\in$         & \verb"\in"         & 
+$\ni$         & \verb"\ni"         \\
+$\vdash$      & \verb"\vdash"      & 
+$\dashv$      & \verb"\dashv"      \\
+$\smile$      & \verb"\smile"      & 
+$\mid$        & \verb"\mid"        \\
+$\frown$      & \verb"\frown"      & 
+$\parallel$   & \verb"\parallel"   \\
+$\neq$        & \verb"\neq"        & 
+$\perp$       & \verb"\perp"       \\
+$\equiv$      & \verb"\equiv"      & 
+$\cong$       & \verb"\cong"       \\
+$\sim$        & \verb"\sim"        & 
+$\bowtie$     & \verb"\bowtie"     \\
+$\simeq$      & \verb"\simeq"      & 
+$\propto$     & \verb"\propto"     \\
+$\asymp$      & \verb"\asymp"      & 
+$\models$     & \verb"\models"     \\
+$\approx$     & \verb"\approx"     & 
+$\doteq$      & \verb"\doteq"      \\
+              &                    & 
+$\Join$       & \verb"\Join"       \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\vspace{3pc}
+
+\begin{table}
+\caption{Variable-Sized Symbols (Math Mode)}
+\begin{tabular}{ccl@{\hspace{2em}}ccl}
+& & & \\[-15pt]
+\tableline
+& & & \\[-5pt]
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{c}{Display Style} & 
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{c}{Display Style} &
+\multicolumn{1}{l}{Command}  \\[4pt]
+\tableline
+& & & \\[-6pt]
+$\sum$                     & $\displaystyle \sum$       &
+$\hbox{\verb"\sum"}$       & $\bigcap$                  &
+$\displaystyle \bigcap$    & $\hbox{\verb"\bigcap"}$
+\vspace{4pt}\\ 
+$\prod$                    & $\displaystyle \prod$      &
+$\hbox{\verb"\prod"}$      & $\bigcup$                  &
+$\displaystyle \bigcup$    & $\hbox{\verb"\bigcup"}$
+\vspace{4pt}\\ 
+$\coprod$                  & $\displaystyle \coprod$    &
+$\hbox{\verb"\coprod"}$    & $\bigsqcup$                &
+$\displaystyle \bigsqcup$  & $\hbox{\verb"\bigsqcup"}$
+\vspace{4pt}\\ 
+$\int$                     & $\displaystyle \int$       &
+$\hbox{\verb"\int"}$       & $\bigvee$                  &
+$\displaystyle \bigvee$    & $\hbox{\verb"\bigvee"}$
+\vspace{4pt}\\ 
+$\oint$                    & $\displaystyle \oint$      &
+$\hbox{\verb"\oint"}$      & $\bigwedge$                &
+$\displaystyle \bigwedge$  & $\hbox{\verb"\bigwedge"}$
+\vspace{4pt}\\ 
+$\bigodot$                 & $\displaystyle \bigodot$   &
+$\hbox{\verb"\bigodot"}$   & $\bigotimes$               &
+$\displaystyle \bigotimes$ & $\hbox{\verb"\bigotimes"}$ 
+\vspace{4pt}\\ 
+$\bigoplus$                & $\displaystyle \bigoplus$  &
+$\hbox{\verb"\bigoplus"}$  & $\biguplus$                &
+$\displaystyle \biguplus$  & $\hbox{\verb"\biguplus"}$  \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\vspace{3pc}
+
+\begin{table}
+\caption{Delimiters (Math Mode)}
+\begin{tabular}{cl@{\hspace{2em}}cl}
+& & & \\[-15pt]
+\tableline
+& & & \\[-5pt]
+\multicolumn{1}{l}{Symbol} & 
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{l}{Symbol} & 
+\multicolumn{1}{l}{Command} \\[4pt]
+\tableline
+& & & \\[-6pt]
+$($            & \verb"("            & 
+$)$            & \verb")"            \\
+$[$            & \verb"["            & 
+$]$            & \verb"]"            \\
+$\{$           & \verb"\{"           & 
+$\}$           & \verb"\}"           \\
+$\lfloor$      & \verb"\lfloor"      & 
+$\rfloor$      & \verb"\rfloor"      \\
+$\lceil$       & \verb"\lceil"       &
+$\rceil$       & \verb"\rceil"       \\
+$\langle$      & \verb"\langle"      & 
+$\rangle$      & \verb"\rangle"      \\
+$/$            & \verb"/"            & 
+$\backslash$   & \verb"\backslash"   \\
+$\vert$        & \verb"\vert"        & 
+$\Vert$        & \verb"\Vert"        \\
+$\uparrow$     & \verb"\uparrow"     & 
+$\Uparrow$     & \verb"\Uparrow"     \\
+$\downarrow$   & \verb"\downarrow"   & 
+$\Downarrow$   & \verb"\Downarrow"   \\
+$\updownarrow$ & \verb"\updownarrow" & 
+$\Updownarrow$ & \verb"\Updownarrow" \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\vspace{3pc}
+
+\begin{table}
+\caption{Function Names (Math Mode)}
+\begin{tabular}{l@{\hspace{2pc}}l@{\hspace{2pc}}
+                l@{\hspace{2pc}}l@{\hspace{2pc}}}
+& & & \\[-15pt]
+\tableline
+& & & \\[-6pt]
+\verb"\arccos" &   \verb"\csc" &
+\verb"\ker"    &  \verb"\min"  \\
+\verb"\arcsin" &   \verb"\deg" &
+\verb"\lg"     &  \verb"\Pr"   \\
+\verb"\arctan" &   \verb"\det" &
+\verb"\lim"    &  \verb"\sec"  \\
+\verb"\arg"    &   \verb"\dim" &
+\verb"\liminf" &  \verb"\sin"  \\
+\verb"\cos"    &   \verb"\exp" &
+\verb"\limsup" &  \verb"\sinh" \\
+\verb"\cosh"   &   \verb"\gcd" &
+\verb"\ln"     &  \verb"\sup"  \\
+\verb"\cot"    &   \verb"\hom" &
+\verb"\log"    &  \verb"\tan"  \\
+\verb"\coth"   &   \verb"\inf" &
+\verb"\max"    &  \verb"\tanh" \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\vspace{6pc}
+
+\begin{table}
+\caption{Arrows (Math Mode)}
+\begin{tabular}{clcl}
+& & & \\[-15pt]
+\tableline
+& & & \\[-5pt]
+\multicolumn{1}{c}{Symbol} &
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} \\[4pt]
+\tableline
+& & & \\[-6pt]
+$\leftarrow$          & \verb"\leftarrow"          & 
+$\longleftarrow$      & \verb"\longleftarrow"      \\
+$\Leftarrow$          & \verb"\Leftarrow"          & 
+$\Longleftarrow$      & \verb"\Longleftarrow"      \\
+$\rightarrow$         & \verb"\rightarrow"         & 
+$\longrightarrow$     & \verb"\longrightarrow"     \\
+$\Rightarrow$         & \verb"\Rightarrow"         & 
+$\Longrightarrow$     & \verb"\Longrightarrow"     \\
+$\leftrightarrow$     & \verb"\leftrightarrow"     & 
+$\longleftrightarrow$ & \verb"\longleftrightarrow" \\
+$\Leftrightarrow$     & \verb"\Leftrightarrow"     & 
+$\Longleftrightarrow$ & \verb"\Longleftrightarrow" \\
+$\mapsto$             & \verb"\mapsto"             & 
+$\longmapsto$         & \verb"\longmapsto"         \\ 
+$\hookleftarrow$      & \verb"\hookleftarrow"      & 
+$\hookrightarrow$     & \verb"\hookrightarrow"     \\
+$\leftharpoonup$      & \verb"\leftharpoonup"      & 
+$\rightharpoonup$     & \verb"\rightharpoonup"     \\
+$\leftharpoondown$    & \verb"\leftharpoondown"    & 
+$\rightharpoondown$   & \verb"\rightharpoondown"   \\
+$\rightleftharpoons$  & \verb"\rightleftharpoons"  & 
+$\leadsto$            & \verb"\leadsto"            \\
+$\uparrow$            & \verb"\uparrow"            & 
+$\Updownarrow$        & \verb"\Updownarrow"        \\
+$\Uparrow$            & \verb"\Uparrow"            & 
+$\nearrow$            & \verb"\nearrow"            \\
+$\downarrow$          & \verb"\downarrow"          & 
+$\searrow$            & \verb"\searrow"            \\
+$\Downarrow$          & \verb"\Downarrow"          &
+$\swarrow$            & \verb"\swarrow"            \\
+$\updownarrow$        & \verb"\updownarrow"        & 
+$\nwarrow$            & \verb"\nwarrow"            \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\vspace{3pc}
+
+\begin{table}
+\caption{Miscellaneous Symbols (Math Mode)}
+\begin{tabular}{cl@{\hspace{3em}}cl}
+& & & \\[-15pt]
+\tableline
+& & & \\[-5pt]
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} & 
+\multicolumn{1}{c}{Symbol} & 
+\multicolumn{1}{l}{Command} \\[4pt]
+\tableline
+& & & \\[-6pt]
+$\aleph$       & \verb"\aleph"       & 
+$\prime$       & \verb"\prime"       \\
+$\hbar$        & \verb"\hbar"        & 
+$\emptyset$    & \verb"\emptyset"    \\
+$\imath$       & \verb"\imath"       & 
+$\nabla$       & \verb"\nabla"       \\
+$\jmath$       & \verb"\jmath"       & 
+$\surd$        & \verb"\surd"        \\
+$\ell$         & \verb"\ell"         & 
+$\top$         & \verb"\top"         \\
+$\wp$          & \verb"\wp"          & 
+$\bot$         & \verb"\bot"         \\
+$\Re$          & \verb"\Re"          & 
+$\|$           & \verb"\|"           \\
+$\Im$          & \verb"\Im"          & 
+$\angle$       & \verb"\angle"       \\
+$\partial$     & \verb"\partial"     & 
+$\triangle$    & \verb"\triangle"    \\
+$\infty$       & \verb"\infty"       & 
+$\backslash$   & \verb"\backslash"   \\
+$\Box$         & \verb"\Box"         & 
+$\Diamond$     & \verb"\Diamond"    \\
+$\forall$      & \verb"\forall"      & 
+$\sharp$       & \verb"\sharp"       \\
+$\exists$      & \verb"\exists"      & 
+$\clubsuit$    & \verb"\clubsuit"    \\
+$\neg$         & \verb"\neg"         & 
+$\diamondsuit$ & \verb"\diamondsuit" \\
+$\flat$        & \verb"\flat"        & 
+$\heartsuit$   & \verb"\heartsuit"   \\
+$\natural$     & \verb"\natural"     & 
+$\spadesuit$   & \verb"\spadesuit"   \\
+$\mho$         & \verb"\mho"         & 
+               &                     \\[4pt]
+\tableline
+& & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+\end{document}

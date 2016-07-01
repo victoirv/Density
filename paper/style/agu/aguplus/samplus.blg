@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99c (Web2C 7.2)
+The top-level auxiliary file: samplus.aux
+The style file: agu.bst
+Reallocated wiz_functions (elt_size=4) to 3000 items from 0.
+Database file #1: sample.bib
+You've used 5 entries,
+            2789 wiz_defined-function locations,
+            1010 strings with 8754 characters,
+and the built_in function-call counts, 3760 in all, are:
+= -- 465
+> -- 123
+< -- 3
++ -- 72
+- -- 30
+* -- 255
+:= -- 383
+add.period$ -- 5
+call.type$ -- 5
+change.case$ -- 24
+chr.to.int$ -- 5
+cite$ -- 15
+duplicate$ -- 340
+empty$ -- 199
+format.name$ -- 43
+if$ -- 755
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 6
+newline$ -- 19
+num.names$ -- 20
+pop$ -- 119
+preamble$ -- 1
+purify$ -- 20
+quote$ -- 0
+skip$ -- 272
+stack$ -- 0
+substring$ -- 171
+swap$ -- 286
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 42
+warning$ -- 0
+while$ -- 23
+width$ -- 0
+write$ -- 57

@@ -1,0 +1,21 @@
+
+%%  update.tex -- August 6, 1996 version
+%
+%%  revisions by Amy Hendrickson, TeXnology Inc.
+
+%   You may not need this file unless you have 
+%   a very old version of LaTeX 2.09.
+%
+%   This file keeps old versions of LaTeX 2.09 
+%   from becoming confused with \reset@font and 
+%   thus crashing at every undefined label or 
+%   citation.  
+%
+%   If you do need to include this file, 
+%   type \input{update.tex} in front of your 
+%   \begin{document} command in your *.tex
+%   file and then continue as you would ordinarily.
+
+\makeatletter
+\let\reset@font\empty
+\makeatother

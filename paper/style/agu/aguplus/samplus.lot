@@ -1,0 +1,18 @@
+\begin{planotable}
+{cll}
+  \tablewidth{20pc}
+\tablecaption
+{\label{tab:sum}The History of America from Discovery to Present}
+\tablehead{\colhead{Date} & \colhead{Event} & \colhead{Ref.}}
+\startdata
+1492 & Discovery & \citet{colu92}
+  \nl
+1776 & Independence & \citet{jame76}
+  \nl
+1954 & Nothing much & \citet{smit54}
+  \nl
+1999 & Present & \citet{phil99}
+
+\end{planotable}
+\doappendix
+\stepcounter{section}

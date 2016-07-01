@@ -1,0 +1,148 @@
+This is TeX, Version 3.14159 (Web2C 7.2) (format=latex 1998.10.11)  13 OCT 2000 14:45
+**samplus.tex
+(samplus.tex
+LaTeX2e <1998/06/01>
+Babel <v3.6j> and hyphenation patterns for american, french, german, italian, n
+ohyphenation, loaded.
+(aguplus.cls
+Document Class: aguplus 1999/08/19 1.6b (PWD)
+(/usr/share/texmf/tex/latex/base/article.cls
+Document Class: article 1998/05/05 v1.3y Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size10.clo
+File: size10.clo 1998/05/05 v1.3y Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+\@maxsep=\dimen103
+\@dblmaxsep=\dimen104
+ (jgrga.sty
+AGU JGR galley substyle, v4 <August 6, 1996>.
+(agu10.sty
+ AGU10 -- August 6, 1996 Version 
+\affilnum=\count87
+\totalaffils=\count88
+\startnum=\count89
+\onecolwide=\dimen105
+\twocolwide=\dimen106
+\ponecolwide=\dimen107
+\ptwocolwide=\dimen108
+)
+\@fmwidth=\dimen109
+\savefmwidth=\dimen110
+\@bodywidth=\dimen111
+\twowide=\dimen112
+\saveparindent=\dimen113
+\@cprtype=\count90
+\@rhdwidth=\dimen114
+\@slugcmmntwidth=\dimen115
+\c@author=\count91
+\@temptokenb=\toks14
+\c@cureqno=\count92
+\c@plate=\count93
+\lecurrentfam=\count94
+\absinsert=\insert233
+\@temptokena=\toks15
+\@temptokenb=\toks16
+\pt@ncol=\count95
+\pt@width=\dimen116
+\ampcount=\count96
+\tabbox=\box26
+\totaltabdp=\dimen117
+\insidetablewd=\dimen118
+\finalcolcount=\count97
+\tabwidth=\dimen119
+\labnum=\count98
+\labloopnum=\count99
+\tablebox=\box27
+\tabnotecount=\count100
+\loopnotecount=\count101
+)
+\@title=\box28
+\wpt@width=\dimen120
+LaTeX Info: Redefining \cite on input line 979.
+\c@NAT@ctr=\count102
+\oldvsize=\dimen121
+)
+`AGU' copyright 1999.
+(samplus.aux)
+\openout1 = `samplus.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 82.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 82.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 90.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 90.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 90.
+\tf@pof=\write3
+\openout3 = `samplus.lof'.
+
+
+
+LaTeX Warning: Marginpar on page 1 moved.
+
+[1
+
+]
+\tf@pot=\write4
+\openout4 = `samplus.lot'.
+
+ [2]
+Overfull \hbox (3.60988pt too wide) in paragraph at lines 261--265
+[]\OT1/cmr/bx/n/9 Acknowledgments. \OT1/cmr/m/n/9 The au-thors thank their col-
+leagues
+ []
+
+(samplus.bbl
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 25.
+) [3] [4
+
+] (samplus.lof
+Underfull \hbox (badness 1231) in paragraph at lines 19--19
+[]\OT1/cmr/bx/n/10 Plate 1. []\OT1/cmr/m/n/10 This litho-graph shows famed ex-p
+lorer
+ []
+
+) [5
+
+] (samplus.lot [6
+
+
+]) [7] (samplus.lof [8]) [9] (samplus.tex) [10]
+(samplus.aux) ) 
+Here is how much of TeX's memory you used:
+ 932 strings out of 10906
+ 8675 string characters out of 71921
+ 63202 words of memory out of 263001
+ 3901 multiletter control sequences out of 10000+0
+ 10115 words of font info for 35 fonts, out of 200000 for 1000
+ 15 hyphenation exceptions out of 1000
+ 29i,10n,25p,138b,346s stack positions out of 300i,100n,500p,30000b,4000s
+
+Output written on samplus.dvi (10 pages, 12132 bytes).

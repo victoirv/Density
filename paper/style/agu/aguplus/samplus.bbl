@@ -1,0 +1,25 @@
+\begin{thebibliography}{5}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{{\it Columbus\/}(1492)}]{colu92}
+Columbus, C., {\it How {I} Discovered {America}\/}, Hispanic Press, Barcelona,
+  1492.
+
+\bibitem[{{\it Green et~al.\/}(1900){\it Green, Fred, and Norbert\/}}]{gree00}
+Green, R.~J., U.~P. Fred, and W.~P. Norbert, Things that go bump in the night,
+  {\it Psych. Today\/}, {\it 46\/}, 345--678, 1900.
+
+\bibitem[{{\it James et~al.\/}(1776){\it James, Harris, and
+  Wollops\/}}]{jame76}
+James, K., G.~Harris, Jr., and W.~Wollops, {American} independence and
+  magnetism, {\it Revol. Tracts\/}, {\it 32\/}, 34--55, 1776.
+
+\bibitem[{{\it Phillips\/}(1999)}]{phil99}
+Phillips, T.~P., Possible influence of the magnetosphere on {American} history,
+  {\it J. Oddball Res.\/}, {\it 98\/}, 1000--1003, 1999.
+
+\bibitem[{{\it Smith and Weston\/}(1954)}]{smit54}
+Smith, J.~G., and H.~K. Weston, Nothing particular in this year's history, {\it
+  J. Geophys. Res.\/}, {\it 2\/}, 14--15, 1954.
+
+\end{thebibliography}

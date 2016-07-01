@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>Welcome to the AGU</title>
+<link rel="stylesheet" href="/pubs/error.css">
+</head>
+<body>
+
+<h3><a href="/"><img alt="e-rights" border="0" src="http://www.agu.org/agu_foot.gif"></a>&nbsp;&nbsp;&nbsp;Welcome to AGU. Please Log in.</h3>
+<p> If you have problems logging in contact <a href="mailto:service@agu.org">service@agu.org</a>
+
+<p>
+
+<form action="/erights/PLogin" method = post>
+
+<INPUT TYPE=HIDDEN NAME=badLoginURL VALUE="/login/blogin.html">
+<INPUT TYPE=HIDDEN NAME=redirectURL VALUE="/">User ID:<br>
+<input size=25 name=userName value=""><br>
+<font size="-1"><i>(AGU membership/identification number)</i></font>
+
+<br><br>Password:<br>
+<input type="password" size=25 name=passwordField value="">
+<br>
+<font size="-1"><i>(Lowercase last name only OR assigned password)</i></font>
+</p>
+<input size=15 type=submit value="Submit" name=Submit>
+
+</form>
+
+<br>
+<!--
+<a href="PPV2.html">Purchase a Single Article</a>
+<a href="changelogin.html">Click here to change your User ID and Password</a>
+-->
+
+<!--#include virtual="contact.htm"-->
+
+</body>
+</html>
+

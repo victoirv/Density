@@ -1,0 +1,23 @@
+\begin{figure}
+
+  \figbox{8cm}{4cm}{Paste map here}
+  \caption[]{\label{fig:dis}
+Columbus's voyages to the New World between 1492 and 1504.}
+
+\end{figure}
+\begin{plate}
+
+  \platewidth{35pc}
+  \figbox*{}{}{\rule[-9cm]{0pt}{18cm}Paste painting here}
+% If an eps graphics file is available, use this line instead:
+% \figbox*{}{}{\includegraphics[width=35pc]{cc1492.eps}}
+  \caption{\label{pla:columbus}
+This lithograph shows famed explorer Christopher Columbus in 1492 departing
+on his first voyage in search of a quicker route to Asia. Here, Columbus
+takes leave of Ferdinand~V and Isabella, the king and queen of Castile, who
+sponsored his first expedition.
+(THE BETTMANN ARCHIVE)}
+
+\end{plate}
+\doappendix
+\stepcounter{section}

@@ -1,0 +1,1543 @@
+%%  SAMPLE.TEX - A LaTeX document template for GRL manuscripts
+%%  Jan 21, 1997 version
+%%  
+   % This document demonstrates how to use commands 
+   % described in the aguguide.tex user manual to create GRL
+   % manuscripts for on-line submission.  Most 
+   % instructions and explanations are commented out; 
+   % thus they will not appear if you LaTeX this file 
+   % and view it as a sample document.
+
+   % You may use this file as a LaTeX document template for 
+   % your GRL manuscript by replacing the sample text with 
+   % your own text and deleting any extraneous commands.
+
+
+%%   PLEASE NOTE:
+%%   1) Don't include any extra style files.
+%%   2) Use LaTeX "thebibliography" environment for the reference
+%%      list.  Use \cite to cite references in the main text.
+%%
+%% ------------------------------------------------------ %%
+
+   % The first item in a LaTeX file should be a \documentstyle
+   % command to declare the overall style of the paper.  The
+   % \documentstyle line that is relevant for GRL manuscripts
+   % is shown below. 
+
+\documentstyle[12pt,agums]{article}
+    % The agums (manuscript) style creates double-spaced wide-margined 
+    % manuscripts.  Use it to create copy to submit to 
+    % GRL editors for first-time review.
+
+%\documentstyle[grlga]{article}
+    % The grlga (galley) style can be used to create 
+    % camera-ready pages. You can use this to measure 
+    % the size of your manuscript.
+
+%% ------------------------------------------------------ %%
+%%
+%%  PREAMBLE
+%%
+%%
+   % Running heads, manuscript dates, manuscript 
+   % information, copyright information, author 
+   % addresses and slug comments are placed in the 
+   % preamble (before the \begin{document} command).  
+   %
+   % AGU's style files cause the actual text to be 
+   % typeset after the reference section.  If you 
+   % have no reference section, you must include a 
+   % \forcesluginfo command or the preamble information
+   % will not print.
+
+
+%% ------------------------------------------------------ %%
+%
+%%  RUNNING HEADS
+%
+%% ------------------------------------------------------ %%
+
+
+\lefthead{KAY ET AL.}
+    % Type only the last name(s) of the author(s) in all
+    % capital letters between the curly brackets in the 
+    % \lefthead command.  If your manuscript has three 
+    % or more authors, type only the last name of the 
+    % first author followed by "ET AL."
+
+\righthead{LATEX SAMPLE DOCUMENT FOR GRL MANUSCRIPTS}
+    % Type a short version of the article title (or 
+    % include the entire title, if it will fit) in 
+    % all capital letters between the curly brackets 
+    % in the \righthead command.  You may type a total 
+    % of 60 characters (including letters, punctuation, 
+    % and spaces) between the curly brackets in the 
+    % \lefthead or \righthead commands (i.e., 10 
+    % characters in one command and 50 in the other
+    % is acceptable).
+
+
+%% ------------------------------------------------------ %%
+%
+%%  MANUSCRIPT DATES
+%
+%% ------------------------------------------------------ %%
+
+\received{January~3,~1996}
+\revised{February~27,~1996}
+\accepted{March~31,~1996}
+   % Editors supply the received, revised, and 
+   % accepted dates.  Type your manuscript dates 
+   % between the curly brackets in the \received, 
+   % \revised, and \accepted commands.  Use the 
+   % date format shown above.
+
+%% ------------------------------------------------------ %%
+%
+%%  MANUSCRIPT INFORMATION  (GRL authors may leave these 
+%%                           commands blank)
+%
+%% ------------------------------------------------------ %%
+
+\paperid{}
+   % Leave this empty.
+
+\cpright{AGU}{1996}
+   % \cpright{PD}{1996}
+   % \cpright{Crown}{1996}
+   % If your paper is AGU copyright, choose the 
+   % "AGU" \cpright command.  If your paper is in 
+   % the public domain, choose the "PD" \cpright 
+   % command.  If your paper is Crown copyright, 
+   % choose the "Crown" \cpright command.  If you 
+   % are not sure which copyright to choose, please 
+   % contact your production coordinator.  You must 
+   % choose one of these copyright options.
+
+\ccc{0148-0227/97/97GL-00000\$05.00}
+   % Type your Copyright Clearance Center code between
+   % the curly brackets in the \ccc command.  Crown
+   % copyrights and manuscripts in the Public Domain
+   % have no "\ccc{}" information.  Be sure to place
+   % a backslash in front of the dollar sign or it
+   % will be interpreted as a math command.
+
+%% ------------------------------------------------------ %%
+%
+%%  AUTHOR ADDRESSES 
+%
+%% ------------------------------------------------------ %%
+
+\authoraddr{J. Blythe, 
+Observation Center for Prediction of 
+Earthquakes and Volcanic Eruptions, 
+Faculty of Science, Tohoku University, 
+Sendai 980, Japan.}
+
+\authoraddr{M. Chen and K. Jamison, 
+U.S. Geological Survey, 
+345 Middlefield Road, 
+MS 977, Menlo Park, CA  94025.  
+(e-mail: k\_jamison@gold.wr.usgs.gov)}
+
+\authoraddr{W.~F. Johnson, G.~M. Kay, 
+T. Ryan, J. Smith, L. Song, and S.~C. Wilson, 
+Department of Geology and Geophysics,
+Woods Hole Oceanographic Institution, 
+Woods Hole, MA  02543.  (e-mail: 
+wj@red.whoi.edu; gk@blue.whoi.edu; 
+tr@blue.whoi.edu; js@red.whoi.edu; 
+ls@red.whoi.edu; sw@red.whoi.edu)}
+
+   % For author postal addresses, group authors 
+   % by affiliation and list them in alphabetical 
+   % order.  Names include first initial only, 
+   % optional middle initial, and last name.  If
+   % available, include e-mail addresses as shown.
+   %
+   % E-mail addresses may be broken over a period 
+   % or after the @ sign.  If your e-mail address 
+   % includes an underscore, do not forget
+   % to place a backslash in front of it or it will 
+   % be interpreted as a command (see e-mail in 
+   % second \authoraddr for example).  You may add 
+   % additional \authoraddr commands if necessary.
+   % 
+   % Note that author addresses include complete 
+   % postal address information, while author 
+   % affiliations include only department, 
+   % institution, town, and state (if state is 
+   % not included in the name of the institution)
+   % or country (if not the United States).
+
+%% ------------------------------------------------------ %%
+%
+%%  SLUG COMMENTS (optional)
+%
+%% ------------------------------------------------------ %%
+
+\slugcomment{To appear in the {\it Geophysical Research  
+Letters}, 1996.}
+  % Slug comments appear only in manuscript and 
+  % preprint styles, not in the camera-ready styles.
+
+
+%% ------------------------------------------------------ %%
+%
+%%  CITE COMMANDS WITH OLD VERSION OF LATEX 2.09
+%
+%% ------------------------------------------------------ %%
+
+  % \input{update.tex}
+
+   % ONLY if you are using a VERY OLD version of LaTeX 2.09 
+   % and include \cite commands, LaTeX may have trouble 
+   % with the \reset@font command.  If so, LaTeX will pause 
+   % at every undefined citation the first time the input 
+   % file is LaTeXed.  Authors may either press [Enter] 
+   % each time this occurs in their first LaTeX run, or 
+   % they may type \input{update.tex} in front 
+   % of the \begin{document} command.  The "update.tex" file 
+   % is available on the kosmos.agu.org anonymous ftp site.
+
+%% ------------------------------------------------------ %%
+%
+%%  NUMBERING YOUR SECTIONS
+%
+%% ------------------------------------------------------ %%
+
+\setcounter{secnumdepth}{4}
+
+   % If you want LaTeX to automatically number your 
+   % sections, type \setcounter{secnumdepth}{4} in
+   % the preamble of your input file, as shown. If 
+   % you do not want section numbers, type
+   % \setcounter{secnumdepth}{0}.
+  
+%% ------------------------------------------------------ %%
+%%
+%%  \BEGIN{DOCUMENT} and FRONT MATTER
+%%
+%%
+   % The body of the paper starts with the \begin{document}
+   % command, which is followed by the front matter (title,
+   % author, affiliation, and abstract).
+
+\begin{document}
+
+
+%% ------------------------------------------------------ %%
+%
+%%  TITLE
+%
+%% ------------------------------------------------------ %%
+
+\title{Sample document for authors using \LaTeX\ \\ 
+to prepare GRL manuscripts}
+
+  % Type the title of your manuscript between the 
+  % curly brackets in a \title command.  Capitalize
+  % only acronyms, first letter of the first word, 
+  % first letter of proper nouns, first letter of 
+  % the first word after colons, and first letter 
+  % of the first word of a subtitle.  If the title 
+  % exceeds one line, break it so that the first line
+  % is longer than the second line; break the title 
+  % before articles, prepositions, and conjunctions.  
+  % To break the title, type a double backslash where
+  % you want the break to occur, as shown above.
+
+
+%% ------------------------------------------------------ %%
+%
+%%  AUTHOR NAMES, AFFILIATIONS, and ALTERNATE AFFILIATIONS
+%
+%% ------------------------------------------------------ %%
+
+\author{Geoffrey M. Kay, 
+ Karen Jamison,\altaffilmark{1}
+ William F. Johnson, 
+ Thomas Ryan,\altaffilmark{2} \\
+ Sara C. Wilson, and Justin Smith}
+%
+\affil{Woods Hole Oceanographic Institution, 
+ Woods Hole, Massachusetts}
+
+\author{J. Blythe and M. Chen\altaffilmark{1}}
+%
+\affil{Observation Center for Prediction of 
+ Earthquakes and Volcanic Eruptions, Faculty 
+ of Science, Tohoku University, Sendai, Japan}
+
+\author{L. Song}
+%
+\affil{Woods Hole Oceanographic Institution, 
+ Woods Hole, Massachusetts}
+
+\altaffiltext{1}{Now at U.S. Geological Survey, 
+ Menlo Park, California.}
+
+\altaffiltext{2}{Also at Observation Center for 
+ Prediction of Earthquakes and Volcanic Eruptions, 
+ Faculty of Science, Tohoku University, Sendai, Japan.}
+
+%%%% Type author names between the curly brackets in 
+   % the \author command(s).  Author names consist of
+   % first name or initial, optional middle name or 
+   % initial, and last name.  If it is necessary to 
+   % break lines, make sure you break them between 
+   % two author's names (using \linebreak commands).
+
+%%%% Type affiliation information between the curly 
+   % brackets in an \affil command that immediately 
+   % follows each \author command.
+
+%%%% If your authors have alternate affiliations, 
+   % type the footnote number between the curly 
+   % brackets in an \altaffilmark command and type 
+   % the alternate affiliation information in 
+   % \altaffiltext commands below the \author and 
+   % \affil commands, as shown.  There is a separate
+   % \altaffiltext for each alternate affiliation 
+   % indicated above.  This information prints
+   % as footnotes after the reference section in 
+   % your camera-ready copy, and will be placed 
+   % on the bottom left-hand corner of the first 
+   % page of your published manuscript.
+
+%% ------------------------------------------------------ %%
+%
+%%  FOOTNOTED AFFILIATIONS    (For more than three 
+%%                             author/affiliation groups.)
+%
+%% ------------------------------------------------------ %%
+
+   % Important:  If your manuscript contains more than three 
+   % author and affiliation groupings, all of the affiliate 
+   % information should be footnoted using \altaffilmark{} 
+   % commands as shown.  Please include commas inside the 
+   % footnote numbers.
+
+   % \author{   S. Kurtz,\altaffilmark{1} 
+   %            Evan R. King,\altaffilmark{1,2} 
+   %            A. E. Simon,\altaffilmark{1,3} 
+   %            R. J. Hall,\altaffilmark{4} 
+   %            C. D. Qian,\altaffilmark{5} 
+   %            Jason M. Albert,\altaffilmark{5}
+   %            G. G. Kaye,\altaffilmark{6} 
+   %            and Antony Ignatov\altaffilmark{7}     }
+   % 
+   % \altaffiltext{1}{Astronomy Department, 
+   %                  University of California, Berkeley.}
+   % \altaffiltext{2}{Also at Physics Department, 
+   %                  University of California, Berkeley.}
+   % \altaffiltext{3}{Now at National Center for Atmospheric
+   %                  Research, Boulder, Colorado.} 
+   % \altaffiltext{4}{Space Telescope Science Institute, 
+   %                  Baltimore, Maryland}
+   % \altaffiltext{5}{Woods Hole Oceanographic Institution, 
+   %                  Woods Hole, Massachusetts}
+   % \altaffiltext{6}{Space Telescope Science Institute,
+   %                  Baltimore, Maryland}
+   % \altaffiltext{7}{Department of Astronomy, California 
+   %                  Institute of Technology, Pasadena.}
+
+
+%% ------------------------------------------------------ %%
+%
+%%  ABSTRACT
+%
+%% ------------------------------------------------------ %%
+
+\begin{abstract}
+This tutorial includes codes and explanations which 
+will not print in an ordinary \LaTeX\ document.  Also 
+included are samples of marked-up equations, tables, 
+and figure captions.  In order to use this tutorial 
+you should view or print it using an editor or a word 
+processing program.
+\end{abstract}
+
+   % The abstract consists of a one-paragraph summary
+   % of your paper, 250 words or fewer.  Do not cite
+   % references unless absolutely necessary.  If you
+   % must cite, place the citation in square brackets
+   % using italic type (this abstract citation format
+   % is new).  Do not include displayed material.
+
+%% ------------------------------------------------------ %%
+%
+%%  SECTION HEADS
+%
+%% ------------------------------------------------------ %%
+
+%%%% LEVEL 1 HEADS
+   %
+   % Use \section{} commands to identify Level 1 heads; 
+   % type the appropriate Level 1 head between the curly 
+   % brackets, as shown.
+   %
+   % Capitalize the first letter of each word (except for 
+   % prepositions, conjunctions, and articles that are 3 
+   % letters or shorter).
+   %
+   % Do not hyphenate Level 1 heads.  To break lines, 
+   % type \protect\\ where you want a break to occur.
+   %
+   % If you wish to number your sections, see the
+   % "Numbering Sections" information in the preamble,
+   % above.
+
+% \section{Introduction}
+
+%%%% LEVEL 2 HEADS
+   % 
+   % Use \subsection{} command to identify Level 2
+   % heads; type the appropriate Level 2 head between 
+   % the curly brackets, as shown.
+   % 
+   % Capitalize the first letter of each word (except for
+   % prepositions, conjunctions, and articles that are 3
+   % letters or shorter).
+   %
+   % Do not hyphenate Level 2 heads.  To break lines,
+   % type \protect\\ where you want a break to occur.
+
+% \subsection{This is a Level Two Head}
+
+
+%%%% LEVEL 3 HEADS
+   %
+   % Use the command \subsubsection{} to identify
+   % Level 3 heads; type the appropriate head between
+   % the curly brackets, as shown.
+   %
+   % Capitalize only acronyms, the first letter of the
+   % first word, first letter of proper nouns, and first
+   % letter of the first word after colons.
+   %
+   % Hyphenation is permitted in Level 3 heads, if needed.
+   %
+   % You must include at least two Level 3 heads per
+   % Level 2 head.
+
+% \subsubsection{This is a level three head}
+
+
+%%%% LEVEL 4 HEADS
+   %
+   % Use the command \subsubsubsection{} to identify
+   % Level 4 heads; type the appropriate head between
+   % the curly brackets, as shown.
+   %
+   % Capitalize only acronyms, the first letter of the
+   % first word, first letter of proper nouns, and first
+   % letter of the first word after colons.
+   %
+   % Hyphenation is permitted in Level 4 heads, if needed.
+   %
+   % A level 4 head cannot directly follow a Level
+   % 3 head; there must be a least one sentence between
+   % the two heads.
+
+% \subsubsubsection{This is a level four head}
+
+
+%% ------------------------------------------------------ %%
+%%
+%%  TEXT
+%%
+%%
+   % The body of the paper must start with a 
+   % \begin{article} command, and you must include 
+   % an \end{article} command after the bibliography 
+   % section (otherwise your text will not print at 
+   % the proper column width).
+
+   % The first \section{} command is optional.  You may 
+   % delete the command or you may replace the word 
+   % "Introduction" with text appropriate to your article.
+
+\begin{article}
+\section{Introduction}
+
+   A focal problem today in the dynamics of globular 
+clusters is core collapse.  It has been predicted by 
+theory for decades \cite{baker77,barbour77,bell72}, but 
+observation has been less alert to the phenomenon.  
+For many years the central brightness peak in M15 
+\cite{brosche77,yamazaki78} seemed a unique anomaly.
+
+\section{Ragged Right Level 1 Head Longer Than One 
+Line With a Flush Left Wraparound}
+
+Then \markcite{\it Higgins} [1968] suggested 
+a central peak in NGC 6397, and limited photographic 
+surveys were conducted, including NGC 6624, whose sharp center had 
+often been noted \cite{namias74}.
+
+\section{Ragged Right Level 1 Head Longer Than One Line 
+With a Flush Left Wraparound Line and 
+$\protect \boldmath Italic $ Text}
+   All our observations were short direct exposures with CCDs.  
+At Central Observatory we used a TI 500$\times$500 chip and a 
+GEC 575$\times$385 on the 1-m Nickel reflector.  The only 
+filter available at Central was red.  At CTIO we used a GEC 
+575$\times$385 with $B, V,$ and $R$ filters and an RCA 
+512$\times$320 with $U, B, V, R,$ and $I$ filters on the 
+1.5-m reflector.  
+
+   The CCD images are unfortunately not always suitable 
+for very poor clusters or for clusters with large cores, 
+as seen in section \ref{text}.  
+
+A number of star count profiles \cite{poppe95} as well 
+as photoelectric profiles 
+\cite{mcmullen78} were reviewed.  In a 
+few cases we judged normality by eye estimates on one 
+of the Sky Surveys. 
+
+%% ------------------------------------------------------ %%
+   %
+   % The next section shows \subsection commands. 
+   % If subsections, subsubsections or subsubsubsections
+   % are included in your manuscript, AGU style requires 
+   % authors to use at least two per section (this is 
+   % standard etiquette for any outline).
+   % 
+   % The next section also shows displayed math 
+   % environments (as described in the AGU guide), 
+   % and several mathematical typesetting examples.
+   %
+%% ------------------------------------------------------ %%
+
+\section{A Level One Head}\label{text}
+   It has been realized that helicity amplitudes provide
+a convenient means for diagram evaluations.  These
+amplitude level techniques are particularly convenient
+for calculations involving many diagrams, where the
+usual trace techniques for the amplitude squared become
+unwieldy.  Our calculations use helicity techniques
+\cite{stair76}; 
+we summarize below.
+
+\subsection{Formalism}
+A three-level amplitude in $ e^+e^-$ collisions can be
+expressed in terms of fermion strings of the form
+\begin{equation}
+   \bar v(p_2,\sigma_2)P_{-\tau}\not\!a_1\not\!a_2
+   \cdots\not\!a_nu(p_1,\sigma_1)\;,
+\end{equation}
+where $p$ and $\sigma$ label the initial $e^{\pm}$
+four momenta and helicities $(\sigma = \pm 1)$,
+$\not\!a_i=a^\mu_i\gamma_\nu$, and 
+$P_\tau=\frac{1}{2}(1+\tau\gamma_5)$ is a chirality 
+projection operator $(\tau = \pm1)$.  The $a^\mu_i$ 
+may be formed from particle four momenta, gauge boson
+polarization vectors, or fermion strings with an 
+uncontracted Lorentz index associated with final state 
+fermions.
+
+\subsection{A Level Two Head}
+In the chiral representation the $\gamma$ matrices 
+are expressed in terms of $2\times 2$ Pauli matrices 
+$\sigma$ and the unit matrix 1 as
+
+%% ------------------------------------------------------ %%
+%
+%%  EQUATIONS
+%
+%% ------------------------------------------------------ %%
+
+%%%% Single-line equations are centered.  For multiline 
+   % equations, break each line at a sign of operation 
+   % (+, -, etc.) if possible, with the sign of operation 
+   % on the new line.  Indent second and subsequent lines 
+   % to align with the first character following the equal 
+   % sign on the first line.  If the left side of the 
+   % equation is longer than one-third of the line, 
+   % subsequent lines should be indented the same amount 
+   % as a text paragraph indent (0.38cm, 0.15").  Set the 
+   % equation number flush right on the last line of the 
+   % equation with at least 4 mm (5/16 inch, 1 pica) of 
+   % space between the equation and the equation number;  
+   % if there is not enough room, set the number flush 
+   % right on a separate line immediately following the
+   % equation.  If you have two equations with the same 
+   % equation number, set them over three lines of type, 
+   % with the equation number appearing flush right and 
+   % in parentheses on the second line.  
+
+%%%% To create multi-line equations, use the
+   % \begin{eqnarray} and \end{eqnarray} environment
+   % to break equations into two or more lines, as
+   % demonstrated below.  Use an \hspace{} command to
+   % insert horizontal space into your LaTeX document.
+   % Place an appropriate unit of measure between the
+   % curly braces; you may have to experiment to achieve
+   % the correct amount of space.  LaTeX accepts several
+   % units of measurement (cm, in, etc.); you may use
+   % whichever unit you prefer.
+
+\begin{eqnarray}
+   x_{1} & = & (x - x_{0}) \cos \Theta + 
+        (y - y_{0}) \sin \Theta \\ 
+   y_{1} & = & -(x - x_{0}) \sin \Theta + 
+        (y - y_{0}) \cos \Theta.
+\end{eqnarray}
+
+%%%% You may change equation numbering by resetting 
+   % the equation counter or by explicitly numbering 
+   % an equation.
+   % 
+   % To explicitly number an equation, type \eqnum{}
+   % (with the desired number between the brackets) 
+   % after the \begin{equation} or \begin{eqnarray}
+   % command.  The \eqnum{} command will affect only
+   % the equation it appears with; LaTeX will number
+   % any equations appearing later in the manuscript 
+   % according to the equation counter.
+   %
+   % To reset the equation counter, place the following 
+   % command in front of your equation(s).
+
+\setcounter{equation}{0}
+
+   % Set the equation counter to 0 if the next 
+   % number needed is 1, or set it to 7 if the 
+   % next number needed is 8, etc.
+   %
+   % The \setcounter{equation} command does affect 
+   % equations appearing later in the manuscript.
+
+%%%% If you have a multi-line equation that needs only
+   % one equation number, use a \nonumber command in 
+   % front of the double backslashes (\\) as shown in
+   % equations above and below.
+
+%%%% To add letters after equation numbers, place your 
+   % equation or eqnarray within a \begin{mathletters} 
+   % and \end{mathletters} environment.  This environment
+   % can enclose several equations:
+
+\begin{mathletters}
+   \begin{eqnarray}
+      \gamma^\mu & = & \left(\begin{array}{cc} 0 & 
+      \sigma^\mu_+ \\ 
+      \sigma^\mu_- & 0 \end{array} \right), 
+      \;\gamma = \left( \begin{array}{cc} 
+      \! \! -1 & \! \! 0 \\ \! \! 0 & \! \! 1  
+      \end{array} \right), \\ & & \nonumber \\
+      \sigma^\mu_{\pm} & = & ({\bf 1} ,\pm \sigma),
+   \end{eqnarray}
+giving 
+   \begin{eqnarray}
+      \not\!a= \left(\begin{array}{cc}0 & 
+      (\not\!a)_+\\(\not\!a)_- & 
+      0\end{array}\right), 
+      \;(\not\!a)_\pm=a_\mu\sigma^\mu_\pm\;,
+   \end{eqnarray}
+\end{mathletters}
+
+\subsubsection{Level three heads capitalize only 
+the first letter of the first word, indent one-em 
+space, and end with a period}
+The spinors are expressed in terms 
+of two-component Weyl spinors as
+\begin{equation}
+\eqnum{17b}      %% <-- Note the use of \eqnum{}
+   u=\left(\begin{array}{c}(u)_-\\(u)
+   _+\end{array}\right),\;v={\bf 
+   (}(v)^\dagger_+{\bf ,} \; (v)^\dagger_-{\bf )}\;.
+\end{equation}
+All four cameras had scales of the order of 0.4 arc 
+sec/pixel, and our field sizes were around 3 arc min.  
+The Weyl spinors are given in terms of helicity 
+eigen\-states $\chi_\lambda(p)$ with $\lambda=\pm1$ by
+\begin{eqnarray}
+   u(p, \lambda)_\pm & = & 
+   (E\pm\lambda|{\bf p}|)^{1/2}\chi_\lambda(p)\;, 
+   \nonumber \\ & & \\v(p,\lambda)_\pm & = & 
+   \pm\lambda(E\mp\lambda|
+   {\bf p}|)^{1/2}\chi_{-\lambda}(p). \nonumber
+\end{eqnarray}
+
+\subsubsubsection{Level four heads capitalize only 
+the first letter of the first word, indent one-em 
+space, and end with a colon}  
+These spinors are expressed in terms 
+of two-component Weyl spinors as 
+\begin{equation}
+   u=\left(\begin{array}{c}(u)_-\\(u)
+   _+\end{array}\right),\;v={\bf (}(v)^\dagger_+{\bf ,} 
+   \; (v)^\dagger_-{\bf )}\;.
+\end{equation}
+The Weyl spinors are given in terms of helicity 
+eigen\-states $\chi_\lambda(p)$ with $\lambda=\pm1$ 
+by
+\begin{eqnarray}u(p, \lambda)_\pm & = & 
+   (E\pm\lambda|{\bf p}|)^{1/2}\chi_\lambda(p)\;, 
+   \nonumber \\ & & \\v(p,\lambda)_\pm & = & 
+   \pm\lambda(E\mp\lambda|{\bf 
+   p}|)^{1/2}\chi_{-\lambda}(p). \nonumber
+\end{eqnarray}
+The CCD images are unfortunately not always suitable 
+for very poor clusters or for clusters with large cores.
+
+%% ------------------------------------------------------ %%
+   %
+   % In the next sections we have a reference to one of 
+   % the tables (tables appear at the end of the LaTeX 
+   % document).  There is also some additional math-related 
+   % markup.  In the second paragraph, note the use of 
+   % in-text math material between the dollar signs ($$) 
+   % including a couple of the miscellaneous symbol 
+   % commands defined in AGU's style file package.
+   % 
+   % Note that keyboard math commands (such as greater 
+   % than or less than) must appear within a math or 
+   % equation environment or they will not print properly 
+   % (i.e., $<$ or $>$).  All other math symbols (such as 
+   % similar) must be created with appropriate LaTeX symbol 
+   % commands (i.e., $\sim$ instead of ~) or they will not 
+   % print properly.  See the aguguide.tex document for a 
+   % complete list of keyboard and LaTeX math symbols.
+   %
+%% ------------------------------------------------------ %%
+
+\section{Floating Material}
+Consider a task that computes profile parameters for 
+a modified Lorentzian of the following form:
+\begin{equation}
+   I = \frac{1}{1 + d_{1}^{P (1 + d_{2} )}}, 
+\end{equation}
+where
+\begin{mathletters}
+\begin{eqnarray}
+   d_{1} = \frac{3}{4} \sqrt{ \left( \begin{array}{c} 
+   \frac{x_{1}}{R_{\rm maj}} 
+   \end{array} \right) ^{2} + \left( 
+   \begin{array}{c} \frac{y_{1}}{R_{\rm min}} 
+   \end{array} \right) ^{2} } \\
+   d_{2} = \case{3}{4} \sqrt{ \left( 
+   \begin{array}{c} \frac{x_{1}}{P R_{\rm maj}}
+   \end{array} \right) ^{2} + \left( 
+   \begin{array}{c} \case{y_{1}}{P R_{\rm min}} 
+   \end{array} \right) ^{2}.}
+\end{eqnarray}
+\end{mathletters}
+In these expressions, $x_{0}$, $y_{0}$ is the star 
+center, and $\Theta$ is the angle with the $x$ axis.
+Results of this task are shown in 
+   
+%% ------------------------------------------------------ %%
+%
+%%  CALLOUTS
+%
+%% ------------------------------------------------------ %%
+   
+\callout{Table~\ref{tbl-1}}
+and
+\callout{Table~2}.
+   %
+   % The first time a table, figure, or plate is 
+   % mentioned in a manuscript, AGU asks that it 
+   % be called out (i.e., identified in the right 
+   % margin of the camera-ready copy).
+   %
+   % Enclose the first occurrence of a table, figure,
+   % or plate within a \callout{} command.  Text within
+   % this command will appear in your manuscript text 
+   % and will also appear in a box in the right margin 
+   % of your manuscript.  Make sure all callouts appear
+   % in numerical sequence (i.e., Table 1, Table 2, etc.)
+   %
+   % You may use \ref{} commands within callout commands,
+   % as shown above.
+   %
+It is not clear how these sorts of analyses may affect 
+determination of $M_{\sun}$ and $M_{\earth}$, but the 
+assumption is that the alternate results should be less 
+than 90\deg\ out of phase with previous values.  We have 
+no observations of \ion{Ca}{2}.
+
+
+%% ------------------------------------------------------ %%
+%%
+%%  APPENDICES
+%%
+%%
+
+\appendix
+\section{Appendix A: Your Title}
+
+   % If you have several appendix sections, lettering in
+   % the appendix header should match the above example.
+   % If there is only one appendix, lettering should not
+   % appear in the header: \section{Appendix: Your Title}.
+
+   % Important:  The \appendix command causes all 
+   % following equations to use a lettered number
+   % (for instance, A1).  This is to distinguish 
+   % appendix equations from equations that appear 
+   % in the main body of the manuscript.
+
+   % Appendix tables must be manually labeled.
+   % If your manuscript contains tables that 
+   % accompany an appendix section, you must use 
+   % \tablenum{} commands and label the table(s) 
+   % accordingly.  (If there is one appendix section 
+   % and one table, the table number will be 
+   % \tablenum{A1}; if there are two appendix 
+   % sections, tables appearing in the second 
+   % section will begin with \tablenum{B1}, etc.)
+
+Consider a task that computes profile parameters for 
+a modified Lorentzian of the form
+\begin{equation}
+   I = \frac{1}{1 + d_{1}^{P (1 + d_{2} )}}, 
+\end{equation}
+where
+\begin{mathletters}
+\begin{equation}
+   d_{1} = \frac{3}{4} \sqrt{ \left( \begin{array}{c} 
+           \frac{x_{1}}{R_{maj}} 
+   \end{array} \right) ^{2} + \left( \begin{array}{c} 
+           \frac{y_{1}}{R_{min}} 
+   \end{array} \right) ^{2} } 
+\end{equation}
+\begin{equation}
+   d_{2} = \case{3}{4} \sqrt{ \left( \begin{array}{c} 
+           \frac{x_{1}}{P R_{maj}}
+   \end{array} \right) ^{2} + \left( \begin{array}{c} 
+           \case{y_{1}}{P R_{min}} 
+   \end{array} \right) ^{2} }  
+\end{equation}
+which leaves us with the conclusion that
+\begin{equation}
+   x_{1} = (x - x_{0}) \cos \Theta 
+   + (y - y_{0}) \sin \Theta 
+\end{equation}
+\begin{equation}
+   y_{1} = -(x - x_{0}) \sin \Theta 
+   + (y - y_{0}) \cos \Theta. 
+\end{equation}
+\end{mathletters}
+
+\section{Appendix B: One Last Equation}
+For completeness, here is one last equation
+\setcounter{equation}{0}  
+\begin{equation}
+e = mc^2.
+\end{equation}
+Notice how the equation numbering and lettering 
+is reset when a new appendix section is added.
+
+
+%% ------------------------------------------------------ %%
+%
+%%  NOTATION TABLES (if any)
+%
+%% ------------------------------------------------------ %%
+   %
+   % If your manuscript contains notation tables, use a 
+   % Level 1 head for the word "Notation" and use a 
+   % tabular environment without any rules for the 
+   % notation information, as shown below.
+   %
+   % If you numbered your sections, place a 
+   % \setcounter{secnumdepth}{0} in front of 
+   % the Notation section head, so it will 
+   % appear flush left and without numbers.
+   %
+   % Set the symbol columns flush right and the 
+   % definition column flush left.  You will probably
+   % need to adjust the {rp{17.5pc} spacing to create
+   % appropriate widths for your notation columns.
+
+\setcounter{secnumdepth}{0}
+\section{Notation}
+\begin{tabular}{rp{17.5pc}}
+\hspace{-2em} b                                        &
+type notation text describing the letter ``b.''        \\
+\hspace{-2em} a$^{\prime}$                             &
+type notation text describing ``a$^{\prime}$.''        \\
+\hspace{-2em} f                                        &
+type notation text describing the letter ``f.''        \\
+\hspace{-2em} O$_2$                                    &
+type notation text describing ``O$_2$.''               \\
+\hspace{-2em} {\bf K}                                  &
+type notation text describing the boldface ``{\bf K}.''\\
+\hspace{-2em} g                                        &
+type notation text describing the letter ``g.''        \\
+\end{tabular}
+
+
+%% ------------------------------------------------------ %%
+%
+%%  ACKNOWLEDGMENTS (optional)
+%
+%% ------------------------------------------------------ %%
+
+\acknowledgments
+ We are grateful to V. Barger, \linebreak
+T.~Han, and R. J. N. Phillips for doing 
+the math in the formalism section.
+
+The Editor would like to thank the reviewer of 
+this manu\-script.
+
+   % Type your acknowledgment text (if any) 
+   % immediately after the \acknowledgments 
+   % command.  Acknowledgments may be only 
+   % one paragraph in length.  
+   %
+   % Be sure to spell "\acknowledgments" 
+   % exactly as it appears above; if you spell 
+   % it differently then LaTeX will not recognize 
+   % the command and it will not work.  There is 
+   % no "end acknowledgments" command.
+   %
+   % If your manuscript contains only one 
+   % acknowledgment, use an \acknowledgment 
+   % command to produce a singular 
+   % "Acknowledgment" subhead.
+   %
+   % If your manuscript contains Editor's 
+   % acknowledgments, set them in a new 
+   % paragraph one line below the regular 
+   % acknowledgments, as shown.
+
+%% ------------------------------------------------------ %%
+
+% \newpage
+
+   % If desired, you may place a \newpage command after 
+   % the acknowledgments section; this will force the 
+   % references section to begin on a new page.
+
+
+%% ------------------------------------------------------ %%
+%
+%%  REFERENCES
+%
+%% ------------------------------------------------------ %%
+
+   % Use "\cite" commands to call out citations,
+   % and then use LaTeX's "thebibliography" environment 
+   % for the reference list.  Please note that the 
+   % \begin{thebibliography}{} command is followed by a 
+   % null argument {} (see the example below).
+   %
+   % Each reference has a \bibitem command to define 
+   % the citation format and the symbolic tag, as well 
+   % as a \reference command which sets up formatting 
+   % parameters for the reference list itself.  Authors 
+   % choose what markup appears in the text, but it must 
+   % match the tags used with the corresponding \bibitem 
+   % command, for example, \cite{can95}
+   %
+   % Try to use \cite for all references in your document. 
+   % Use \markcite commands for the format such as 
+   % {\it Kurtz and King} [1994].
+   % HOWEVER, THIS FORMAT SHOULD BE USED AS LESS AS POSSIBLE.
+   %
+
+
+\begin{thebibliography}{}
+\bibitem[{\it Baker et al.,} 1977]{baker77}
+\reference % (Journal article)
+Baker, K. D., D. J. Baker, J. C. Ulwick, and A. T. 
+Stair Jr., Infrared enhancements associated with a 
+bright auroral breakup, \jgr {\it 82,} 
+3518-3528, 1977.
+
+
+\bibitem[{\it Barbour and Major,} 1977]{barbour77}
+\reference % (Edited book)
+Barbour, M. G., and J. Major (Eds.), {\it Terrestrial 
+Vegetation of California,} 1002 pp., John Wiley, New 
+York, 1977.
+
+\bibitem[{\it Bell,} 1972]{bell72}
+\reference % (Authored book)
+Bell, R. J. {\it Introductory Fourier Transform 
+Spectroscopy,} 329 pp., Academic, San Diego, Calif., 
+1972.
+
+\bibitem[{\it Brosche and Sunderman,} 1977]{brosche77}
+\reference % (Article in book)
+Brosche, P., and J. Sunderman, Effects of oceanic 
+tides on the rotation of the Earth, in {\it Scientific 
+Applications of Lunar Laser Ranging,} edited by J. D. 
+Mulholland, pp. 133-141, D. Reidel, Norwell, Mass., 1977.
+
+\bibitem[{\it Degges and Smith,} 1977]{degges77}
+\reference % (Laboratory or technical report)
+Degges, T. C., and H. J. P. Smith, A high altitude 
+infrared radiance model, {\it Tech. Rep. AFGL-TR-77-02721, 
+AD-A059242,} 25 pp., Air Force Geophys. Lab., Bedford, 
+Mass., 1977.
+
+\bibitem[{\it Golitsyn and Mokhov,} 1995]{golitsyn95}
+\reference % (Article in a translation journal)
+Golitsyn, G., and I. Mokhov, Stability and extremal 
+properties of climate models, {\it Izv. Russ. Acad. Sci. 
+USSR Atmos. Oceanic Phys.,} Engl. Transl., {\it 31,} 
+781-787, 1995.
+
+\bibitem{higgins68}
+\reference % (Map)
+Higgins, M. W., Geologic map of the Brevard fault 
+zone near Atlanta, Georgia, scale 1:48,000, {\it U.S. 
+Geol. Surv. Geol. Invest. Map, I-511,} 1968.
+
+\bibitem[{\it McMullen,} 1978]{mcmullen78}
+\reference % (Thesis)
+McMullen, R. J., The effect of geothermal gradients on 
+nonlinear creep deformations in the lithosphere, M.A. 
+thesis, 256 pp., State Univ. of N.Y. at Buffalo, May 1978.
+
+\bibitem[{\it Namias,} 1974]{namias74}
+\reference % (Meeting paper)
+Namias, J., Suggestions for research leading to long range 
+precipitation forecasting for the tropics, paper presented 
+at International Tropical Meteorology Meeting, Am. Meteorol.
+Soc., Nairobi, Jan. 31 to Feb. 7, 1974.
+
+\bibitem[{\it Poppe and Zwickl,} 1995]{poppe95}
+\reference % (Abstract)
+Poppe, B., and R. Zwickl, Internet education by Space 
+Environment Laboratory (abstract), \eos {\it 76}(17), 
+Spring Meet. Suppl., S210, 1995.
+
+\bibitem[{\it Stair,} 1976]{stair76}
+\reference % (Proceedings paper)
+Stair, A. T., Jr., Cryogenic spectrometry for the measure 
+of airglow and aurora, {\it Proc. Soc. Photo. Opt. Instrum. 
+Eng., 91,} 71-75, 1976.
+
+\bibitem[{\it Yamazaki,} 1978]{yamazaki78}
+\reference % (Nonroman alphabet article)
+Yamazaki, Y., Resistivity change at Aburatsubo caused by 
+the earthquake of magnitude 7.0 on January 17, 1978 (in 
+Japanese), {\it J. Seismol. Soc. Jpn., 31,} 230-233, 1978.
+
+\end{thebibliography}{}
+\end{article}
+   % You must type an \end{article} 
+   % command after the references.
+
+\newpage
+
+
+%% ------------------------------------------------------ %%
+%
+%%  NO REFERENCE SECTION (forcesluginfo)
+%
+%% ------------------------------------------------------ %%
+
+   % If your manuscript contains no reference section, 
+   % you must place a \forcesluginfo command in the 
+   % manuscript after the last paragraph of text (or 
+   % after the acknowledgments, if any).  Otherwise,
+   % your manuscript information will not print.
+
+% \forcesluginfo
+
+%% ------------------------------------------------------ %%
+%
+%%  FIGURE CAPTIONS
+%
+%% ------------------------------------------------------ %%
+
+   % Set figure captions between the curly brackets in the 
+   % \caption command.  Each figure caption must have a 
+   % \begin{figure} before and an \end{figure} after, 
+   % as shown.  Several captions may be printed per page, 
+   % as long as there is sufficient room to cut between 
+   % the captions.  
+   %
+   % It may be necessary to use \clearpage commands 
+   % between a long series of captions, since a large 
+   % number of captions can cause LaTeX's memory buffer 
+   % to overload and crash.  
+   %
+   % AGU asks authors to submit two sets of captions; 
+   % one set for single column and one set for double 
+   % column figures.  You must input the first set of 
+   % captions, but AGU's LaTeX style files will 
+   % automatically generate the second set of captions.  
+   % Both sets of captions will print at the correct 
+   % single- and double-column widths for your journal 
+   % (these widths change depending on the document style 
+   % you choose).
+   %
+   % The \figurewidth commands do not affect the second
+   % set of figure captions.  The second set of captions
+   % will always mirror the figure numbers of the first
+   % set of captions.
+   %
+   % The wide figure captions will likely cause
+   % "overfull hbox" error messages to appear when 
+   % you LaTeX your file: please ignore these.
+   %
+   % Be aware that figure width and figure numbering 
+   % commands may affect following plate captions, 
+   % and vice versa.
+   %
+   % Caption lines may be broken by using a \protect 
+   % command in front of a \linebreak command:
+   % \protect\linebreak (this will maintain justification).
+
+\begin{figure}
+        \caption{We use the \LaTeX\ {\tt figure} environment 
+        to set figure captions.  Figure captions consist of 
+        a paragraph containing several sentences or phrases.}
+\end{figure}
+
+\begin{figure}
+\figurenum{17c}
+   % The \figurenum command allows you to explicitly 
+   % number your figure captions.  Letters or symbols 
+   % may also be included.  This command *does* affect 
+   % LaTeX's figure counter (so the next figure number 
+   % would be 3 instead of 2, if there was no explicit
+   % \figurenum or \setcounter command).
+   % 
+\figurewidth{13pc}
+   % The \figurewidth command, when used inside 
+   % a figure environment, sets the width of the 
+   % first set of that particular caption to the 
+   % specified width (shown is 13 picas).  
+   % 
+ \caption{AGU asks authors to submit two sets 
+  of captions.  Authors may change the width of 
+  the first set of captions using a ``figurewidth'' 
+  command, but the second set of captions will 
+  always print at the correct double-column width 
+  for your journal.  The first caption for this 
+  figure will print at a width of 13 picas.}
+\end{figure}
+
+
+\setcounter{figure}{0}  
+     % (set this to 0 if the next number is 1, etc.)
+     % To reset the figure counter, place this command 
+     % in front of your second set of figure captions.
+
+\figurewidth{25pc}
+     % The \figurewidth command, when placed in front of a 
+     % series of figure captions, sets all following captions 
+     % to the specified width (shown is 25 picas).
+
+\begin{figure}
+\caption{We use the \LaTeX\ {\tt figure} 
+ environment to set another figure caption.  
+ This caption was preceded by commands that
+ reset the figure number and the figure width.
+ The figure number is reset to ``one'' and the 
+ first figure caption width is set to 25 picas.}
+\end{figure}
+
+%% ------------------------------------------------------ %%
+%
+%%  PLATE CAPTIONS
+%
+%% ------------------------------------------------------ %%
+
+   % Plate captions are similar to figure captions, 
+   % but they use \platenum{}, \platewidth, and 
+   % \setcounter{plate}{} commands.  Again, AGU 
+   % asks authors to submit two sets of captions; 
+   % one set for single column and one set for 
+   % double column plate widths.
+   %
+   % It may be necessary to use \clearpage commands 
+   % between a long series of captions, since a large 
+   % number of captions can cause LaTeX's memory buffer 
+   % to overload and crash.  Be aware that plate commands 
+   % may affect following figure captions, and vice versa.
+
+\begin{plate}
+\platenum{7c}
+   % The \platenum command allows you to explicitly number 
+   % your plate captions.  Letters or symbols may also be 
+   % included.  This command *does* affect LaTeX's plate 
+   % counter (so the next plate number would be 3, not 2).
+   % 
+\platewidth{41pc}
+   % The \platewidth{} command, when used inside a plate 
+   % environment, sets the width of that particular caption 
+   % to the specified width (shown is 41 picas).
+   % 
+\caption{Use a \LaTeX\ {\tt plate} environment
+to set plate captions.  This plate caption 
+contains commands that reset the plate number 
+to ``7c'' and the first plate caption width 
+to 41 picas.  Figure captions accompany black 
+and white line art or gray scale artwork, 
+while plate captions accompany color artwork.}
+\end{plate}
+
+
+%% ------------------------------------------------------ %%
+%
+%%  TABLES
+%
+%% ------------------------------------------------------ %%
+
+%%%% Table Page Breaks
+   %
+   % Tables should be submitted one or two to a page 
+   % following the main body of the text.  (Planotables 
+   % automatically begin on a new page for formatting 
+   % reasons.)  Use \clearpage commands to force page 
+   % breaks as needed.  Include a \clearpage command 
+   % after the last table so it is forced onto its own 
+   % page as well.
+
+%%%% Table Rules
+   %
+   % AGU table style allows no vertical rules.  The 
+   % required horizontal rules are created automatically
+   % by the \startdata command.  If you must include 
+   % other rules, use a \tableline command (not an 
+   % \hline command).
+
+%%%% Table Footnotes
+   % 
+   % Some column headings require special annotation, 
+   % i.e., table footnotes.  These are marked and tagged 
+   % with \tablenotemark{tag}.  The \tablenotemark commands
+   % may be placed on individual data entries as well, 
+   % but try to keep them to a minimum.  Accompanying text 
+   % appears in \tablenotetext{tag}{TEXT} commands; the 
+   % \tablenotetext "tag" must match the "tag" in the 
+   % appropriate \tablenotemark command.
+   % 
+   % Place short table notes in \tablenotetext{\null}{TEXT} 
+   % commands, with a \null argument as the tag.  Longer 
+   % notes may be placed in a \tablecomment{TEXT} command.  
+   % Lists of table references should use this format:
+   % \tablecomment{References:  Names of your references.}  
+   % There are examples of these in the tables below.
+
+%%%% Column Headers
+   % 
+   % The \colhead{} command automatically creates centered 
+   % column headers, in accordance with AGU style.  Use this
+   % command in place of the usual \multicolumn{} command.  
+   % If you prefer to use multicolumn{}, or if you have a 
+   % more complicated table, AGU's style files will still 
+   % accept that coding.  It is not recommended that both 
+   % the \colhead{} and \multicolumn{} commands be used in 
+   % the same table.  Examples of both styles are included.
+
+%%%% Table Captions 
+   %
+   % Captions should contain only the caption text.  
+   % The "Table #." identification is generated 
+   % automatically.  If you need to change the table 
+   % number, see the section on table numbers, below.
+   %   
+   % Use \tablecaption{} commands with planotables and
+   % \caption{} commands with tabular tables.
+
+%%%% Tabular Tables
+   %
+   % It is possible to use a "tabular" environment to 
+   % create tables.  The tabular environment should be 
+   % embedded within a table environment (which is needed 
+   % for automatic numbering and caption generation).  
+   % See the last table for an example.
+
+%%%% Planotables
+   %
+   % Planotables have several capabilities (above and 
+   % beyond LaTeX's tabular environment) that facilitate
+   % the formatting of tables.  For instance, it is 
+   % possible to break long planotables across pages, 
+   % and while tabular tables print at an automatic width,
+   % authors may choose a specific planotable width.
+   % See the aguguide.tex and samples below for more 
+   % information.
+
+
+
+%%%% Numbering Tables
+   % 
+   % If you must create a particular table number, or if 
+   % you need a letter before or after a table number,
+   % use a \tablenum{} command, with the desired text
+   % between the curly brackets.  Several examples are
+   % shown below.  A \tablenum command will affect any
+   % following table numbers.
+
+%%%% Setting Planotable Widths
+   %
+   % Use \tablewidth{} commands to set the width of 
+   % your planotables.  See the aguguide.tex or the
+   % Table section in your General Instructions to
+   % choose an appropriate size for your table.
+
+%% ------------------------------------------------------ %%
+
+\begin{planotable}{crrrrrrrrrrr}
+\tablewidth{41pc}
+\tablecaption{Planotable with Examples of Footnotes}
+\tablenum{1}
+\tablehead{
+      \colhead{Event}          &
+     \colhead{Height, km}      &
+     \colhead{$d_{x}$}         &
+     \colhead{$d_{y}$}         &
+     \colhead{$n$}             &
+     \colhead{$\chi^2$}        &
+     \colhead{$R_{\rm maj}$}   &
+     \colhead{$R_{\rm min}$}   &
+     \colhead{$P$\tablenotemark{a}} &
+     \colhead{$P R_{\rm maj}$} &
+     \colhead{$P R_{\rm min}$} &
+     \colhead{$\Theta$\tablenotemark{b}}
+}
+   % Text for table footnotes should directly precede the 
+   % "startdata" command.  If they are placed between the 
+   % table data and the \end{planotable} command then the 
+   % last cell of information will not indent properly.  
+   % Note that it is acceptable to use \ref commands in 
+   % \tablenotetext commands.
+\tablenotetext{a}{Sample footnote for 
+                      Table~\ref{tbl-1}.}
+\tablenotetext{b}{Another sample footnote for 
+                      Table~\ref{tbl-1}.}
+\startdata
+\label{tbl-1}
+1 &33472.5 &-0.1 &0.4  &53 &27.4 &2.065   &
+1.940 &3.900 &68.3 &116.2 &-27.639        \nl
+2 &27802.4 &-0.3 &-0.2 &60 &3.7  &1.628   &
+1.510 &2.156 &6.8  &7.5 &-26.764          \nl
+3 &29210.6 &0.9  &0.3  &60 &3.4  &1.622   &
+1.551 &2.159 &6.7  &7.3 &-40.272          \nl
+4 &32733.8 &-1.2 &-0.5 &41 &54.8 &2.282   &
+2.156 &4.313 &117.4 &78.2 &-35.847        \nl
+5 & 9607.4 &-0.4 &-0.4 &60 &1.4  &1.669   &
+1.574 &2.343 &8.0  &8.9 &-33.417          \nl
+6 &31638.6 &1.6  &0.1  &39 &315.2 & 3.433 &
+3.075 &7.488 &92.1 &25.3 &-12.052
+\end{planotable}
+
+
+\begin{planotable}{ccccc}
+\tablewidth{20pc}
+\tablecaption{Planotable With Multicolumn Commands}
+\tablenum{33a}
+\tablehead{\multicolumn{1}{c}{}&
+           \multicolumn{2}{c}{Length}&
+           \multicolumn{2}{c}{Distance}\\[.3ex]
+        \cline{2-3}
+        \cline{4-5}\\[-1.6ex]
+           \multicolumn{1}{c}{} &
+           \multicolumn{1}{c}{0 mK} &
+           \multicolumn{1}{c}{3 mK} &
+           \multicolumn{1}{c}{0 mK} &
+           \multicolumn{1}{c}{3 mK}
+}
+\tablenotetext{\null}{Occasionally, authors may wish to 
+            append a short paragraph of explanatory notes 
+            which pertain to an entire table but are 
+            different than the caption.  Such notes may 
+            be placed in a ``tablenotetext'' environment 
+            with a ``null'' argument as demonstrated in 
+            this example.}
+\startdata
+Height off & 20 & 21 & 22 & 23\nl
+Seabed, m  & 10 & 11 & 12 & 13
+\end{planotable}
+
+
+\begin{planotable}{lrrrrcrrrrr}
+\tablewidth{35pc}
+\tablecaption{Literature Data for Program Stars}
+\tablenum{7}
+\tablehead{
+\colhead{Star}   & 
+\colhead{V}      &
+\colhead{b$-$y}  & 
+\colhead{m$_1$}  &
+\colhead{c$_1$}  & 
+\colhead{Source} &
+\colhead{T$_{\rm eff}$} & 
+\colhead{log g}  &
+\colhead{v$_{\rm turb}$} & 
+\colhead{[Fe/H]} &
+\colhead{Source}
+}
+\tablecomments{Sources:  
+1, {\it Barbuy et al.} [1985];
+2, {\it Bond} [1980];
+3, {\it Carbon et al.} [1987];
+4, {\it      Hobbs and Duncan} [1987];
+5, {\it Gilroy et al.} [1988];
+6, {\it Gratton and Ortolani} [1986];
+7, {\it Gratton and Sneden} [1987, 1988, 1991];
+8, {\it Kraft et al.} [1982];
+9, {\it Laird} [1990];
+10, {\it Leep and Wallerstein} [1981];
+11, {\it Luck and Bond} [1981, 1985];
+12, {\it Magain} [1987, 1989];
+13, {\it Peterson} [1981];
+14, {\it Peterson et al.} [1990];
+15, {\it Royce et al} [1988];
+16, {\it Schuster and Nissen} [1988a, b];
+17, {\it Spite et al.} [1984];
+18, {\it Spite and Spite} [1986];
+19, {\it Hobbs and Thorburn} [1991].  Only one 
+    paragraph of material is permitted at the end
+    of a table (excluding superscripted footnotes),
+    so if both references and notes exist, they should
+    be run in together.}
+\tablenotetext{a}{This is another example
+                      of a footnote.}
+\tablenotetext{b}{Star LP 608--62 is also known
+                      as BD+1\deg 2341p.}
+\startdata
+HD 97 & 9.7& 0.51& 0.15& 0.35& 8 & \nodata & \nodata &
+\nodata & $-1.50$ & 2 \nl
+& & & & & & 5015 & \nodata & \nodata & $-1.50$ & 10 \nl
+& & & & & & 5000 & 2.50 & 2.4 & $-1.99$ & 5 \nl
+& & & & & & 5120 & 3.00 & 2.0 & $-1.69$ & 7 \nl
+& & & & & & 4980 & \nodata & \nodata & $-2.05$ & 10 \nl
+HD 4306 & 9.0& 0.52& 0.05& 0.35& 19, 2& \nodata & \nodata &
+\nodata & $-2.70$ & 2 \nl
+& & & & & & 5000 & 1.50 & 1.8 & $-2.65$ & 14 \nl
+& & & & & & 4950 & 2.10 & 2.0 & $-2.92$ & 8 \nl
+& & & & & & 5000 & 2.25 & 2.0 & $-2.83$ & 18 \nl
+& & & & & & \nodata & \nodata & \nodata & $-2.80$ & 1 \nl
+HD 84937 & 8.3& 0.30& 0.06& 0.35& 4, 11& 6200 & \nodata &
+\nodata & $-2.10$ & 4 \nl
+& & & & & & 6216 & \nodata & \nodata & $-2.42$ & 11 \nl
+& & & & & & 6240 & \nodata & \nodata & $-2.13$ & 3 \nl
+& & & & & & \nodata & \nodata & \nodata & $-2.14$ & 1 \nl
+& & & & & & 6200 & 3.60 & 1.5 & $-2.43$ & 16 \nl
+& & & & & & 6250 & 4.00 & \nodata & $-2.10$ & 3 \nl
+%
+\cutinhead{This Is a Center Head} \nl
+%
+HD 87140 & 9.0& 0.48& 0.12& 0.28& 7 & 5000 & 4.50 &
+1.0 & $-1.41$ & 7 \nl
+& & & & & & \nodata & \nodata & \nodata & $-1.56$ & 1 \nl 
+%
+\tablebreak & & & & & & 4500 & 1.10 & 2.8 & $-2.77$ & 5 \nl 
+%
+HD 94028 & 8.2& 0.34& 0.08& 0.25& 12, 15 & 5795 & 4.00 &
+\nodata & $-1.70$ & 3 \nl
+& & & & & & 4500 & 0.80 & 3.2 & $-2.65$ & 14 \nl
+& & & & & & 4600 & \nodata & \nodata & $-2.75$ & 10 \nl
+& & & & & & 5860 & \nodata & \nodata & $-1.70$ & 4 \nl
+& & & & & & 5910 & 3.80 & \nodata & $-1.76$ & 15 \nl
+& & & & & & 5900 & \nodata & \nodata & $-1.57$ & 3 \nl
+& & & & & & \nodata & \nodata & \nodata & $-1.32$ & 1 \nl
+HD 97916 & 9.2& 0.29& 0.10& 0.41& 13, 14 & 6125 & 4.00 &
+\nodata & $-1.10$ & 3 \nl
+& & & & & & 5950 & \nodata & \nodata & $-1.50$ & 17 \nl
+& & & & & & 6204 & \nodata & \nodata & $-1.36$ & 11 \nl
+%
+\cutinhead{At Least Two Center Heads 
+Are Required if Any Are Used} \nl
+%
++26\deg2606& 9.7&0.34&0.05&0.28&5, 6& 5980 & \nodata & 
+\nodata & $<-2.20$ & 19 \nl
+& & & & & & 5950 & \nodata & \nodata & $-2.89$ & 9 \nl
++26\deg3578& 9.4&0.31&0.05&0.37&10& 5830 & \nodata &
+\nodata & $-2.60$ & 4 \nl
+& & & & & & 5800 & \nodata & \nodata & $-2.62$ & 17 \nl
+& & & & & & 6177 & \nodata & \nodata & $-2.51$ & 11 \nl
+& & & & & & 6000 & 3.25 & \nodata & $-2.20$ & 3 \nl
+& & & & & & 6140 & 3.50 & \nodata & $-2.57$ & 15 \nl
+& & & & & & 4260 & \nodata & \nodata & $-1.55$ & 10 \nl
++37\deg1458& 8.9&0.44&0.07&0.22&9, 16& 5296 & 
+\nodata & \nodata & $-2.39$ & 11 \nl
+& & & & & & 5420 & \nodata & \nodata & $-2.43$ & 3 \nl
+& & & & & & 5000 & 1.10 & 2.2 & $-2.71$ & 14 \nl
+& & & & & & 5000 & 2.20 & 1.8 & $-2.46$ & 5 \nl
+G5--36\tablenotemark{a} & 10.8& 0.40& 0.07& 
+0.28& 3, 17 & \nodata & \nodata & \nodata & $-1.19$ & 1 \nl
+& & & & & & 4980 & \nodata & \nodata & $-2.55$ & 10 \nl
+& & & & & & \nodata & \nodata & \nodata & $-2.03$ & 1 \nl
+& & & & & & 6020 & \nodata & \nodata & $-1.56$ & 3 \nl
+LP 608--62\tablenotemark{b} & 10.5& 0.30& 0.07& 0.35 &
+1, 18 & 6250 & \nodata & \nodata & $-2.70$ & 4
+\end{planotable}
+
+\begin{planotable}{llrr}
+\tablewidth{20pc}
+\tablecaption{Example of an Appendix Table}
+\tablenum{A1}
+\tablehead{  \multicolumn{2}{c}{} &
+             \multicolumn{2}{c}{\it dl/dt, \rm mm/yr}\\[.3ex]
+\cline{3-4}\\[-1.6ex]
+             \multicolumn{1}{c}{From} &
+             \multicolumn{1}{c}{To} &
+             \multicolumn{1}{c}{Observed} &
+             \multicolumn{1}{c}{Model}
+}
+\tablecomments{Occasionally, authors may wish to append 
+    longer paragraphs of explanatory notes which pertain 
+    to an entire table but are different from the caption.  
+    These notes may be placed in a ``tablecomments'' 
+    environment as demonstrated in this example.  Note 
+    that this table uses the ``tablenum'' command since 
+    it needs a letter ``A'' in the table caption.}
+\startdata
+Alamillo & Palvadero & $0.6 + 0.8$ & $1.4$\nl
+Campana & Canas &$0.4 + 1.1$ & $-0.7$\nl
+& Chupadera & $ -0.5 + 1.0$ & $0.2$
+\end{planotable}
+
+\vspace{6pc}
+
+\begin{table}
+\caption{Example of a Table in a Tabular \protect\\ 
+Environment} 
+\tablenotetext{}{This table is an example 
+of \LaTeX's \verb"table" and \verb"tabular" 
+environments.  Blank columns have been added
+to force the table width closer to 20 picas.}
+\vspace{5pt}
+\begin{tabular}{llllrrr} 
+\tableline 
+& & & \\[-5pt]
+      \multicolumn{4}{c}{} & 
+ \multicolumn{3}{c}{ \it dl/dt, \rm mm/yr}\\[4pt]
+\cline{4-7}\\[-7pt]
+     \multicolumn{1}{c}{From} & 
+     \multicolumn{1}{c}{} & 
+ \multicolumn{1}{c}{To} & 
+       \multicolumn{1}{c}{} & 
+ \multicolumn{1}{c}{Observed} & 
+ \multicolumn{1}{c}{} & 
+ \multicolumn{1}{c}{Model} \\[4pt]
+\tableline
+& & & & & & \\[-6pt]
+Alamillo & & Palvadero & & $0.6 + 0.8$ & & $1.4$ \\
+Campana & & Canas & & $0.4 + 1.1$ &&  $-0.7$\\
+& & Chupadera &&  $ -0.5 + 1.0$ & & $0.2$\\[4pt]
+\tableline
+& & & & & & \\[-6pt]
+\end{tabular}
+\end{table}
+
+   % This is the last table for this paper so we should 
+   % follow it with a \clearpage command.  The \clearpage 
+   % command forces all the floating tables out of the
+   % memory buffers.
+
+\clearpage
+
+\end{document}
+
+  % All LaTeX input files must conclude with an 
+  % \end{document} command.  LaTeX cannot process 
+  % a file that does not contain this command.
