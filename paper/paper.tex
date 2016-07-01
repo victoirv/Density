@@ -28,9 +28,10 @@
 \documentclass[12pt]{article}
 \bibliographystyle{./style/agufull}
 \usepackage[square,comma,authoryear]{natbib}
+\usepackage{aas_macros}
 \usepackage{epsfig}
-\usepackage{style/lineno}
 \usepackage{amsmath}
+\usepackage{style/lineno}
 %\usepackage{booktabs}
 \linenumbers*[1]
 \usepackage{subfig}
@@ -149,7 +150,7 @@ These tests indicate that there is not a statistically significant change in med
 
 \begin{table}
 \small
-%\input{../tables/DeltaBootstraps-case10.txt}
+\input{../tables/DeltaBootstraps-case10.txt}
 \caption{Results of test on of means of $\rho_{eq}$ shown in the top panel of Figure~\ref{DailyAveragedDstEvents} between days of threshold crossing  near (day = 1 or -1) or on the day of a $D_{st}$ event (day = 0).}
 \label{BootstrapDifferenceTable}
 \end{table}
@@ -220,7 +221,7 @@ On average, around the time of large geomagnetic events, there is a very weak en
 
 \begin{figure}[tp!]
 \centering
-\includegraphics[scale=0.40]{figures/stormavs-dst.eps}
+\includegraphics[scale=0.40]{figures/stormavs-dst-GOES6.eps}
 \\
 \rule[1ex]{5cm}{1pt}
 \\
@@ -241,8 +242,8 @@ On average, around the time of large geomagnetic events, there is a very weak en
 \clearpage
 \begin{figure}[tp!]
   \centering
-  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedBzIMF-case24-t020-tf25-GOES6.eps}
-  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedBzIMF-case24-t025-tf30-GOES6.eps}
+  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedB_z-case24-t020-tf25-GOES6.eps}
+  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedB_z-case24-t025-tf30-GOES6.eps}
   \caption{$\rho_{eq}$ events of Figure~\ref{HourlyAveragedRhoEvents} separated by the average $B_z$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
   \label{fig:BzBinned}
 \end{figure}
@@ -275,16 +276,16 @@ On average, around the time of large geomagnetic events, there is a very weak en
 
 \begin{figure}[tp!]
   \centering
-  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedkp-case24-t020-tf25-GOES6.eps}
-  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedkp-case24-t025-tf30-GOES6.eps}
+  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedKp-case24-t020-tf25-GOES6.eps}
+  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedKp-case24-t025-tf30-GOES6.eps}
   \caption{Binning $\rho_{eq}$ events by $B_z$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
   \label{fig:KpBinned}
 \end{figure}
 
 \begin{figure}[tp!]
   \centering
-  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinneddst-case24-t020-tf25-GOES6.eps}
-  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinneddst-case24-t025-tf30-GOES6.eps}
+  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedDst-case24-t020-tf25-GOES6.eps}
+  \includegraphics[scale=0.40]{figures/RhoBinned/RhoBinnedDst-case24-t025-tf30-GOES6.eps}
   \caption{Binning $\rho_{eq}$ events by $B_z$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
   \label{fig:DstBinned}
 \end{figure}

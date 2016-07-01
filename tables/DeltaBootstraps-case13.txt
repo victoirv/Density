@@ -1,8 +1,8 @@
-\begin{tabular}{|c|cCc|}
+\begin{tabular}{|c|ccc|}
  \hline 
-Days & Diff(medians) & \%  & p-val\\ \hline
--1 0 & -0.71 & 28.30\%\geq 0 & 0.64 \\ 
--1 1 & 0.71 & 17.50\%\leq 0 & 0.09 \\ 
- 1 0 & -1.42 & 2.60\%\geq 0 & 0.04 \\ 
+Days & Difference (amu/cm$^3$) & \%  & p\\ \hline
+-1 0 & -0.71 & $30.00\%\geq 0$ & 0.64 \\ 
+-1 1 & 0.71 & $15.90\%\leq 0$ & 0.09 \\ 
+ 1 0 & -1.42 & $3.10\%\geq 0$ & 0.04 \\ 
 \hline
 \end{tabular}

@@ -307,14 +307,14 @@ if(MakePaperPlots)
     h=figure('Visible',visible);
     orient tall;
     
-    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
+    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.85,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
     hold on; plot(xa,AVMatBars(:,:,5),'r-.'); ylim(yranges(yr,1,:))
-    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
+    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.85,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
     hold on; plot(xa,AVMatBars(:,:,6),'r-.'); ylim(yranges(yr,2,:))
-    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
+    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.85,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
     hold on; plot(xa,AVMatBars(:,:,15),'r-.'); ylim(yranges(yr,3,:))
     if(DSTCut<0), plot([xa(1) xa(end)],[DSTCut DSTCut],'k-.','LineWidth',2); hold off; end
-    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,30),'+-','LineWidth',2); text(0.01,0.9,'F_{10.7} (s.f.u)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
+    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,30),'+-','LineWidth',2); text(0.01,0.85,'F_{10.7} (s.f.u)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
     hold on; plot(xa,AVMatBars(:,:,30),'r-.'); ylim(yranges(yr,4,:))
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
@@ -335,6 +335,7 @@ if(MakePaperPlots)
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);
+    set(findall(gcf,'-property','FontSize'),'FontSize',14) %Make all fonts same size 
     print('-depsc2','-r200',figurename);
     print('-dpng','-r200',strrep(strrep(figurename,'eps','png'),'figures','figures/PNGs'));
     if(strcmp(visible,'off')),close(h);end;
@@ -345,14 +346,14 @@ if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
     h=figure('Visible',visible);
     orient tall;
     
-    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.9,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
+    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.85,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
     hold on; plot(xa,AVMatBars(:,:,5),'r-.'); ylim(yranges(yr,1,:))
-    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.9,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
+    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.85,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
     hold on; plot(xa,AVMatBars(:,:,6),'r-.'); ylim(yranges(yr,2,:))
-    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.9,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
+    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.85,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
     hold on; plot(xa,AVMatBars(:,:,15),'r-.'); ylim(yranges(yr,3,:))
     if(DSTCut<0), plot([xa(1) xa(end)],[DSTCut DSTCut],'k-.','LineWidth',2); hold off; end
-    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,8),'+-','LineWidth',2); text(0.01,0.9,'P_{dyn} (nPa)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
+    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,8),'+-','LineWidth',2); text(0.01,0.85,'P_{dyn} (nPa)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
     hold on; plot(xa,AVMatBars(:,:,8),'r-.'); %ylim(yranges(yr,4,:))
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
@@ -371,6 +372,7 @@ if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);
+    set(findall(gcf,'-property','FontSize'),'FontSize',14) %Make all fonts same size
     print('-depsc2','-r200',strrep(figurename,'.eps','-withPressure.eps'));
     print('-dpng','-r200',strrep(strrep(figurename,'.eps','-withPressure.png'),'figures','figures/PNGs'));
     if(strcmp(visible,'off')),close(h);end;
@@ -536,12 +538,12 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     [~,p2]=ttest2(AVm1,AV1);
     [~,p3]=ttest2(AV1,AV0);
     
-    fprintf(table,'\\begin{tabular}{|c|cCc|}\n \\hline \n');
-    fprintf(table,'Days & Diff(medians) & \\%%  & p-val\\\\ \\hline\n');
+    fprintf(table,'\\begin{tabular}{|c|ccc|}\n \\hline \n');
+    fprintf(table,'Days & Difference (amu/cm$^3$) & \\%%  & p\\\\ \\hline\n');
     
-    fprintf(table,'-1 0 & %2.2f & %2.2f\\%%\\geq 0 & %2.2f \\\\ \n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100,p1);
-    fprintf(table,'-1 1 & %2.2f & %2.2f\\%%\\leq 0 & %2.2f \\\\ \n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100,p2);
-    fprintf(table,' 1 0 & %2.2f & %2.2f\\%%\\geq 0 & %2.2f \\\\ \n',nanmedian(AV1)-nanmedian(AV0),D10*100,p3);
+    fprintf(table,'-1 0 & %2.2f & $%2.2f\\%%\\geq 0$ & %2.2f \\\\ \n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100,p1);
+    fprintf(table,'-1 1 & %2.2f & $%2.2f\\%%\\leq 0$ & %2.2f \\\\ \n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100,p2);
+    fprintf(table,' 1 0 & %2.2f & $%2.2f\\%%\\geq 0$ & %2.2f \\\\ \n',nanmedian(AV1)-nanmedian(AV0),D10*100,p3);
     
     fprintf(table,'\\hline\n\\end{tabular}\n');
     
