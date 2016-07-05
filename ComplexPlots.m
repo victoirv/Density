@@ -534,16 +534,16 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     Dm10=sum(delta(1,:)>=0)/length(delta(1,:));
     Dm11=sum(delta(2,:)<=0)/length(delta(2,:));
     D10=sum(delta(3,:)>=0)/length(delta(3,:));
-    [~,p1]=ttest2(AVm1,AV0);
-    [~,p2]=ttest2(AVm1,AV1);
-    [~,p3]=ttest2(AV1,AV0);
+    %[~,p1]=ttest2(AVm1,AV0);
+    %[~,p2]=ttest2(AVm1,AV1);
+    %[~,p3]=ttest2(AV1,AV0);
     
-    fprintf(table,'\\begin{tabular}{|c|ccc|}\n \\hline \n');
-    fprintf(table,'Days & Difference (amu/cm$^3$) & \\%%  & p\\\\ \\hline\n');
+    fprintf(table,'\\begin{tabular}{|c|cc|}\n \\hline \n');
+    fprintf(table,'Days & Difference (amu/cm$^3$) & \\%%  \\\\ \\hline\n');
     
-    fprintf(table,'-1 0 & %2.2f & $%2.2f\\%%\\geq 0$ & %2.2f \\\\ \n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100,p1);
-    fprintf(table,'-1 1 & %2.2f & $%2.2f\\%%\\leq 0$ & %2.2f \\\\ \n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100,p2);
-    fprintf(table,' 1 0 & %2.2f & $%2.2f\\%%\\geq 0$ & %2.2f \\\\ \n',nanmedian(AV1)-nanmedian(AV0),D10*100,p3);
+    fprintf(table,'-1 0 & %2.2f & $%2.2f\\%%\\geq 0$  \\\\ \n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100);
+    fprintf(table,'-1 1 & %2.2f & $%2.2f\\%%\\leq 0$  \\\\ \n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100);
+    fprintf(table,' 1 0 & %2.2f & $%2.2f\\%%\\geq 0$  \\\\ \n',nanmedian(AV1)-nanmedian(AV0),D10*100);
     
     fprintf(table,'\\hline\n\\end{tabular}\n');
     
