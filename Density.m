@@ -269,6 +269,11 @@ switch stormcase
         yranges(5,:,:)=[-1 2; 400 500; -20 0; 100 120; 5 30];
 end
 
+eventtype='D_{st}';
+if(MDCut>0)
+    eventtype='\\rho_{eq}';
+end
+
 
 %Remove F10.7 influence if requested
 if(removef107)

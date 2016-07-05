@@ -113,9 +113,9 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         end
         set(gca,'xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
         xlim([-timewidth timewidth*2]./LongTimeScale)
-        lh=legend('All \rho_{eq} events ',sprintf('%s  \\geq %2.2f %s; %d events ',varname,topcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)>=topcut)),sprintf('%s < %2.2f %s; %d events ',varname,bottomcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)<bottomcut)));
+        lh=legend('All events ',sprintf('%s  \\geq %2.2f %s; %d events ',varname,topcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)>=topcut)),sprintf('%s < %2.2f %s; %d events ',varname,bottomcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)<bottomcut)));
         set(lh,'box','off');
-        title(sprintf('\\rho_{eq} events; GOES %d; %d-%d',satnum,sy,ey));
+        title(sprintf('%s events; GOES %d; %d-%d',eventtype,satnum,sy,ey));
         ylabel('\rho_{eq} (amu/cm^3)')
         xlabel('Time since onset (hours)')
         print('-depsc2',sprintf('paper/figures/RhoBinned/RhoBinned%s-case%d-t0%d-tf%d-GOES%d.eps',varname,stormcase,tw(1),tw(end),satnum));
