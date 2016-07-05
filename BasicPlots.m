@@ -329,12 +329,12 @@ if(MakePaperPlots && stormcase==28 && sy==1989 && ey==1989) %For a short time pe
     
     plot(FILLEDTime,xnew,'r','LineWidth',1.5);
     text(0.01,0.1,'D_{st} (nT)','Units','normalized','FontSize',14);
-    legend('Actual',sprintf('IR Model - CC %2.2f',corr),sprintf('Persistence Model - %2.2f',corr2),'Location','SouthEast')
-    
+    h_legend=legend('Measured',sprintf('IR Model - CC %2.2f',corr),sprintf('Persistence Model - %2.2f',corr2),'Location','SouthEast');
+    set(h_legend,'FontSize',14)
     h(2)=subplot('position',subplotstack(2,2)); 
     
     plot(FILLEDTime,VBS,'k','LineWidth',1.5);
-    text(0.01,0.92,'V_{B_S}','Units','normalized','FontSize',14);
+    text(0.01,0.92,'vB_S (\mu{}V/m)','Units','normalized','FontSize',14);
     set(findobj('type','axes'),'xticklabel',{[]});
 set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
 axis tight;
@@ -342,7 +342,7 @@ datetick('x','keeplimits')
 set(findobj('type','axes'),'xtick',get(h(end),'xtick'))
 linkaxes(h,'x')
 axis tight;
-    xlabel('Date')
+    xlabel('Date of 1989')
     
     print('-depsc2', '-r200', sprintf('figures/BasicModelExample-GOES%d.eps',satnum));
     print('-dpng', '-r200', sprintf('figures/PNGs/BasicModelExample-GOES%d.png',satnum));

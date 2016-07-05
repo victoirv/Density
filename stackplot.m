@@ -30,7 +30,8 @@ Time(Time>datelimits(2))=[];
 for i=1:numvars
     h(i)=subplot('position',subplotstack(numvars,i));
     if(i<numvars)
-        plot(Time,Data(:,i),'-','MarkerSize',10);
+        plot(Time,Data(:,i),'-','LineWidth',1.5);
+     
     else
         plot(Time,Data(:,i),'r.','MarkerSize',10); %Plot last subplot in red
     end
@@ -53,16 +54,24 @@ datetick('x','keeplimits')
 set(findobj('type','axes'),'xtick',get(h(end),'xtick'))
 linkaxes(h,'x')
 axis tight;
-xlabel(sprintf('Date from %s through %s',datestr(Time(1),1),datestr(Time(end),1)),'FontSize',14);
 
 sy=year(Time(1));
 ey=year(Time(end));
+
+if(sy~=ey)
+    xlabel(sprintf('Date from %s through %s',datestr(Time(1),1),datestr(Time(end),1)),'FontSize',14);
+else
+    xlabel(sprintf('Date of %d',sy),'FontSize',14);
+end
+
+
 
 if(sy ~= ey)
 %print('-depsc2',sprintf('paperfigures/alldata-GOES%d-%d-%d.eps',satnum,sy,ey));
 print('-depsc2','-r300',sprintf('paper/figures/alldata-GOES%d-%d-%d.eps',satnum,sy,ey));
 print('-dpng','-r200',sprintf('paper/figures/PNGs/alldata-GOES%d-%d-%d.png',satnum,sy,ey));
 else
+    
     sy=datestr(Time(1),'ddmmmyyyy');
     ey=datestr(Time(end),'ddmmmyyyy');
     print('-depsc2','-r300',sprintf('paper/figures/alldata-GOES%d-%s-%s.eps',satnum,sy,ey));
