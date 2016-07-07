@@ -42,16 +42,16 @@
 
 ### July 7, 2016 ###
 6:
-![Fig](figures/RhoBinned/PNGs/RhoBinnedB_z-case1-t020-tf25-GOES6.png) ![Fig](figures/RhoBinned/PNGs/RhoBinnedB_z-case1-t025-tf30-GOES6.png)
+![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF107-case1-t020-tf25-GOES6.png) ![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF107-case1-t025-tf30-GOES6.png)
 
 2:
-![Fig](figures/RhoBinned/PNGs/RhoBinnedB_z-case1-t020-tf25-GOES2.png) ![Fig](figures/RhoBinned/PNGs/RhoBinnedB_z-case1-t025-tf30-GOES2.png)
+![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF107-case1-t020-tf25-GOES2.png) ![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF107-case1-t025-tf30-GOES2.png)
 
 5:
-![Fig](figures/RhoBinned/PNGs/RhoBinnedB_z-case1-t020-tf25-GOES5.png) ![Fig](figures/RhoBinned/PNGs/RhoBinnedB_z-case1-t025-tf30-GOES5.png)
+![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF107-case1-t020-tf25-GOES5.png) ![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF107-case1-t025-tf30-GOES5.png)
 
 7:
-![Fig](figures/RhoBinned/PNGs/RhoBinnedB_z-case1-t020-tf25-GOES7.png) ![Fig](figures/RhoBinned/PNGs/RhoBinnedB_z-case1-t025-tf30-GOES7.png)
+![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF107-case1-t020-tf25-GOES7.png) ![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF107-case1-t025-tf30-GOES7.png)
 
 ### June 1, 2016 ###
 Made 2D correlation plots of MHD model vs IR model of model (need better term). This is using the prior 3 data points (equal to an hour and a half), and all available input variables. Unsurprisingly, correlation is great at the edges far from earth. More surprisingly, there are sections of very high correlation along the shock boundaries. Example plot for Bz:
