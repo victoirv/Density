@@ -330,6 +330,7 @@ if(MakePaperPlots)
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
     if(DSTCut<0), title(h1,sprintf('%d D_{st} < %d nT events; %d-%d',length(starti),DSTCut,sy,ey)); end
+    if(DSTCut<0 && cutoffduration>1), title(h1,sprintf('%d extended D_{st} < %d nT events; %d-%d',length(starti),DSTCut,sy,ey)); end
     if(AECut<0), title(h1,sprintf('%d AE > %d events; %d-%d',length(starti),AECut,sy,ey)); end
     if(MDCut>0), title(h1,sprintf('%d \\rho_{eq} > %d amu/cm^3 events; %d-%d',length(starti),MDCut,sy,ey)); end
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
