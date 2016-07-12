@@ -28,7 +28,7 @@ feedbackDelays = 1:delays;
 hiddenLayerSize = 10;
 
 net=patternnet(hiddenLayerSize);
-net=train(net,x',y'); %Look at confusion matrix. Not great.
+net=train(net,x',y',[],[],y'.*log(length(y)/sum(y))+1); %Look at confusion matrix. Not great.
 
 output=net(x');
 
@@ -43,35 +43,45 @@ end
 
 %Make histograms if labels are passed in
 if(~isempty(labels))
-    [bina,binax]=hist(x(y & 1,1)); %Not sure why I need the & 1, but it doesn't seem to think target is 1s and 0s otherwise
-    [bin,binx]=hist(x(round(output) & y',1));
-    [bin2,binx2]=hist(x(~round(output) & y',1));
     
-    
-    if(min(size(x))==1)
-        figure; stairs(binax,bina,'k','LineWidth',1.2);
-        hold on; stairs(binx,bin); stairs(binx2,bin2,'r')
-        legend('Actual','True Positive','False Negative')
-        xlabel(labels)
-    else
-        figure; subplot(min(size(x)),1,1)
-        stairs(binax,bina,'k','LineWidth',1.2);
-        hold on; stairs(binx,bin); stairs(binx2,bin2,'r')
-        legend('Actual','True Positive','False Negative')
-        xlabel(labels{1})
-        
-        for i=2:min(size(x))
-            [bina,binax]=hist(x(y & 1,i));
-            [bin,binx]=hist(x(round(output) & y',i));
-            [bin2,binx2]=hist(x(~round(output) & y',i));
-            subplot(min(size(x)),1,i)
-            stairs(binax,bina,'k','LineWidth',1.2);
-            hold on; stairs(binx,bin); stairs(binx2,bin2,'r')
-            legend('Actual','True Positive','False Negative')
-            xlabel(labels{i})
+    if(findstr('full',figname))
+        for i=1:length(labels)
+        x2(:,i)=nanmedian(x(:,i:length(labels):end),2);
         end
-        
+        x=x2;
     end
+        [bina,binax]=hist(x(y & 1,1)); %Not sure why I need the & 1, but it doesn't seem to think target is 1s and 0s otherwise
+        [bin,binx]=hist(x(round(output) & y',1));
+        [bin2,binx2]=hist(x(~round(output) & y',1));
+        [bin3,binx3]=hist(x(round(output) & ~y',1));
+
+
+        if(min(size(x))==1)
+            figure; stairs(binax,bina,'k','LineWidth',1.2);
+            hold on; stairs(binx,bin); stairs(binx2,bin2,'r'); stairs(binx3,bin3,'m');
+            legend('Actual','True Positive','False Negative','False Positive')
+            xlabel(labels)
+        else
+            figure; subplot(min(size(x)),1,1)
+            stairs(binax,bina,'k','LineWidth',1.2);
+            hold on; stairs(binx,bin); stairs(binx2,bin2,'r'); stairs(binx3,bin3,'m');
+            legend('Actual','True Positive','False Negative','False Positive')
+            xlabel(labels{1})
+
+            for i=2:min(size(x))
+                [bina,binax]=hist(x(y & 1,i));
+                [bin,binx]=hist(x(round(output) & y',i));
+                [bin2,binx2]=hist(x(~round(output) & y',i));
+                [bin3,binx3]=hist(x(round(output) & ~y',i));
+                subplot(min(size(x)),1,i)
+                stairs(binax,bina,'k','LineWidth',1.2);
+                hold on; stairs(binx,bin); stairs(binx2,bin2,'r'); stairs(binx3,bin3,'m');
+                legend('Actual','True Positive','False Negative','False Positive')
+                xlabel(labels{i})
+            end
+
+        end
+    %end
     
     if(~isempty(figname))
         orient tall;

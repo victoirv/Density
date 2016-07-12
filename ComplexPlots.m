@@ -84,7 +84,7 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         plot(xa,tvals+ylims(1)-1,'.','MarkerSize',15,'Color',[0.3 0.8 0.3])
         print('-depsc2',sprintf('paper/figures/RhoBinned/RhoBinned%s-case%d-t0%d-tf%d-GOES%d-valid.eps',varname,stormcase,tw(1),tw(end),satnum));
         print('-dpng','-r200',sprintf('paper/figures/RhoBinned/PNGs/RhoBinned%s-case%d-t0%d-tf%d-GOES%d-valid.png',varname,stormcase,tw(1),tw(end),satnum));
-        
+       
         
         t1=normrnd(ones(20,100),0.1);
         t1(1:10,:)=normrnd(ones(10,100)+4,0.1);
@@ -120,6 +120,54 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         xlabel('Time since onset (hours)')
         print('-depsc2',sprintf('paper/figures/RhoBinned/RhoBinned%s-case%d-t0%d-tf%d-GOES%d.eps',varname,stormcase,tw(1),tw(end),satnum));
         print('-dpng','-r200',sprintf('paper/figures/RhoBinned/PNGs/RhoBinned%s-case%d-t0%d-tf%d-GOES%d.png',varname,stormcase,tw(1),tw(end),satnum));
+        
+        
+        
+        
+        
+                %Do it again but with means
+        topcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
+        bottomcut=topcut;
+        h=figure('Visible',visible);   
+        top=nanmean(AVMDMat(nanmean(AVMat(:,tw,varnum),2)>=topcut,:));
+        bottom=nanmean(AVMDMat(nanmean(AVMat(:,tw,varnum),2)<bottomcut,:));
+        topbar=nanstd(AVMDMat(nanmean(AVMat(:,tw,varnum),2)>=topcut,:))./sqrt(sum(~isnan(AVMDMat(nanmean(AVMat(:,tw,varnum),2)>=topcut,:))));
+        bottombar=nanstd(AVMDMat(nanmean(AVMat(:,tw,varnum),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmean(AVMat(:,tw,varnum),2)<bottomcut,:))));
+        tvals=ones(1,length(top));
+        for j=1:length(top)
+            [tvals(j),p]=ttest2(AVMDMat(nanmean(AVMat(:,tw,varnum),2)>=topcut,j),AVMDMat(nanmean(AVMat(:,tw,varnum),2)<topcut,j));
+        end
+        tvals(tvals==0)=NaN;
+        h=figure('Visible',visible);
+        plot(xa,nanmean(AVMDMat),'r','LineWidth',3)
+        hold on;
+
+        plot(xa,top,'b','LineWidth',2)    
+        plot(xa,bottom,'k','LineWidth',2)%'Color',[0.3 0.8 0.3])
+        plot(xa,[top+topbar; top-topbar],'b-.')
+        plot(xa,[bottom+bottombar; bottom-bottombar],'k-.')%,'Color',[0.3 0.8 0.3])
+        ylims=get(gca,'YLim');
+        plot(xa,tvals+ylims(1)-1,'.','MarkerSize',15,'Color',[0.3 0.8 0.3])
+        rect=rectangle('Position',[tw(1)-timewidth-1 ylims(1) tw(end)-tw(1) ylims(2)-ylims(1)]) ;
+        set(rect,'FaceColor',[0.9 0.9 0.9])
+        uistack(rect,'bottom')
+        grid on;
+        if(tw(1)==25)
+            text(0.01,0.97,'(b)','Units','normalized','FontSize',14)
+        else
+            text(0.01,0.97,'(a)','Units','normalized','FontSize',14)
+        end
+        set(gca,'xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
+        xlim([-timewidth timewidth*2]./LongTimeScale)
+        lh=legend('All events ',sprintf('%s  \\geq %2.2f %s; %d events ',varname,topcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)>=topcut)),sprintf('%s < %2.2f %s; %d events ',varname,bottomcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)<bottomcut)));
+        set(lh,'box','off');
+        title(sprintf('%s events using means; GOES %d; %d-%d',eventtype,satnum,sy,ey));
+        ylabel('\rho_{eq} (amu/cm^3)')
+        xlabel('Time since onset (hours)')
+        print('-depsc2',sprintf('paper/figures/RhoBinned/RhoBinned%s-case%d-t0%d-tf%d-GOES%d-means.eps',varname,stormcase,tw(1),tw(end),satnum));
+        print('-dpng','-r200',sprintf('paper/figures/RhoBinned/PNGs/RhoBinned%s-case%d-t0%d-tf%d-GOES%d-means.png',varname,stormcase,tw(1),tw(end),satnum));
+        
+        
     end
     end
     
@@ -426,11 +474,11 @@ if(stormcase==30) %NNBinary Onset for rhoeq, and only storm time
     stormstarts(stormstarts==-1)=0;
     
     xi=find(stormstarts);
-    NNBinaryOnset([FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) MassDensitySpline([xi xi-1 xi-2 xi-3])'] ,stormstarts([xi xi-1 xi-2 xi-3])','hourly-withreq',{'F_{10.7}','Kp','D_{st}','V_{sw}','\rho_{eq}'});
-    NNBinaryOnset(FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) ,stormstarts([xi xi-1 xi-2 xi-3])','hourly',{'F_{10.7}','Kp','D_{st}','V_{sw}'});
+    NNBinaryOnset([FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) MassDensitySpline([xi xi-1 xi-2 xi-3])'] ,stormstarts([xi xi-1 xi-2 xi-3])','hourly-withreq',{'F_{10.7} (s.f.u)','Kp','D_{st} (nT)','V_{sw} (km/s)','\rho_{eq} (amu/cm^3)'});
+    NNBinaryOnset(FILLED([xi xi-1 xi-2 xi-3],[6 13 15 30]) ,stormstarts([xi xi-1 xi-2 xi-3])','hourly',{'F_{10.7} (s.f.u)','Kp','D_{st} (nT)','V_{sw} (km/s)'});
   
-    NNBinaryOnset([FILLED(:,[6 13 15 30]) MassDensitySpline' circshift([FILLED(:,[6 13 15 30]) MassDensitySpline'],1) circshift([FILLED(:,[6 13 15 30]) MassDensitySpline'],2) circshift([FILLED(:,[6 13 15 30]) MassDensitySpline'],3)],stormstarts','full-hourly-withreq');
-    NNBinaryOnset([FILLED(:,[6 13 15 30]) circshift(FILLED(:,[6 13 15 30]),1) circshift(FILLED(:,[6 13 15 30]),2) circshift(FILLED(:,[6 13 15 30]),3)],stormstarts','full-hourly');
+    NNBinaryOnset([FILLED(:,[6 13 15 30]) MassDensitySpline' circshift([FILLED(:,[6 13 15 30]) MassDensitySpline'],1) circshift([FILLED(:,[6 13 15 30]) MassDensitySpline'],2) circshift([FILLED(:,[6 13 15 30]) MassDensitySpline'],3)],circshift(stormstarts',1),'full-hourly-withreq');
+    NNBinaryOnset([FILLED(:,[6 13 15 30]) circshift(FILLED(:,[6 13 15 30]),1) circshift(FILLED(:,[6 13 15 30]),2) circshift(FILLED(:,[6 13 15 30]),3)],circshift(stormstarts',1),'full-hourly');
     
     stormstartsDay=stormstarts;
     while(mod(length(stormstartsDay),24)~=0)
@@ -439,7 +487,7 @@ if(stormcase==30) %NNBinary Onset for rhoeq, and only storm time
     stormstartsDay=sum(reshape(stormstartsDay,24,[]));
     stormstartsDay(stormstartsDay>1)=1; %Any day with multiple storms is just marked as one event. Might be worth leaving off?
     
-    xi=find(stormstartsDay);
+    xi=find(stormstartsDay); 
    
    F107Day=interptest(FILLEDTime,FILLED(:,30),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    KpDay=interptest(FILLEDTime,FILLED(:,13),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
@@ -447,11 +495,11 @@ if(stormcase==30) %NNBinary Onset for rhoeq, and only storm time
    DstDay=interptest(FILLEDTime,FILLED(:,15),FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    MDDay=interptest(FILLEDTime,MassDensitySpline,FILLEDTime(1):24*(FILLEDTime(2)-FILLEDTime(1)):FILLEDTime(end)); 
    
-   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KpDay([xi xi-1 xi-2 xi-3]) DstDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily',{'F_{10.7}','Kp','D_{st}','V_{sw}'});
-   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KpDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3]) MDDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily-withreq',{'F_{10.7}','Kp','V_{sw}','\rho_{eq}'});
+   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KpDay([xi xi-1 xi-2 xi-3]) DstDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily',{'F_{10.7} (s.f.u)','Kp','D_{st} (nT)','V_{sw} (km/s)'});
+   NNBinaryOnset([F107Day([xi xi-1 xi-2 xi-3]) KpDay([xi xi-1 xi-2 xi-3]) VSWDay([xi xi-1 xi-2 xi-3]) MDDay([xi xi-1 xi-2 xi-3])] ,stormstartsDay([xi xi-1 xi-2 xi-3])','daily-withreq',{'F_{10.7} (s.f.u)','Kp','V_{sw} (km/s)','\rho_{eq} (amu/cm^3)'});
    
-   NNBinaryOnset([[F107Day KpDay VSWDay MDDay] circshift([F107Day KpDay VSWDay MDDay],1) circshift([F107Day KpDay VSWDay MDDay],2) circshift([F107Day KpDay VSWDay MDDay],3)],stormstartsDay','full-daily-withreq');
-   NNBinaryOnset([[F107Day KpDay VSWDay] circshift([F107Day KpDay VSWDay],1) circshift([F107Day KpDay VSWDay],2) circshift([F107Day KpDay VSWDay],3)],stormstartsDay','full-daily');
+   NNBinaryOnset([[F107Day KpDay VSWDay MDDay] circshift([F107Day KpDay VSWDay MDDay],1) circshift([F107Day KpDay VSWDay MDDay],2) circshift([F107Day KpDay VSWDay MDDay],3)],circshift(stormstartsDay',1),'full-daily-withreq',{'F_{10.7} (s.f.u)','Kp','V_{sw} (km/s)','\rho_{eq} (amu/cm^3)'});
+   NNBinaryOnset([[F107Day KpDay VSWDay] circshift([F107Day KpDay VSWDay],1) circshift([F107Day KpDay VSWDay],2) circshift([F107Day KpDay VSWDay],3)],circshift(stormstartsDay',1),'full-daily');
    
    
    %Shuffled target

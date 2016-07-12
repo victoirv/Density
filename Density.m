@@ -56,6 +56,7 @@ MDCut=0;
 AECut=0;
 nnanalysis=0; %Also set 0 here, changed on per-case basis.
 ccanalysis=0;
+arxanalysis=0;
 figurename='paper/figures/stormavs-';
 BigFont=16; %Set size for larger, readable fonts
 
@@ -267,11 +268,17 @@ switch stormcase
         figurename=strcat(figurename,'randomdaily',sprintf('-GOES%d.eps',satnum));
         yr=5;
         yranges(5,:,:)=[-1 2; 400 500; -20 0; 100 120; 5 30];
+    case 32
+        storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+        DSTCut=-50;
+        figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
+        yr=2;
+        arxanalysis=1;
 end
 
 eventtype='D_{st}';
 if(MDCut>0)
-    eventtype='\\rho_{eq}';
+    eventtype='\rho_{eq}';
 end
 
 
@@ -346,6 +353,10 @@ end
 
 if(nnanalysis) 
     NNAnalysis(AVMat,AVMDMat,satnum);
+end
+
+if(arxanalysis)
+    ARXAnalysis(FILLED,MassDensitySpline,headers,satnum);
 end
 
 

@@ -313,7 +313,7 @@ end
 
 if(MakePaperPlots && stormcase==28 && sy==1989 && ey==1989) %For a short time period plot, make quick IR model plot
     
-    VBS=FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5))./2;
+    VBS=(FILLED(:,6).*(abs(FILLED(:,5))-FILLED(:,5))./2)./100;
     [~,~, ~,xnew,corr] = IR(FILLED(:,15),VBS,0,12,0,0);
     
     h=figure('Visible',visible);
@@ -334,7 +334,7 @@ if(MakePaperPlots && stormcase==28 && sy==1989 && ey==1989) %For a short time pe
     h(2)=subplot('position',subplotstack(2,2)); 
     
     plot(FILLEDTime,VBS,'k','LineWidth',1.5);
-    text(0.01,0.92,'vB_S (\mu{}V/m)','Units','normalized','FontSize',14);
+    text(0.01,0.92,'vB_S (V/Km)','Units','normalized','FontSize',14);
     set(findobj('type','axes'),'xticklabel',{[]});
 set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
 axis tight;

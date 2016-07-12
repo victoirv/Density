@@ -20,7 +20,7 @@ if(size(x,1)~=size(t,1)) %If x has two dimensions and the time dimension isn't a
     x=x';
 end
 
-
+%{
 if(min(size(x))~=1) %If x has two dimensions, recursively interpolate over the non-time dimensions
     xdim=setdiff(size(x),size(t));
     datanew=NaN(length(tnew),xdim);  
@@ -78,10 +78,10 @@ else
 return
 
 end
+%}
 
 
 
-%{
 xdim=setdiff(size(x),size(t)); %setdiff(size(x),size(t)) finds length of non-time dimension of x
 if(isempty(xdim))
     xdim=1;
@@ -89,11 +89,11 @@ end
 datanew2=zeros(length(tnew),xdim); 
 
 for i=1:length(tnew)
-    datanew2(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); %Center
-    %datanew(i,:)=nanmedian(x(t>=(tnew(i)) & t<(tnew(i)+2*dt),:)); %Forwards time
+    %datanew2(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); %Center
+    datanew(i,:)=nanmedian(x(t>=(tnew(i)) & t<(tnew(i)+2*dt),:)); %Forwards time
 end
 test=0;
-%}
+
 
 
 

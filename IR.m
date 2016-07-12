@@ -75,7 +75,7 @@ if(loops==1)
     cc=coef(end);
 else
     cas=zeros(loops,numxcoef);
-    cbs=zeros(loops,numfcoef);
+    cbs=zeros(loops,numfcoef*numimpulses);
     ccs=zeros(loops,1);
     for i=1:loops
         randrows=randsample(1:length(b),length(b),'true');

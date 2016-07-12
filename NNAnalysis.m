@@ -87,18 +87,7 @@ for i=1:length(Perms)
     [CCMs(:,:), CCMSDs(:,:)]=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
     fprintf(table,'%s   \t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %2.2f %2.2f %2.2f %2.2f %2.2f %2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:),CCMSDs(:));
 end
-%{
-    Perms=combnk(1:6,4);
-    for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
-        fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
-    end
-    Perms=combnk(1:6,5);
-    for i=1:length(Perms)
-        CCMs(:,:)=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(i,:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
-        fprintf(table,'%s\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f \n',strjoin(PermNames(Perms(i,:)),'+'),CCMs(:));
-    end
-%}
+
 Perms=combnk(1:7,7);
 [CCMs(:,:), CCMSDs(:,:)]=nntest(nanmedian(AVMat(:,20:24,PermCols(Perms(:))),2),nanmedian(AVMDMat(:,25:29),2),1,loops,1);
 fprintf(table,'All\t- %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %+2.2f %2.2f %2.2f %2.2f %2.2f %2.2f %2.2f \n',CCMs(:),CCMSDs(:));

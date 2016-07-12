@@ -132,7 +132,7 @@ MassDensityNanSpline=interp1(FILLEDTime(~isnan(MassDensitySpline)),MassDensitySp
 %interpolated version
 FILLED=[FILLED MLTFit F107 OMNIRho MFit]; %28 cols of F, 29 is mlt, 30 is f107, etc
 headers{end+1}='MLT';
-headers{end+1}='F107';
+headers{end+1}='F_{10.7}';
 headers{end+1}='OMNIRho';
 headers{end+1}='M';
 units={'year','day','hour','nT','nT','cm/s','verify','nPa','','','','','','','nT','nT','nT','nT','nT','nT','nT','','','','','','',''};
