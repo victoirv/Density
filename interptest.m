@@ -89,7 +89,7 @@ end
 datanew2=zeros(length(tnew),xdim); 
 
 for i=1:length(tnew)
-    %datanew2(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); %Center
+    %datanew(i,:)=nanmedian(x(t>=(tnew(i)-dt) & t<(tnew(i)+dt),:)); %Center
     datanew(i,:)=nanmedian(x(t>=(tnew(i)) & t<(tnew(i)+2*dt),:)); %Forwards time
 end
 test=0;

@@ -28,6 +28,11 @@ while(starti(end)+maxwidth>=length(storms)-1)
     starti(end)=[]; endi(end)=[];
 end
 
+tooclose=find(diff(starti)<23)+1;
+starti(tooclose)=[]; %remove storms within 10 hours of each other
+endi(tooclose)=[];
+duration(tooclose)=[];
+
 %Cut down found storms to only include pre-noon conditions
 if(cutconditions) 
    endi(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
