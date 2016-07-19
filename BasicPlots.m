@@ -73,7 +73,7 @@ if(MakePaperPlots && stormcase==1)
     axis([-1 24 0 8000])
     set(gca,'XTick',0:2:24)
     xlabel('MLT')
-    ylabel('Frequency')
+    ylabel('Count')
     print -depsc2 -r200 figures/databyMLT.eps
     print -dpng -r200 figures/PNGs/databyMLT.png
     if(strcmp(visible,'off')),close(h);end;
@@ -94,6 +94,24 @@ if(MakePaperPlots && stormcase==1)
     print -depsc2 -r200 figures/nansbyhour_storm.eps
     print -dpng -r200 figures/PNGs/nansbyhour_storm.png
     if(strcmp(visible,'off')),close(h);end;
+    
+    
+    
+    
+    h=figure('Visible',visible);
+    hold on;
+    for i=1:10
+    plot(xa,i/3+normc(AVMat(i,:,5)'));
+    end
+    plot(xa,normc(nanmedian(AVMat(1:10,:,5))'),'r','LineWidth',2);
+    %plot(xa,normc(AVs(:,5)),'r','LineWidth',2);
+    ylabel('Normalized D_{st}')
+    xlabel('Hours since onset')
+    grid on;
+    print -depsc2 -r200 figures/epochexample.eps
+    print -dpng -r200 figures/PNGs/epochexample.png
+    if(strcmp(visible,'off')),close(h);end;
+    
 end
 
 
