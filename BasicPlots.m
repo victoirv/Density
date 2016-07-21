@@ -105,7 +105,7 @@ if(MakePaperPlots && stormcase==1)
     end
     plot(xa,normc(nanmedian(AVMat(1:10,:,5))'),'r','LineWidth',2);
     %plot(xa,normc(AVs(:,5)),'r','LineWidth',2);
-    ylabel('Normalized D_{st}')
+    ylabel('Normalized B_z')
     xlabel('Hours since onset')
     grid on;
     print -depsc2 -r200 figures/epochexample.eps

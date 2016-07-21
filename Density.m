@@ -76,9 +76,10 @@ switch stormcase
         MakeBinPlots=1;
         yranges(5,:,:)=[-1 3; 350 450; -20 0; 180 210; 10 60];
     case 3
-        storms=[0 diff([0 (diff(MassDensityNanSpline)>10)' 0])];
-        figurename=strcat(figurename,'diffden-10amu',sprintf('-GOES%d.eps',satnum));
-        yr=3;
+        storms=[0 diff([0 (diff(MassDensityNanSpline)>5)' 0])];
+        figurename=strcat(figurename,'diffden-5amu',sprintf('-GOES%d.eps',satnum));
+        yr=5;
+        yranges(5,:,:)=[-1 3; 350 450; -20 0; 180 210; 10 60];
     case 4
         storms=[0 diff([0 (abs(MassDensityNanSpline(2:end)./MassDensityNanSpline(1:end-1))>1.3)' 0])];
         figurename=strcat(figurename,'diffden-30percent',sprintf('-GOES%d.eps',satnum));
@@ -274,6 +275,27 @@ switch stormcase
         figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
         yr=2;
         arxanalysis=1;
+    case 33
+        storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
+        DSTCut=-50;
+        figurename=strcat(figurename,'dst-normalized',sprintf('-GOES%d.eps',satnum));
+        yr=5;
+        yranges(5,:,:)=[-6 2; 350 550; -60 0; 150 230; -4 4];
+    case 34
+        storms=diff([0 (FILLED(:,15)<-50)' 0]);
+        DSTCut=-50;
+        cutoffduration=6; %12 hour DST storm
+        figurename=strcat(figurename,'dd6',sprintf('-GOES%d.eps',satnum));
+        yr=5;
+        yranges(5,:,:)=[-10 5; 400 700; -100 0; 150 200; 0 30];
+     case 35
+        storms=diff([0 (FILLED(:,15)<-50)' 0]);
+        DSTCut=-50;
+        LongTimeScale=24;
+        cutoffduration=6; %12 hour DST storm
+        figurename=strcat(figurename,'dd6-day',sprintf('-GOES%d.eps',satnum));
+        yr=5;
+        yranges(5,:,:)=[-10 5; 400 700; -100 0; 150 200; 0 30];
 end
 
 eventtype='D_{st}';
@@ -316,6 +338,13 @@ for i=1:length(starti)
 end
 AVs=nanmedian(AVMat,1);
 AVMDs=nanmedian(AVMDMat);
+if(stormcase==33)
+    NormAVMDMat=AVMDMat;
+    for i=1:length(AVMat)
+        NormAVMDMat(i,:)=(AVMDMat(i,:)-min(AVMDMat(i,:)))./(max(AVMDMat(i,:))-min(AVMDMat(i,:)));
+    end
+    AVMDs=nanmedian(NormAVMDMat);
+end
 AVnnans=sum(~isnan(AVMDMat));
 AVMatBars=[AVs(1,:,:)-nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:)))) ; AVs(1,:,:)+nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:))))];
 AVMDMatBars=[AVMDs(1,:)-nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:)))) ; AVMDs(1,:)+nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:))))];
