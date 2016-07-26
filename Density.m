@@ -42,7 +42,7 @@ DentonData
 
 yranges=zeros(5,5,2);
 yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230; 8 16];
-yranges(2,:,:)=[-8 3; 400 600; -80 0; 160 190; 8 18];
+yranges(2,:,:)=[-8 3; 400 600; -80 0; 140 180; 8 18];
 yranges(3,:,:)=[-8 3; 350 580; -90 0; 170 200; 12 22];
 yranges(4,:,:)=[-3 2; 400 550; -30 -10; 80 120; 12 22];
 yranges(5,:,:)=[-10 10; 0 1000; -100 0; 00 200; 12 22]; %Made for overwriting with specific cases
@@ -117,10 +117,11 @@ switch stormcase
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         cutconditions=1;
+        cutoffduration=12;
         LongTimeScale=24;
         figurename=strcat(figurename,'dst-50-tak',sprintf('-GOES%d.eps',satnum));
         yr=5;
-        yranges(5,:,:)=[-2 2; 350 550; -60 0; 150 230; 12 22];
+        yranges(5,:,:)=[-2 2; 400 600; -80 0; 150 230; 10 30];
         
     case 11 %Takahashi but Mass Storm
         storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
@@ -324,7 +325,7 @@ end
 %%%%%%
 %Find storm indices and apply conditions to prune storms based on duration
 %or overlapping edges of data
-[starti,endi,duration]=FindStorms(storms,cutoffduration,cutconditions,maxwidth,MLTFit);
+[starti,endi,duration]=FindStorms(storms,cutoffduration,cutconditions,maxwidth,MLTFit,FILLED);
 
 %Build matrices storing all storms
 stormi=1;
@@ -332,8 +333,8 @@ AVMat=[];
 AVMDMat=[];
 for i=1:length(starti)
     %datanum=sum(~isnan(MassDensitySpline(starti(i):endi(i))));
-    AVMat(stormi,:,:)=FILLED((starti(i)-timewidth):starti(i)+timewidth*2,:); 
-    AVMDMat(stormi,:)=MassDensitySpline((starti(i)-timewidth):starti(i)+timewidth*2);
+    AVMat(stormi,:,:)=FILLED((starti(i)-timewidth):starti(i)+timewidth*2-1,:); 
+    AVMDMat(stormi,:)=MassDensitySpline((starti(i)-timewidth):starti(i)+timewidth*2-1);
     stormi=stormi+1;
 end
 AVs=nanmedian(AVMat,1);
@@ -351,28 +352,33 @@ AVMDMatBars=[AVMDs(1,:)-nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:)))) ; 
 AVs=squeeze(AVs);
 
 if(LongTimeScale>1)
-    AVs=interptest(-timewidth:1:timewidth*2,AVs,-timewidth:LongTimeScale:timewidth*2);
-    AVMDs=interptest(-timewidth:1:timewidth*2,AVMDs',-timewidth:LongTimeScale:timewidth*2)';
+    TimeGridOld=[-timewidth:1:(timewidth*2-1)];
+    TimeGridNew=[-timewidth:LongTimeScale:(timewidth*2-1)];
+    AVs=interptest(TimeGridOld,AVs,TimeGridNew);
+    AVMDs=interptest(TimeGridOld,AVMDs',TimeGridNew)';
     
-    AVnnans=interptest(-timewidth:1:timewidth*2,AVnnans',-timewidth:LongTimeScale:timewidth*2)';
-    NewAVMatBars(1,:,:)=interptest(-timewidth:1:timewidth*2,squeeze(AVMatBars(1,:,:)),-timewidth:LongTimeScale:timewidth*2); 
-    NewAVMatBars(2,:,:)=interptest(-timewidth:1:timewidth*2,squeeze(AVMatBars(2,:,:)),-timewidth:LongTimeScale:timewidth*2);
+    AVnnans=interptest(TimeGridOld,AVnnans',TimeGridNew)';
+    NewAVMatBars(1,:,:)=interptest(TimeGridOld,squeeze(AVMatBars(1,:,:)),TimeGridNew); 
+    NewAVMatBars(2,:,:)=interptest(TimeGridOld,squeeze(AVMatBars(2,:,:)),TimeGridNew);
     AVMatBars=NewAVMatBars;
     
-    AVMDMatBars=[interptest(-timewidth:1:timewidth*2,AVMDMatBars(1,:)',-timewidth:LongTimeScale:timewidth*2)'; ...
-        interptest(-timewidth:1:timewidth*2,AVMDMatBars(2,:)',-timewidth:LongTimeScale:timewidth*2)'];
+    AVMDMatBars=[interptest(TimeGridOld,AVMDMatBars(1,:)',TimeGridNew)'; ...
+        interptest(TimeGridOld,AVMDMatBars(2,:)',TimeGridNew)'];
     
     xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
-    AVMDblock=nanmedian(reshape(AVMDMat(:,14:end),[],length(-timewidth:LongTimeScale:timewidth*2)-1));
+    AVMDblock=nanmedian(reshape(AVMDMat(:,14:end),[],length(TimeGridNew)-1));
 
 
+    AVMD2=AVMDs;
+    %{
     AVMD2=zeros(length(starti),13);
     AVMD2(:,1)=nanmedian(AVMDMat(:,1:12),2);
-    for i=1:length(-timewidth:LongTimeScale:timewidth*2)-2
+    for i=1:length(TimeGridNew)-2
        AVMD2(:,i+1)=nanmedian(AVMDMat(:,i*LongTimeScale+1-12:i*LongTimeScale+12),2);
     end
     AVMD2(:,13)=nanmedian(AVMDMat(:,end-12:end),2);
     AVMD2=nanmedian(AVMD2);
+    %}
 end
 
 %Shifting these to external functions for cleanliness and proof of independence/modularity
@@ -403,7 +409,7 @@ end
 
 
 %Default x-axis for plots
-xa=(-timewidth:LongTimeScale:timewidth*2);
+xa=(-timewidth:LongTimeScale:timewidth*2-1);
 
 %Plots just made to prove data is accurate, or make some simple comparison
 DataProofPlots

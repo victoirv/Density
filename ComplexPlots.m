@@ -13,9 +13,9 @@ if(MakePaperPlots && stormcase==1)
     end
 
     h=figure('Visible',visible);
-    plot(-timewidth:1:timewidth*2,AVMDMat,'.')
+    plot(-timewidth:1:timewidth*2-1,AVMDMat,'.')
     hold on;
-    xa=(-timewidth:LongTimeScale:timewidth*2);
+    xa=(-timewidth:LongTimeScale:timewidth*2-1);
     plot(xa,AVMDs(1,:),'r','LineWidth',3);
     hold on; plot(xa,AVMDMatBars(:,:),'r-.','LineWidth',2);
     print -depsc2 -r200 figures/allstorms.eps
@@ -351,7 +351,7 @@ end
 
 %Make main stack plots
 if(MakePaperPlots)
-    xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
+    xa=(-timewidth:LongTimeScale:timewidth*2-1)./LongTimeScale;
     h=figure('Visible',visible);
     orient tall;
     
@@ -551,8 +551,8 @@ end
 
 if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for any day plot
     %Bootstrap test for same daily means
-    xa1d=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
-    AV1d=interptest(-timewidth:1:timewidth*2,AVMDMat',-timewidth:LongTimeScale:timewidth*2)';
+    xa1d=(-timewidth:LongTimeScale:timewidth*2-1)./LongTimeScale;
+    AV1d=interptest(-timewidth:1:timewidth*2-1,AVMDMat',-timewidth:LongTimeScale:timewidth*2-1)';
     AVm1=AV1d(:,4);
     AV0=AV1d(:,5);
     AV1=AV1d(:,6);
@@ -581,7 +581,7 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     
     table=fopen(sprintf('tables/DeltaBootstraps-case%d.txt',stormcase),'w');
     Dm10=sum(delta(1,:)>=0)/length(delta(1,:));
-    Dm11=sum(delta(2,:)<=0)/length(delta(2,:));
+    Dm11=sum(delta(2,:)>=0)/length(delta(2,:));
     D10=sum(delta(3,:)>=0)/length(delta(3,:));
     %[~,p1]=ttest2(AVm1,AV0);
     %[~,p2]=ttest2(AVm1,AV1);
@@ -591,7 +591,7 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     fprintf(table,'Days & Difference (amu/cm$^3$) & \\%%  \\\\ \\hline\n');
     
     fprintf(table,'-1 0 & %2.2f & $%2.2f\\%%\\geq 0$  \\\\ \n',nanmedian(AVm1)-nanmedian(AV0),Dm10*100);
-    fprintf(table,'-1 1 & %2.2f & $%2.2f\\%%\\leq 0$  \\\\ \n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100);
+    fprintf(table,'-1 1 & %2.2f & $%2.2f\\%%\\geq 0$  \\\\ \n',nanmedian(AVm1)-nanmedian(AV1),Dm11*100);
     fprintf(table,' 1 0 & %2.2f & $%2.2f\\%%\\geq 0$  \\\\ \n',nanmedian(AV1)-nanmedian(AV0),D10*100);
     
     fprintf(table,'\\hline\n\\end{tabular}\n');
@@ -601,41 +601,41 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     
     g=figure('Visible',visible);
     h(1)=subplot('position',subplotstack(3,1));
-    hist(delta(1,:),[-7.5:0.5:5.5])
+    hist(delta(1,:),[-20:1:10])
     hold on;
     plot(nanmedian(AVm1)-nanmedian(AV0),0,'.','MarkerSize',20)
     plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
     text(0.01,0.9,'1 day pre-onset and onset','Units','normalized','FontSize',14)
-    text(1,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',Dm10*100))
+    text(4,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',Dm10*100))
     ylabel('Count')
     title('Bootstrapped differences of daily \rho_{eq} medians around event onset')
     
     h(2)=subplot('position',subplotstack(3,2));
-    hist(delta(2,:),[-7.5:0.5:5.5])
+    hist(delta(2,:),[-20:1:10])
     hold on;
     plot(nanmedian(AVm1)-nanmedian(AV1),0,'.','MarkerSize',20)
     plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
     text(0.01,0.9,'1 day pre-onset and 1 day post-onset','Units','normalized','FontSize',14)
-    text(-2.5,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\leq 0',Dm11*100))
+    text(4,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',Dm11*100))
     ylabel('Count')
     
    h(3)=subplot('position',subplotstack(3,3));
-    hist(delta(3,:),[-7:0.5:5])
+    hist(delta(3,:),[-20:1:10])
     hold on;
     plot(nanmedian(AV1)-nanmedian(AV0),0,'.','MarkerSize',20)
     plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
     text(0.01,0.9,'1 day post-onset and onset','Units','normalized','FontSize',14)
-    text(1,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',D10*100))
+    text(4,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',D10*100))
     ylabel('Count')
     
     set(findobj('type','axes'),'xticklabel',{[]});
 set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
 axis tight;
 %set(findobj('type','axes'),'xtick',get(h(end),'xtick'))
-set(findobj('type','axes'),'xtick',[-7:1:5])
+set(findobj('type','axes'),'xtick',[-20:2:10])
 linkaxes(h,'x')
 axis tight;
-set(h(end),'xticklabel',[-7:1:5])
+set(h(end),'xticklabel',[-20:2:10])
 xlabel('Difference (amu/cm^3)','FontSize',14)
     
     print('-depsc2', '-r200', sprintf('figures/DailyBootstrapDifferences-GOES%d-case%d.eps',satnum,stormcase))
@@ -770,3 +770,12 @@ if(MakePaperPlots && stormcase==25)
     print('-dpng', '-r200', 'figures/PNGs/F107MD27d-all2.png')
     if(strcmp(visible,'off')),close(g);end;
 end
+
+%{
+if(MakePaperPlots && stormcase==10)
+   for i=1:length(starti)
+       fprintf('Plotting %s \n',datestr(FILLEDTime(starti(i))));
+       stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[],[],[FILLEDTime(starti(i))-1,FILLEDTime(starti(i))+2]);
+   end
+end
+%}

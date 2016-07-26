@@ -6,7 +6,7 @@ endi=find(storms<0)-1;
 duration=endi-starti+1;
 
 %Shift event start points to next local DST minimum 
-while(0) 
+while(1 && cutconditions) 
     ind=FILLED(starti+1,15)<FILLED(starti,15);
     if(sum(ind)==0)
         break
@@ -38,4 +38,15 @@ if(cutconditions)
    endi(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
    duration(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
    starti(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
+   
+   drop=[];
+   for i=1:length(starti)
+       if(sum(FILLED([starti(i)-20 : starti(i)-1],15) < FILLED(starti(i),15))>0)
+           drop=[drop i];
+       end
+   end
+   starti(drop)=[];
+   endi(drop)=[];
+   duration(drop)=[];
+   
 end
