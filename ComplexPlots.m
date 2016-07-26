@@ -30,7 +30,7 @@ end
 
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
-    tws=[12:17; 20:25; 25:30];
+    tws=[20:25; 25:30];
     for varnum=[5 6 8 13 15 30]
     %varnum=30; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp, 30 is f10.7
     varname=headers{varnum};
@@ -391,7 +391,7 @@ if(MakePaperPlots)
 end
 
 if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
-    xa=(-timewidth:LongTimeScale:timewidth*2)./LongTimeScale;
+    xa=(-timewidth:LongTimeScale:timewidth*2-1)./LongTimeScale;
     h=figure('Visible',visible);
     orient tall;
     

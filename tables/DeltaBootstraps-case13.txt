@@ -1,8 +1,8 @@
 \begin{tabular}{|c|cc|}
  \hline 
 Days & Difference (amu/cm$^3$) & \%  \\ \hline
--1 0 & -0.71 & $30.40\%\geq 0$  \\ 
--1 1 & 0.71 & $18.70\%\leq 0$  \\ 
- 1 0 & -1.42 & $3.70\%\geq 0$  \\ 
+-1 0 & -2.60 & $23.90\%\geq 0$  \\ 
+-1 1 & 0.84 & $66.20\%\geq 0$  \\ 
+ 1 0 & -3.44 & $15.80\%\geq 0$  \\ 
 \hline
 \end{tabular}

@@ -142,8 +142,11 @@ switch stormcase
         storms=diff([0 (FILLED(:,15)<-50)' 0]);
         DSTCut=-50;
         LongTimeScale=24;
+        cutoffduration=12;
+        cutconditions=1;
         figurename=strcat(figurename,'dst-day',sprintf('-GOES%d.eps',satnum));
-        yr=1;
+        yr=5;
+        yranges(5,:,:)=[-2 2; 400 600; -80 0; 150 230; 5 25];
     case 14
         storms=diff([0 (MassDensityNanSpline>40)' 0]); 
         MDCut=40;
