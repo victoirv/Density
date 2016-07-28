@@ -73,6 +73,13 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
            print('-dpng',sprintf('paper/figures/RhoBinned/PNGs/RhoBinned%s-case%d-t0%d-tf%d-GOES%d-histogram.png',varname,stormcase,tw(1),tw(end),satnum));
         end
         
+        if(varnum==30 && i==2)
+            baseline=AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,40:end);
+            spike=AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,29);
+            [p,h]=ranksum(spike,baseline(:));
+            fprintf('Probability spike events come from same median distribution as baseline: %2.2f\n',p);
+        end
+        
         
         h=figure('Visible',visible);
         hold on;
