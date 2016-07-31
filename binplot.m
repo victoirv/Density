@@ -34,7 +34,7 @@ HighMatBars=[nanmedian(plotter(HighIndex,:))-nanstd(plotter(HighIndex,:))./sqrt(
 LowMatBars=[nanmedian(plotter(LowIndex,:))-nanstd(plotter(LowIndex,:))./sqrt(sum(~isnan(plotter(LowIndex,:)))) ; nanmedian(plotter(LowIndex,:))+nanstd(plotter(LowIndex,:))./sqrt(sum(~isnan(plotter(LowIndex,:))))];
 
 h=figure('visible',visible);
-set(gca, 'ColorOrder', [0 0 0; 0 0 1; 0.5 0 0.5; 1 0 0 ], 'NextPlot', 'replacechildren');
+set(gca, 'ColorOrder', [0 0 0; 0 0 1; 0 1 0; 1 0 0 ], 'NextPlot', 'replacechildren');
 plot(xa,[high; midhigh; midlow; low],'LineWidth',1.5);
 hold on; plot(xa,HighMatBars,'k-.'); plot(xa,LowMatBars,'r-.');
 ylabel(sprintf('%s (%s)',plotname,plotunits))
@@ -49,11 +49,11 @@ if(strcmp(visible,'off')),close(h);end;
 
 if(sum(sum(isnan(plotter)))) %If any nan points
     h=figure('Visible',visible);
-    plot(xa,sum(~isnan(plotter(sorter(events)>highsplit,:))),'LineWidth',1.5)
+    plot(xa,sum(~isnan(plotter(sorter(events)>highsplit,:))),'k','LineWidth',1.5)
     hold on;
-    plot(xa,sum(~isnan(plotter(sorter(events)>medsplit & sorter(events)<highsplit,:))),'m','LineWidth',1.5)
-    plot(xa,sum(~isnan(plotter(sorter(events)<medsplit & sorter(events)>lowsplit,:))),'r','LineWidth',1.5)
-    plot(xa,sum(~isnan(plotter(sorter(events)<lowsplit,:))),'k','LineWidth',1.5)
+    plot(xa,sum(~isnan(plotter(sorter(events)>medsplit & sorter(events)<highsplit,:))),'b','LineWidth',1.5)
+    plot(xa,sum(~isnan(plotter(sorter(events)<medsplit & sorter(events)>lowsplit,:))),'g','LineWidth',1.5)
+    plot(xa,sum(~isnan(plotter(sorter(events)<lowsplit,:))),'r','LineWidth',1.5)
     [~,objh]=legend(sprintf('%s>%2.0f',sortname,highsplit),sprintf('%2.0f>%s>%2.0f',highsplit,sortname,medsplit),sprintf('%2.0f>%s>%2.0f',medsplit,sortname,lowsplit),sprintf('%2.0f>%s',lowsplit,sortname),'Location','NorthEast');
     set(objh,'linewidth',2);
     xlabel('Time from start of event (hour)')

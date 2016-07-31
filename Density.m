@@ -1,15 +1,18 @@
-function Density(stormcase,satnum,cuttime,skiptoplots)
+function Density(stormcase,satnum,cuttime,skiptoplots,presentation)
 if nargin < 1
     stormcase=1;
 end
 if nargin < 2
     satnum=6;
 end
-if nargin < 3
+if nargin < 3 || isempty(cuttime)
     cuttime=[0 datenum('Jan-01-2100')]; %Just to use all data. The years only serve to constrict, if possible
 end
-if nargin < 4
+if nargin < 4 || isempty(skiptoplots)
     skiptoplots=0;
+end
+if nargin < 5 
+    presentation=0;
 end
 
 savefilename=sprintf('data/DensitySaveState_%d_%d_%2.2f_%2.2f.mat',stormcase,satnum,cuttime(1),cuttime(2));
@@ -27,6 +30,15 @@ MakeBinPlots=0;
 MakeDstThreshPlot=0;
 MakeRandThreshPlot=0;
 visible='off';
+
+if(presentation)
+     set(0,'DefaultAxesFontSize',18) %set(groot for R2014b and newer, though seems to work here too?
+     set(0,'DefaultTextFontSize',18)
+     %set(0,'DefaultLineLinewidth',1.5)
+else
+     set(0,'DefaultAxesFontSize',12) %The usual defaults. Set just in case you run the code multiple times (it doesn't reset) 
+     set(0,'DefaultTextFontSize',12)
+end
 
 %profile on
 

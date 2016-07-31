@@ -391,7 +391,7 @@ if(MakePaperPlots)
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);
-    set(findall(gcf,'-property','FontSize'),'FontSize',14) %Make all fonts same size 
+    %set(findall(gcf,'-property','FontSize'),'FontSize',14) %Make all fonts same size 
     print('-depsc2','-r200',figurename);
     print('-dpng','-r200',strrep(strrep(figurename,'eps','png'),'figures','figures/PNGs'));
     if(strcmp(visible,'off')),close(h);end;
