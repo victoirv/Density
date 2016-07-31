@@ -67,6 +67,7 @@ switch stormcase
         DSTCut=-50;
         figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
         yr=2;
+        cutconditions=1;
         MakeBinPlots=1;
     case 2
         storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
@@ -90,6 +91,7 @@ switch stormcase
         cutoffduration=12; %12 hour DST storm
         figurename=strcat(figurename,'dd12',sprintf('-GOES%d.eps',satnum));
         yr=5;
+        cutconditions=1;
         yranges(5,:,:)=[-10 5; 400 700; -100 0; 150 200; 0 70];
     case 6
         storms=diff([0 (MassDensityNanSpline>40)' 0]);
