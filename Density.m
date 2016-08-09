@@ -1,4 +1,15 @@
-function Density(stormcase,satnum,cuttime,skiptoplots,presentation)
+function Density(stormcase,satnum,cuttime,skiptoplots,figuretype)
+%function Density(stormcase,satnum,cuttime,skiptoplots,figuretype)
+%Stormcase defines set of calculations/plots to make
+%Satnum is which satellite to use (GOES 2,5,6,7)
+%Cuttime is boundaries for time as date numbers. e.g [datenum('Mar-10-1989') datenum('Mar-18-1989')]
+%skiptoplots skips reading data and uses pre-made save state (not well
+%tested)
+%figuretype is 0 for dissertation, 1 for paper (sets cutconditions=1 to
+%match takahashi, only using MLT 06-12 and shifting event centers), 2 for
+%presentation (sets font sizes much larger)
+
+
 if nargin < 1
     stormcase=1;
 end
@@ -12,7 +23,7 @@ if nargin < 4 || isempty(skiptoplots)
     skiptoplots=0;
 end
 if nargin < 5 
-    presentation=0;
+    figuretype=0;
 end
 
 savefilename=sprintf('data/DensitySaveState_%d_%d_%2.2f_%2.2f.mat',stormcase,satnum,cuttime(1),cuttime(2));
@@ -31,7 +42,8 @@ MakeDstThreshPlot=0;
 MakeRandThreshPlot=0;
 visible='off';
 
-if(presentation)
+
+if(figuretype==2) 
      set(0,'DefaultAxesFontSize',18) %set(groot for R2014b and newer, though seems to work here too?
      set(0,'DefaultTextFontSize',18)
      %set(0,'DefaultLineLinewidth',1.5)
@@ -62,6 +74,9 @@ yranges(5,:,:)=[-10 10; 0 1000; -100 0; 00 200; 12 22]; %Made for overwriting wi
 LongTimeScale=1;%24*27; %How many hours to average over. Best stick to 1, 24, or 24*27
 cutoffduration=1; %Minimum duration of events, in hours
 cutconditions=0; %1=Look at only pre-noon. Change in FindStorms.m for other conditions
+if(figuretype == 1)
+    cutconditions=1;
+end
 removef107=0; %Remove an IR predicted f10.7 dependence from mass density
 DSTCut=0; %Set to 0 here, then if set by a case the code knows what variable to draw a threshold on
 MDCut=0;
@@ -79,7 +94,6 @@ switch stormcase
         DSTCut=-50;
         figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
         yr=2;
-        cutconditions=1;
         MakeBinPlots=1;
     case 2
         storms=diff([0 (MassDensityNanSpline>40)' 0]); %Mass Density Storm, started at 40
@@ -103,7 +117,6 @@ switch stormcase
         cutoffduration=12; %12 hour DST storm
         figurename=strcat(figurename,'dd12',sprintf('-GOES%d.eps',satnum));
         yr=5;
-        cutconditions=1;
         yranges(5,:,:)=[-10 5; 400 700; -100 0; 150 200; 0 70];
     case 6
         storms=diff([0 (MassDensityNanSpline>40)' 0]);
@@ -157,7 +170,6 @@ switch stormcase
         DSTCut=-50;
         LongTimeScale=24;
         cutoffduration=12;
-        cutconditions=1;
         figurename=strcat(figurename,'dst-day',sprintf('-GOES%d.eps',satnum));
         yr=5;
         yranges(5,:,:)=[-2 2; 400 600; -80 0; 150 230; 5 25];
@@ -235,7 +247,7 @@ switch stormcase
         ccanalysis=1;
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
         DSTCut=-50;
-        figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
+        figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
         yr=2;
     case 24
                 storms=diff([0 (MassDensityNanSpline>20)' 0]); %Mass Density Storm, started at 20
@@ -246,7 +258,7 @@ switch stormcase
     case 25 %Specifically for 27 day F10.7 vs mass density plot
         storms=diff([0 (FILLED(:,15)<-50)' 0]); %DST Storm
         DSTCut=-50;
-        figurename=strcat(figurename,'dst',sprintf('-GOES%d.eps',satnum));
+        figurename=strcat(figurename,'ignore',sprintf('-GOES%d.eps',satnum));
         yr=2;
     case 26
         storms=diff([0 (FILLED(:,13)>6)' 0]); %KP Storm
@@ -364,8 +376,13 @@ if(stormcase==33)
     AVMDs=nanmedian(NormAVMDMat);
 end
 AVnnans=sum(~isnan(AVMDMat));
-AVMatBars=[AVs(1,:,:)-nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:)))) ; AVs(1,:,:)+nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:))))];
-AVMDMatBars=[AVMDs(1,:)-nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:)))) ; AVMDs(1,:)+nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:))))];
+if(length(starti)==1)
+    AVMatBars=[zeros(size(AVMat)); zeros(size(AVMat))];
+    AVMDMatBars=[zeros(size(AVMDMat)); zeros(size(AVMDMat))];
+else
+    AVMatBars=[AVs(1,:,:)-nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:)))) ; AVs(1,:,:)+nanstd(AVMat(:,:,:))./sqrt(sum(~isnan(AVMat(:,:,:))))];
+    AVMDMatBars=[AVMDs(1,:)-nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:)))) ; AVMDs(1,:)+nanstd(AVMDMat(:,:))./sqrt(sum(~isnan(AVMDMat(:,:))))];
+end
 AVs=squeeze(AVs);
 
 if(LongTimeScale>1)
