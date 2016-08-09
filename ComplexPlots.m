@@ -28,6 +28,19 @@ if(MakePaperPlots && stormcase==26) %Kp Stack plot
     stackplot(FILLEDTime, [FILLED(:,[5,6,13,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','Kp','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 6],yranges(yr,:,:))
 end
 
+if(stormcase==1)
+     baselineL=AVMDMat(:,1:12);
+     baselineR=AVMDMat(:,40:end);
+     spikeL=AVMDMat(:,24);
+     spikeR=AVMDMat(:,29);
+     [pLL,h]=ranksum(spikeL,baselineL(:));
+     [pLR,h]=ranksum(spikeL,baselineR(:));
+     [pRL,h]=ranksum(spikeR,baselineL(:));
+     [pRR,h]=ranksum(spikeR,baselineR(:));
+     fprintf('Probability spike events come from same median distribution as baselines:\n');
+     Ptable={'' 'BaseLeft' 'BaseRight'; 'SpikeLeft' pLL pLR; 'SpikeRight' pRL pRR}
+end
+
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
     tws=[20:25; 25:30];
@@ -377,7 +390,16 @@ if(MakePaperPlots)
     [AX,H5,H6]=plotyy(xa,AVMDs(1,:),xa,AVnnans,'plot','bar');
     hold on; plot(xa,AVMDMatBars(:,:),'r-.'); %ylim(AX(1),yranges(yr,5,:))
     if(MDCut>0), plot([xa(1) xa(end)],[MDCut MDCut],'k-.','LineWidth',2); end
-    set(AX(1),'Xlim',xv); set(AX(1),'YColor','r'); set(AX(1),'Color','none'); set(AX(1),'Ylim',yranges(yr,5,:),'YTick',round(linspace(yranges(yr,5,1),yranges(yr,5,2),length(get(AX(2),'YTick'))))); 
+    TryTick=0.5;
+    Tryi=4;
+    while(TryTick~=round(TryTick)) %Find a number of ticks that divide evenly
+        TryTick=linspace(yranges(yr,5,1),yranges(yr,5,2),Tryi);
+        if(Tryi==8)
+            TryTick=linspace(yranges(yr,5,1),yranges(yr,5,2),4);
+        end
+        Tryi=Tryi+1;
+    end
+    set(AX(1),'Xlim',xv); set(AX(1),'YColor','r'); set(AX(1),'Color','none'); set(AX(1),'Ylim',yranges(yr,5,:),'YTick',TryTick); 
     set(AX(2),'Xlim',xv); set(AX(2),'YColor',[0 0.5 0.5]); set(AX(2),'Color','w');
     set(H5,'LineWidth',2);   set(H5,'marker','+','color','red'); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1));  
     text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
