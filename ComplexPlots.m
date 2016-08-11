@@ -60,7 +60,11 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         bottombar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))));
         tvals=ones(1,length(top));
         for j=1:length(top)
+            try
             [p,tvals(j)]=ranksum(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,j),AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<topcut,j));
+            catch
+                tvals(j)=0;
+            end
         end
         %tvals=ttest2(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:),AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
         tvals(tvals==0)=NaN;

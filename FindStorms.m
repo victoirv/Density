@@ -35,6 +35,8 @@ duration(tooclose)=[];
 
 %Cut down found storms to only include pre-noon conditions
 if(cutconditions) 
+    
+    
    endi(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
    duration(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
    starti(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
