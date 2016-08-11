@@ -391,11 +391,12 @@ if(MakePaperPlots)
     hold on; plot(xa,AVMDMatBars(:,:),'r-.'); %ylim(AX(1),yranges(yr,5,:))
     if(MDCut>0), plot([xa(1) xa(end)],[MDCut MDCut],'k-.','LineWidth',2); end
     TryTick=0.5;
-    Tryi=4;
-    while(TryTick~=round(TryTick)) %Find a number of ticks that divide evenly
+    Tryi=3;
+    while(sum(TryTick~=round(TryTick))>0) %Find a number of ticks that divide evenly
         TryTick=linspace(yranges(yr,5,1),yranges(yr,5,2),Tryi);
         if(Tryi==8)
             TryTick=linspace(yranges(yr,5,1),yranges(yr,5,2),4);
+            break
         end
         Tryi=Tryi+1;
     end

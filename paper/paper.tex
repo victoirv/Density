@@ -126,7 +126,7 @@ The parameters $\rho_{eq}$ and $F_{10.7}$ are from the dataset of \cite{Takahash
 
 %Fill (NaN) values were used for hours in which no measurements were available.  In cases where $\rho_{eq}$ was available from multiple GOES satellites at the same time, the value from GOES 6 was selected.  In the dataset, measurements from GOES 6 had the longest time span of coverage.  An overview of the data used is shown in Figure~\ref{AllData}.
 
-The top panel of Figure~\ref{ccplot} shows the long-term trends of log$_{10}(\rho_{eq})$ from GOES 6 and $F_{10.7}$ computed using the median values in 27-day non-overlapping windows.  A scatter plot of these two lines is shown in the lower panel of Figure~\ref{ccplot} along with that for 1--day and 1--hour medians.  The linear correlation for GOES 6 using all measurements is found to be $0.94$, which is the same value documented by \cite{Takahashi2010} who used combined measurements from all satellites in the time interval of 1980 through 1991 using the constraint $0600 \leq MLT \le 1200$, $K_{p3d}\ge1.0$ and $D_{st}\ge -50$~nT.  Our 27-day correlations for GOES 2, 5, and 7 are 0.81, 0.78, and 0.87, and the time range of coverage of measurements from these satellites is 1980-01-01/1983-05-16, 1983-01-01/1987-02-28, and 1983-05-27/1991-08-29, respectively.
+The top panel of Figure~\ref{fig:ccplot} shows the long-term trends of log$_{10}(\rho_{eq})$ from GOES 6 and $F_{10.7}$ computed using the median values in 27-day non-overlapping windows.  A scatter plot of these two lines is shown in the lower panel of Figure~\ref{fig:ccplot} along with that for 1--day and 1--hour medians.  The linear correlation for GOES 6 using all measurements is found to be $0.94$, which is the same value documented by \cite{Takahashi2010} who used combined measurements from all satellites in the time interval of 1980 through 1991 using the constraint $0600 \leq MLT \le 1200$, $K_{p3d}\ge1.0$ and $D_{st}\ge -50$~nT.  Our 27-day correlations for GOES 2, 5, and 7 are 0.81, 0.78, and 0.87, and the time range of coverage of measurements from these satellites is 1980-01-01/1983-05-16, 1983-01-01/1987-02-28, and 1983-05-27/1991-08-29, respectively.
 
 \section{Results}
 
@@ -138,15 +138,15 @@ The second type of event is an increase in $\rho_{eq}$ above a threshold of 20~a
 
 Our first analysis uses GOES-6 data only from the time interval 1989-1991, which corresponds with the interval used in the epoch analysis of \cite{Takahashi2010}. In this interval, there were 75 $D_{st}$ events where $D_{st}$ remained below the $-50$~nT threshold for at least 12 hours. Only events with an onset time between 06:00 and 12:00 MLT were considered. The first hour of a local minimum in $D_{st}$ following a threshold crossing defines the zero epoch time, and for each event, $4\cdot24$ hours were considered before and $8\cdot24$ hours after event onset. For multiple detected threshold crossings within 24 hours of each other, the first crossing was selected as the event because visual inspection showed the following crossings to typically be from brief downward deviations during the recovery period of a geomagnetic storm. To compute the epoch averages on a daily time scale, the median value of all available measurements for all events centered on a window of $\pm 12$ hours of the epoch zero hour was computed, and these averaging windows were shifted in increments of $24$~hours. Similar results are obtained if we first reduce each event time series to have a 1-day cadence by computing medians for each event in 1-day bins and then compute the medians across events on each epoch day. 
 
-The stack plot in the upper panel of Figure \ref{DailyAveragedDstEvents} shows the epoch averages for the 75 events from 1989-1991.  The minimum $D_{st}$ median is $-75$~nT.  Consistent with \cite{Takahashi2010}, $D_{st}$ events correspond to elevated $\rho_{eq}$ before and after the event, although the magnitude of increase observed here is $4.5$ amu/cm$^3$ instead of the increase of ${\sim} 10$ amu/cm$^3$ found in Figure 11 of \cite{Takahashi2010}.  The vertical green bars in the $\rho_{eq}$ plot show the number of $\rho_{eq}$ values that were used to compute the medians and red error lines.  Error lines for each parameter are the standard deviation of the values used in computing the median divided by the square root of the number of values. For the non-$\rho_{eq}$\ parameters, the number of measurements used in computing the medians is typically equal to the number of events, which is much larger than the number of $\rho_{eq}$\ values as all available measurements were used instead of restricting to only values where a $\rho_{eq}$ value also existed.
+The stack plot in the upper panel of Figure \ref{fig:DailyAveragedDstEvents} shows the epoch averages for the 75 events from 1989-1991.  The minimum $D_{st}$ median is $-75$~nT.  Consistent with \cite{Takahashi2010}, $D_{st}$ events correspond to elevated $\rho_{eq}$ before and after the event, although the magnitude of increase observed here is $4.5$ amu/cm$^3$ instead of the increase of ${\sim} 10$ amu/cm$^3$ found in Figure 11 of \cite{Takahashi2010}.  The vertical green bars in the $\rho_{eq}$ plot show the number of $\rho_{eq}$ values that were used to compute the medians and red error lines.  Error lines for each parameter are the standard deviation of the values used in computing the median divided by the square root of the number of values. For the non-$\rho_{eq}$\ parameters, the number of measurements used in computing the medians is typically equal to the number of events, which is much larger than the number of $\rho_{eq}$\ values as all available measurements were used instead of restricting to only values where a $\rho_{eq}$ value also existed.
 
-In the lower panel of Figure \ref{DailyAveragedDstEvents}, it is shown that the trends seen in the analysis of 1989-1991 also hold for the entire span of measurements from GOES 6 - a small elevation on the day of the event relative to the day before and day after, with median averages after the day of the event being slightly lower than that before.  
+In the lower panel of Figure \ref{fig:DailyAveragedDstEvents}, it is shown that the trends seen in the analysis of 1989-1991 also hold for the entire span of measurements from GOES 6 (1983-1991) - a small elevation on the day of the event relative to the day before and day after, with median averages after the day of the event being slightly lower than that before.  This trend is also seen for GOES 7 (1987-1991), is much less significant for GOES 5 (1983-1987), and much more significant for GOES 2 (1981-1983), correlating with the average value of $F_{10.7}$ during each respective coverage period.
 
-To determine if the magnitude of the density medians in the top panel of Figure~\ref{DailyAveragedDstEvents} on epoch days -1, 0, and 1 are statistically different from each other, we used a two-population bootstrap test.  A bootstrap sample of the medians for each epoch day was created by sampling the values used to compute the median on each epoch day with replacement.  The observed difference between the medians is shown in Table~\ref{BootstrapDifferenceTable} along with the fraction of observations in 1000 bootstrap differences with a different sign than that observed. 
+To determine if the magnitude of the density medians in the top panel of Figure~\ref{fig:DailyAveragedDstEvents} on epoch days -1, 0, and 1 are statistically different from each other, we used a two-population bootstrap test.  A bootstrap sample of the medians for each epoch day was created by sampling the values used to compute the median on each epoch day with replacement.  The observed difference between the medians is shown in Table~\ref{fig:BootstrapDifferenceTable} along with the fraction of observations in 1000 bootstrap differences with a different sign than that observed. 
 
 If a statistically significant difference in the medians between two days existed, the fraction of bootstrap samples with a different sign is expected to be much smaller ($<$ 5\%).  In terms of a hypothesis test, we cannot reject the null hypothesis that the medians are the same with a confidence higher than 100 minus the percentage value shown in the table; the highest confidence level of 86\% is in the difference between day 0 and day -1.
 
-A similar hypothesis test run for the bottom panel of Figure~\ref{DailyAveragedDstEvents} yields a maximum confidence level of $\sim$85\%.
+A similar hypothesis test run for the bottom panel of Figure~\ref{fig:DailyAveragedDstEvents} yields a maximum confidence level of $\sim$85\%.
 
 These tests indicate that there is not a statistically significant difference in medians of daily-averaged $\rho_{eq}$ on the day before and day after a threshold crossing in $D_{st}$.  In addition, the observed differences are on the order of only 20\% of the value of $\rho_{eq}$ on the onset day, which is similar to the variation in the observations over the displayed epoch time interval.  
 
@@ -154,29 +154,29 @@ These tests indicate that there is not a statistically significant difference in
 \small
 \centering
 \input{../tables/DeltaBootstraps-case10.txt}
-\caption{Results of test on of means of $\rho_{eq}$ shown in the top panel of Figure~\ref{DailyAveragedDstEvents} between days of threshold crossing  near (day = 1 or -1) or on the day of a $D_{st}$ event (day = 0).}
+\caption{Results of test on of means of $\rho_{eq}$ shown in the top panel of Figure~\ref{fig:DailyAveragedDstEvents} between days of threshold crossing  near (day = 1 or -1) or on the day of a $D_{st}$ event (day = 0).}
 \label{BootstrapDifferenceTable}
 \end{table}
 
-We have also considered the hourly averages from the events shown in the bottom panel of Figure~\ref{DailyAveragedDstEvents}, which shown in the top panel of Figure~\ref{HourlyAveragedDstEvents}.  In the time period of elevated mass density within 6 hours of the start of the event, there are only $\sim$4 samples per hourly interval and the peak value of $\sim$70 amu/cm$^3$ is associated with a single observation.  
+We have also considered the hourly averages from the events shown in the bottom panel of Figure~\ref{fig:DailyAveragedDstEvents}, which shown in the top panel of Figure~\ref{fig:HourlyAveragedDstEvents}.  In the time period of elevated mass density within 6 hours of the start of the event, there are only $\sim$4 samples per hourly interval and the peak value of $\sim$70 amu/cm$^3$ is associated with a single observation.  
 
-To increase the number of events, we have removed the constraint that the events must occur in the MLT range from 06:00-12:00 and the constraint that $D_{st}$ remained below the threshold value for 12 hours or longer.  The result is shown in the bottom panel of Figure~\ref{HourlyAveragedDstEvents}. The two spikes (one upwards after onset, one downwards before onset) were tested for significant deviation from two baselines, one 24-12 hours before onset, one 16-48 hours after onset. The probability of the left spike coming from the same distribution as the left baseline is 1.06\%, and 8.2\% from the right baseline, whereas the probability of the right spike coming from the left baseline is 1.89\% and 0.17\% from the right baseline.  This indicates that there is a statistically significant peak in $\rho_{eq}$ within 6 hours of onset when hourly averages are considered.  This result is consistent with previous observations of large mass density increases in the plasma trough region during large geomagnetic storms (\cite{Yao2008}; \cite{Takahashi2010}).  
+To increase the number of events, we have removed the constraint that the events must occur in the MLT range from 06:00-12:00 and the constraint that $D_{st}$ remained below the threshold value for 12 hours or longer.  The result is shown in the bottom panel of Figure~\ref{fig:HourlyAveragedDstEvents}. The two spikes (one upwards after onset, one downwards before onset) were tested for significant deviation from two baselines, one 24-12 hours before onset, one 16-48 hours after onset. The probability of the left spike coming from the same distribution as the left baseline is 1.06\%, and 8.2\% from the right baseline, whereas the probability of the right spike coming from the left baseline is 1.89\% and 0.17\% from the right baseline.  This significant result is also maintained for GOES 2, 5, and 7. This indicates that there is a statistically significant peak in $\rho_{eq}$ within 6 hours of onset when hourly averages are considered.  This result is consistent with previous observations of large mass density increases in the plasma trough region during large geomagnetic storms (\cite{Yao2008}; \cite{Takahashi2010}).  
 
 %A total of 333 $D_{st}$ events were found in the interval of May 1983 through August 1991 with an average duration of 10 hours and a median duration of 3 hours. In this plot, the overall trend is similar to that found in the bottom panel of Figure~\ref{HourlyAveragedDstEvents} - $\rho_{eq}$ is slightly elevated at the time of the threshold crossing of $D_{st}$ with respect to the values one day before and after, but the elevation is small relative to the error bars around the time of the event onset. 
 
 %The top panel of Figure~\ref{HourlyAveragedDstEvents} shows that, on average, near the onset of $D_{st}$ events there is not a significant reponse in $\rho_{eq}$ while the bottom panel shows that for rare and large $D_{st}$ events elevated $\rho_{eq}$ can be observed.  
 
-To determine if there is an IMF $B_{z}$ dependence, the epoch curves in the bottom panel of Figure~\ref{HourlyAveragedDstEvents} for $\rho_{eq}$ and $B_{z}$ were separated into two parts depending whether $B_z$ was above or below its average four hours before and including the onset hour and four hours after and including the hour of onset; the result is shown in Figure~\ref{fig:BzBinnedDstEvents}. Any statistically significant difference at a 95\% confidence level between the two parts is indicated by a green dot on the horizontal axis using the same bootstrap method described previously.  (At this confidence level, false positives are expected to randomly occur 5\% of the time, or 3.6 times for 72 values.)  These two plots indicate that there is not a statistically significant dependence on IMF $B_{z}$ around the time of the onset of a $D_{st}$ event.
+To determine if there is an IMF $B_{z}$ dependence, the epoch curves in the bottom panel of Figure~\ref{fig:HourlyAveragedDstEvents} for $\rho_{eq}$ and $B_{z}$ were separated into two parts depending whether $B_z$ was above or below its average four hours before and including the onset hour and four hours after and including the hour of onset; the result is shown in Figure~\ref{fig:BzBinnedDstEvents}. Any statistically significant difference at a 95\% confidence level between the two parts is indicated by a green dot on the horizontal axis using the same bootstrap method described previously.  (At this confidence level, false positives are expected to randomly occur 5\% of the time, or 3.6 times for 72 values.)  These two plots indicate that there is not a statistically significant dependence on IMF $B_{z}$ around the time of the onset of a $D_{st}$ event.
 
 The process for creating Figure~\ref{fig:BzBinnedDstEvents} was repeated except using the sort variable $F10.7$ instead of $B_z$, and the result is shown in Figure~\ref{fig:F107BinnedDstEvents}. The difference between the epoch curves is statistically significant at all times, as expected due to the high correlation between $\rho_{eq}$ and $F10.7$, but elevated $F10.7$ is associated with a peak in the $\rho_{eq}$ curve approximately 5 hours after onset. The values contributing to the peak were compared to a baseline of all values 16-48 hours after onset via a Wilcoxon rank-sum test and were found to have significantly different medians at the 99\% significance level.  This indicates the possibility that there must be a high base-line level of $\rho_{eq}$ in order for an increase in $\rho_{eq}$ to be observed for a $D_{st}$ event.
 
 \subsection{$\rho_{eq}$ Events}
 
-An alternative type of event can be defined that corresponds to large increases in $\rho_{eq}$.  Figure~\ref{HourlyAveragedRhoEvents} shows the epoch time series for events in which an increase of $\rho_{eq}$ above $20$~amu/cm$^2$ defines the start of the event. In finding $\rho_{eq}$ events, missing values were replaced with linearly interpolated values.  These events are associated with positive $B_z$ and low values of $D_{st}$.  Approximately 12 hours after onset, $\rho_{eq}$ slowly decays over 40 hours to near pre--onset levels.  
+An alternative type of event can be defined that corresponds to large increases in $\rho_{eq}$.  Figure~\ref{fig:HourlyAveragedRhoEvents} shows the epoch time series for events in which an increase of $\rho_{eq}$ above $20$~amu/cm$^2$ defines the start of the event. In finding $\rho_{eq}$ events, missing values were replaced with linearly interpolated values.  These events are associated with positive $B_z$ and low values of $D_{st}$.  Approximately 12 hours after onset, $\rho_{eq}$ slowly decays over 40 hours to near pre--onset levels.  
 
-Figure~\ref{HourlyAveragedRhoEvents} can be compared with Figure~9 of \cite{Denton2016}, which shows daily averages of $\rho_{eq}$ from this dataset after the onset of quiet $K_p$ intervals.  The growth shown here is approximately linear and lasts $\sim$ 12--18 hours whereas the 10 quiet $K_p$ events considered by \cite{Denton2016} showed growth that lasted for at least 48~hours. 
+Figure~\ref{fig:HourlyAveragedRhoEvents} can be compared with Figure~9 of \cite{Denton2016}, which shows daily averages of $\rho_{eq}$ from this dataset after the onset of quiet $K_p$ intervals.  The growth shown here is approximately linear and lasts $\sim$ 12--18 hours whereas the 10 quiet $K_p$ events considered by \cite{Denton2016} showed growth that lasted for at least 48~hours. 
 
-Figure~\ref{BzBinned} shows the the events of Figure~\ref{HourlyAveragedRhoEvents} when separated by $B_z$ in the same manner as Figure~\ref{fig:BzBinnedDstEvents}.  The largest difference occurs when the separation is performed after onset, with more positive $B_z$ leading to a larger peak in $\rho_{eq}$ than more negative $B_{z}$.  The rate of change of $\rho_{eq}$ also appears to be insenstive to $B_z$ for approximately 12 hours prior to onset.  
+Figure~\ref{fig:BzBinned} shows the the events of Figure~\ref{fig:HourlyAveragedRhoEvents} when separated by $B_z$ in the same manner as Figure~\ref{fig:BzBinnedDstEvents}.  The largest difference occurs when the separation is performed after onset, with more positive $B_z$ leading to a larger peak in $\rho_{eq}$ than more negative $B_{z}$.  The rate of change of $\rho_{eq}$ also appears to be insenstive to $B_z$ for approximately 12 hours prior to onset.  
 
 %The equivalent epoch separation curves for $P_{dyn}$ had a statistically significant differences similar to that for $B_z$, with higher dynamic pressure playing a role similar to positive $B_z$.
 
@@ -207,7 +207,7 @@ For $\rho_{eq}$, more postive $B_{z}$ after onset lead to higher values of subse
 \centering
 \includegraphics[scale=0.45]{figures/alldata-GOES6-1983-1991.eps}
 \caption{Overview of data used in this article. The top four panels show parameters from \cite{Kondrashov2014ReconstructionOfGaps} and the bottom panel contains $\rho_{eq}$ based on GOES 6 measurements from \cite{Denton} after interpolation and averaging described in the text. Dashed horizontal lines in the $D_{st}$ and $\rho_{eq}$ panels indicate sample event cutoff thresholds of $D_{st} = -50$~nT and $\rho_{eq} = 20$~amu/cm$^3$ considered in Section~3.}
-\label{AllData}
+\label{fig:AllData}
 \end{figure}
 
 \clearpage
@@ -217,7 +217,7 @@ For $\rho_{eq}$, more postive $B_{z}$ after onset lead to higher values of subse
 \includegraphics[scale=0.40]{figures/F107MD27d-GOES6.eps}
 \includegraphics[scale=0.40]{figures/ccplot-GOES6.eps}
 \caption{Top: 27-day non-overlapping medians of $F_{10.7}$ and $log(\rho_{eq})$ from GOES 6. Bottom: Correlation between $log(\rho_{eq})$ and $F_{10.7}$ using medians in non-overlapping hour, day, and 27-day windows.}
-\label{ccplot}
+\label{fig:ccplot}
 \end{figure}
 \clearpage
 
@@ -229,7 +229,7 @@ For $\rho_{eq}$, more postive $B_{z}$ after onset lead to higher values of subse
 \\
 \includegraphics[scale=0.40]{figures/stormavs-dst-day-GOES6.eps}
 \caption{$D_{st}$ events from GOES 6 using daily medians. Top: Events in the interval 1989-1991; compare to \cite{Takahashi2010} Figure~11. Bottom: Events in the interval 1983-1991.}
-\label{DailyAveragedDstEvents}
+\label{fig:DailyAveragedDstEvents}
 \end{figure}
 
 \clearpage
@@ -242,7 +242,7 @@ For $\rho_{eq}$, more postive $B_{z}$ after onset lead to higher values of subse
 \\
 \includegraphics[scale=0.40]{figures/stormavs-dst-GOES6.eps}
 \caption{$D_{st}$ events from GOES 6 using hourly medians. Top: Events with the constraint that $D_{st}$ stayed below $-50$~nT for at least 12~hours after crossing below $-50$~nT.  Bottom: Same as Top except without constraint.}
-\label{HourlyAveragedDstEvents}
+\label{fig:HourlyAveragedDstEvents}
 \end{figure}
 
 \clearpage
@@ -268,7 +268,7 @@ For $\rho_{eq}$, more postive $B_{z}$ after onset lead to higher values of subse
 \centering
 \includegraphics[scale=0.40]{figures/stormavs-mass-gt20-GOES6.eps}
 \caption{$\rho_{eq} >$ 20~amu/cm$^3$ events from GOES 6 using hourly medians.}
-\label{HourlyAveragedRhoEvents}
+\label{fig:HourlyAveragedRhoEvents}
 \end{figure}
 
 \clearpage
