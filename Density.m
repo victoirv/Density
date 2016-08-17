@@ -351,6 +351,12 @@ if(cutoffduration>1)
     durationcaveat=sprintf('longer than %d hours',cutoffduration);
 end
 
+
+while(sum(isnan(MLTFit))>0)
+   MLTFit(isnan(MLTFit))=mod(MLTFit(find(isnan(MLTFit))-1)+1,24);
+end
+
+
 %%%%%%
 %Find storm indices and apply conditions to prune storms based on duration
 %or overlapping edges of data
