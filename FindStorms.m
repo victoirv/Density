@@ -1,4 +1,4 @@
-function [starti,endi,duration]=FindStorms(storms,cutoffduration,cutconditions,maxwidth,MLTFit,FILLED)
+function [starti,endi,duration]=FindStorms(storms,cutoffduration,cutconditions,maxwidth,MLTFit,FILLED,DstCut)
 %If reproduction of DST shifted events is needed, pass FILLED
 
 starti=find(storms>0);
@@ -6,7 +6,7 @@ endi=find(storms<0)-1;
 duration=endi-starti+1;
 
 %Shift event start points to next local DST minimum 
-while(1 && cutconditions) 
+while(1 && cutconditions && DstCut~=0) 
     ind=FILLED(starti+1,15)<FILLED(starti,15);
     if(sum(ind)==0)
         break

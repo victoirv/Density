@@ -67,7 +67,11 @@ else
     F107=OMNIin(:,13); 
     OMNIRho=OMNIin(:,7);
     F107(F107==999.9)=NaN;
-    save('data/OMNIdata','OMNITime','F107','OMNIRho');
+    
+    OMNIin=dlmread('data/omni2_32356.lst');
+    AL=OMNIin(:,11);
+    
+    save('data/OMNIdata','OMNITime','F107','OMNIRho','AL');
 end
 
 if(~exist('figures','dir'))
@@ -121,6 +125,7 @@ getFtime=getFtime+(OMNITime<=max(FILLEDTime));
 getFtime=(getFtime==2);
 OMNITime=OMNITime(getFtime);
 F107=F107(getFtime);
+AL=AL(getFtime);
 OMNIRho=OMNIRho(getFtime);
 
 
@@ -130,13 +135,15 @@ MassDensityNanSpline=interp1(FILLEDTime(~isnan(MassDensitySpline)),MassDensitySp
 
 %FILLED=[FILLED F107Spline]; %When F107 is from Denton, use
 %interpolated version
-FILLED=[FILLED MLTFit F107 OMNIRho MFit]; %28 cols of F, 29 is mlt, 30 is f107, etc
+FILLED=[FILLED MLTFit F107 OMNIRho MFit AL]; %28 cols of F, 29 is mlt, 30 is f107, etc
 headers{end+1}='MLT';
 headers{end+1}='F_{10.7}';
 headers{end+1}='OMNIRho';
 headers{end+1}='M';
+headers{end+1}='AL';
 units={'year','day','hour','nT','nT','cm/s','verify','nPa','','','','','','','nT','nT','nT','nT','nT','nT','nT','','','','','','',''};
 units{end+1}='hour';
 units{end+1}='s.f.u';
 units{end+1}='amu/cm^3';
 units{end+1}='amu?';
+units{end+1}='nT';

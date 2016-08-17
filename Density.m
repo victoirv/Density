@@ -354,7 +354,7 @@ end
 %%%%%%
 %Find storm indices and apply conditions to prune storms based on duration
 %or overlapping edges of data
-[starti,endi,duration]=FindStorms(storms,cutoffduration,cutconditions,maxwidth,MLTFit,FILLED);
+[starti,endi,duration]=FindStorms(storms,cutoffduration,cutconditions,maxwidth,MLTFit,FILLED,DSTCut);
 
 %Build matrices storing all storms
 stormi=1;

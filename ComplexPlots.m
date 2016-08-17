@@ -2,11 +2,14 @@
 
 if(MakePaperPlots && stormcase==28)
     stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[],[],cuttime)
+    stackplot(FILLEDTime, [FILLED(:,[5,15,30,33]) MassDensitySpline'],{'B_z (nT)','D_{st} (nT)','F_{10.7} (s.f.u.)','AL (nT)','\rho_{eq} (amu/cm^3)'},satnum,[],[],cuttime)
 end
     
 
 if(MakePaperPlots && stormcase==1)
     stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[3 DSTCut; 5 20],yranges(yr,:,:))
+    
+    
     
     if(satnum==6 && sy<=1989 && ey>=1989) %Make March 1989 Geomagnetic storm plot (if necessary time range still exists)
         stackplot(FILLEDTime, [FILLED(:,[5,6,15,30]) MassDensitySpline'],{'B_z (nT)','V_{SW} (km/s)','D_{st} (nT)','F_{10.7} (s.f.u.)','\rho_{eq} (amu/cm^3)'},satnum,[],[],[datenum('Mar-10-1989') datenum('Mar-18-1989')])
@@ -93,7 +96,11 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         if(varnum==30 && i==2)
             baseline=AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,40:end);
             spike=AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,29);
-            [p,h]=ranksum(spike,baseline(:));
+            try
+                [p,h]=ranksum(spike,baseline(:));
+            catch
+                p=2;
+            end
             fprintf('Probability spike events come from same median distribution as baseline: %2.2f\n',p);
         end
         
