@@ -624,9 +624,9 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     Dm10=sum(delta(1,:)>=0)/length(delta(1,:));
     Dm11=sum(delta(2,:)>=0)/length(delta(2,:));
     D10=sum(delta(3,:)>=0)/length(delta(3,:));
-    %[~,p1]=ttest2(AVm1,AV0);
-    %[~,p2]=ttest2(AVm1,AV1);
-    %[~,p3]=ttest2(AV1,AV0);
+    p1=ranksum(AVm1,AV0);
+    p2=ranksum(AVm1,AV1);
+    p3=ranksum(AV1,AV0);
     
     fprintf(table,'\\begin{tabular}{|c|cc|}\n \\hline \n');
     fprintf(table,'Days & Difference (amu/cm$^3$) & \\%%  \\\\ \\hline\n');

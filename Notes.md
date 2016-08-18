@@ -1,19 +1,19 @@
 ## To-Do ##
-* Connect Denton 2016 to Ch5
-* Add plasmasphere knee details (pass location, etc)
-* show MLT dependence not significant
+* ~~Connect Denton 2016 to Ch5~~
+* ~~Add plasmasphere knee details (pass location, etc)~~
+* ~~show MLT dependence not significant~~
 * Make new run without dipole tilt, using only real B field, at high resolution
 * Histograms for models of entire time series, include rho and possibly Bz
 * Correlation plots of pv^2, vBz
-* Classify binary onset with NN model based on 3 prior days of daily averaged KP, Vsw, and F10.7 (see Denton 2016)
+* ~~Classify binary onset with NN model based on 3 prior days of daily averaged KP, Vsw, and F10.7 (see Denton 2016)~~
   * ~~Use rho events instead of Dst events~~
   * ~~Shuffle target to test effect~~
   * ~~Try only 4 points before and onset, not entire dataset~~
-  * 2D histograms of events that lead to correct "1" vs missed "1". 
+  * ~~2D histograms of events that lead to correct "1" vs missed "1". ~~
 * ~~Wilmot Hess Radiation Belt~~
 * Makefile example and commit permissions
 * Add KP to NN analysis
-* Clean up figures directory
+* ~~Clean up figures directory~~
 * ~~Epoch analysis for 668 random events, daily and hourly~~
 * ~~Remake figure 3.2 for GOES 6, show alongside~~
 * ~~cite MATLAB libraries~~
@@ -31,6 +31,7 @@
 
 
 ## History ##
+* [August 17: Other variables](#august-17-2016)
 * [July 7: RhoBinned all satellites](#july-7-2016)
 * [June 1: Correlation Plots](#june-1-2016)
 * [May 24: Binary analysis](#may-24-2016)
@@ -39,6 +40,19 @@
 * [May 16: Significance tests and pressure behavior](#may-16-2016)
 
 * * *
+### August 17, 2016 ###
+For Dst < -50nT events (case 1), GOES 6
+##### V_SW #####
+![Fig](paper/figures/RhoBinnedV_{SW}-case1-t020-tf25-GOES6.eps) ![Fig](paper/figures/RhoBinnedV_{SW}-case1-t025-tf30-GOES6.eps)
+
+##### P_Dyn #####
+
+![Fig](paper/figures/RhoBinnedPdyn-case1-t020-tf25-GOES6.eps) ![Fig](paper/figures/RhoBinnedPdyn-case1-t025-tf30-GOES6.eps)
+
+##### Kp #####
+
+![Fig](paper/figures/RhoBinnedK_p-case1-t020-tf25-GOES6.eps) ![Fig](paper/figures/RhoBinnedK_p-case1-t025-tf30-GOES6.eps)
+
 
 ### July 7, 2016 ###
 6:

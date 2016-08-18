@@ -41,6 +41,7 @@ if(cutconditions)
    duration(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
    starti(MLTFit(starti)>12 | MLTFit(starti)<6)=[];
 end
+
 if(cutconditions && DstCut<0)
    
    drop=[];
