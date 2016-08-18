@@ -66,7 +66,7 @@ DentonData
 
 yranges=zeros(5,5,2);
 yranges(1,:,:)=[-2 2; 350 550; -60 0; 150 230; 8 16];
-yranges(2,:,:)=[-8 3; 400 600; -80 0; 140 180; 8 36];
+yranges(2,:,:)=[-8 3; 400 600; -80 0; 140 180; 4 22];
 yranges(3,:,:)=[-8 3; 350 580; -90 0; 170 200; 12 22];
 yranges(4,:,:)=[-3 2; 400 550; -30 -10; 80 120; 12 22];
 yranges(5,:,:)=[-10 10; 0 1000; -100 0; 00 200; 12 22]; %Made for overwriting with specific cases
@@ -351,11 +351,11 @@ if(cutoffduration>1)
     durationcaveat=sprintf('longer than %d hours',cutoffduration);
 end
 
-
+%{
 while(sum(isnan(MLTFit))>0)
    MLTFit(isnan(MLTFit))=mod(MLTFit(find(isnan(MLTFit))-1)+1,24);
 end
-
+%}
 
 %%%%%%
 %Find storm indices and apply conditions to prune storms based on duration
