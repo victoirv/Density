@@ -47,6 +47,9 @@ if(figuretype==2)
      set(0,'DefaultAxesFontSize',18) %set(groot for R2014b and newer, though seems to work here too?
      set(0,'DefaultTextFontSize',18)
      %set(0,'DefaultLineLinewidth',1.5)
+elseif(figuretype==1)
+     set(0,'DefaultAxesFontSize',16) %set(groot for R2014b and newer, though seems to work here too?
+     set(0,'DefaultTextFontSize',16)
 else
      set(0,'DefaultAxesFontSize',12) %The usual defaults. Set just in case you run the code multiple times (it doesn't reset) 
      set(0,'DefaultTextFontSize',12)

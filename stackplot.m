@@ -38,7 +38,7 @@ for i=1:numvars
     if(sum(ThreshLines(:,1)==i)>0)
         hold on; plot(Time,ones(1,length(Time)).*(ThreshLines(ThreshLines(:,1)==i,2)),'k-.','LineWidth',2)
     end
-    text(0.01,0.85,labels{i},'Units','normalized','FontSize',14);
+    text(0.01,0.85,labels{i},'Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14));
     if(ylims~=0)
         ylim(ylims(1,i,:));
     end
@@ -50,7 +50,7 @@ end
 set(findobj('type','axes'),'xticklabel',{[]});
 set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
 axis tight;
-datetick('x','keeplimits')
+datetick('x','keeplimits','keepticks')
 set(findobj('type','axes'),'xtick',get(h(end),'xtick'))
 linkaxes(h,'x')
 axis tight;
@@ -61,7 +61,7 @@ ey=year(Time(end));
 if(sy~=ey)
     xlabel(sprintf('Date from %s through %s',datestr(Time(1),1),datestr(Time(end),1)),'FontSize',14);
 else
-    xlabel(sprintf('Date of %d',sy),'FontSize',14);
+    xlabel(sprintf('Date of %d',sy),'FontSize',max(get(0,'DefaultAxesFontSize'),14));
 end
 
 

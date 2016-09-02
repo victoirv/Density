@@ -131,6 +131,9 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         plot(xa,bottom,'k','LineWidth',2)%'Color',[0.3 0.8 0.3])
         plot(xa,[top+topbar; top-topbar],'b-.')
         plot(xa,[bottom+bottombar; bottom-bottombar],'k-.')%,'Color',[0.3 0.8 0.3])
+        if(stormcase==24 && figuretype==2 && varnum==30)
+            ylim([0 40])
+        end
         ylims=get(gca,'YLim');
         plot(xa,tvals+ylims(1)-1,'.','MarkerSize',15,'Color',[0.3 0.8 0.3])
         rect=rectangle('Position',[tw(1)-timewidth-1 ylims(1) tw(end)-tw(1) ylims(2)-ylims(1)]) ;
@@ -386,14 +389,14 @@ if(MakePaperPlots)
     h=figure('Visible',visible);
     orient tall;
     
-    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.85,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
+    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.85,'B_z (nT)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel('B_z (nT)'); %Bz
     hold on; plot(xa,AVMatBars(:,:,5),'r-.'); ylim(yranges(yr,1,:))
-    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.85,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
+    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.85,'V_{SW} (km/s)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel('V_{SW} (km/s)');%V_sw
     hold on; plot(xa,AVMatBars(:,:,6),'r-.'); ylim(yranges(yr,2,:))
-    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.85,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
+    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.85,'D_{st} (nT)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel('D_{st} (nT)'); %dst
     hold on; plot(xa,AVMatBars(:,:,15),'r-.'); ylim(yranges(yr,3,:))
     if(DSTCut<0), plot([xa(1) xa(end)],[DSTCut DSTCut],'k-.','LineWidth',2); hold off; end
-    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,30),'+-','LineWidth',2); text(0.01,0.85,'F_{10.7} (s.f.u)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
+    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,30),'+-','LineWidth',2); text(0.01,0.85,'F_{10.7} (s.f.u)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel('F10.7 (s.f.u.)');%f107
     hold on; plot(xa,AVMatBars(:,:,30),'r-.'); ylim(yranges(yr,4,:))
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
@@ -414,7 +417,7 @@ if(MakePaperPlots)
     set(AX(1),'Xlim',xv); set(AX(1),'YColor','r'); set(AX(1),'Color','none'); set(AX(1),'Ylim',yranges(yr,5,:),'YTick',TryTick); 
     set(AX(2),'Xlim',xv); set(AX(2),'YColor',[0 0.5 0.5]); set(AX(2),'Color','w');
     set(H5,'LineWidth',2);   set(H5,'marker','+','color','red'); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1));  
-    text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
+    text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
     ylabel(AX(2),'# valid hourly values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
@@ -436,14 +439,14 @@ if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
     h=figure('Visible',visible);
     orient tall;
     
-    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.85,'B_z (nT)','Units','normalized','FontSize',14); %ylabel('B_z (nT)'); %Bz
+    h1=subplot('position',subplotstack(5,1));plot(xa,AVs(:,5),'+-','LineWidth',2); text(0.01,0.85,'B_z (nT)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel('B_z (nT)'); %Bz
     hold on; plot(xa,AVMatBars(:,:,5),'r-.'); ylim(yranges(yr,1,:))
-    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.85,'V_{SW} (km/s)','Units','normalized','FontSize',14); %ylabel('V_{SW} (km/s)');%V_sw
+    h2=subplot('position',subplotstack(5,2));plot(xa,AVs(:,6),'+-','LineWidth',2); text(0.01,0.85,'V_{SW} (km/s)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel('V_{SW} (km/s)');%V_sw
     hold on; plot(xa,AVMatBars(:,:,6),'r-.'); ylim(yranges(yr,2,:))
-    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.85,'D_{st} (nT)','Units','normalized','FontSize',14); %ylabel('D_{st} (nT)'); %dst
+    h3=subplot('position',subplotstack(5,3));plot(xa,AVs(:,15),'+-','LineWidth',2); text(0.01,0.85,'D_{st} (nT)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel('D_{st} (nT)'); %dst
     hold on; plot(xa,AVMatBars(:,:,15),'r-.'); ylim(yranges(yr,3,:))
     if(DSTCut<0), plot([xa(1) xa(end)],[DSTCut DSTCut],'k-.','LineWidth',2); hold off; end
-    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,8),'+-','LineWidth',2); text(0.01,0.85,'P_{dyn} (nPa)','Units','normalized','FontSize',14); %ylabel('F10.7 (s.f.u.)');%f107
+    h4=subplot('position',subplotstack(5,4));plot(xa,AVs(:,8),'+-','LineWidth',2); text(0.01,0.85,'P_{dyn} (nPa)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel('F10.7 (s.f.u.)');%f107
     hold on; plot(xa,AVMatBars(:,:,8),'r-.'); %ylim(yranges(yr,4,:))
     set(findobj('type','axes'),'xticklabel',{[]})
     xv=[xa(1) xa(end)];
@@ -454,7 +457,7 @@ if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
     set(AX(1),'Xlim',xv); set(AX(1),'YColor','r'); set(AX(1),'Color','none'); set(AX(1),'Ylim',yranges(yr,5,:),'YTick',round(linspace(yranges(yr,5,1),yranges(yr,5,2),length(get(AX(2),'YTick'))))); 
     set(AX(2),'Xlim',xv); set(AX(2),'YColor',[0 0.5 0.5]); set(AX(2),'Color','w');
     set(H5,'LineWidth',2);   set(H5,'marker','+','color','red'); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1));  
-    text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',14); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
+    text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
     ylabel(AX(2),'# valid hourly values');
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
@@ -462,7 +465,7 @@ if(MakePaperPlots && MDCut>0) %Add a stack plot for Pressure for mass events
     if(LongTimeScale>1),xlabel('Time from start of event (day)');
     else xlabel('Time from start of event (hour)'); end
     fprintf('Average of %d storms %s (%d to %d)\n',length(duration),durationcaveat, sy,ey);
-    set(findall(gcf,'-property','FontSize'),'FontSize',14) %Make all fonts same size
+    %set(findall(gcf,'-property','FontSize'),'FontSize',14) %Make all fonts same size
     print('-depsc2','-r200',strrep(figurename,'.eps','-withPressure.eps'));
     print('-dpng','-r200',strrep(strrep(figurename,'.eps','-withPressure.png'),'figures','figures/PNGs'));
     if(strcmp(visible,'off')),close(h);end;
@@ -646,7 +649,7 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     hold on;
     plot(nanmedian(AVm1)-nanmedian(AV0),0,'.','MarkerSize',20)
     plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
-    text(0.01,0.9,'1 day pre-onset and onset','Units','normalized','FontSize',14)
+    text(0.01,0.9,'1 day pre-onset and onset','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14))
     text(4,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',Dm10*100))
     ylabel('Count')
     title('Bootstrapped differences of daily \rho_{eq} medians around event onset')
@@ -656,7 +659,7 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     hold on;
     plot(nanmedian(AVm1)-nanmedian(AV1),0,'.','MarkerSize',20)
     plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
-    text(0.01,0.9,'1 day pre-onset and 1 day post-onset','Units','normalized','FontSize',14)
+    text(0.01,0.9,'1 day pre-onset and 1 day post-onset','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14))
     text(4,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',Dm11*100))
     ylabel('Count')
     
@@ -665,7 +668,7 @@ if(MakePaperPlots && (stormcase==10 || stormcase==13)) %1-day takahashi. Do for 
     hold on;
     plot(nanmedian(AV1)-nanmedian(AV0),0,'.','MarkerSize',20)
     plot([0 0],get(gca,'ylim'),'k-','LineWidth',1.5)
-    text(0.01,0.9,'1 day post-onset and onset','Units','normalized','FontSize',14)
+    text(0.01,0.9,'1 day post-onset and onset','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14))
     text(4,max(get(gca,'ylim'))*3/4,sprintf('%2.2f%% \\geq 0',D10*100))
     ylabel('Count')
     

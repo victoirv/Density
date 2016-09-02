@@ -346,17 +346,17 @@ if(MakePaperPlots && stormcase==28 && sy==1989 && ey==1989) %For a short time pe
     [~,~, ~,xnew,corr2] = IR(FILLED(:,15),VBS,1,0,0,0); %persistence 
     
     plot(FILLEDTime,xnew,'r','LineWidth',1.5);
-    text(0.01,0.1,'D_{st} (nT)','Units','normalized','FontSize',14);
+    text(0.01,0.1,'D_{st} (nT)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14));
     h_legend=legend('Measured',sprintf('IR Model - CC %2.2f',corr),sprintf('Persistence Model - %2.2f',corr2),'Location','SouthEast');
-    set(h_legend,'FontSize',14)
+    set(h_legend,'FontSize',max(get(0,'DefaultAxesFontSize'),14))
     h(2)=subplot('position',subplotstack(2,2)); 
     
     plot(FILLEDTime,VBS,'k','LineWidth',1.5);
-    text(0.01,0.92,'vB_S (V/Km)','Units','normalized','FontSize',14);
+    text(0.01,0.92,'vB_S (V/km)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14));
     set(findobj('type','axes'),'xticklabel',{[]});
 set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on')
 axis tight;
-datetick('x','keeplimits')
+datetick('x','keeplimits','keepticks')
 set(findobj('type','axes'),'xtick',get(h(end),'xtick'))
 linkaxes(h,'x')
 axis tight;
