@@ -6,16 +6,16 @@
 
 * ~~Line 106: -> "after A period of"~~
 
-* Line 129, "Dst events correspond to elevated rho_m before and after the event": I find this very confusing. Isn't your data showing that rho_m is elevated on the day of the event?
+* Line 129, "Dst events correspond to elevated rho_m before and after the event": I find this very confusing. Isn't your data showing that rho_m is elevated on the day of the event? **Fixed**
 
-* Lines 133-134, "twice the standard deviation of the values used in computing the median divided by the square root of the number of values": I suggest that you give some motivation for this. I suspect that you are trying to characterize the uncertainty of the median value. **Just call it the standard error?**
+* Lines 133-134, "twice the standard deviation of the values used in computing the median divided by the square root of the number of values": I suggest that you give some motivation for this. I suspect that you are trying to characterize the uncertainty of the median value. **Fixed**
 
 * Line 137, "as all available measurements were used instead of restricting to only values where a rho_m value also existed": Doesn't this introduce the danger that the rho_m values could correspond to different values of the indices? **Assuming he means "Could these indices not actually correspond to an onset", yes, but they'd be close, and if anything will trend towards less significance**
 
 * Lines 130-131 and 144: You mentioned that you found an increase of 4.5 amu/cm^-3 where as Takahashi et al. found an increase of 10 amu/cm^-3. Could this be because of the different spacecraft used? You mentioned that GOES 2 found a much larger increase **GOES 2 doesn't cover 1989-1991, GOES 7 figure:**
 ![fig](paper/figures/PNGs/stormavs-dst-50-tak-GOES7.png)
 
-* Line 151, "compute the median on each epoch day with replacement": To me, it's not exactly clear what you're doing here. Are you replacing the values by the measured values plus or minus a value based on the standard deviation? **Rephrase as "created by sampling (with replacement) the values used..."**
+* Line 151, "compute the median on each epoch day with replacement": To me, it's not exactly clear what you're doing here. Are you replacing the values by the measured values plus or minus a value based on the standard deviation? **Rephrase as "created by sampling (with replacement) the values used..."**  **Fixed**
 
 * ~~Line 168, -> "which ARE shown in the top panel".~~
 
