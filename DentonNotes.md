@@ -12,7 +12,8 @@
 
 * Line 137, "as all available measurements were used instead of restricting to only values where a rho_m value also existed": Doesn't this introduce the danger that the rho_m values could correspond to different values of the indices? **Assuming he means "Could these indices not actually correspond to an onset", yes, but they'd be close, and if anything will trend towards less significance**
 
-* Lines 130-131 and 144: You mentioned that you found an increase of 4.5 amu/cm^-3 where as Takahashi et al. found an increase of 10 amu/cm^-3. Could this be because of the different spacecraft used? You mentioned that GOES 2 found a much larger increase **GOES 2 doesn't cover 1989-1991, can check GOES 7 later**
+* Lines 130-131 and 144: You mentioned that you found an increase of 4.5 amu/cm^-3 where as Takahashi et al. found an increase of 10 amu/cm^-3. Could this be because of the different spacecraft used? You mentioned that GOES 2 found a much larger increase **GOES 2 doesn't cover 1989-1991, GOES 7 figure:**
+![fig](paper/figures/stormavs-dst-50-tak-GOES7.eps)
 
 * Line 151, "compute the median on each epoch day with replacement": To me, it's not exactly clear what you're doing here. Are you replacing the values by the measured values plus or minus a value based on the standard deviation? **Rephrase as "created by sampling (with replacement) the values used..."**
 
