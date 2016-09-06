@@ -48,8 +48,8 @@ if(figuretype==2)
      set(0,'DefaultTextFontSize',18)
      %set(0,'DefaultLineLinewidth',1.5)
 elseif(figuretype==1)
-     set(0,'DefaultAxesFontSize',16) %set(groot for R2014b and newer, though seems to work here too?
-     set(0,'DefaultTextFontSize',16)
+     set(0,'DefaultAxesFontSize',14) %set(groot for R2014b and newer, though seems to work here too?
+     set(0,'DefaultTextFontSize',14)
 else
      set(0,'DefaultAxesFontSize',12) %The usual defaults. Set just in case you run the code multiple times (it doesn't reset) 
      set(0,'DefaultTextFontSize',12)
@@ -375,6 +375,16 @@ for i=1:length(starti)
     AVMDMat(stormi,:)=MassDensitySpline((starti(i)-timewidth):starti(i)+timewidth*2-1);
     stormi=stormi+1;
 end
+
+%Try only keeping values that coincide with existing mass density values
+%{
+for i=1:size(AVMat,3)
+    AVMat(:,:,i)=AVMat(:,:,i).*(~isnan(AVMDMat));
+end
+AVMat(AVMat==0)=NaN;
+%}
+
+
 AVs=nanmedian(AVMat,1);
 AVMDs=nanmedian(AVMDMat);
 if(stormcase==33)

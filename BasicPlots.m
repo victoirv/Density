@@ -140,6 +140,18 @@ if(MakePaperPlots && stormcase==1)
     print -depsc2 -r200 figures/DoYDst.eps
     print -dpng -r200 figures/PNGs/DoYDst.png
     if(strcmp(visible,'off')),close(h);end;
+    
+    
+    h=figure('Visible',visible);
+    hold on;
+    plot(FILLEDTime,FILLED(:,30))
+    plot([FILLEDTime(starti) FILLEDTime(starti)]',[zeros(length(FILLED(starti,30)),1) FILLED(starti,30)]','r-')
+    xlabel('Date')
+    ylabel('F_{10.7} (s.f.u.)')
+    print -depsc2 -r200 figures/StormDates.eps
+    print -dpng -r200 figures/PNGs/StormDates.png
+    if(strcmp(visible,'off')),close(h);end;
+    
 end
 
 

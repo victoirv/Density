@@ -31,6 +31,7 @@
 
 
 ## History ##
+* [September 5: Paper edits](#september-5-2016)
 * [August 17: Other variables](#august-17-2016)
 * [July 7: RhoBinned all satellites](#july-7-2016)
 * [June 1: Correlation Plots](#june-1-2016)
@@ -40,6 +41,20 @@
 * [May 16: Significance tests and pressure behavior](#may-16-2016)
 
 * * *
+### September 5, 2016 ###
+First plot just to show where all the storms are relative to F10.7 values:
+![Fig](figures/PNGs/StormDates.png)
+
+Significance values for the GOES 7 version of the Takahashi verification plot:
+![Fig](figures/PNGs/DailyBootstrapDifferences-GOES7-case10.png)
+
+And that takahashi plot for reference:
+![Fig](paper/figures/PNGs/stormavs-dst-GOES7.png)
+
+A figure where each variable is only using the rows with existing rho_eq values.
+![Fig](paper/figures/PNGs/stormavs-dst-existing-GOES6.png)
+
+
 ### August 17, 2016 ###
 For Dst < -50nT events (case 1), GOES 6
 ##### V_SW #####
