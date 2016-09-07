@@ -49,10 +49,19 @@ Significance values for the GOES 7 version of the Takahashi verification plot:
 ![Fig](figures/PNGs/DailyBootstrapDifferences-GOES7-case10.png)
 
 And that takahashi plot for reference:
-![Fig](paper/figures/PNGs/stormavs-dst-GOES7.png)
+![Fig](paper/figures/PNGs/stormavs-dst-50-tak-GOES7.png)
 
 A figure where each variable is only using the rows with existing rho_eq values.
 ![Fig](paper/figures/PNGs/stormavs-dst-existing-GOES6.png)
+
+F10.7 Binplot only using existing rho_eq values
+![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF_{10.7}-case1-t025-tf30-GOES6-onlyvalid.png)
+
+F10.7 of events that have existing rho_eq at onset:
+![Fig](figures/PNGs/F107OfExistingEvents.png)
+
+rho_eq availability map:
+![Fig](figures/PNGs/SurfExistingEvents.png)
 
 
 ### August 17, 2016 ###

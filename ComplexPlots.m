@@ -44,6 +44,30 @@ if(stormcase==1)
      Ptable={'' 'BaseLeft' 'BaseRight'; 'SpikeLeft' pLL pLR; 'SpikeRight' pRL pRR}
 end
 
+if(MakePaperPlots && stormcase==1)
+    h=figure('Visible',visible);
+        hold on;
+        plot(xa,AVMat((~isnan(AVMDMat(:,25))),:,30));
+        xlabel('Hours since onset')
+        ylabel('F_{10.7}')
+        title('F_{10.7} of events with valid \rho_{eq} at onset')
+            print -depsc2 -r200 figures/F107OfExistingEvents.eps
+    print -dpng -r200 figures/PNGs/F107OfExistingEvents.png    
+    if(strcmp(visible,'off')),close(h);end;
+    
+        h=figure('Visible',visible);
+        hold on;
+        tempy=repmat(1:size(AVMDMat,1),size(AVMDMat,2),1);
+        tempz=(~isnan(AVMDMat))';
+        scatter(repmat(xa,1,size(AVMDMat,1)),tempy(:),[],tempz(:));
+        xlabel('Hours since onset')
+        ylabel('Event number')
+        title('Valid \rho_{eq} locations')
+            print -depsc2 -r200 figures/SurfExistingEvents.eps
+    print -dpng -r200 figures/PNGs/SurfExistingEvents.png    
+    if(strcmp(visible,'off')),close(h);end;
+    
+end
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
     tws=[20:25; 25:30];
@@ -415,10 +439,10 @@ if(MakePaperPlots)
         Tryi=Tryi+1;
     end
     set(AX(1),'Xlim',xv); set(AX(1),'YColor','r'); set(AX(1),'Color','none'); set(AX(1),'Ylim',yranges(yr,5,:),'YTick',TryTick); 
-    set(AX(2),'Xlim',xv); set(AX(2),'YColor',[0 0.5 0.5]); set(AX(2),'Color','w');
+    set(AX(2),'Xlim',xv); set(AX(2),'YColor',[0 0.5 0.5]); set(AX(2),'Color','w'); set(AX(2),'FontSize',12);
     set(H5,'LineWidth',2);   set(H5,'marker','+','color','red'); set(get(H6,'child'),'FaceColor',[0 0.5 0.5]); uistack(AX(1));  
     text(0.01,0.85,'\rho_{eq} (amu/cm^3)','Units','normalized','FontSize',max(get(0,'DefaultAxesFontSize'),14)); %ylabel(AX(1),'\rho_{eq} (amu/cm^3)'); 
-    ylabel(AX(2),'# valid hourly values');
+    ylabel(AX(2),'# valid hourly values','FontSize',12);
     set(findobj('type','axes'),'xgrid','on','ygrid','on','box','on','xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
     linkaxes([AX h1 h2 h3 h4],'x')
     if(DSTCut<0), title(h1,sprintf('%d D_{st} < %d nT events; %d-%d',length(starti),DSTCut,sy,ey)); end
