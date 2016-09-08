@@ -63,6 +63,12 @@ F10.7 of events that have existing rho_eq at onset:
 rho_eq availability map:
 ![Fig](figures/PNGs/SurfExistingEvents.png)
 
+Histograms of F10.7 during NaN values and during existing values
+![Fig](figures/PNGs/F107HistWithWithoutNaNs.png)
+
+Plot of all events that go into binplot with spike:
+![Fig](figures/PNGs/AllBinnedEvents.png)
+
 
 ### August 17, 2016 ###
 For Dst < -50nT events (case 1), GOES 6

@@ -67,6 +67,29 @@ if(MakePaperPlots && stormcase==1)
     print -dpng -r200 figures/PNGs/SurfExistingEvents.png    
     if(strcmp(visible,'off')),close(h);end;
     
+    
+    h=figure('Visible',visible);
+    hold on;
+    %Two commented out are hist of all data, not just events
+    %[bin,binx]=hist(F107(isnan(MassDensitySpline)),30);
+    %[bin2,binx2]=hist(F107(~isnan(MassDensitySpline)),30);
+    F107Events=AVMat(:,:,30);
+    [bin,binx]=hist(F107Events(isnan(AVMDMat)),30);
+    [bin2,binx2]=hist(F107Events(~isnan(AVMDMat)),30);
+            
+    stairs(binx,bin,'r','LineWidth',1.2);
+    hold on; stairs(binx2,bin2); 
+    legend('NaN','Existing')
+    xlabel('F10.7')
+    ylabel('Count')
+    print -depsc2 -r200 figures/F107HistWithWithoutNaNs.eps
+    print -dpng -r200 figures/PNGs/F107HistWithWithoutNaNs.png    
+    if(strcmp(visible,'off')),close(h);end;
+    
+    
+    
+    
+    
 end
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
@@ -126,6 +149,16 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
                 p=2;
             end
             fprintf('Probability spike events come from same median distribution as baseline: %2.2f\n',p);
+            
+            h=figure('Visible',visible);
+            hold on;
+            plot(xa,AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:),'b')
+            plot(xa,AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<topcut,:),'r')
+            ylabel('\rho_{eq}')
+            xlabel('Hour since onset')
+            title('F10.7 < median in red, >median in blue')
+            print -depsc2 -r200 figures/AllBinnedEvents.eps
+            print -dpng -r200 figures/PNGs/AllBinnedEvents.png  
         end
         
         
