@@ -69,6 +69,9 @@ Histograms of F10.7 during NaN values and during existing values
 Plot of all events that go into binplot with spike:
 ![Fig](figures/PNGs/AllBinnedEvents.png)
 
+Binplot for all satellites:
+![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF_{10.7}-case1-t020-tf25-GOES2.png) ![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF_{10.7}-case1-t020-tf25-GOES5.png)
+![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF_{10.7}-case1-t020-tf25-GOES6.png) ![Fig](paper/figures/RhoBinned/PNGs/RhoBinnedF_{10.7}-case1-t020-tf25-GOES7.png)
 
 ### August 17, 2016 ###
 For Dst < -50nT events (case 1), GOES 6
