@@ -377,12 +377,13 @@ for i=1:length(starti)
 end
 
 %Try only keeping values that coincide with existing mass density values
+%{
 AVMatOrig = AVMat; %Backup for future stuff
 for i=1:size(AVMat,3)
     AVMat(:,:,i)=AVMat(:,:,i).*(~isnan(AVMDMat));
 end
 AVMat(AVMat==0)=NaN;
-
+%}
 
 
 AVs=nanmedian(AVMat,1);

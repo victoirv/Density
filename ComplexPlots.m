@@ -93,7 +93,7 @@ if(MakePaperPlots && stormcase==1)
 end
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
-    tws=[5:25; 25:45];
+    tws=[20:25; 25:30];
     for varnum=[5 6 8 13 15 30]
     %varnum=30; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp, 30 is f10.7
     varname=headers{varnum};
@@ -103,9 +103,9 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
 
         topcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
         bottomcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
-        if(varnum==30)
-            %topcut=150;
-            %bottomcut=150;
+        if(varnum==30 && 0)
+            topcut=150;
+            bottomcut=150;
         end
         h=figure('Visible',visible);   
         top=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:));
