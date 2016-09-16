@@ -93,7 +93,7 @@ if(MakePaperPlots && stormcase==1)
 end
 
 if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1)) 
-    tws=[20:25; 25:30];
+    tws=[5:25; 25:45];
     for varnum=[5 6 8 13 15 30]
     %varnum=30; %5 is Bz, 15 is dst, 8 is p, 6 is Vsw, 13 is kp, 30 is f10.7
     varname=headers{varnum};
@@ -103,9 +103,21 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
 
         topcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
         bottomcut=nanmedian(nanmedian(AVMat(:,tw,varnum),2));
+        if(varnum==30)
+            %topcut=150;
+            %bottomcut=150;
+        end
         h=figure('Visible',visible);   
         top=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:));
         bottom=nanmedian(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:));
+        ntop=sum(nanmedian(AVMat(:,tw,varnum),2)>=topcut);
+        nbottom=sum(nanmedian(AVMat(:,tw,varnum),2)<bottomcut);
+        if(varnum==30 && 0)
+            top=nanmedian(AVMDMat(nanmedian(AVMatOrig(:,tw,varnum),2)>=topcut,:));
+            bottom=nanmedian(AVMDMat(nanmedian(AVMatOrig(:,tw,varnum),2)<bottomcut,:));
+            ntop=sum(nanmedian(AVMatOrig(:,tw,varnum),2)>=topcut);
+            nbottom=sum(nanmedian(AVMatOrig(:,tw,varnum),2)<bottomcut);
+        end
         topbar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)>=topcut,:))));
         bottombar=nanstd(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))./sqrt(sum(~isnan(AVMDMat(nanmedian(AVMat(:,tw,varnum),2)<bottomcut,:))));
         tvals=ones(1,length(top));
@@ -204,7 +216,7 @@ if(MakePaperPlots && (stormcase==2 || stormcase==24 || stormcase==1))
         end
         set(gca,'xtick',[-timewidth:timewidth/2:timewidth*2]./LongTimeScale)
         xlim([-timewidth timewidth*2]./LongTimeScale)
-        lh=legend('All events ',sprintf('%s  \\geq %2.2f %s; %d events ',varname,topcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)>=topcut)),sprintf('%s < %2.2f %s; %d events ',varname,bottomcut,varunit,sum(nanmedian(AVMat(:,tw,varnum),2)<bottomcut)));
+        lh=legend('All events ',sprintf('%s  \\geq %2.2f %s; %d events ',varname,topcut,varunit,ntop),sprintf('%s < %2.2f %s; %d events ',varname,bottomcut,varunit,nbottom));
         set(lh,'box','off');
         title(sprintf('%s events; GOES %d; %d-%d',eventtype,satnum,sy,ey));
         ylabel('\rho_{eq} (amu/cm^3)')

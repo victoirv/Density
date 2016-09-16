@@ -31,6 +31,7 @@
 
 
 ## History ##
+* [September 15: Spike Mystery](#september-15-2016)
 * [September 5: Paper edits](#september-5-2016)
 * [August 17: Other variables](#august-17-2016)
 * [July 7: RhoBinned all satellites](#july-7-2016)
@@ -41,6 +42,21 @@
 * [May 16: Significance tests and pressure behavior](#may-16-2016)
 
 * * *
+### September 15, 2016 ###
+ It doesn't just matter where that split-point is (100 s.f.u. vs 150 s.f.u.), but the events are then divided based on their median value in the highlighted window relative to that split value. If the NaNs from the mass density data are inserted into F10.7, the median value in that window for each event also changes and affects which events end up in which bin.
+
+ If I only shift the split value, the spike is there but doesn't look like a spike because there's so much variability in the data:
+![Fig](NoteFigures/RhoBinned150.png)
+  
+If I set the split point and allow the binning to see all F10.7 data, but then just plot the medians of the NaN inserted data, it still shows the spike as usual (but with giant error bars).
+![Fig](NoteFigures/RhoBinned150AllData.png)
+
+They both show an increase from ~20 amu/cm^3 to ~30 amu/cm^3 though, so it seems that requiring data to exist within a 5 hour window is too restrictive for this case. But since we're looking at F10.7, a consistent daily value, I made the window a 20 hour window instead, this time without manually setting the split or adding back information:
+![Fig](NoteFigures/RhoBinnedWideWindow.png)
+
+And the spike is still there despite all variables only using the same times as existing mass density values. So even with limited data, the spike is a feature. This still doesn't explain why only low F10.7 values coincide with existing mass density values, but at least supports our result.
+
+
 ### September 5, 2016 ###
 First plot just to show where all the storms are relative to F10.7 values:
 ![Fig](figures/PNGs/StormDates.png)
