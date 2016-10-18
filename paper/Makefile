@@ -8,6 +8,10 @@ all:
 	$(COMP) $(TEX).tex
 	$(COMP) $(TEX).tex
 
+production:
+	$(COMP) $(TEX).production.tex
+	$(COMP) $(TEX).production.tex
+
 clean:
 	rm -f $(TEX).synctex.gz
 	rm -f $(TEX).aux 

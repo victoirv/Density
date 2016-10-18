@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-
-for i in {1..9}; do gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=$i -dLastPage=$i -sOutputFile=2016SW001507R-p0$i.pdf Fig1.pdf; done

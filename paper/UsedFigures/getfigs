@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+
+echo "Getting figures from paper tex"
+sed -n '/begin{figure/,/figure}/p' ../paper.production.tex > Figs.tex
+
+sed -i '/\(label\|caption\)/d' Figs.tex
+sed -i '/\(label\|caption\)/d' Figs.tex
+sed -ri 's/UsedFigures\///' Figs.tex
+
+echo "Compiling figures to standalone pdf"
+
+pdflatex Fig1.tex
+pdflatex Fig1.tex
+
+echo "Splitting pdf into individual pages"
+
+for i in {1..9}; do gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=$i -dLastPage=$i -sOutputFile=2016SW001507R-p0$i.pdf Fig1.pdf; done

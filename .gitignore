@@ -11,3 +11,11 @@ paper/*.blg
 paper/*.bbl
 paper/*.toc
 paper/*.tks
+paper/UsedFigures/*.aux
+paper/UsedFigures/*.log
+paper/UsedFigures/*.lot
+paper/UsedFigures/*.lof
+paper/UsedFigures/*.blg
+paper/UsedFigures/*.bbl
+paper/UsedFigures/*.toc
+paper/UsedFigures/*.tks
