@@ -20,9 +20,10 @@ clean:
 
 diff:
 	#checkout f26fb4b as that's pre-submission, compare to newest
-	git checkout f26fb4b paper.tex
+	#1285679 is pre-second-review
+	git checkout 1285679 paper.tex
 	mv paper.tex paper.old
-	git checkout paper.tex
+	git checkout master paper.tex
 	latexdiff paper.old paper.tex > paper.diff.tex
 	$(COMP) paper.diff.tex
 	$(BIB) paper.diff
