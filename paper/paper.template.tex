@@ -140,9 +140,11 @@
 %  Each must be 100 characters or less with no special characters or punctuation 
 
 \begin{keypoints}
-\item = enter point 1 here = 
-\item = enter point 2 here = 
-\item = enter point 3 here = 
+\item Hourly averages are required to show a statistically significant mass density response during high geomagnetic activity
+
+\item The response of mass density for high geomagnetic activity intervals is strongest when F10.7 is elevated
+
+\item There is no solar wind variation signature associated with large mass density events 
 \end{keypoints}
 
 %% ------------------------------------------------------------------------ %%
@@ -221,7 +223,14 @@ These tests indicate that there is not a statistically significant difference in
 \begin{table}
 	\small
 	\centering
-	\input{../tables/DeltaBootstraps-case10.txt}
+	\begin{tabular}{|c|cc|}
+		\hline 
+		Days & Difference (amu/cm$^3$) & \%  \\ \hline
+		-1 0 & -4.48 & $10.90\%\geq 0$  \\ 
+		-1 1 & -1.46 & $34.30\%\geq 0$  \\ 
+		1 0 & -3.02 & $21.50\%\geq 0$  \\ 
+		\hline
+	\end{tabular}
 	\caption{Results of test on of medians of $\rho_{eq}$ shown in the top panel of Figure~\ref{fig:DailyAveragedDstEvents} between days of threshold crossing  near (day = 1 or -1) or on the day of a $D_{st}$ event (day = 0).}
 	\label{BootstrapDifferenceTable}
 \end{table}
