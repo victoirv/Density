@@ -1,88 +1,166 @@
+%% 11/23/2015
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AGUJournalTemplate.tex: this template file is for articles formatted with LaTeX
+%
+% This file includes commands and instructions
+% given in the order necessary to produce a final output that will
+% satisfy AGU requirements. 
+%
+% You may copy this file and give it your
+% article name, and enter your text.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PLEASE DO NOT USE YOUR OWN MACROS
+% DO NOT USE \newcommand, \renewcommand, or \def, etc.
+%
+% FOR FIGURES, DO NOT USE \psfrag or \subfigure.
+% DO NOT USE \psfrag or \subfigure commands.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% All questions should be e-mailed to latex@agu.org.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Step 1: Set the \documentclass
+%
+% There are two options for article format:
+%
+% 1) PLEASE USE THE DRAFT OPTION TO SUBMIT YOUR PAPERS.
+% The draft option produces double spaced output.
+% 
+% 2) numberline will give you line numbers.
 
+%% To submit your paper:
+\documentclass[draft,linenumbers]{agujournal}
+\draftfalse
 
-\documentclass[12pt]{article}
-\bibliographystyle{./style/agufull}
-\usepackage[square,comma,authoryear]{natbib}
-\usepackage{aas_macros}
-\usepackage{epsfig}
-\usepackage{amsmath}
-\usepackage{style/lineno}
-\usepackage[hidelinks]{hyperref}
-%\usepackage{url}
+%% For final version.
+% \documentclass{agujournal}
 
-%\usepackage{booktabs}
-\linenumbers*[1]
-\usepackage{subfig}
+% Now, type in the journal name: \journalname{<Journal Name>}
 
-\usepackage{setspace}  
-\usepackage{fancyhdr}
+% ie, \journalname{Journal of Geophysical Research}
+%% Choose from this list of Journals:
+%
+% JGR-Atmospheres
+% JGR-Biogeosciences
+% JGR-Earth Surface
+% JGR-Oceans
+% JGR-Planets
+% JGR-Solid Earth
+% JGR-Space Physics
+% Global Biochemical Cycles
+% Geophysical Research Letters
+% Paleoceanography
+% Radio Science
+% Reviews of Geophysics
+% Tectonics
+% Space Weather
+% Water Resource Research
+% Geochemistry, Geophysics, Geosystems
+% Journal of Advances in Modeling Earth Systems (JAMES)
+% Earth's Future
+% Earth and Space Science
+%
+%
 
-\newcommand{\citeay}[1]{%
-\citeauthor{#1}, \citeyear{#1}%
-}
+\journalname{Space Weather}
 
-\pagestyle{fancy}
-\fancyhead{}
-\fancyfoot{}
-\fancyhead[R]{X - \thepage}
-\fancyhead[L]{VEIBELL: MASS DENSITY AT GEO}
-\fancyfoot[L]{D R A F T}
-\fancyfoot[C]{\today}
-\fancyfoot[R]{D R A F T}
-\renewcommand{\headrulewidth}{0.0pt}
-\renewcommand{\footrulewidth}{0.0pt}
-\oddsidemargin 0.0in
-\evensidemargin 1.0in
-\textwidth 6.5in
-\headheight 0.1in
-\topmargin -0.5in
-\textheight 9.0in
 
 \begin{document}
+
+%% ------------------------------------------------------------------------ %%
+%  Title
+% 
+% (A title should be specific, informative, and brief. Use
+% abbreviations only if they are defined in the abstract. Titles that
+% start with general keywords then specific terms are optimized in
+% searches)
+%
+%% ------------------------------------------------------------------------ %%
+
+% Example: \title{This is a test title}
+
 \title{Solar wind, F10.7, and geomagnetic activity relationship to the equatorial plasma mass density at geosynchronous orbit}
-\author{V. Veibell, R.S. Weigel, and R.E. Denton}
-\doublespacing
-\maketitle
 
-%\author{
-%Victoir Veibell\footnote{vveibell@gmu.edu}
-%\and
-%R.S. Weigel\footnote{rweigel@gmu.edu}}
+%% ------------------------------------------------------------------------ %%
+%
+%  AUTHORS AND AFFILIATIONS
+%
+%% ------------------------------------------------------------------------ %%
 
-%\setlength{\parskip}{3ex}
+% Authors are individuals who have significantly contributed to the
+% research and preparation of the article. Group authors are allowed, if
+% each author in the group is separately identified in an appendix.)
 
-%\titlespacing{\section}{0pc}{0.2pc}{-1pc}
-%\titlespacing{\subsection}{0pc}{0.1pc}{-1pc}
-%\titleformat*{\section}{\normalsize\bfseries}
-%\titleformat*{\subsection}{\small\bfseries}
+% List authors by first name or initial followed by last name and
+% separated by commas. Use \affil{} to number affiliations, and
+% \thanks{} for author notes.  
+% Additional author notes should be indicated with \thanks{} (for
+% example, for current addresses). 
 
-%\twocolumn[
-%  \begin{@twocolumnfalse}
-%\maketitle
-%\hrule
+% Example: \authors{A. B. Author\affil{1}\thanks{Current address, Antartica}, B. C. Author\affil{2,3}, and D. E.
+% Author\affil{3,4}\thanks{Also funded by Monsanto.}}
 
-% Key points
-% Hourly averages are required to show a statistically significant mass density response during high geomagnetic activity
-% The response of mass density for high geomagnetic activity intervals is strongest when F10.7 is elevated
-% There is no solar wind variation signature associated with large mass density events
+\authors{V. Veibell\affil{1}, R.S. Weigel\affil{1}, and R.E. Denton\affil{2}}
 
-% Reviewers
-% Takahashi
-% O'Brien
-% Denton
-% Galager
-% Singer
+
+% \affiliation{1}{First Affiliation}
+% \affiliation{2}{Second Affiliation}
+% \affiliation{3}{Third Affiliation}
+% \affiliation{4}{Fourth Affiliation}
+
+\affiliation{1}{George Mason University}
+\affiliation{2}{Dartmouth University}
+%(repeat as many times as is necessary)
+
+%% Corresponding Author:
+% Corresponding author mailing address and e-mail address:
+
+% (include name and email addresses of the corresponding author.  More
+% than one corresponding author is allowed in this LaTeX file and for
+% publication; but only one corresponding author is allowed in our
+% editorial system.)  
+
+% Example: \correspondingauthor{First and Last Name}{email@address.edu}
+
+%\correspondingauthor{=name=}{=email address=}
+
+%% Keypoints, final entry on title page.
+
+% Example: 
+% \begin{keypoints}
+% \item	List up to three key points (at least one is required)
+% \item	Key Points summarize the main points and conclusions of the article
+% \item	Each must be 100 characters or less with no special characters or punctuation 
+% \end{keypoints}
+
+%  List up to three key points (at least one is required)
+%  Key Points summarize the main points and conclusions of the article
+%  Each must be 100 characters or less with no special characters or punctuation 
+
+\begin{keypoints}
+\item = enter point 1 here = 
+\item = enter point 2 here = 
+\item = enter point 3 here = 
+\end{keypoints}
+
+%% ------------------------------------------------------------------------ %%
+%
+%  ABSTRACT
+%
+% A good abstract will begin with a short description of the problem
+% being addressed, briefly describe the new data or analyses, then
+% briefly states the main conclusion(s) and how they are supported and
+% uncertainties. 
+%% ------------------------------------------------------------------------ %%
+
+%% \begin{abstract} starts the second page 
 
 \begin{abstract}
 We consider two types of events, identified by decreases in $D_{st}$ below a threshold value and increases in the equatorial mass density at geosynchronous altitudes, $\rho_{eq}$, above a threshold value using the \citet{Takahashi2010} dataset.  From the $D_{st}$ events and 1-day averages, we find that there is a statistically weak and small-amplitude difference between $\rho_{eq}$ on the day of the event and the days before and after.  When hourly averages are considered, a significant peak is found to occur six hours after event onset, and the primary factor that determines the post-onset peak amplitude in $\rho_{eq}$ is elevated $F10.7$.  In addition, for hourly averages, $\rho_{eq}$ following the onset of a $D_{st}$ event depends on the north-south component of the interplanetary magnetic field, $B_z$ after the time of onset, with higher average $B_{z}$ four hours after the event onset corresponding to larger $\rho_{eq}$ value 7-11 hours after onset.  From the $\rho_{eq}$ events, we find a weak dependence on $B_{z}$ after the onset of an event, with higher average $B_{z}$ four hours after the event onset corresponding to larger $\rho_{eq}$ values 24-36 hours after onset.
 \end{abstract}
-%\vspace{2em}
-%\hrule
-%\vspace{2em}
-% \end{@twocolumnfalse}
-%  ]
 
-%\saythanks
 
 \section{Introduction}
 
@@ -141,11 +219,11 @@ A similar hypothesis test run for the bottom panel of Figure~\ref{fig:DailyAvera
 These tests indicate that there is not a statistically significant difference in medians of daily-averaged $\rho_{eq}$ on the day before and day after a threshold crossing in $D_{st}$.  In addition, the observed differences are on the order of only 20\% of the value of $\rho_{eq}$ on the onset day, which is similar to the magnitude of variation in the observations over the displayed epoch time interval.  
 
 \begin{table}
-\small
-\centering
-\input{../tables/DeltaBootstraps-case10.txt}
-\caption{Results of test on of medians of $\rho_{eq}$ shown in the top panel of Figure~\ref{fig:DailyAveragedDstEvents} between days of threshold crossing  near (day = 1 or -1) or on the day of a $D_{st}$ event (day = 0).}
-\label{BootstrapDifferenceTable}
+	\small
+	\centering
+	\input{../tables/DeltaBootstraps-case10.txt}
+	\caption{Results of test on of medians of $\rho_{eq}$ shown in the top panel of Figure~\ref{fig:DailyAveragedDstEvents} between days of threshold crossing  near (day = 1 or -1) or on the day of a $D_{st}$ event (day = 0).}
+	\label{BootstrapDifferenceTable}
 \end{table}
 
 We have also considered hourly averages of data for the events shown in the bottom panel of Figure~\ref{fig:DailyAveragedDstEvents}, which are shown in the top panel of Figure~\ref{fig:HourlyAveragedDstEvents}.  In the time period of elevated mass density within 6 hours of the start of the event, there are only $\sim$4 samples per hourly interval and the peak value of $\sim$70 amu/cm$^3$ is associated with a single observation. 
@@ -188,16 +266,64 @@ It was shown that a key factor in determining if large $\rho_{eq}$ enhancements 
 
 For $\rho_{eq}$ events, more positive $B_{z}$ after onset corresponded to higher values of subsequent $\rho_{eq}$, which indicates that a substantial portion of the events may be due to the apparent mass refilling mechanism described by \citet{Denton2016}.  In order to separate this mechanism from an enhancement due to magnetospheric activity using this type of analysis, additional information about the location of the plasmapause may be required.
 
-\section{Acknowledgements}
-
+\acknowledgments
 Work at Dartmouth College was supported by NSF grant AGS-1105790. 
 
-The mass density data used for this work can be obtained from \url{http://www.dartmouth.edu/~rdenton} and the gap-filled solar wind data is available at \url{http://virbo.org/ftp/users/kondrashov/}.
+The mass density data used for this work can be obtained from http://www.dartmouth.edu/~rdenton and the gap-filled solar wind data is available at http://virbo.org/ftp/users/kondrashov/.
 
-\newpage
-%\footnotesize
-%\bibliographystyle{plainnat}
-%\bibliography{paper}
+
+%% ------------------------------------------------------------------------ %%
+%% Citations
+
+% Please use ONLY \citet and \citep for reference citations.
+% DO NOT use other cite commands (e.g., \cite, \citeyear, \nocite, \citealp, etc.).
+
+
+%% Example \citet and \citep:
+%  ...as shown by \citet{Boug10}, \citet{Buiz07}, \citet{Fra10},
+%  \citet{Ghel00}, and \citet{Leit74}. 
+
+%  ...as shown by \citep{Boug10}, \citep{Buiz07}, \citep{Fra10},
+%  \citep{Ghel00, Leit74}. 
+
+%  ...has been shown \citep [e.g.,][]{Boug10,Buiz07,Fra10}.
+
+
+
+%%  REFERENCE LIST AND TEXT CITATIONS
+%
+% Either type in your references using
+%
+% \begin{thebibliography}{}
+% \bibitem[{\textit{Kobayashi et~al.}}(2003)]{R2013} Kobayashi, T.,
+% Tran, A.~H., Nishijo, H., Ono, T., and Matsumoto, G.  (2003).
+% Contribution of hippocampal place cell activity to learning and
+% formation of goal-directed navigation in rats. \textit{Neuroscience}
+% 117, 1025--1035.
+%
+% \bibitem{}
+% Text
+% \end{thebibliography}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Or, to use BibTeX:
+%
+% Follow these steps
+%
+% 1. Type in \bibliography{<name of your .bib file>} 
+%    Run LaTeX on your LaTeX file.
+%
+% 2. Run BiBTeX on your LaTeX file.
+%
+% 3. Open the new .bbl file containing the reference list and
+%   copy all the contents into your LaTeX file here.
+%
+% 4. Run LaTeX on your new file which will produce the citations.
+%
+% AGU does not want a .bib or a .bbl file. Please copy in the contents of your .bbl file here.
+
+
+%% After you run BibTeX, Copy in the contents of the .bbl file here:
 
 \begin{thebibliography}{16}
 	\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
@@ -282,97 +408,117 @@ The mass density data used for this work can be obtained from \url{http://www.da
 		Geophys. Res.\/}, {\it 113\/}, 2008.
 	
 \end{thebibliography}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Track Changes:
+% To add words, \added{<word added>}
+% To delete words, \deleted{<word deleted>}
+% To replace words, \replace{<word to be replaced>}{<replacement word>}
+% To explain why change was made: \explain{<explanation>} This will put
+% a comment into the right margin.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% At the end of the document, use \listofchanges, which will list the
+% changes and the page and line number where the change was made.
 
+% When final version, \listofchanges will not produce anything,
+% \added{<word or words>} word will be printed, \deleted{<word or words} will take away the word,
+% \replaced{<delete this word>}{<replace with this word>} will print only the replacement word.
+%  In the final version, \explain will not print anything.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%
+%\listofchanges
+%%%
 
-\clearpage
 
 \section{Figures}
 
 \begin{figure}[htp!]
-\centering
-\includegraphics[scale=0.45]{UsedFigures/2016SW001507R-p01.eps}
-\caption{Overview of data used in this article. The top four panels show parameters from \citet{Kondrashov2014ReconstructionOfGaps} and the bottom panel contains $\rho_{eq}$ based on GOES 6 measurements from \citet{Denton} after interpolation and averaging described in the text. Dashed horizontal lines in the $D_{st}$ and $\rho_{eq}$ panels indicate sample event cutoff thresholds of $D_{st} = -50$~nT and $\rho_{eq} = 20$~amu/cm$^3$ considered in Section~3.}
-\label{fig:AllData}
+	\centering
+	\includegraphics[scale=0.45]{UsedFigures/2016SW001507R-p01.eps}
+	\caption{Overview of data used in this article. The top four panels show parameters from \citet{Kondrashov2014ReconstructionOfGaps} and the bottom panel contains $\rho_{eq}$ based on GOES 6 measurements from \citet{Denton} after interpolation and averaging described in the text. Dashed horizontal lines in the $D_{st}$ and $\rho_{eq}$ panels indicate sample event cutoff thresholds of $D_{st} = -50$~nT and $\rho_{eq} = 20$~amu/cm$^3$ considered in Section~3.}
+	\label{fig:AllData}
 \end{figure}
 
 \clearpage
 
 \begin{figure}[htp!]
-\centering
-\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p02a.eps}
-\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p02b.eps}
-\caption{Top: 27-day non-overlapping medians of $F_{10.7}$ and $\log_{10}(\rho_{eq})$ from GOES 6. Bottom: Scatter plot of $\log_{10}(\rho_{eq})$ and $F_{10.7}$ using medians in non-overlapping hour, day, and 27-day windows.}
-\label{fig:ccplot}
+	\centering
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p02a.eps}
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p02b.eps}
+	\caption{Top: 27-day non-overlapping medians of $F_{10.7}$ and $\log_{10}(\rho_{eq})$ from GOES 6. Bottom: Scatter plot of $\log_{10}(\rho_{eq})$ and $F_{10.7}$ using medians in non-overlapping hour, day, and 27-day windows.}
+	\label{fig:ccplot}
 \end{figure}
 \clearpage
 
 \begin{figure}[h]
-\centering
-\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p03a.eps}
-\\
-\rule[1ex]{5cm}{1pt}
-\\
-\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p03b.eps}
-\caption{$D_{st}$ events from GOES 6 using daily medians. Top: Events in the interval 1989-1991; compare to \citet{Takahashi2010} Figure~11. Bottom: Events in the interval 1983-1991.}
-\label{fig:DailyAveragedDstEvents}
+	\centering
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p03a.eps}
+	\\
+	\rule[1ex]{5cm}{1pt}
+	\\
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p03b.eps}
+	\caption{$D_{st}$ events from GOES 6 using daily medians. Top: Events in the interval 1989-1991; compare to \citet{Takahashi2010} Figure~11. Bottom: Events in the interval 1983-1991.}
+	\label{fig:DailyAveragedDstEvents}
 \end{figure}
 
 \clearpage
 
 \begin{figure}[tp!]
-\centering
-\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p04a.eps}
-\\
-\rule[1ex]{5cm}{1pt}
-\\
-\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p04b.eps}
-\caption{$D_{st}$ events from GOES 6 using hourly medians. Top: Events with the constraint that $D_{st}$ stayed below $-50$~nT for at least 12~hours after crossing below $-50$~nT.  Bottom: Same as Top except without constraint.}
-\label{fig:HourlyAveragedDstEvents}
+	\centering
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p04a.eps}
+	\\
+	\rule[1ex]{5cm}{1pt}
+	\\
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p04b.eps}
+	\caption{$D_{st}$ events from GOES 6 using hourly medians. Top: Events with the constraint that $D_{st}$ stayed below $-50$~nT for at least 12~hours after crossing below $-50$~nT.  Bottom: Same as Top except without constraint.}
+	\label{fig:HourlyAveragedDstEvents}
 \end{figure}
 
 \clearpage
 \begin{figure}[tp!]
-  \centering
-  \includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p05a.eps}
-  \includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p05b.eps}
-  \caption{$D_{st}$ events of the bottom panel of Figure~\ref{fig:HourlyAveragedDstEvents} separated by the average $D_{st}$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
-  \label{fig:BzBinnedDstEvents}
+	\centering
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p05a.eps}
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p05b.eps}
+	\caption{$D_{st}$ events of the bottom panel of Figure~\ref{fig:HourlyAveragedDstEvents} separated by the average $D_{st}$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
+	\label{fig:BzBinnedDstEvents}
 \end{figure}
 
 \begin{figure}[tp!]
-  \centering
-  \includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p06a.eps}
-  \includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p06b.eps}
-  \caption{$D_{st}$ events of the bottom panel of Figure~\ref{fig:HourlyAveragedDstEvents} separated by the average $F10.7$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
-  \label{fig:F107BinnedDstEvents}
+	\centering
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p06a.eps}
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p06b.eps}
+	\caption{$D_{st}$ events of the bottom panel of Figure~\ref{fig:HourlyAveragedDstEvents} separated by the average $F10.7$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
+	\label{fig:F107BinnedDstEvents}
 \end{figure}
 
 \clearpage
 
 \begin{figure}[htp!]
-\centering
-\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p07.eps}
-\caption{$\rho_{eq} >$ 20~amu/cm$^3$ events from GOES 6 using hourly medians.}
-\label{fig:HourlyAveragedRhoEvents}
+	\centering
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p07.eps}
+	\caption{$\rho_{eq} >$ 20~amu/cm$^3$ events from GOES 6 using hourly medians.}
+	\label{fig:HourlyAveragedRhoEvents}
 \end{figure}
 
 \clearpage
 \begin{figure}[tp!]
-  \centering
-  \includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p08a.eps}
-  \includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p08b.eps}
-  \caption{$\rho_{eq}$ events of Figure~\ref{fig:HourlyAveragedRhoEvents} separated by the average $B_z$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
-  \label{fig:BzBinned}
+	\centering
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p08a.eps}
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p08b.eps}
+	\caption{$\rho_{eq}$ events of Figure~\ref{fig:HourlyAveragedRhoEvents} separated by the average $B_z$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
+	\label{fig:BzBinned}
 \end{figure}
 
 \begin{figure}[tp!]
-  \centering
-  \includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p09a.eps}
-  \includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p09b.eps}
-  \caption{$\rho_{eq}$ events of Figure~\ref{fig:HourlyAveragedRhoEvents} separated by the average $F10.7$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
-  \label{fig:F107Binned}
+	\centering
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p09a.eps}
+	\includegraphics[scale=0.40]{UsedFigures/2016SW001507R-p09b.eps}
+	\caption{$\rho_{eq}$ events of Figure~\ref{fig:HourlyAveragedRhoEvents} separated by the average $F10.7$ value (a) at onset and four hours before, and (b) at onset and four hours after.}
+	\label{fig:F107Binned}
 \end{figure}
 
 \end{document}
+
+
+
