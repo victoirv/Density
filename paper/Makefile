@@ -12,6 +12,10 @@ production:
 	$(COMP) $(TEX).production.tex
 	$(COMP) $(TEX).production.tex
 
+template:
+	$(COMP) $(TEX).template.tex
+	$(COMP) $(TEX).template.tex
+
 clean:
 	rm -f $(TEX).synctex.gz
 	rm -f $(TEX).aux 
